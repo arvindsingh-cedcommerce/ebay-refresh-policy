@@ -1,0 +1,9 @@
+export const environment = {
+    isLive: false,
+    // Bearer: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFwcCIsImlzcyI6Imh0dHBzOlwvXC9hcHBzLmNlZGNvbW1lcmNlLmNvbSIsImF1ZCI6IjEyNy4wLjAuMSIsInRva2VuX2lkIjoiNjE0YzFmM2E5MzFjNDMzZTE2NmRiMGYyIn0.SvNwLoOffOVSqaMttUz6Tg1q268cgpNt0Oc4pq_9uVdM-VzQQ6GlBbNXkFGAHuO4PxW99wEArPFDYMIb3tpLRCknbnMsoXYej5FJrXWZ7h-1p9EYZsZyHNgJVNnDOj8nojIxg05n6179vFb-OL7x4UeCUfpA6KL2wV2qnQ3XGyTAhw7TbaM-efIgX5prHHEpMQ38EGgctla7C8P4z7UdsNB19F9JpzSxZMF8m01gh11Pdxlu4uQ1o7PO8-9YamdbYF9jgu0JrT-jhxBo48eM4Drm8wTdC3F2kvgdP2SlHb_XhK1HOoR6bZ1dUVVJxo55EIIZ6y1zQt2hcdDq8H7UKA',
+    Bearer: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjBiOGQ3YjczMjRlYzQwNmNjNGI2MjUyIiwicm9sZSI6ImFwcCIsImlzcyI6Imh0dHBzOlwvXC9hcHBzLmNlZGNvbW1lcmNlLmNvbSIsImF1ZCI6IjEyNy4wLjAuMSIsInRva2VuX2lkIjoiNjBlZDkyM2NjNjJkMWMwNjM5MDljYTEyIn0.jB4uI6N-XCs0W2h3p2wjVKK7LRmShZqj3AKxtvwK1qFRE610WY1AqVRHM7TaCcOAXo6LpwFIJ8qF0WgRiUtZ1TujZ1QljChJA4nVf3SynIeFEyNyAeFDo9Kh090cR0fztk8W13e4lQ-v081DPw8sYMCoKKYgtVZ3phpu8kdXCGiZSK5YzAhkCfGr0AabEhkCNPouWRlyX0UzrxHnzN3NBBOK2YLNNrcDXyJb3grY_idsvZKWVmioeh3mwEinisg5AlZ9sYjk_WTDTSLiMmqwLSRb6cH0rk7fcqaeULxzx7JOfzN7ah_D-2D3s22xws7kngY93Q-3pqsqRFFWBjuW5g',
+    // API_ENDPOINT: 'http://192.168.0.215/home/public/',
+    // API_ENDPOINT: 'http://home.local.cedcommerce.com:8080/',
+    API_ENDPOINT: 'https://ebay-multiaccount.home.sellernext.com/',
+    // API_ENDPOINT: 'https://ebay.sellernext.com/',
+};

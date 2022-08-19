@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.content {
+  display: flex;
+}
+@media (max-width: 576px) {
+  .content {
+    display: block;
+  }
+}
+.ant-list-item-meta-avatar {
+  margin-right: 0px !important;
+}

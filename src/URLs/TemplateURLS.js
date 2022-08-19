@@ -1,0 +1,12 @@
+// export const getTemplatesURL = "ebay/request/getTemplate";
+export const getTemplatesURL = "ebay/template/getTemplate";
+export const deleteTempalteURL = "ebay/template/deleteTemplate";
+// export const getTemplateByIDURL = "ebay/request/getTemplatebyId";
+export const getTemplateByIDURL = "ebay/template/getTemplatebyId";
+// export const getAttributesURL = "ebay/request/getAttributes";
+export const getAttributesURL = "ebay/category/getAttributes";
+// export const categoryFeaturesURL = "ebay/request/categoryFeatures";
+export const categoryFeaturesURL = "ebay/category/categoryFeatures";
+export const configurableAttributesURL = "connector/get/configurableAttributes";
+// export const getCategoriesURL = "/ebay/request/getCategories";
+export const getCategoriesURL = "/ebay/category/getCategories";

@@ -1,17 +1,41 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import * as serviceWorker from './serviceWorker';
+import {BrowserRouter} from "react-router-dom";
+import {AppProvider} from "@shopify/polaris";
+// import '@shopify/polaris/dist/styles.css';
+import {NotificationContainer} from "react-notifications";
+// import {theme} from "./PolarisComponents/theme-skins";
+import { Provider } from 'react-redux';
+import configureStore from "./store/configureStore";
+import '@shopify/polaris/build/esm/styles.css';
+import 'antd/dist/antd.css';
+// import '../src/styles/styles.css'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+const store = configureStore();
+
+const theme = {
+    colors: {
+      primary: '#084e8a',
+
+    },
+};
+
+ReactDOM.render(
+        <BrowserRouter basename='/ebay'>
+            <AppProvider i18n={{}} theme={theme}>
+                <Provider store={store}>
+                    <App />
+                </Provider>
+            </AppProvider>
+            <NotificationContainer/>
+        </BrowserRouter>,
+    document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();

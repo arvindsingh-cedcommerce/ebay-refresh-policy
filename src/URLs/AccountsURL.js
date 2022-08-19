@@ -1,0 +1,1 @@
+export const getAllMessagesURL = 'ebay/request/getMessage'
