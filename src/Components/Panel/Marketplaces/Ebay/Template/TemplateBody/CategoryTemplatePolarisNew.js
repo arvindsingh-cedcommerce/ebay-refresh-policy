@@ -1551,7 +1551,7 @@ const CategoryTemplatePolarisNew = (props) => {
             id={`${categoryType}CategoryMapping`}
             title={`${categoryType} Category Mapping`.toUpperCase()}
             description={
-              "Set eBay Category / Browse Node for a product, to set the Searchability & browsing hierarchy on eBay Marketplace."
+              "Select the secondary category for eBay listng. it is optional and charable eBay. also it should be related to primary category because attributes/ item specifics will be shared."
             }
           >
             <Card sectioned title="Category Mapping">
@@ -1598,7 +1598,7 @@ const CategoryTemplatePolarisNew = (props) => {
             id="primaryCategoryMapping"
             title={`${categoryType} Category Mapping`.toUpperCase()}
             description={
-              "Set eBay Category / Browse Node for a product, to set the Searchability & browsing hierarchy on eBay Marketplace."
+              "Select the Primary category for eBay listings. Search option is available."
             }
           >
             <Card sectioned title="Category Mapping">
@@ -1616,7 +1616,9 @@ const CategoryTemplatePolarisNew = (props) => {
             <Layout.AnnotatedSection
               id="additionalInformation"
               title="Additional Information"
-              description={""}
+              description={
+                "Checked options are available for this selected category"
+              }
             >
               <Card sectioned>{renderBarcodeOptions()}</Card>
             </Layout.AnnotatedSection>
@@ -1639,9 +1641,9 @@ const CategoryTemplatePolarisNew = (props) => {
           {requiredAttributesMapping?.options?.length > 0 && (
             <Layout.AnnotatedSection
               id="requiredAttributeMapping"
-              title="Required Attribute"
+              title="Required Attributes (Item Specifics)"
               description={
-                "Map your eBay attributes with that of Shopify store’s attributes before uploading the product on Amazon."
+                "These attributes are required for product listing on eBay."
               }
             >
               <Card sectioned>{renderRequiredAttributeMappingStructure()}</Card>
@@ -1650,8 +1652,10 @@ const CategoryTemplatePolarisNew = (props) => {
           {optionalAttributesMapping?.options?.length > 0 && (
             <Layout.AnnotatedSection
               id="optionalAttributeMapping"
-              title="Optional Attribute"
-              description={""}
+              title="Optional Attributes (Item Specifics)"
+              description={
+                "These attributes are optional and can be used for enhacning the product's specification on eBay."
+              }
             >
               <Card
                 sectioned
@@ -1670,8 +1674,10 @@ const CategoryTemplatePolarisNew = (props) => {
             // showAttributeMapping &&
             <Layout.AnnotatedSection
               id="customAttributeMapping"
-              title="Custom Attribute"
-              description={""}
+              title="Custom Attributes (Item Specifics)"
+              description={
+                "Apart from eBay attributes you can set your own attributes/ item specifics for eBay listing."
+              }
             >
               <Card
                 sectioned
@@ -1690,7 +1696,9 @@ const CategoryTemplatePolarisNew = (props) => {
             <Layout.AnnotatedSection
               id="productCondition"
               title="Product condition"
-              description={""}
+              description={
+                "Most eBay listing categories require an item condition. It ensure the product's condition."
+              }
             >
               <Card sectioned>{getProductConditionStructure()}</Card>
             </Layout.AnnotatedSection>
@@ -1699,7 +1707,9 @@ const CategoryTemplatePolarisNew = (props) => {
             <Layout.AnnotatedSection
               id="variationImageSettings"
               title="Variation Image Settings"
-              description={""}
+              description={
+                "Select attribute which you want to use for variation product's image."
+              }
             >
               <Card sectioned>{renderVariationImageSettings()}</Card>
             </Layout.AnnotatedSection>
@@ -1888,9 +1898,9 @@ const CategoryTemplatePolarisNew = (props) => {
         >
           <Banner status="info">
             <p>
-              Category template is used for assigning a category to your product
-              along with the required and optional attributes which you commonly
-              use for listing on eBay.
+              Set category related components for eBay listing. Here you can set
+              Primary Category and it's attributes. You can set product
+              condition, store front category and secondary category also.
             </p>
           </Banner>
           <Card.Section>{getCategoryStructure("primary")}</Card.Section>

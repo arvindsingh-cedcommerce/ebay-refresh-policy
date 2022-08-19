@@ -8,6 +8,7 @@ import {
   Stack,
   SkeletonBodyText,
   SkeletonPage,
+  Link,
 } from "@shopify/polaris";
 import { getConnectedAccounts } from "../../../../../../../Apirequest/accountsApi";
 import { getCountryName } from "../../../../../Accounts/NewAccount";
@@ -38,7 +39,11 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
           Object.keys(orderSettingsFromSavedAPIData[account]).map((field) => {
             if (
               field !== "setBuyerNotes" &&
-              field !== "trackInventoryFromShopify"
+              field !== "trackInventoryFromShopify" &&
+              field !== "shippingService" &&
+              field !== "useShopifyProductTitleInOrder" &&
+              field !== "orderSourceIdentifier" &&
+              field !== "enableOrderUpdate"
             ) {
               temp["Default"]["fields"][field]["enable"] =
                 orderSettingsFromSavedAPIData[account][field]?.["enable"];
@@ -111,7 +116,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
               }
             } else if (
               [
-                "shippingService",
+                // "shippingService",
                 "shipmentSync",
                 "userRealCustomerDetails",
                 "shipmentSync",
@@ -154,6 +159,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 //       ][attributeKey]["value"];
                 //   }
                 // }
+                console.log(field);
                 if (
                   [
                     "setBuyerNotes",
@@ -222,7 +228,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   }
                 } else if (
                   [
-                    "shippingService",
+                    // "shippingService",
                     "shipmentSync",
                     "userRealCustomerDetails",
                     "shipmentSync",
@@ -339,7 +345,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 },
               ],
               description:
-                "Enable tax details inclusion for your eBay order details.",
+                "Enable to include taxes in the order subtotal while creating order on Shopify.",
             },
             inventoryBehavioursetting: {
               label: "Inventory Behaviour Setting",
@@ -360,7 +366,8 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   value: "bypass",
                 },
               ],
-              description: "",
+              description:
+                "Select behaviour to use updating inventory while creating order on Shopify.",
             },
             syncWithoutProductdetails: {
               label: "Sync Without Product details",
@@ -377,7 +384,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 },
               ],
               description:
-                "Synchronizes orders received on eBay even if the product is not available on Shopify",
+                "Enable if you want to create order on Shopify even when order item not found on App/Shopify.",
             },
             setOrderNote: {
               label: "Set Shopify Order Note",
@@ -406,10 +413,11 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   attributeValue: "",
                 },
               },
-              description: "",
+              description:
+                "Set Shopify Order note. you can customise it as per your need.",
             },
             setOrderTags: {
-              label: "Set Shopify Order Tag",
+              label: "Set Shopify Order Tag(s)",
               enable: "yes",
               options: [
                 {
@@ -435,7 +443,8 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   attributeValue: "",
                 },
               },
-              description: "",
+              description:
+                "Set Shopify Order Tags. you can customise it as per your need.",
             },
             setOrderName: {
               label: "Set Shopify Order Name",
@@ -464,50 +473,51 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   attributeValue: "",
                 },
               },
-              description: "",
-            },
-            shippingService: {
-              label: "Shipping Service",
-              enable: "yes",
-              type: "form",
-              options: [
-                {
-                  label: "Yes",
-                  value: "yes",
-                },
-                {
-                  label: "No",
-                  value: "no",
-                },
-              ],
-              type: "segmentedBtn",
-              attribute: {
-                mappingOfShippingService: {
-                  label: "Mapping of Shipping Service",
-                  enable: "yes",
-                  type: "mappingBoolean",
-                  value: "yes",
-                  shippingServiceMapping: {
-                    mapping: {
-                      "#1": {
-                        customAttribute: {
-                          label: "Shopify Shipping Service",
-                          value: "",
-                        },
-                        // shopifyAttribute: { label: "Shopify attribute", value: ShippingServiceCodeTypeOptions[0]['value'] },
-                        shopifyAttribute: {
-                          label: "eBay Shipping Service",
-                          value: "",
-                        },
-                      },
-                    },
-                    counter: 1,
-                  },
-                },
-              },
               description:
-                "Map shipping services for Shopify with the shipping services of eBay. For example; Shopify shipping service USPS can be mapped to eBay FedEx Ground shipping services, in case you use different shipping services Shopify and eBay.",
+                "Set Shopify Order Name. you can customise it as per your need.",
             },
+            // shippingService: {
+            //   label: "Shipping Service",
+            //   enable: "yes",
+            //   type: "form",
+            //   options: [
+            //     {
+            //       label: "Yes",
+            //       value: "yes",
+            //     },
+            //     {
+            //       label: "No",
+            //       value: "no",
+            //     },
+            //   ],
+            //   type: "segmentedBtn",
+            //   attribute: {
+            //     mappingOfShippingService: {
+            //       label: "Mapping of Shipping Service",
+            //       enable: "yes",
+            //       type: "mappingBoolean",
+            //       value: "yes",
+            //       shippingServiceMapping: {
+            //         mapping: {
+            //           "#1": {
+            //             customAttribute: {
+            //               label: "Shopify Shipping Service",
+            //               value: "",
+            //             },
+            //             // shopifyAttribute: { label: "Shopify attribute", value: ShippingServiceCodeTypeOptions[0]['value'] },
+            //             shopifyAttribute: {
+            //               label: "eBay Shipping Service",
+            //               value: "",
+            //             },
+            //           },
+            //         },
+            //         counter: 1,
+            //       },
+            //     },
+            //   },
+            //   description:
+            //     "Map shipping services for Shopify with the shipping services of eBay. For example; Shopify shipping service USPS can be mapped to eBay FedEx Ground shipping services, in case you use different shipping services Shopify and eBay.",
+            // },
             userRealCustomerDetails: {
               label: "Use Real Customer Details",
               enable: "yes",
@@ -537,7 +547,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 },
               },
               description:
-                "Display details like email and Name of customers for Orders received on eBay if don’t want to fetch the order with the buyer's details got in the orders.",
+                "Enable this to use ebay customer details for order creation. you can set customer details if you don't want eBay Customer details for Order creation.",
             },
             shipmentSync: {
               label: "Shipment Sync",
@@ -590,8 +600,24 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 },
               },
               type: "segmentedBtn",
-              description:
-                "Enable and tick the checkbox (1) to sync order fulfillment from Shopify to ebay irrespective of their tracking details. Also, can tick the checkbox (2) to map the Shopify shipping carriers with eBay shipping carriers.",
+              description: (
+                <>
+                  Enable for syncing the Shipment from Shopify to eBay. You can
+                  choose to setting for syncing of tracking details and map
+                  Shopify Shipping carrier to eBay Shipping carrier if default
+                  value not matched with allowed{" "}
+                  <Link
+                    external
+                    monochrome
+                    removeUnderline
+                    url={
+                      "https://developer.ebay.com/devzone/xml/docs/reference/ebay/types/ShippingCarrierCodeType.html"
+                    }
+                  >
+                    <b>{`"eBay Shipping Carrier code"`}</b>
+                  </Link>
+                </>
+              ),
             },
             orderCancelation: {
               label: "Order Cancellation Reason",
@@ -632,52 +658,52 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 },
               },
               description:
-                "Map the reasons for canceling orders on eBay with the reasons available.",
+                "Enable if you want to sync order cancellation from Shopify to eBay. you can also map cancellation reason.",
             },
-            useShopifyProductTitleInOrder: {
-              label: "Use Shopify Product Title",
-              enable: "no",
-              type: "segmentedBtn",
-              options: [
-                {
-                  label: "Yes",
-                  value: "yes",
-                },
-                {
-                  label: "No",
-                  value: "no",
-                },
-              ],
-              description: "",
-            },
-            orderSourceIdentifier: {
-              label: "Order Source Identifier",
-              enable: "yes",
-              type: "textfield",
-              // value: "",
-              attribute: {
-                orderSourceIdentifier: {
-                  value: "",
-                },
-              },
-              description: "",
-            },
-            enableOrderUpdate: {
-              label: "Enable Order Update",
-              enable: "no",
-              type: "segmentedBtn",
-              options: [
-                {
-                  label: "Yes",
-                  value: "yes",
-                },
-                {
-                  label: "No",
-                  value: "no",
-                },
-              ],
-              description: "",
-            },
+            // useShopifyProductTitleInOrder: {
+            //   label: "Use Shopify Product Title",
+            //   enable: "no",
+            //   type: "segmentedBtn",
+            //   options: [
+            //     {
+            //       label: "Yes",
+            //       value: "yes",
+            //     },
+            //     {
+            //       label: "No",
+            //       value: "no",
+            //     },
+            //   ],
+            //   description: "",
+            // },
+            // orderSourceIdentifier: {
+            //   label: "Order Source Identifier",
+            //   enable: "yes",
+            //   type: "textfield",
+            //   // value: "",
+            //   attribute: {
+            //     orderSourceIdentifier: {
+            //       value: "",
+            //     },
+            //   },
+            //   description: "",
+            // },
+            // enableOrderUpdate: {
+            //   label: "Enable Order Update",
+            //   enable: "no",
+            //   type: "segmentedBtn",
+            //   options: [
+            //     {
+            //       label: "Yes",
+            //       value: "yes",
+            //     },
+            //     {
+            //       label: "No",
+            //       value: "no",
+            //     },
+            //   ],
+            //   description: "",
+            // },
           },
         },
       };
@@ -721,7 +747,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
               },
             ],
             description:
-              "Enable tax details inclusion for your eBay order details.",
+              "Enable to include taxes in the order subtotal while creating order on Shopify.",
           },
           inventoryBehavioursetting: {
             label: "Inventory Behaviour Setting",
@@ -742,7 +768,8 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 value: "bypass",
               },
             ],
-            description: "",
+            description:
+              "Select behaviour to use updating inventory while creating order on Shopify.",
           },
           syncWithoutProductdetails: {
             label: "Sync Without Product details",
@@ -759,7 +786,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
               },
             ],
             description:
-              "Synchronizes orders received on eBay even if the product is not available on Shopify",
+              "Enable if you want to create order on Shopify even when order item not found on App/Shopify.",
           },
           setOrderNote: {
             label: "Set Shopify Order Note",
@@ -788,10 +815,11 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 attributeValue: "",
               },
             },
-            description: "",
+            description:
+              "Set Shopify Order note. you can customise it as per your need.",
           },
           setOrderTags: {
-            label: "Set Shopify Order Tag",
+            label: "Set Shopify Order Tag(s)",
             enable: "yes",
             options: [
               {
@@ -817,7 +845,8 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 attributeValue: "",
               },
             },
-            description: "",
+            description:
+              "Set Shopify Order Tags. you can customise it as per your need.",
           },
           setOrderName: {
             label: "Set Shopify Order Name",
@@ -846,50 +875,51 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 attributeValue: "",
               },
             },
-            description: "",
-          },
-          shippingService: {
-            label: "Shipping Service",
-            enable: "yes",
-            type: "form",
-            options: [
-              {
-                label: "Yes",
-                value: "yes",
-              },
-              {
-                label: "No",
-                value: "no",
-              },
-            ],
-            type: "segmentedBtn",
-            attribute: {
-              mappingOfShippingService: {
-                label: "Mapping of Shipping Service",
-                enable: "yes",
-                type: "mappingBoolean",
-                value: "yes",
-                shippingServiceMapping: {
-                  mapping: {
-                    "#1": {
-                      customAttribute: {
-                        label: "Shopify Shipping Service",
-                        value: "",
-                      },
-                      // shopifyAttribute: { label: "Shopify attribute", value: ShippingServiceCodeTypeOptions[0]['value'] },
-                      shopifyAttribute: {
-                        label: "eBay Shipping Service",
-                        value: "",
-                      },
-                    },
-                  },
-                  counter: 1,
-                },
-              },
-            },
             description:
-              "Map shipping services for Shopify with the shipping services of eBay. For example; Shopify shipping service USPS can be mapped to eBay FedEx Ground shipping services, in case you use different shipping services Shopify and eBay.",
+              "Set Shopify Order Name. you can customise it as per your need.",
           },
+          // shippingService: {
+          //   label: "Shipping Service",
+          //   enable: "yes",
+          //   type: "form",
+          //   options: [
+          //     {
+          //       label: "Yes",
+          //       value: "yes",
+          //     },
+          //     {
+          //       label: "No",
+          //       value: "no",
+          //     },
+          //   ],
+          //   type: "segmentedBtn",
+          //   attribute: {
+          //     mappingOfShippingService: {
+          //       label: "Mapping of Shipping Service",
+          //       enable: "yes",
+          //       type: "mappingBoolean",
+          //       value: "yes",
+          //       shippingServiceMapping: {
+          //         mapping: {
+          //           "#1": {
+          //             customAttribute: {
+          //               label: "Shopify Shipping Service",
+          //               value: "",
+          //             },
+          //             // shopifyAttribute: { label: "Shopify attribute", value: ShippingServiceCodeTypeOptions[0]['value'] },
+          //             shopifyAttribute: {
+          //               label: "eBay Shipping Service",
+          //               value: "",
+          //             },
+          //           },
+          //         },
+          //         counter: 1,
+          //       },
+          //     },
+          //   },
+          //   description:
+          //     "Map shipping services for Shopify with the shipping services of eBay. For example; Shopify shipping service USPS can be mapped to eBay FedEx Ground shipping services, in case you use different shipping services Shopify and eBay.",
+          // },
           userRealCustomerDetails: {
             label: "Use Real Customer Details",
             enable: "yes",
@@ -919,7 +949,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
               },
             },
             description:
-              "Display details like email and Name of customers for Orders received on eBay if don’t want to fetch the order with the buyer's details got in the orders.",
+              "Enable this to use ebay customer details for order creation. you can set customer details if you don't want eBay Customer details for Order creation.",
           },
           shipmentSync: {
             label: "Shipment Sync",
@@ -972,8 +1002,24 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
               },
             },
             type: "segmentedBtn",
-            description:
-              "Enable and tick the checkbox (1) to sync order fulfillment from Shopify to ebay irrespective of their tracking details. Also, can tick the checkbox (2) to map the Shopify shipping carriers with eBay shipping carriers.",
+            description: (
+              <>
+                Enable for syncing the Shipment from Shopify to eBay. You can
+                choose to setting for syncing of tracking details and map
+                Shopify Shipping carrier to eBay Shipping carrier if default
+                value not matched with allowed{" "}
+                <Link
+                  external
+                  monochrome
+                  removeUnderline
+                  url={
+                    "https://developer.ebay.com/devzone/xml/docs/reference/ebay/types/ShippingCarrierCodeType.html"
+                  }
+                >
+                  <b>{`"eBay Shipping Carrier code"`}</b>
+                </Link>
+              </>
+            ),
           },
           orderCancelation: {
             label: "Order Cancellation Reason",
@@ -1014,52 +1060,52 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
               },
             },
             description:
-              "Map the reasons for canceling orders on eBay with the reasons available.",
+                "Enable if you want to sync order cancellation from Shopify to eBay. you can also map cancellation reason.",
           },
-          useShopifyProductTitleInOrder: {
-            label: "Use Shopify Product Title",
-            enable: "no",
-            type: "segmentedBtn",
-            options: [
-              {
-                label: "Yes",
-                value: "yes",
-              },
-              {
-                label: "No",
-                value: "no",
-              },
-            ],
-            description: "",
-          },
-          orderSourceIdentifier: {
-            label: "Order Source Identifier",
-            enable: "yes",
-            type: "textfield",
-            // value: "",
-            attribute: {
-              orderSourceIdentifier: {
-                value: "",
-              },
-            },
-            description: "",
-          },
-          enableOrderUpdate: {
-            label: "Enable Order Update",
-            enable: "no",
-            type: "segmentedBtn",
-            options: [
-              {
-                label: "Yes",
-                value: "yes",
-              },
-              {
-                label: "No",
-                value: "no",
-              },
-            ],
-            description: "",
-          },
+          // useShopifyProductTitleInOrder: {
+          //   label: "Use Shopify Product Title",
+          //   enable: "no",
+          //   type: "segmentedBtn",
+          //   options: [
+          //     {
+          //       label: "Yes",
+          //       value: "yes",
+          //     },
+          //     {
+          //       label: "No",
+          //       value: "no",
+          //     },
+          //   ],
+          //   description: "",
+          // },
+          // orderSourceIdentifier: {
+          //   label: "Order Source Identifier",
+          //   enable: "yes",
+          //   type: "textfield",
+          //   // value: "",
+          //   attribute: {
+          //     orderSourceIdentifier: {
+          //       value: "",
+          //     },
+          //   },
+          //   description: "",
+          // },
+          // enableOrderUpdate: {
+          //   label: "Enable Order Update",
+          //   enable: "no",
+          //   type: "segmentedBtn",
+          //   options: [
+          //     {
+          //       label: "Yes",
+          //       value: "yes",
+          //     },
+          //     {
+          //       label: "No",
+          //       value: "no",
+          //     },
+          //   ],
+          //   description: "",
+          // },
         };
         ebayAccountsObj[
           `${getCountryName(account["warehouses"][0]["site_id"])}-${
@@ -1111,7 +1157,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   connectedAccountsObject[account]["shopId"]
                 ][field][key] =
                   connectedAccountsObject[account]["fields"][field][key];
-              } 
+              }
               // for https://app.clickup.com/t/2me3rh1
               else if (
                 key === "attribute" &&

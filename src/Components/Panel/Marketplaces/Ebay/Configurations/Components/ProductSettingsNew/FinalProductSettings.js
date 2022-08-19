@@ -27,7 +27,7 @@ const FinalProductSettings = () => {
       label: "Auto Product Syncing",
       enable: "yes",
       description:
-        "Enable the option to sync the details of the product automatically, also, you can select the respective fields for which you want to enable the auto-syncing from Shopify to the App.",
+        "Enable the option to automatic sync selected attributes of the product from shopify on app. You can unselect the attribute if you don't want to sync the value.",
       options: [
         {
           label: "Yes",
@@ -89,7 +89,7 @@ const FinalProductSettings = () => {
       label: "Auto Delete Product",
       enable: "yes",
       description:
-        "Enable the option for Auto-Deleting of products from the App when deleted from Shopify.",
+        "Enable the option to allow automatic delete product from app. Which means if the product delated on Shopify then it will automatically deleted on app as well.",
       options: [
         {
           label: "Yes",
@@ -105,7 +105,7 @@ const FinalProductSettings = () => {
       label: "Auto Product Create",
       enable: "yes",
       description:
-        "Enable the option to import new products automatically on the App when created on Shopify.",
+        "Enable the option to import new products automatically on the App when created on Shopify. i.e. importing process will consider the product import settings but not for collection based import settings.",
       options: [
         {
           label: "Yes",
@@ -291,12 +291,13 @@ const FinalProductSettings = () => {
                           "product_settings"
                         ]["app_to_ebay"][field]["attributeMapping"]
                       : [];
-                  } else if (field === "packageType") {
-                    temp[key]["fields"][field]["packageTypeValue"] =
-                      data.marketplace.ebay.shop[id]["data"][
-                        "product_settings"
-                      ]?.["app_to_ebay"]?.[field]?.["packageTypeValue"];
-                  }
+                  } 
+                  // else if (field === "packageType") {
+                  //   temp[key]["fields"][field]["packageTypeValue"] =
+                  //     data.marketplace.ebay.shop[id]["data"][
+                  //       "product_settings"
+                  //     ]?.["app_to_ebay"]?.[field]?.["packageTypeValue"];
+                  // }
                 }
               }
             }
@@ -607,7 +608,7 @@ const FinalProductSettings = () => {
             label: "Product Syncing",
             enable: "yes",
             description:
-              "Enable the option to sync the details of the product automatically, also, you can select the respective fields for which you want to enable the auto-syncing from App to the eBay Marketplace.",
+              "Enable the option to sync selected attributes of the product on eBay.You can unselect the attribute if you don't want sync the value.",
             options: [
               {
                 label: "Yes",
@@ -658,7 +659,7 @@ const FinalProductSettings = () => {
             label: "End product",
             enable: "yes",
             description:
-              "Enable to automatically end product listing on eBay once the product is deleted from the App.",
+              "Enable the option to allow end listing action on eBay.",
             options: [
               {
                 label: "Yes",
@@ -675,7 +676,7 @@ const FinalProductSettings = () => {
             label: "Auto List product",
             enable: "no",
             description:
-              "Enable to automatically upload the listings on eBay once imported to the app.",
+              "Enable the option to allow automatic listing of products on eBay whenever any product imported on app and fall under any available product-profile.",
             options: [
               {
                 label: "Yes",
@@ -769,7 +770,7 @@ const FinalProductSettings = () => {
             enable: "yes",
             type: "form",
             description:
-              "VAT is calculated based on the difference between the cost of the product and its price for a buyer. Enter your VAT percentage after confirming whether you are a Business seller and the account is only for business.",
+              "VAT is not applicable to all countries. Allowed VAT percentage rates can vary by region/country, so sellers should be aware of the rates they are legally required/allowed to charge. Sellers must be registered as Business Sellers on the site they are selling on in order to use the Business Seller-related fields.",
             options: [
               {
                 label: "Yes",
@@ -814,7 +815,7 @@ const FinalProductSettings = () => {
             enable: "yes",
             type: "form",
             description:
-              "Item location information is to accurately state where the item will be shipped from. Set the Item location for the products by selecting a country and providing a ZIP code.",
+              "Indicates the geographical location of the item on eBay.",
             options: [
               {
                 label: "Yes",
@@ -846,24 +847,24 @@ const FinalProductSettings = () => {
                 value: "",
               },
             },
-            description:
-              "Zip code is the postal code of the place where the item is located. This value is used for proximity searches",
+            // description:
+            //   "Zip code is the postal code of the place where the item is located. This value is used for proximity searches",
           },
-          packageType: {
-            label: "Package Type",
-            enable: "yes",
-            type: "dropdown",
-            description: "",
-            options: packageTypeArray,
-            packageTypeValue: packageTypeArray[0]["value"],
-          },
+          // packageType: {
+          //   label: "Package Type",
+          //   enable: "yes",
+          //   type: "dropdown",
+          //   description: "",
+          //   options: packageTypeArray,
+          //   packageTypeValue: packageTypeArray[0]["value"],
+          // },
           shopifyWarehouses: {
             label: "Shopify Warehouses",
             enable: "yes",
             type: "form",
             options: shopifyWarehouses,
             description:
-              "Select from the available warehouses on Shopify to be used for fulfilling eBay orders.",
+              "Choose shopify location to use location's inventory for eBay listing.",
             shopifyWarehouseValue: shopifyWarehouses.map(
               (warehouse) => warehouse.value
             ),
@@ -919,6 +920,13 @@ const FinalProductSettings = () => {
             ],
           },
         };
+        // if (
+        //   ["United States"].includes(
+        //     getCountryName(account["warehouses"][0]["site_id"])
+        //   )
+        // ) {
+        //   delete temp["fields"]["vatDetails"];
+        // }
         if (
           !["United States", "Canada (Eng)"].includes(
             getCountryName(account["warehouses"][0]["site_id"])

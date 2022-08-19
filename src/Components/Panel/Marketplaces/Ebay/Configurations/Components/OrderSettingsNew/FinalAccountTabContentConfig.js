@@ -848,7 +848,7 @@ const FinalAccountTabContentConfig = ({
                                 )}
                               </FormLayout>
                             )}
-                          {fields[field]["label"] === "Shipping Service" &&
+                          {/* {fields[field]["label"] === "Shipping Service" &&
                             fields[field]["enable"] === "yes" && (
                               <FormLayout>
                                 {Object.keys(fields[field]["attribute"]).map(
@@ -895,7 +895,7 @@ const FinalAccountTabContentConfig = ({
                                   }
                                 )}
                               </FormLayout>
-                            )}
+                            )} */}
                         </Stack>
                       </FormLayout>
                       {fields[field]["label"] === "Shipment Sync" &&

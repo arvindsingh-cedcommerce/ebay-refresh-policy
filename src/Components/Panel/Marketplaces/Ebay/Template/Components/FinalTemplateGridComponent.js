@@ -33,11 +33,13 @@ import {
 } from "@ant-design/icons";
 import { notify } from "../../../../../../services/notify";
 import {
+  Banner,
   Card,
   Modal,
   Select as PolarisSelect,
   Stack,
   Tabs,
+  TextStyle,
 } from "@shopify/polaris";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import { getCountryName } from "../../../../Accounts/NewAccount";
@@ -200,17 +202,17 @@ const FinalTemplateGridComponent = (props) => {
     }
   };
   const cbFuncCategory = () => {
-    getCategoryTemplateCount()
-  }
+    getCategoryTemplateCount();
+  };
   const cbFuncInventory = () => {
-    getInventoryTemplateCount()
-  }
+    getInventoryTemplateCount();
+  };
   const cbFuncPrice = () => {
-    getPriceTemplateCount()
-  }
+    getPriceTemplateCount();
+  };
   const cbFuncTitle = () => {
-    getTitleTemplateCount()
-  }
+    getTitleTemplateCount();
+  };
   const getCategoryTemplateCount = async () => {
     const postData = {
       "filter[type][1]": "category",
@@ -286,6 +288,7 @@ const FinalTemplateGridComponent = (props) => {
     <PageHeader
       className="site-page-header-responsive"
       title="Templates"
+      subTitle="Manage templates for choosing eBay category and customise your products details like price, inventory, title, description etc)."
       ghost={true}
       extra={[
         <Select

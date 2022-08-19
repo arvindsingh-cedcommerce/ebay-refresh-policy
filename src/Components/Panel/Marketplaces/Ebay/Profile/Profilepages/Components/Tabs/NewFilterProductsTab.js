@@ -627,7 +627,29 @@ const NewFilterProductsTab = ({
         <Layout.AnnotatedSection
           id="filterProducts"
           title="Filter Products"
-          description="Create rules to filter, group and assign Shopify Products to this newly created Template."
+          // description="Create rules to filter, group and assign Shopify Products to this newly created Template."
+          description={
+            <>
+              <>
+                Create rules to filter, group and assign Shopify Products to
+                this newly created Template.
+              </>
+              <Card.Section title="Add Group">
+                <p>
+                  Add Group corresponds to || (OR) condition . i.e. If any one
+                  group condition is true then results will be shown based on
+                  applied filters
+                </p>
+              </Card.Section>
+              <Card.Section title="Add More">
+                <p>
+                  Add More corresponds to && (AND) condition. i.e. If all the
+                  conditions within that one group are true then results will be
+                  shown based on applied filters
+                </p>
+              </Card.Section>
+            </>
+          }
         >
           <Card
             primaryFooterAction={{
@@ -646,7 +668,7 @@ const NewFilterProductsTab = ({
               loading: testQueryLoader,
             }}
           >
-            <Card.Section>
+            {/* <Card.Section>
               <Banner title="Add Group" status="info">
                 <p>
                   Add Group corresponds to || (OR) condition . i.e. If any one
@@ -661,7 +683,7 @@ const NewFilterProductsTab = ({
                   shown based on applied filters
                 </p>
               </Banner>
-            </Card.Section>
+            </Card.Section> */}
             {sentenceQuery !== "  " && (
               <Card.Section>
                 <Banner status="info" icon={MarketingMajorFilled}>

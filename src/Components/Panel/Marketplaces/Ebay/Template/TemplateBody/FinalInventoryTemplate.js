@@ -185,7 +185,7 @@ const FinalInventoryTemplate = (props) => {
   const saveFormdata = async () => {
     // console.log(formValidator());
     if (formValidator()) {
-      setSaveBtnLoader(true)
+      setSaveBtnLoader(true);
       let tempObj = {
         title: formData.name,
         type: "inventory",
@@ -196,7 +196,7 @@ const FinalInventoryTemplate = (props) => {
       if (returnedResponse) {
         redirect("/panel/ebay/templatesUS");
       }
-      setSaveBtnLoader(false)
+      setSaveBtnLoader(false);
     } else {
       notify.error("Kindly fill all the required fields with proper values");
     }
@@ -265,10 +265,11 @@ const FinalInventoryTemplate = (props) => {
           title="Threshold Inventory"
           description={
             <>
-              Set a minimum quantity that you want to keep reserved for your
-              Shopify store, as soon as product inventory reaches the set
-              minimum value, it will be shown as{" "}
-              <b>{`“out of stock” on eBay`}</b>.
+              Set a minimum inventory that you want to keep for your Shopify
+              products, as soon as shopify product inventory reaches the
+              threshold value, product will be shown as{" "}
+              <b>{`“out of stock”`}</b> on eBay. Customise Inventory will not
+              applied on threshold inventory.
             </>
           }
         >
@@ -311,7 +312,11 @@ const FinalInventoryTemplate = (props) => {
     <Card
       title="Inventory Template"
       sectioned
-      primaryFooterAction={{ content: "Save", onAction: saveFormdata, loading: saveBtnLoader }}
+      primaryFooterAction={{
+        content: "Save",
+        onAction: saveFormdata,
+        loading: saveBtnLoader,
+      }}
     >
       <Banner status="info">
         <p>
@@ -327,7 +332,7 @@ const FinalInventoryTemplate = (props) => {
           <Layout.AnnotatedSection
             id="templateName"
             title="Template name"
-            description="Enter a unique name"
+            description="Set unique name to identify in profile section."
           >
             <Card sectioned>
               <TextField
@@ -337,7 +342,11 @@ const FinalInventoryTemplate = (props) => {
               />
             </Card>
           </Layout.AnnotatedSection>
-          <Layout.AnnotatedSection id="customise" title="Customise Inventory">
+          <Layout.AnnotatedSection
+            id="customise"
+            title="Customise Inventory"
+            description="Customise product inventory while create listing on eBay. you can set fixed inventory or reserve shopify inventory before sending inventory details on eBay. i.e. Fixed inventory value will ignore the shopify inventory and Reserve inventory value will reduse shopify inventory before sending to eBay."
+          >
             <Card sectioned>
               <FormLayout>
                 <Select
@@ -357,10 +366,11 @@ const FinalInventoryTemplate = (props) => {
             title="Threshold Inventory"
             description={
               <>
-                Set a minimum quantity that you want to keep reserved for your
-                Shopify store, as soon as product inventory reaches the set
-                minimum value, it will be shown as{" "}
-                <b>{`“out of stock” on eBay`}</b>.
+                Set a minimum inventory that you want to keep for your Shopify
+                products, as soon as shopify product inventory reaches the
+                threshold value, product will be shown as{" "}
+                <b>{`“out of stock”`}</b> on eBay. Customise Inventory will not
+                applied on threshold inventory.
               </>
             }
           >
@@ -398,10 +408,7 @@ const FinalInventoryTemplate = (props) => {
             id="deleteOutOfStockProducts"
             title="Delete Out of Stock Products"
             description={
-              <>
-                {/* Enabling the option will <b>{"END"}</b> the products from eBay
-                once out of stock in Shopify. */}
-              </>
+              "Enable to END a product listing on eBay once it goes out of stock on Shopify."
             }
           >
             <Card sectioned>
