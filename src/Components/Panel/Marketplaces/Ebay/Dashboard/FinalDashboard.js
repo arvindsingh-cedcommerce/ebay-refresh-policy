@@ -1059,7 +1059,16 @@ const FinalDashboard = (props) => {
                 // title="Acive Accounts"
                 title={
                   <Tooltip content="Number of active accounts connected on app">
-                    <TextStyle variation="strong">Active Account(s)</TextStyle>
+                    <TextStyle variation="strong">
+                      <span
+                        style={{
+                          borderBottomStyle: "dashed",
+                          borderColor: "#00000069",
+                        }}
+                      >
+                        Active Account(s)
+                      </span>
+                    </TextStyle>
                   </Tooltip>
                 }
                 bordered={false}
@@ -1110,7 +1119,16 @@ const FinalDashboard = (props) => {
                 // title="Product Credits Remaining"
                 title={
                   <Tooltip content="Number of products can list on eBay from app">
-                    <TextStyle variation="strong">Product Credits</TextStyle>
+                    <TextStyle variation="strong">
+                      <span
+                        style={{
+                          borderBottomStyle: "dashed",
+                          borderColor: "#00000069",
+                        }}
+                      >
+                        Product Credits
+                      </span>
+                    </TextStyle>
                   </Tooltip>
                 }
                 sectioned={dashboardSkeleton ? true : false}
@@ -1159,7 +1177,16 @@ const FinalDashboard = (props) => {
                 // title="Order Credits Remaining"
                 title={
                   <Tooltip content="Number of orders can create on Shopify">
-                    <TextStyle variation="strong">Order Credits</TextStyle>
+                    <TextStyle variation="strong">
+                      <span
+                        style={{
+                          borderBottomStyle: "dashed",
+                          borderColor: "#00000069",
+                        }}
+                      >
+                        Order Credits
+                      </span>
+                    </TextStyle>
                   </Tooltip>
                 }
                 sectioned={dashboardSkeleton ? true : false}
@@ -1235,7 +1262,16 @@ const FinalDashboard = (props) => {
                 // title="Product Analytics"
                 title={
                   <Tooltip content="Check eBay product status with account specification">
-                    <TextStyle variation="strong">Product Analytics</TextStyle>
+                    <TextStyle variation="strong">
+                      <span
+                        style={{
+                          borderBottomStyle: "dashed",
+                          borderColor: "#00000069",
+                        }}
+                      >
+                        Product Analytics
+                      </span>
+                    </TextStyle>
                   </Tooltip>
                 }
                 style={{ borderRadius: "8px" }}
@@ -1297,7 +1333,16 @@ const FinalDashboard = (props) => {
                 // title="Order Analytics"
                 title={
                   <Tooltip content="Check shopify order status with account specification">
-                    <TextStyle variation="strong">Order Analytics</TextStyle>
+                    <TextStyle variation="strong">
+                      <span
+                        style={{
+                          borderBottomStyle: "dashed",
+                          borderColor: "#00000069",
+                        }}
+                      >
+                        Order Analytics
+                      </span>
+                    </TextStyle>
                   </Tooltip>
                 }
                 style={{ borderRadius: "8px" }}
@@ -1394,7 +1439,16 @@ const FinalDashboard = (props) => {
                 // title="Lifetime Revenue"
                 title={
                   <Tooltip content="Total amount of orders created on Shopify">
-                    <TextStyle variation="strong">Lifetime Revenue</TextStyle>
+                    <TextStyle variation="strong">
+                      <span
+                        style={{
+                          borderBottomStyle: "dashed",
+                          borderColor: "#00000069",
+                        }}
+                      >
+                        Lifetime Revenue
+                      </span>
+                    </TextStyle>
                   </Tooltip>
                 }
                 sectioned={dashboardSkeleton ? true : false}

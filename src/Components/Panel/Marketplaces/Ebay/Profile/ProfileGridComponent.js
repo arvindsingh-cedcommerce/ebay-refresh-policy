@@ -585,7 +585,16 @@ const ProfileGridComponent = (props) => {
           content="To create listings on eBay, profile is mandatory"
           preferredPosition="above"
         >
-          <TextStyle variation="strong">Profiles</TextStyle>
+          <TextStyle variation="strong">
+            <span
+              style={{
+                borderBottomStyle: "dashed",
+                borderColor: "#00000069",
+              }}
+            >
+              Profiles
+            </span>
+          </TextStyle>
         </Tooltip>
       }
       ghost={true}

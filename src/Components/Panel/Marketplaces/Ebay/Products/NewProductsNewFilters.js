@@ -1120,7 +1120,16 @@ function NewProductsNewFilters(props) {
           preferredPosition="above"
           content="Manage your shopify products"
         >
-          <TextStyle variation="strong"> Products</TextStyle>
+          <TextStyle variation="strong">
+            <span
+              style={{
+                borderBottomStyle: "dashed",
+                borderColor: "#00000069",
+              }}
+            >
+              Products
+            </span>
+          </TextStyle>
         </Tooltip>
       }
       ghost={true}

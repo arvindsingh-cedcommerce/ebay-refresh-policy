@@ -359,9 +359,19 @@ const CreateProfilePolaris = (props) => {
             className="site-page-header-responsive"
             title={id === "" ? 
             <Tooltip content="Every product must associated with one profile. profile provides feature to set variation conditions on group of products" preferredPosition='above'>
-        <TextStyle variation="strong">Create profile</TextStyle>
+        <TextStyle variation="strong"><span
+                                    style={{
+                                      borderBottomStyle: "dashed",
+                                      borderColor: "#00000069",
+                                    }}
+                                  >Create profile</span></TextStyle>
       </Tooltip> : <Tooltip content="Every product must associated with one profile. Profile provides feature to set variation conditions on group of products" preferredPosition='above'>
-        <TextStyle variation="strong">View profile</TextStyle>
+        <TextStyle variation="strong"><span
+                                    style={{
+                                      borderBottomStyle: "dashed",
+                                      borderColor: "#00000069",
+                                    }}
+                                  >View profile</span></TextStyle>
       </Tooltip>}
             ghost={true}
             onBack={() => props.history.push("/panel/ebay/profilesUS")}

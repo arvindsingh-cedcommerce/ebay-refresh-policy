@@ -51,7 +51,7 @@ const DescriptionComponent = ({
       <Layout.AnnotatedSection
         id="description"
         title="Description"
-        description="View the product description assigned to your product on Shopify. You can customize the product description based on your preference by clicking on the checkbox."
+        description="View the product description assigned to your product on Shopify. You can customize the product description based on your preference by clicking on the set custom checkbox."
       >
         <Card sectioned>
           <FormLayout>

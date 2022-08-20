@@ -1283,7 +1283,14 @@ export const FinalRegistrationItemLocation = (props) => {
                                 content="Indicates the geographical location of the item on eBay"
                               >
                                 <TextStyle variation="strong">
-                                  Item Location
+                                  <span
+                                    style={{
+                                      borderBottomStyle: "dashed",
+                                      borderColor: "#00000069",
+                                    }}
+                                  >
+                                    Item Location
+                                  </span>
                                 </TextStyle>
                               </Tooltip>
                             }
@@ -1408,7 +1415,14 @@ export const FinalRegistrationItemLocation = (props) => {
                             content="Import Shopify products on the bases of available filter(s) or Shopify Collection"
                           >
                             <TextStyle variation="strong">
-                              Import Shopify Products
+                              <span
+                                style={{
+                                  borderBottomStyle: "dashed",
+                                  borderColor: "#00000069",
+                                }}
+                              >
+                                Import Shopify Products
+                              </span>
                             </TextStyle>
                           </Tooltip>
                           {/* <b>Import Shopify Products</b> */}
@@ -1427,7 +1441,16 @@ export const FinalRegistrationItemLocation = (props) => {
                                     preferredPosition="mostSpace"
                                     content="All selected filters will apply for importing process"
                                   >
-                                    <TextStyle>Import By Filter(s)</TextStyle>
+                                    <TextStyle>
+                                      <span
+                                        style={{
+                                          borderBottomStyle: "dashed",
+                                          borderColor: "#00000069",
+                                        }}
+                                      >
+                                        Import By Filter(s)
+                                      </span>
+                                    </TextStyle>
                                   </Tooltip>
                                 ),
                                 value: "Import By Filter(s)",
@@ -1672,7 +1695,14 @@ export const FinalRegistrationItemLocation = (props) => {
                                 content="Do you want to sync eBay orders on Shopify store?"
                               >
                                 <TextStyle variation="strong">
-                                  Manage eBay orders?
+                                  <span
+                                    style={{
+                                      borderBottomStyle: "dashed",
+                                      borderColor: "#00000069",
+                                    }}
+                                  >
+                                    Manage eBay orders?
+                                  </span>
                                 </TextStyle>
                               </Tooltip>
                             }
