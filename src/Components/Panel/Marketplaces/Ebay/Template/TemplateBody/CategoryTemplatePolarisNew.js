@@ -67,7 +67,7 @@ const CategoryTemplatePolarisNew = (props) => {
 
   // form data
   const deselectedOptions = [];
-  const [loaderOverlayActive, setLoaderOverlayActive] = useState(false);
+  const [loaderOverlayActive, setLoaderOverlayActive] = useState(true);
   const [
     primaryCategorySearchPredictionOptions,
     setPrimaryCategorySearchPredictionOptions,
@@ -360,18 +360,19 @@ const CategoryTemplatePolarisNew = (props) => {
     });
     return structurePrepared;
   };
-  useEffect(() => {
-    if (enableSecondaryCategory) {
-      getCategory(
-        { level: 1 },
-        secondaryCategoryMapping,
-        setSecondaryCategoryMapping,
-        "secondaryCategory"
-      );
-    } else {
-      setSecondaryCategoryMapping([]);
-    }
-  }, [enableSecondaryCategory]);
+  // useEffect(() => {
+  //   console.log("367");
+  //   if (enableSecondaryCategory) {
+  //     getCategory(
+  //       { level: 1 },
+  //       secondaryCategoryMapping,
+  //       setSecondaryCategoryMapping,
+  //       "secondaryCategory"
+  //     );
+  //   } else {
+  //     setSecondaryCategoryMapping([]);
+  //   }
+  // }, [enableSecondaryCategory]);
 
   const addOptionalAttribute = (categoryType) => {
     let temp = { ...optionalAttributesMapping };
@@ -864,6 +865,8 @@ const CategoryTemplatePolarisNew = (props) => {
       }
       if (data?.data) {
         extractDataFromSavedTemplate(data?.data, temp);
+      } else {
+        setLoaderOverlayActive(false);
       }
       setShopifyAttributes(temp);
     }
@@ -980,6 +983,7 @@ const CategoryTemplatePolarisNew = (props) => {
           console.log(err);
         });
     }
+    await setLoaderOverlayActive(false);
   };
   const populateRequiredAttributeMapping = async (
     attributeData,
@@ -1104,13 +1108,14 @@ const CategoryTemplatePolarisNew = (props) => {
       "secondary"
     );
   };
-  useEffect(() => {
-    if (configurableAttributes.length) {
-      if (configurableAttributesRecieved) {
-        getTemplate();
-      }
-    }
-  }, [configurableAttributesRecieved]);
+  // useEffect(() => {
+  //   console.log("1112");
+  //   if (configurableAttributes.length) {
+  //     if (configurableAttributesRecieved) {
+  //       getTemplate();
+  //     }
+  //   }
+  // }, [configurableAttributesRecieved]);
   const getTemplate = async () => {
     if (id) {
       let { success, data, message, code } = await getTemplatebyId(id);
@@ -1171,15 +1176,30 @@ const CategoryTemplatePolarisNew = (props) => {
     // }
   };
 
+  const callAPIs = async () => {
+    await getTemplate();
+    await getConfigurableAttributes();
+    await getAllConnectedAccounts();
+  };
   useEffect(() => {
+    console.log("1185");
     setsiteIDSelection(siteID);
     setshopIDSelection(shopID);
     // getTemplate();
-    getTemplate();
-    getConfigurableAttributes();
-    getAllConnectedAccounts();
+    callAPIs();
+    // getTemplate();
+    // getConfigurableAttributes();
+    // getAllConnectedAccounts();
     // getStorefrontcategory();
   }, []);
+  useEffect(() => {
+    console.log("1196");
+    if (configurableAttributes.length) {
+      if (configurableAttributesRecieved) {
+        getTemplate();
+      }
+    }
+  }, [configurableAttributesRecieved]);
 
   const getWholeNamePrimaryCategoryMapping = () => {
     let categoryMappingName = "";
@@ -1292,11 +1312,13 @@ const CategoryTemplatePolarisNew = (props) => {
     }
   };
   useEffect(() => {
+    console.log("1307");
     if (primaryCategorySearchPredictionOptions.length) {
       setLoaderOverlayActive(false);
     }
   }, [primaryCategorySearchPredictionOptions]);
   useEffect(() => {
+    console.log("1313");
     if (secondaryCategorySearchPredictionOptions.length) {
       setLoaderOverlayActive(false);
     }
@@ -1335,6 +1357,7 @@ const CategoryTemplatePolarisNew = (props) => {
     []
   );
   useEffect(() => {
+    console.log("1352");
     if (inputValue !== "") {
       verify(inputValue);
     }
@@ -1374,10 +1397,24 @@ const CategoryTemplatePolarisNew = (props) => {
     []
   );
   useEffect(() => {
+    console.log("1392");
     if (secondaryInputValue !== "") {
       verifySecondary(secondaryInputValue);
     }
   }, [secondaryInputValue]);
+  useEffect(() => {
+    console.log("1398");
+    if (enableSecondaryCategory) {
+      getCategory(
+        { level: 1 },
+        secondaryCategoryMapping,
+        setSecondaryCategoryMapping,
+        "secondaryCategory"
+      );
+    } else {
+      setSecondaryCategoryMapping([]);
+    }
+  }, [enableSecondaryCategory]);
   const hitAttributeMappingAfterPrediction = async (lastLevelValue) => {
     setAttributesLoader(true);
     let dataCategoryFeatures = await getcategoryFeatures({

@@ -47,6 +47,7 @@ const CreateProfilePolaris = (props) => {
 
   // loaders
   const [profileSaveBtnLoader, setProfileSaveBtnLoader] = useState(false);
+  const [profileDataSkeleton, setProfileDataSkeleton] = useState(true);
 
   const dumpTemplatePolicyWarehouse = (extractedAccount) => {
     let test = {};
@@ -375,6 +376,7 @@ const CreateProfilePolaris = (props) => {
         setPrepareQuery(prepareQuery);
       }
     }
+    setProfileDataSkeleton(false);
   };
 
   // const getTabContent = () => {
@@ -461,6 +463,7 @@ const CreateProfilePolaris = (props) => {
         setCheckboxError={setCheckboxError}
         profileNameError={profileNameError}
         setProfileNameError={setProfileNameError}
+        profileDataSkeleton={profileDataSkeleton}
       />
       <br />
       {/* <FilterProductsTab propsPassed={props} prepareQuery={prepareQuery} setMinProductFlag={setMinProductFlag}
@@ -474,6 +477,7 @@ const CreateProfilePolaris = (props) => {
           setMinProductFlag={setMinProductFlag}
           setPrepareQuery={setPrepareQuery}
           savedQuery={prepareQuery}
+          profileDataSkeleton={profileDataSkeleton}
         />
       )}
     </PageHeader>

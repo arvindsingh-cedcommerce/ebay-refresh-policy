@@ -6,7 +6,10 @@ import {
   Icon,
   Layout,
   Select,
+  SkeletonBodyText,
+  SkeletonDisplayText,
   Stack,
+  TextContainer,
   TextField,
 } from "@shopify/polaris";
 import { CancelSmallMinor, MarketingMajorFilled } from "@shopify/polaris-icons";
@@ -60,6 +63,7 @@ const NewFilterProductsTab = ({
   setMinProductFlag,
   setPrepareQuery,
   savedQuery,
+  profileDataSkeleton,
 }) => {
   const [filtersArrayGroup, setFiltersArrayGroup] = useState([
     [{ attribute: "", condition: "", value: "" }],
@@ -621,7 +625,32 @@ const NewFilterProductsTab = ({
     setSentenceQuery(resStr);
   };
 
-  return (
+  return profileDataSkeleton ? (
+    <Card sectioned>
+      <Layout>
+        <Layout.AnnotatedSection
+          description={
+            <TextContainer>
+              <SkeletonDisplayText size="small" />
+              <SkeletonBodyText lines={3} />
+            </TextContainer>
+          }
+        >
+          <Card>
+            <Card.Section>
+              <TextContainer>
+                <SkeletonDisplayText size="small" />
+                <SkeletonBodyText lines={4} />
+              </TextContainer>
+            </Card.Section>
+            <Card.Section>
+              <SkeletonBodyText lines={3} />
+            </Card.Section>
+          </Card>
+        </Layout.AnnotatedSection>
+      </Layout>
+    </Card>
+  ) : (
     <Card sectioned>
       <Layout>
         <Layout.AnnotatedSection
