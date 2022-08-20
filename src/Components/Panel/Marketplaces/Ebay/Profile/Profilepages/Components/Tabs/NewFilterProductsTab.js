@@ -119,16 +119,16 @@ const NewFilterProductsTab = ({
     //   onCell: () => {},
     //   width: 250,
     // },
-    // {
-    //   title: <center>Inventory</center>,
-    //   dataIndex: "variantsCount",
-    //   key: "variantsCount",
-    //   className: "show",
-    //   label: "Variant Count",
-    //   value: "Variant Count",
-    //   checked: true,
-    //   editable: true,
-    // },
+    {
+      title: <center>Inventory</center>,
+      dataIndex: "variantsCount",
+      key: "variantsCount",
+      className: "show",
+      label: "Variant Count",
+      value: "Variant Count",
+      checked: true,
+      editable: true,
+    },
     {
       title: <center>Profile</center>,
       dataIndex: "profile",
@@ -432,6 +432,7 @@ const NewFilterProductsTab = ({
           profile_name,
           source_product_id,
           edited,
+          quantity,
         } = row;
         let tempObject = {};
         tempObject["source_product_id"] = source_product_id;
@@ -446,7 +447,12 @@ const NewFilterProductsTab = ({
           </center>
         );
         tempObject["title"] = (
-          <Stack spacing="extraTight" wrap={true} vertical={false}>
+          <Stack
+            distribution="center"
+            spacing="extraTight"
+            wrap={true}
+            vertical={false}
+          >
             <Text strong title={title}>
               {trimTitle(title)}
             </Text>
@@ -484,11 +490,11 @@ const NewFilterProductsTab = ({
         //     </Text>
         //   </center>
         // );
-        // tempObject["variantsCount"] = (
-        //   <center>
-        //     <Text>{getVariantsCountDetails(variants, variant_attributes)}</Text>
-        //   </center>
-        // );
+        tempObject["variantsCount"] = (
+          <center>
+            <Text>{quantity}</Text>
+          </center>
+        );
         tempObject["variantsData"] = variants;
         tempObject["container_id"] = container_id;
         return tempObject;
