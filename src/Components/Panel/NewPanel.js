@@ -449,6 +449,10 @@ const NewPanel = (props) => {
                 >
                   eBay Accounts
                 </Menu.Item>
+                <Menu.Item
+                  style={{ margin: "0px", pointerEvents: "none" }}
+                  key="forSider"
+                ></Menu.Item>
               </Menu>
             </Sider>
           </Drawer>
@@ -630,6 +634,10 @@ const NewPanel = (props) => {
               >
                 eBay Accounts
               </Menu.Item>
+              <Menu.Item
+                style={{ margin: "0px", pointerEvents: "none" }}
+                key="forSider"
+              ></Menu.Item>
             </Menu>
           </Sider>
         )}
