@@ -8,18 +8,18 @@ const TemplateComponent = () => {
   return (
     <Switch>
       <Route
-        path="/panel/ebay/templatesUS/grid"
+        path="/panel/ebay/templates/grid"
         // component={TemplateGridComponent}
         component={FinalTemplateGridComponent}
       />
       <Route
-        path="/panel/ebay/templatesUS/handler"
+        path="/panel/ebay/templates/handler"
         component={TemplateHandlerComponent}
       />
       <Route
         exact
-        path="/panel/ebay/templatesUS"
-        render={() => <Redirect to="/panel/ebay/templatesUS/grid" />}
+        path="/panel/ebay/templates"
+        render={() => <Redirect to="/panel/ebay/templates/grid" />}
       />
     </Switch>
   );

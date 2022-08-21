@@ -40,7 +40,7 @@ class TemplateHandlerComponent extends Component {
     );
     if (type) {
       this.setState({ type, id, siteID, shopID });
-    } else this.redirect("/panel/ebay/templatesUS/grid");
+    } else this.redirect("/panel/ebay/templates/grid");
   }
 
   redirect(url) {
@@ -155,7 +155,7 @@ class TemplateHandlerComponent extends Component {
         breadcrumbs={[
           {
             content: "Templates",
-            onAction: this.redirect.bind(this, "/panel/ebay/templatesUS/grid"),
+            onAction: this.redirect.bind(this, "/panel/ebay/templates/grid"),
           },
         ]}
         title={title}

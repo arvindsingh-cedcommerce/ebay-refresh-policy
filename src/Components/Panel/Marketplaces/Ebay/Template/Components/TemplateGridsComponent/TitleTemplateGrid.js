@@ -59,7 +59,7 @@ const getFitersInitially = () => {
 };
 
 const TitleTemplateGrid = (props) => {
-  const {cbFuncTitle} = props
+  const { cbFuncTitle } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
     siteID: "",
@@ -138,14 +138,16 @@ const TitleTemplateGrid = (props) => {
       activePage: activePage,
       ...filtersToPass,
     };
-    if(Object.keys(filtersToPass).length) {
-      postData['activePage'] = 1
+    if (Object.keys(filtersToPass).length) {
+      postData["activePage"] = 1;
     }
     const {
       success,
       data: fetchedTemplatesArray,
       message,
-    } = await getTemplates(getTemplatesURL, postData
+    } = await getTemplates(
+      getTemplatesURL,
+      postData
       // {
       // // marketplace: "ebay",
       // // multitype: ["title"],
@@ -191,7 +193,7 @@ const TitleTemplateGrid = (props) => {
                   onClick={() => {
                     if (template["type"] === "category") {
                       props.history.push(
-                        `/panel/ebay/templatesUS/handler?type=${template[
+                        `/panel/ebay/templates/handler?type=${template[
                           "type"
                         ].toLowerCase()}&id=${template["_id"]}&siteID=${
                           template["data"]?.site_id
@@ -200,7 +202,7 @@ const TitleTemplateGrid = (props) => {
                     } else {
                       if (template["_id"]) {
                         props.history.push(
-                          `/panel/ebay/templatesUS/handler?type=${capitalizeFirstLetterofWords(
+                          `/panel/ebay/templates/handler?type=${capitalizeFirstLetterofWords(
                             template["type"]
                           ).toLowerCase()}&id=${template["_id"]}`
                         );

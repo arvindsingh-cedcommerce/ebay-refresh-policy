@@ -79,7 +79,7 @@ const PolicyGridComponent = (props) => {
                   let { policyType, policyId, policySiteId, policyShopId } =
                     record;
                   props.history.push(
-                    `/panel/ebay/policyUS/handler?type=${policyType}&id=${policyId}&site_id=${policySiteId}&shop_id=${policyShopId}`
+                    `/panel/ebay/policy/handler?type=${policyType}&id=${policyId}&site_id=${policySiteId}&shop_id=${policyShopId}`
                   );
                 }}
               />
@@ -269,7 +269,7 @@ const PolicyGridComponent = (props) => {
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     props.history.push(
-                      `/panel/ebay/policyUS/handler?type=${capitalizeFirstLetterofWords(
+                      `/panel/ebay/policy/handler?type=${capitalizeFirstLetterofWords(
                         policy["type"]
                       )}&id=${data[type]}&site_id=${siteID}&shop_id=${
                         policy["shop_id"]
@@ -368,7 +368,7 @@ const PolicyGridComponent = (props) => {
           placeholder={<Text strong>Add Policy</Text>}
           onChange={(selectedPolicyValue) => {
             props.history.push(
-              `/panel/ebay/policyUS/handler?type=${selectedPolicyValue}&site_id=${siteID}&shop_id=${shopId}`
+              `/panel/ebay/policy/handler?type=${selectedPolicyValue}&site_id=${siteID}&shop_id=${shopId}`
             );
           }}
         >

@@ -336,7 +336,7 @@ const DisabledProducts = (props) => {
                   strong
                   onClick={(e) => {
                     return props.history.push(
-                      `/panel/ebay/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
+                      `/panel/ebay/disabledproducts/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
                     );
                   }}
                   style={{ cursor: "pointer" }}

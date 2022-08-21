@@ -259,7 +259,7 @@ const ReturnPolicyGrid = (props) => {
                       style={{ cursor: "pointer" }}
                       onClick={() => {
                         props.history.push(
-                          `/panel/ebay/policyUS/handler?type=${policyType}&id=${data[type]}&site_id=${policy["site_id"]}&shop_id=${policy["shop_id"]}`
+                          `/panel/ebay/policy/handler?type=${policyType}&id=${data[type]}&site_id=${policy["site_id"]}&shop_id=${policy["shop_id"]}`
                         );
                       }}
                     >

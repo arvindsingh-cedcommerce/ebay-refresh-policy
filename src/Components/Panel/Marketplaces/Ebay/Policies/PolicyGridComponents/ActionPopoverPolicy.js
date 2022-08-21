@@ -30,7 +30,7 @@ const ActionPopoverPolicy = ({
           onClick={() => {
             let { policyType, policyId, policySiteId, policyShopId } = record;
             props.history.push(
-              `/panel/ebay/policyUS/handler?type=${policyType}&id=${policyId}&site_id=${policySiteId}&shop_id=${policyShopId}`
+              `/panel/ebay/policy/handler?type=${policyType}&id=${policyId}&site_id=${policySiteId}&shop_id=${policyShopId}`
             );
           }}
         >

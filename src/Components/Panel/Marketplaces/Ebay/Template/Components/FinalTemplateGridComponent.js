@@ -300,7 +300,7 @@ const FinalTemplateGridComponent = (props) => {
               if (connectedAccountsArray.length === 1) {
                 const { siteID, shopID } = connectedAccountsArray[0];
                 props.history.push(
-                  `/panel/ebay/templatesUS/handler?type=category&siteID=${siteID}&shopID=${shopID}`
+                  `/panel/ebay/templates/handler?type=category&siteID=${siteID}&shopID=${shopID}`
                 );
               } else {
                 setaccountSelectionModal({
@@ -310,7 +310,7 @@ const FinalTemplateGridComponent = (props) => {
               }
             } else {
               props.history.push(
-                `/panel/ebay/templatesUS/handler?type=${selectedTemplateValue}`
+                `/panel/ebay/templates/handler?type=${selectedTemplateValue}`
               );
             }
           }}
@@ -344,7 +344,7 @@ const FinalTemplateGridComponent = (props) => {
             !accountSelectionModal.siteID && !accountSelectionModal.shopID,
           onAction: () => {
             props.history.push(
-              `/panel/ebay/templatesUS/handler?type=category&siteID=${accountSelectionModal.siteID}&shopID=${accountSelectionModal.shopID}`
+              `/panel/ebay/templates/handler?type=category&siteID=${accountSelectionModal.siteID}&shopID=${accountSelectionModal.shopID}`
             );
           },
         }}

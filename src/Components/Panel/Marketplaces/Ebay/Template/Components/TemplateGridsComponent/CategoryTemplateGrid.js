@@ -196,7 +196,7 @@ const CategoryTemplateGrid = (props) => {
                     if (template["type"] === "category") {
                       if (template["_id"]) {
                         props.history.push(
-                          `/panel/ebay/templatesUS/handler?type=${template[
+                          `/panel/ebay/templates/handler?type=${template[
                             "type"
                           ].toLowerCase()}&id=${template["_id"]}&siteID=${
                             template["data"]?.site_id
@@ -205,7 +205,7 @@ const CategoryTemplateGrid = (props) => {
                       }
                     } else {
                       props.history.push(
-                        `/panel/ebay/templatesUS/handler?type=${capitalizeFirstLetterofWords(
+                        `/panel/ebay/templates/handler?type=${capitalizeFirstLetterofWords(
                           template["type"]
                         ).toLowerCase()}&id=${template["_id"]}`
                       );

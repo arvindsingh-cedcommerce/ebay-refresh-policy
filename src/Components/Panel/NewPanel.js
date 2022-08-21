@@ -102,6 +102,10 @@ import { allNotificationsURL } from "../../URLs/ActivitiesURL";
 import FinalDashboard from "./Marketplaces/Ebay/Dashboard/FinalDashboard";
 import { notify } from "../../services/notify";
 import { getConnectedAccounts } from "../../Apirequest/accountsApi";
+import ProfileComponent from "./Marketplaces/Ebay/Profile/ProfileComponent";
+import PolicyComponent from "./Marketplaces/Ebay/Policies/PolicyComponent";
+import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsComponent";
+import DisbaledProductsWrapper from "./Marketplaces/Ebay/Products/DisbaledProductsWrapper";
 // import DashboardPolaris2 from "./Marketplaces/Ebay/Dashboard/DashboardPolaris2";
 
 const { Text } = Typography;
@@ -146,7 +150,6 @@ const NewPanel = (props) => {
       });
     }
     setQueuedTasks(queuedTasks);
-    // setQueuedTasks(dummyTasksData);
   };
 
   const getSeverityIcon = (severity) => {
@@ -174,28 +177,11 @@ const NewPanel = (props) => {
       let temp = rows.map((row) => {
         let testObj = {};
         if (row.hasOwnProperty("message") && row["message"] !== null) {
-          // testObj["message"] =
-          //   typeof row["message"] === "object"
-          //     ? row["message"]["message"]
-          //     : row["message"];
-          // testObj["createdAt"] = row["created_at"];
-          // testObj["severity"] = row["severity"];
-          // testObj["url"] = row?.["url"];
           testObj["content"] = (
             <Stack alignment="center" spacing="extraTight" wrap={false}>
               <>{getSeverityIcon(row["severity"])}</>
               <>{row["message"]}</>
-              {/* <Tooltip content={"Download Report"}>
-                <div style={{ cursor: "pointer", fontSize: "0.25rem" }}>
-                  <Link url={activity["url"]} external>
-                    <Icon source={ImportMinor} color={"blueDark"} />
-                  </Link>
-                </div>
-              </Tooltip> */}
             </Stack>
-            // <Banner title={row["message"]} status={row["severity"]}>
-            //   <p>{row["created_at"]}.</p>
-            // </Banner>
           );
         }
         return testObj;
@@ -253,21 +239,6 @@ const NewPanel = (props) => {
         setBellClicked(!bellClicked);
       }}
     />
-    // <Badge
-    //   // count={allNotifications.length}
-    //   size="small"
-    //   // style={{ cursor: "pointer" }}
-    // onClick={(e) => {
-    //   setBellClicked(!bellClicked);
-    // }}
-    // >
-    //   {/* <Icon source={NotificationMajorMonotone} color="base" /> */}
-    //   {/* <Avatar
-    //     style={{ backgroundColor: "rgb(117 152 205)" }}
-    //     size="small"
-    //     icon={<BellOutlined />}
-    //   /> */}
-    // {/* </Badge> */}
   );
   return (
     <div>
@@ -341,55 +312,27 @@ const NewPanel = (props) => {
                   >
                     Manage Products
                   </Menu.Item>
-                  {/* <Menu.Item
-                style={{ margin: "0px" }}
-                key="productsPS"
-                icon={<UploadOutlined style={{ fontSize: "16px" }} />}
-              >
-                 Products PS
-              </Menu.Item> */}
                   <Menu.Item
                     style={{ margin: "0px" }}
-                    key="profilesUS"
+                    key="profiles"
                     icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
                   >
                     Profiles
                   </Menu.Item>
-                  {/* <Menu.Item
-                style={{ margin: "0px" }}
-                key="profiles"
-                icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
-              >
-                Profiles PS
-              </Menu.Item> */}
                   <Menu.Item
                     style={{ margin: "0px" }}
-                    key="policiesUS"
+                    key="policy"
                     icon={<FileTextOutlined style={{ fontSize: "16px" }} />}
                   >
                     Business Policy
                   </Menu.Item>
-                  {/* <Menu.Item
-                style={{ margin: "0px" }}
-                key="policies"
-                icon={<FileTextOutlined style={{ fontSize: "16px" }} />}
-              >
-                Business Policy PS
-              </Menu.Item> */}
                   <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="templatesUS"
-                    icon={<LinkOutlined style={{ fontSize: "16px" }} />}
-                  >
-                    Templates
-                  </Menu.Item>
-                  {/* <Menu.Item
                     style={{ margin: "0px" }}
                     key="templates"
                     icon={<LinkOutlined style={{ fontSize: "16px" }} />}
                   >
-                    Templates PS
-                  </Menu.Item> */}
+                    Templates
+                  </Menu.Item>
                   <Menu.Item
                     style={{ margin: "0px" }}
                     key="disabledproducts"
@@ -496,9 +439,10 @@ const NewPanel = (props) => {
             </div>
             <Menu
               mode="inline"
-              defaultSelectedKeys={["0"]}
+              defaultSelectedKeys={["dashboard"]}
               onClick={handleClick}
               theme="dark"
+              selectedKeys={[props.location.pathname.split("/")[3]]}
             >
               <Menu.Item
                 key="dashboard"
@@ -507,13 +451,6 @@ const NewPanel = (props) => {
               >
                 Dashboard
               </Menu.Item>
-              {/* <Menu.Item
-                key="dashboard2"
-                icon={<BarChartOutlined style={{ fontSize: "22px" }} />}
-                style={{ margin: "0px" }}
-              >
-                Dashboard2
-              </Menu.Item> */}
               <SubMenu
                 key="sub1"
                 icon={<TagOutlined style={{ fontSize: "22px" }} />}
@@ -526,55 +463,27 @@ const NewPanel = (props) => {
                 >
                   Manage Products
                 </Menu.Item>
-                {/* <Menu.Item
-            style={{ margin: "0px" }}
-            key="productsPS"
-            icon={<UploadOutlined style={{ fontSize: "16px" }} />}
-          >
-             Products PS
-          </Menu.Item> */}
                 <Menu.Item
                   style={{ margin: "0px" }}
-                  key="profilesUS"
+                  key="profiles"
                   icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
                 >
                   Profiles
                 </Menu.Item>
-                {/* <Menu.Item
-            style={{ margin: "0px" }}
-            key="profiles"
-            icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
-          >
-            Profiles PS
-          </Menu.Item> */}
                 <Menu.Item
                   style={{ margin: "0px" }}
-                  key="policiesUS"
+                  key="policy"
                   icon={<FileTextOutlined style={{ fontSize: "16px" }} />}
                 >
                   Business Policy
                 </Menu.Item>
-                {/* <Menu.Item
-            style={{ margin: "0px" }}
-            key="policies"
-            icon={<FileTextOutlined style={{ fontSize: "16px" }} />}
-          >
-            Business Policy PS
-          </Menu.Item> */}
                 <Menu.Item
                   style={{ margin: "0px" }}
-                  key="templatesUS"
+                  key="templates"
                   icon={<LinkOutlined style={{ fontSize: "16px" }} />}
                 >
                   Templates
                 </Menu.Item>
-                {/* <Menu.Item
-                style={{ margin: "0px" }}
-                key="templates"
-                icon={<LinkOutlined style={{ fontSize: "16px" }} />}
-              >
-                Templates PS
-              </Menu.Item> */}
                 <Menu.Item
                   style={{ margin: "0px" }}
                   key="disabledproducts"
@@ -641,19 +550,9 @@ const NewPanel = (props) => {
             </Menu>
           </Sider>
         )}
-        <Layout
-        // style={{ marginLeft: 200 }}
-        // style={
-        //   menuCollapsed ? { marginLeft: "80px" } : { marginLeft: "200px" }
-        // }
-        >
+        <Layout>
           <Header
-            // className="headerCSS"
-            // style={{width: `calc(100% / ${yourVariable})`}}
             theme={"dark"}
-            // style={
-            //   menuCollapsed ? { marginLeft: "80px" } : { marginLeft: "200px" }
-            // }
             style={
               menuCollapsed
                 ? {
@@ -768,35 +667,20 @@ const NewPanel = (props) => {
                 path="/panel"
                 render={() => <Redirect to="/panel/ebay/dashboard" />}
               />
-              {/* <Route path="/panel/ebay/dashboard1" component={Ebaydashboard} /> */}
-              {/* <Route path="/panel/ebay/dashboard" component={FinalDashboard} /> */}
               <Route
                 path="/panel/ebay/dashboard"
                 render={(props) => (
                   <FinalDashboard queuedTasks={queuedTasks} {...props} />
                 )}
               />
-              {/* <Route
-                path="/panel/ebay/dashboard"
-                component={DashboardPolaris}
-              /> */}
-              {/* <Route
-                path="/panel/ebay/dashboard2"
-                component={DashboardPolaris2}
-              /> */}
-              {/* <Route path='/panel/ebay/productsPS' component={ebayproducts}/> */}
-              {/* <Route path="/panel/ebay/products" component={NewProducts} /> */}
               <Route
                 path="/panel/ebay/products"
-                component={NewProductsNewFilters}
+                component={NewProductsComponent}
               />
-              {/* <Route path="/panel/ebay/products" component={FinalProductGrid} /> */}
               <Route
                 path="/panel/ebay/disabledproducts"
-                component={DisabledProducts}
+                component={DisbaledProductsWrapper}
               />
-              {/* <Route path='/panel/ebay/products' component={Products} /> */}
-              {/* <Route path="/panel/ebay/accounts" component={Accounts} /> */}
               <Route path="/panel/ebay/accounts" component={NewAccountGrid} />
               <Route
                 path="/panel/ebay/appaccount"
@@ -806,28 +690,8 @@ const NewPanel = (props) => {
                     {...props}
                   />
                 )}
-                // component={ShopifyAccount}
               />
-              <Route
-                path="/panel/ebay/viewproductsprev"
-                component={ProductViewPolaris}
-              />
-              <Route
-                path="/panel/ebay/viewproducts"
-                component={ProductViewPolarisNew}
-                // component={ProductViewPolarisNewBKP}
-              />
-              {/* <Route
-                path="/panel/ebay/viewproductsPS"
-                component={Ebayproductview}
-              /> */}
-              {/* <Route path="/panel/ebay/ordersPS" component={Ebayorders} /> */}
               <Route path="/panel/ebay/orders" component={OrdersComponent} />
-              {/* <Route
-                path="/panel/ebay/viewordersPS"
-                component={Ebayorderview}
-              /> */}
-              {/* <Route path="/panel/ebay/vieworders1" component={ViewOrders} /> */}
               <Route
                 path="/panel/ebay/vieworders1"
                 component={ViewOrdersPolaris}
@@ -836,77 +700,24 @@ const NewPanel = (props) => {
                 path="/panel/ebay/vieworders"
                 component={ViewOrdersPolarisNew}
               />
-              <Route path="/panel/ebay/profiles" component={Ebayprofile} />
-              <Route
-                path="/panel/ebay/profilesUS"
-                component={ProfileGridComponent}
-              />
-              <Route
-                path="/panel/ebay/createprofile1"
-                component={Createprofile}
-              />
-              {/* <Route
-                path="/panel/ebay/createprofileUS"
-                component={Createprofile}
-              /> */}
-              <Route
-                path="/panel/ebay/createprofileUS"
-                component={CreateProfilePolaris}
-              />
-              {/* <Route
-                path="/panel/ebay/policiesUS"
-                component={PolicyGridComponent}
-              /> */}
-              <Route
-                path="/panel/ebay/policiesUS"
-                component={FinalPolicyGrid}
-              />
-              <Route path="/panel/ebay/policies" component={Ebaypolicieslist} />
+              <Route path="/panel/ebay/profiles" component={ProfileComponent} />
+              <Route path="/panel/ebay/policy" component={PolicyComponent} />
               <Route path="/panel/ebay/message" component={Ebaymessage} />
               <Route
-                path="/panel/ebay/policy/handler"
-                component={EbayPolicyHandler}
-              />
-              <Route
-                path="/panel/ebay/policyUS/handler"
-                component={PolicyHandler}
-              />
-              <Route path="/panel/ebay/templates" component={Ebaytemplate} />
-              <Route
-                path="/panel/ebay/templatesUS"
+                path="/panel/ebay/templates"
                 component={TemplateComponent}
               />
-              {/* <Route path="/panel/ebay/pricing" component={Ebaypricing} /> */}
               <Route
                 path="/panel/ebay/pricing"
-                // component=
-                // {<PlansComponent plans={plansSample}/>}
-                render={() => (
-                  // <PlansComponent
-                  //   plans={plansSample}
-                  //   fromOnBoarding={false}
-                  // />
-                  <PlansComponentAnt
-                    // plans={plansSample}
-                    fromOnBoarding={false}
-                  />
-                )}
+                render={() => <PlansComponentAnt fromOnBoarding={false} />}
               />
-              {/* <Route
-                path="/panel/ebay/configurations"
-                component={Ebayconfiguration}
-              /> */}
               <Route
                 path="/panel/ebay/configurations"
                 component={Configuration}
               />
-              {/* <Route path="/panel/ebay/activity1" component={ebayactivity} /> */}
-              <Route path="/panel/ebay/activity1" component={ActivityPolaris} />
               <Route path="/panel/ebay/activity" component={ActivityGrid} />
-              <Route path="/panel/ebay/help1" component={Ebayhelp} />
               <Route path="/panel/ebay/help" component={EbayHelpComponent} />
               <Route path="/panel/ebay/contactUs" component={ContactUs} />
-              {/* <Route path="/panel/ebay/accounts" component={NewAccount} /> */}
             </Switch>
           </Content>
         </Layout>

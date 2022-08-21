@@ -194,7 +194,7 @@ const FinalInventoryTemplate = (props) => {
       if (id !== "") tempObj["_id"] = id;
       let returnedResponse = await props.recieveFormdata(tempObj);
       if (returnedResponse) {
-        redirect("/panel/ebay/templatesUS");
+        redirect("/panel/ebay/templates");
       }
       setSaveBtnLoader(false);
     } else {

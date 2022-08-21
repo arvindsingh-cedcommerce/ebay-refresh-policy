@@ -110,7 +110,7 @@ class PolicyHandler extends Component {
             this.setState({type, id, site_id, shop_id}, () => {
                 // console.log('first',type, id, site_id, shop_id);
             });
-        }else this.redirect('/panel/ebay/policiesUS');
+        }else this.redirect('/panel/ebay/policy');
     }
 
     render() {
@@ -118,15 +118,12 @@ class PolicyHandler extends Component {
         let openModal = errors_recieved_policy.length;
         let title = !id ? 'Create policy' : 'Edit policy';
         return (
-            // <Page
-            //     title={title} fullWidth={true}
-            //     breadcrumbs={[{content: 'Policies', onAction:this.redirect.bind(this,'/panel/ebay/policiesUS')}]}>
 
             <PageHeader
             className="site-page-header-responsive"
             title={!id ? 'Create policy' : 'View policy'}
             ghost={true}
-            onBack={()=>{this.redirect('/panel/ebay/policiesUS')}}
+            onBack={()=>{this.redirect('/panel/ebay/policy')}}
             >
                 {
                     this.getPolicybody(type)

@@ -183,7 +183,7 @@ const PricingTemplatePolaris = (props) => {
 
   const saveFormdata = async () => {
     if (formValidator()) {
-      setSaveBtnLoader(true)
+      setSaveBtnLoader(true);
       let tempObj = {
         title: formData.name,
         type: "price",
@@ -192,9 +192,9 @@ const PricingTemplatePolaris = (props) => {
       if (id !== "") tempObj["_id"] = id;
       let returnedResponse = await props.recieveFormdata(tempObj);
       if (returnedResponse) {
-        redirect("/panel/ebay/templatesUS");
+        redirect("/panel/ebay/templates");
       }
-      setSaveBtnLoader(false)
+      setSaveBtnLoader(false);
     } else {
       notify.error("Kindly fill all the required fields");
     }
@@ -269,7 +269,7 @@ const PricingTemplatePolaris = (props) => {
         content: "Save",
         onAction: saveFormdata,
         // loading: props.loader,
-        loading: saveBtnLoader
+        loading: saveBtnLoader,
       }}
     >
       <Banner status="info">

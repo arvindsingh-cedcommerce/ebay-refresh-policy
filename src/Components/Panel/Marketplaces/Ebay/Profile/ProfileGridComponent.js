@@ -276,7 +276,7 @@ const ProfileGridComponent = (props) => {
                   onClick={(e) => {
                     if (row["profile_id"]) {
                       return props.history.push(
-                        `/panel/ebay/createprofileUS?id=${row["profile_id"]}`
+                        `/panel/ebay/profiles/edit?id=${row["profile_id"]}`
                       );
                     }
                   }}
@@ -601,7 +601,7 @@ const ProfileGridComponent = (props) => {
       extra={[
         <ShopifyButton
           primary
-          onClick={() => props.history.push("/panel/ebay/createprofileUS")}
+          onClick={() => props.history.push("/panel/ebay/profiles/edit")}
         >
           Profile Create
         </ShopifyButton>,

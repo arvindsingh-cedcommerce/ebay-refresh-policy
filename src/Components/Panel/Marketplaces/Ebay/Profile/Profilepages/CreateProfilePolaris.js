@@ -174,7 +174,7 @@ const CreateProfilePolaris = (props) => {
       );
       if (success) {
         notify.success(message);
-        props.history.push("/panel/ebay/profilesUS");
+        props.history.push("/panel/ebay/profiles/grid");
       } else {
         // if (code && code === "duplicate_query") {
         //     this.setState({ matching_profiles }, () => {
@@ -438,7 +438,7 @@ const CreateProfilePolaris = (props) => {
         )
       }
       ghost={true}
-      onBack={() => props.history.push("/panel/ebay/profilesUS")}
+      onBack={() => props.history.push("/panel/ebay/profiles/grid")}
       extra={[
         <Button
           primary

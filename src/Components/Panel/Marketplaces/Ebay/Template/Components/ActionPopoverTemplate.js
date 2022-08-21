@@ -46,11 +46,11 @@ const ActionPopoverTemplate = ({
             let { templateId, templateType, siteID, shopID } = record;
             if (templateType === "Category") {
               props.history.push(
-                `/panel/ebay/templatesUS/handler?type=${templateType.toLowerCase()}&id=${templateId}&siteID=${siteID}&shopID=${shopID}`
+                `/panel/ebay/templates/handler?type=${templateType.toLowerCase()}&id=${templateId}&siteID=${siteID}&shopID=${shopID}`
               );
             } else {
               props.history.push(
-                `/panel/ebay/templatesUS/handler?type=${templateType.toLowerCase()}&id=${templateId}`
+                `/panel/ebay/templates/handler?type=${templateType.toLowerCase()}&id=${templateId}`
               );
             }
           }}

@@ -14,7 +14,10 @@ import {
 } from "@shopify/polaris";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { getMetafields, getTemplatebyId } from "../../../../../../Apirequest/ebayApirequest/templatesApi";
+import {
+  getMetafields,
+  getTemplatebyId,
+} from "../../../../../../Apirequest/ebayApirequest/templatesApi";
 import { ckeditor } from "../../../../../../PolarisComponents/InputGroups";
 import { notify } from "../../../../../../services/notify";
 
@@ -100,7 +103,10 @@ const TitleTemplatePolaris = (props) => {
         metaOptionsPrepared.push({ label: meta, value: meta });
       });
     }
-    defaultAttributeoptions = [...defaultAttributeoptions, ...metaOptionsPrepared];
+    defaultAttributeoptions = [
+      ...defaultAttributeoptions,
+      ...metaOptionsPrepared,
+    ];
     AttributeMapoptions = [...AttributeMapoptions, ...metaOptionsPrepared];
   };
 
@@ -172,7 +178,7 @@ const TitleTemplatePolaris = (props) => {
       if (id !== "") tempObj["_id"] = id;
       let returnedResponse = await props.recieveFormdata(tempObj);
       if (returnedResponse) {
-        redirect("/panel/ebay/templatesUS");
+        redirect("/panel/ebay/templates");
       }
       setSaveBtnLoader(false);
     } else {

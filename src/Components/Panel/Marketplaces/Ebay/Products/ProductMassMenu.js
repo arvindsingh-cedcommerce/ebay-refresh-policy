@@ -393,8 +393,8 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   if (success) {
                     notify.success(message ? message : data);
                     if (modal.content === "Disable Product") {
-                      props.history.push("disabledproducts");
-                    } else props.history.push("activity");
+                      props.history.push("/panel/ebay/disabledproducts");
+                    } else props.history.push("/panel/ebay/activity");
                   } else {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });

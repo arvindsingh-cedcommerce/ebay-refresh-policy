@@ -65,7 +65,7 @@ const ActionPopoverProfileGrid = (props) => {
           type="text"
           onClick={(e) => {
             const { id } = record;
-            props.history.push(`/panel/ebay/createprofileUS?id=${id}`);
+            props.history.push(`/panel/ebay/profiles/edit?id=${id}`);
           }}
         >
           <Stack>
