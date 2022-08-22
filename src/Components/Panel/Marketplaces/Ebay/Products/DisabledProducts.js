@@ -280,7 +280,7 @@ const DisabledProducts = (props) => {
       // await getProductsCount(getProductsCountURL, postData);
       await getProductsCount(getProductsCountURL, {
         productOnly: true,
-        status: 'disabled',
+        status: "disabled",
         // ...filtersToPass
         ...filtersToPass,
       });
@@ -935,7 +935,7 @@ const DisabledProducts = (props) => {
                   );
                   if (success) {
                     notify.success(message ? message : data);
-                    props.history.push("products");
+                    props.history.push("/panel/ebay/products");
                   } else {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });
