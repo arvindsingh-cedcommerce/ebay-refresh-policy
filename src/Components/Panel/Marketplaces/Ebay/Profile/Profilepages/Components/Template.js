@@ -14,49 +14,42 @@ const Template = ({
   };
   const getOptions = (templateOption) => {
     if (templateOption === "category_template") {
-      let templateOptions100 = templateOptions[
-        templateOption
-      ].filter((template) => template["account"] === account);
+      let templateOptions100 = templateOptions[templateOption].filter(
+        (template) => template["account"] === account
+      );
       templateOptions100.unshift({
         label: "Please Select",
         value: "",
       });
-      return templateOptions100
+      return templateOptions100;
     }
-  }
+  };
   return (
     <Stack distribution="fill">
       <FormLayout>
-      {Object.keys(templateOptions).map((templateOption, index) => {
-        
-        return (
-          <Layout>
-          <Layout.AnnotatedSection
-            title={templateOption?.split("_")?.join(" ")?.toUpperCase()}
-          >
-          <Select
-            key={index}
-            options={
-              // templateOption !== "category_template"
-              //     ? templateOptions[templateOption]
-              //     : templateOptions[templateOption].filter(
-              //         (template) => template["account"] === account
-              //     )
-              // templateOptions100
-              
-              templateOption !== "category_template"
-                  ? templateOptions[templateOption] :
-              getOptions(templateOption)
-            }
-            onChange={(e) => handleChange(e, templateOption)}
-            // placeholder="Please Select..."
-            value={connectedAccountsObject[account][templateOption]}
-            error={connectedAccountsObject[account]['errors'][templateOption]}
-          />
-          </Layout.AnnotatedSection>
-          </Layout>
-        );
-      })}
+        {Object.keys(templateOptions).map((templateOption, index) => {
+          return (
+            <Layout>
+              <Layout.AnnotatedSection
+                title={templateOption?.split("_")?.join(" ")?.toUpperCase()}
+              >
+                <Select
+                  key={index}
+                  options={
+                    templateOption !== "category_template"
+                      ? templateOptions[templateOption]
+                      : getOptions(templateOption)
+                  }
+                  onChange={(e) => handleChange(e, templateOption)}
+                  value={connectedAccountsObject[account][templateOption]}
+                  error={
+                    connectedAccountsObject[account]["errors"][templateOption]
+                  }
+                />
+              </Layout.AnnotatedSection>
+            </Layout>
+          );
+        })}
       </FormLayout>
     </Stack>
   );

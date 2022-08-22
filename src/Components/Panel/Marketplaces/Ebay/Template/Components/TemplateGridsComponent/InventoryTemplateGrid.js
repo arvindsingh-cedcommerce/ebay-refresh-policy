@@ -13,7 +13,6 @@ import { getTemplatesURL } from "../../../../../../../URLs/TemplateURLS";
 import NestedTableComponent from "../../../../../../AntDesignComponents/NestedTableComponent";
 import PaginationComponent from "../../../../../../AntDesignComponents/PaginationComponent";
 import { getCountryName } from "../../../../../Accounts/NewAccount";
-import ActionPopover from "../../../Products/ActionPopover";
 import NewFilterComponentSimilarPolaris from "../../../Products/NewFilterComponentSimilarPolaris";
 import {
   numberOperatorOptions,
@@ -162,14 +161,6 @@ const InventoryTemplateGrid = (props) => {
       data: fetchedTemplatesArray,
       message,
     } = await getTemplates(getTemplatesURL, postData
-      // {
-      // // marketplace: "ebay",
-      // // multitype: ["inventory"],
-      // "filter[type][1]": "inventory",
-      // count: pageSize,
-      // activePage: activePage,
-      // ...filtersToPass,
-      // }
     );
     if (success) {
       const overAllFilteredTemplateData = fetchedTemplatesArray.map(
@@ -220,7 +211,6 @@ const InventoryTemplateGrid = (props) => {
                 <Stack distribution="center" alignment="center" spacing="tight">
                   <>{getCountyrName(template["data"]["site_id"])}</>
                   <>
-                    {/* {getUsername(template["data"]["site_id"], ebayAccountsObj)} */}
                     {getUsername(
                       template["data"]["site_id"],
                       connectedAccountsArray
@@ -300,26 +290,15 @@ const InventoryTemplateGrid = (props) => {
     return ebayAccountsObj;
   };
 
-  // const hitRequiredFuncs = async () => {
-  //   let ebayAccountsObj = await getAllConnectedAccounts();
-  //   if (Array.isArray(ebayAccountsObj) && ebayAccountsObj.length) {
-  //     await getTemplatesList(ebayAccountsObj);
-  //   }
-  // };
-
   useEffect(() => {
-    // hitRequiredFuncs();
     getTemplatesList();
   }, [activePage, pageSize, filtersToPass]);
 
   useEffect(() => {
-    // hitRequiredFuncs();
     getAllConnectedAccounts();
   }, []);
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      // hitGetProductsAPI();
-      // hitRequiredFuncs(connectedAccountsArray);
       getTemplatesList();
     }
   }, [connectedAccountsArray]);
@@ -337,15 +316,12 @@ const InventoryTemplateGrid = (props) => {
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
-      // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
     }, 200),
     [filtersToPass]
   );
 
   useEffect(() => {
-    // if (filterCategoryTemplateName !== "") {
       verify(filterCategoryTemplateName);
-    // }
   }, [filterCategoryTemplateName]);
 
   const renderCategorySearch = () => {
@@ -434,21 +410,6 @@ const InventoryTemplateGrid = (props) => {
     });
   };
 
-  const renderOtherFilters = () => {
-    return (
-      <Stack wrap>
-        <Button
-          icon={<Icon source={FilterMajorMonotone} color="base" />}
-          onClick={() => {
-            setFiltersDrawerVisible(true);
-          }}
-        >
-          More Filters
-        </Button>
-      </Stack>
-    );
-  };
-
   const gatherAllFilters = () => {
     let temp = {};
     Object.keys(filters).forEach((filter) => {
@@ -480,7 +441,6 @@ const InventoryTemplateGrid = (props) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Stack wrap>
             <Stack.Item fill>{renderCategorySearch()}</Stack.Item>
-            {/* <Stack.Item>{renderOtherFilters()}</Stack.Item> */}
           </Stack>
           <Stack spacing="tight">
             {Object.keys(filtersToPass).length > 0 && tagMarkup()}

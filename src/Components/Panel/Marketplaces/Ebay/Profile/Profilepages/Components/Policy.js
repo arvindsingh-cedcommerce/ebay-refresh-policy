@@ -1,21 +1,14 @@
 import {
   Select,
   Stack,
-  Card,
   FormLayout,
   Layout,
   SkeletonDisplayText,
   SkeletonBodyText,
 } from "@shopify/polaris";
-import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
-import {
-  getPolicies,
-  getPoliciesPost,
-} from "../../../../../../../APIrequests/PoliciesAPI";
+import { getPolicies } from "../../../../../../../APIrequests/PoliciesAPI";
 import { getPoliciesURL } from "../../../../../../../URLs/PoliciesURL";
-// import { getPolicies } from "../../../../../../../APIrequests/PoliciesAPI";
-// import { getPoliciesURL } from "../../../../../../../URLs/PoliciesURL";
 
 const Policy = ({
   label,
@@ -27,41 +20,24 @@ const Policy = ({
   const [loader, setLoader] = useState(false);
   const hitPolicyAPI = async () => {
     setLoader(true);
-    // let requestData = {
-    //     multitype: ["shipping", "payment", "return"],
-    //     site_id: value["siteID"],
-    //     shop_id: value["shopId"],
-    // };
     let shippingRequestData = {
-      // count: pageSize,
-      // activePage: activePage,
       "filter[type][1]": "shipping",
-      // ...filterPostData,
       "filter[shop_id][1]": value["shopId"],
     };
     let paymentRequestData = {
-      // count: pageSize,
-      // activePage: activePage,
       "filter[type][1]": "payment",
-      // ...filterPostData,
       "filter[shop_id][1]": value["shopId"],
     };
     let returnRequestData = {
-      // count: pageSize,
-      // activePage: activePage,
       "filter[type][1]": "return",
-      // ...filterPostData,
       "filter[shop_id][1]": value["shopId"],
     };
     let test = {};
     let payment_policy = [{ label: "Please Select", value: "" }];
     let shipping_policy = [{ label: "Please Select", value: "" }];
     let return_policy = [{ label: "Please Select", value: "" }];
-    let {
-      success: successShipping,
-      data: fetchedPoliciesArrayShipping,
-      //   message,
-    } = await getPolicies(getPoliciesURL, { ...shippingRequestData });
+    let { success: successShipping, data: fetchedPoliciesArrayShipping } =
+      await getPolicies(getPoliciesURL, { ...shippingRequestData });
     if (successShipping) {
       fetchedPoliciesArrayShipping.forEach((policy) => {
         switch (policy["type"]) {

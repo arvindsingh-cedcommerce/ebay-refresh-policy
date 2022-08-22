@@ -50,12 +50,8 @@ const getFitersInitially = () => {
 };
 
 const ReturnPolicyGrid = (props) => {
-  const {
-    refreshPolicyBtnClicked,
-    cbFuncCategory,
-    refreshSuccessStatus,
-    setRefreshSuccessStatus,
-  } = props;
+  const { cbFuncCategory, refreshSuccessStatus, setRefreshSuccessStatus } =
+    props;
 
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   // grid
@@ -71,11 +67,6 @@ const ReturnPolicyGrid = (props) => {
       dataIndex: "policyConnectedAccount",
       key: "account",
     },
-    // {
-    //   title: "Type",
-    //   dataIndex: "policyType",
-    //   key: "policyType",
-    // },
     {
       title: <center>Actions</center>,
       key: "action",
@@ -87,7 +78,6 @@ const ReturnPolicyGrid = (props) => {
           <center>
             <ActionPopoverPolicy
               record={record}
-              // hitRequiredFuncs={() => deletePolicyCall(record)}
               hitRequiredFuncs={hitRequiredFuncs}
               cbFunc={cbFuncCategory}
             />
@@ -117,26 +107,6 @@ const ReturnPolicyGrid = (props) => {
   const hitRequiredFuncs = () => {
     getAllPolicies();
     getAllConnectedAccounts();
-  };
-  const deletePolicyCall = async (record) => {
-    setGridLoader(true);
-    let { policySiteId, policyShopId, policyId, policyType } = record;
-    let { success, message } = await deletePolicy({
-      site_id: policySiteId,
-      profile_ids: policyId,
-      shop_id: policyShopId,
-      type: `${policyType.toLowerCase()}_policy`,
-    });
-    if (success) {
-      notify.success(message);
-      getAllConnectedAccounts();
-      getAllPolicies(false, policySiteId, policyShopId);
-    } else {
-      getAllConnectedAccounts();
-      getAllPolicies(false, policySiteId, policyShopId);
-      notify.error(message);
-    }
-    setGridLoader(false);
   };
 
   const getAllConnectedAccounts = async (props) => {
@@ -179,7 +149,6 @@ const ReturnPolicyGrid = (props) => {
       temp["country"]["options"] = [...tempArr];
       setFilters(temp);
       setconnectedAccountsArray(tempArr);
-      // setSelectedAccount(tempArr[0]["value"]);
     } else {
       notify.error(message);
     }
@@ -237,7 +206,6 @@ const ReturnPolicyGrid = (props) => {
       }
       if (fetchedPoliciesArray) {
         const overAllFilteredPolicyData = fetchedPoliciesArray
-          // .reverse()
           .map((policy, index) => {
             let { data, type: policyType } = policy;
             let type = "";
@@ -309,24 +277,12 @@ const ReturnPolicyGrid = (props) => {
     }
   }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
 
-  // useEffect(() => {
-  //   if (refreshPolicyBtnClicked) {
-  //     getAllPolicies();
-  //   }
-  // }, [refreshPolicyBtnClicked]);
-
   useEffect(() => {
     if (refreshSuccessStatus) {
       getAllPolicies();
       cbFuncCategory();
     }
   }, [refreshSuccessStatus]);
-
-  // useEffect(() => {
-  //   if (connectedAccountsArray.length) {
-  //     getAllPolicies();
-  //   }
-  // }, [connectedAccountsArray]);
 
   const renderShippingPolicySearch = () => {
     return (
@@ -393,15 +349,12 @@ const ReturnPolicyGrid = (props) => {
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
-      // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
     }, 200),
     [filtersToPass]
   );
 
   useEffect(() => {
-    // if (filterShippingPolicyName !== "") {
     verify(filterShippingPolicyName);
-    // }
   }, [filterShippingPolicyName]);
 
   const getFieldValue = (field) => {

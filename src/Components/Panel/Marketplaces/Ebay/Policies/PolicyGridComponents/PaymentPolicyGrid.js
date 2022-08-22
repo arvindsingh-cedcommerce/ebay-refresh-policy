@@ -71,11 +71,6 @@ const PaymentPolicyGrid = (props) => {
       dataIndex: "policyConnectedAccount",
       key: "account",
     },
-    // {
-    //   title: "Type",
-    //   dataIndex: "policyType",
-    //   key: "policyType",
-    // },
     {
       title: <center>Actions</center>,
       key: "action",
@@ -87,7 +82,6 @@ const PaymentPolicyGrid = (props) => {
           <center>
             <ActionPopoverPolicy
               record={record}
-              // hitRequiredFuncs={() => deletePolicyCall(record)}
               hitRequiredFuncs={hitRequiredFuncs}
               cbFunc={cbFuncCategory}
             />
@@ -117,27 +111,6 @@ const PaymentPolicyGrid = (props) => {
   const hitRequiredFuncs = () => {
     getAllPolicies();
     getAllConnectedAccounts();
-  };
-
-  const deletePolicyCall = async (record) => {
-    setGridLoader(true);
-    let { policySiteId, policyShopId, policyId, policyType } = record;
-    let { success, message } = await deletePolicy({
-      site_id: policySiteId,
-      profile_ids: policyId,
-      shop_id: policyShopId,
-      type: `${policyType.toLowerCase()}_policy`,
-    });
-    if (success) {
-      notify.success(message);
-      getAllConnectedAccounts();
-      getAllPolicies(false, policySiteId, policyShopId);
-    } else {
-      getAllConnectedAccounts();
-      getAllPolicies(false, policySiteId, policyShopId);
-      notify.error(message);
-    }
-    setGridLoader(false);
   };
 
   const getAllConnectedAccounts = async (props) => {
@@ -180,7 +153,6 @@ const PaymentPolicyGrid = (props) => {
       temp["country"]["options"] = [...tempArr];
       setFilters(temp);
       setconnectedAccountsArray(tempArr);
-      // setSelectedAccount(tempArr[0]["value"]);
     } else {
       notify.error(message);
     }
@@ -310,12 +282,6 @@ const PaymentPolicyGrid = (props) => {
     }
   }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
 
-  // useEffect(() => {
-  //   if (refreshPolicyBtnClicked) {
-  //     getAllPolicies();
-  //   }
-  // }, [refreshPolicyBtnClicked]);
-
   useEffect(() => {
     console.log(refreshSuccessStatus);
     if (refreshSuccessStatus) {
@@ -323,12 +289,6 @@ const PaymentPolicyGrid = (props) => {
       cbFuncCategory();
     }
   }, [refreshSuccessStatus]);
-
-  // useEffect(() => {
-  //   if (connectedAccountsArray.length) {
-  //     getAllPolicies();
-  //   }
-  // }, [connectedAccountsArray]);
 
   const renderShippingPolicySearch = () => {
     return (
@@ -395,7 +355,6 @@ const PaymentPolicyGrid = (props) => {
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
-      // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
     }, 200),
     [filtersToPass]
   );

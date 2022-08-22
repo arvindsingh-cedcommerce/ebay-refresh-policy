@@ -1,11 +1,7 @@
-import { Image, PageHeader, Alert, Row, Col, Typography, Dropdown } from "antd";
+import { Image, PageHeader, Alert, Row, Col, Typography } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
-import {
-  DownOutlined,
-  CaretDownOutlined,
-  CaretUpOutlined,
-} from "@ant-design/icons";
+import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import NoProductImage from "../../../../../assets/notfound.png";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import VariantComponentData from "./VariantComponentData";
@@ -20,7 +16,6 @@ import {
 } from "../../../../../APIrequests/ProductsAPI";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
 import PaginationComponent from "../../../../AntDesignComponents/PaginationComponent";
-import { testController } from "../../../../../Apirequest/ebayApirequest/productsApi";
 import {
   ButtonGroup,
   Card,
@@ -31,15 +26,12 @@ import {
   Popover,
   ChoiceList,
   Tag,
-  Link,
   Badge,
   Tooltip,
   TextStyle,
 } from "@shopify/polaris";
 import { notify } from "../../../../../services/notify";
 import ActionPopover from "./ActionPopover";
-import { bulkMenu } from "./helperFunctions/bulkMenuHelper";
-import { massMenu } from "./helperFunctions/massMenuHelper";
 import {
   getVariantsCountDetails,
   trimTitle,
@@ -58,7 +50,6 @@ import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import PopoverProduct from "./PopoverProduct";
 import ProductBulkMenu from "./ProductBulkMenu";
 import ProductMassMenu from "./ProductMassMenu";
-import ProductDisabledMenu from "./ProductDisabledMenu";
 
 const { Text } = Typography;
 
@@ -127,14 +118,6 @@ export const filtersFields = [
     operator: "1",
     dataType: "number",
   },
-  // {
-  //   label: "Variant Attribute",
-  //   value: "variant_attributes",
-  //   searchType: "textField",
-  //   inputValue: "",
-  //   operator: "3",
-  //   dataType: "string",
-  // },
 ];
 
 export const getFitersInitially = () => {
@@ -270,9 +253,7 @@ function NewProductsNewFilters(props) {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-  // const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
   const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
-  // const [pageSize, setPageSize] = useState(5);
   const [pageSize, setPageSize] = useState(25);
   const [totalProductsCount, setTotalProductsCount] = useState(0);
 
@@ -387,26 +368,9 @@ function NewProductsNewFilters(props) {
           };
           const structStatus = (test.ItemId || test.Errors) && (
             <Stack distribution="center" spacing="tight">
-              {/* <Badge status="success" progress="complete" /> */}
               {test?.image}
-              {/* {test?.ItemId && test["Errors"] && (
-                <Icon source={AlertMinor} color={"red"} />
-              )} */}
               <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
               {getBadge(test)}
-              {/* {test?.abbreviation}
-              {test?.ItemId && test["Errors"] && (
-                <Icon source={AlertMinor} color={"red"} />
-              )}
-              <Text style={{ fontSize: "1.5rem" }}>
-                {test?.ended
-                  ? "Ended"
-                  : test?.ItemId
-                  ? test?.ItemId
-                  : test?.Errors
-                  ? "Error"
-                  : "Not Uploaded"} */}
-              {/* </Text> */}
             </Stack>
           );
           statusStructures.push(structStatus);
@@ -463,25 +427,10 @@ function NewProductsNewFilters(props) {
         filterPostData[key] = filtersToPass[key];
       }
     }
-    // let filterKeys = Object.keys(filterPostData).map(filter => {
-    //   let filterKeyName = filter.split('[')?.[1].split(']')?.[0]
-    //   return filterKeyName
-    // })
-    // let flagCount = 0
-    // filterKeys.forEach(filter => {
-    //   if(['shop_id', 'status'].includes(filter)) {
-    //     flagCount++
-    //   }
-    // })
-    // if(flagCount === 2) {
-    //   console.log(filterPostData);
-    // }
     let postData = {
       productOnly: true,
       count: pageSize,
       activePage: activePage,
-      // grid: true,
-      // ...filtersToPass,
       ...filterPostData,
     };
     if (Object.keys(filterPostData).length) {
@@ -494,22 +443,14 @@ function NewProductsNewFilters(props) {
       code,
     } = await getProducts(getProductsURL, postData);
     let { success: totalProductsCountSuccess, data: totalProductsCountData } =
-      await getProductsCount(
-        getProductsCountURL,
-        {
-          productOnly: true,
-          // ...filtersToPass
-          ...filterPostData,
-        }
-        // postData
-      );
+      await getProductsCount(getProductsCountURL, {
+        productOnly: true,
+        ...filterPostData,
+      });
     if (totalProductsCountSuccess) {
       let { count } = totalProductsCountData;
       setTotalProductsCount(count);
     }
-    // let { success: accountConnectedSuccess } = await getConnectedAccounts();
-
-    // if (accountConnectedSuccess) {
     if (productsDataSuccess) {
       let { rows } = productsData;
       if (rows && Array.isArray(rows)) {
@@ -568,35 +509,22 @@ function NewProductsNewFilters(props) {
           );
           tempObject["productStatus"] = (
             <Stack alignment="center" distribution="center">
-              {/* <PopoverProduct>{getProductStatus(edited)}</PopoverProduct> */}
               {getProductStatusEbayResponse(ebay_response)}
             </Stack>
           );
           tempObject["productType"] = (
             <center>
-              <Text
-              // copyable={product_type && true}
-              >
-                {product_type}
-              </Text>
+              <Text>{product_type}</Text>
             </center>
           );
           tempObject["vendor"] = (
             <center>
-              <Text
-              // copyable={brand && true}
-              >
-                {brand}
-              </Text>
+              <Text>{brand}</Text>
             </center>
           );
           tempObject["profile"] = (
             <center>
-              <Text
-              // copyable={profile_name && true}
-              >
-                {profile_name ? profile_name : "-"}
-              </Text>
+              <Text>{profile_name ? profile_name : "-"}</Text>
             </center>
           );
           tempObject["variantAttributes"] = (
@@ -622,17 +550,11 @@ function NewProductsNewFilters(props) {
         setProductData(tempProductData);
       }
     } else {
-      // notify.error(message);
       if (code === "invalid_token" || code === "token_expired") {
         props.history.push("/auth/login");
       }
     }
     setGridLoader(false);
-    // } else {
-    //   if (code === "invalid_token" || code === "token_expired") {
-    //     props.history.push("/auth/login");
-    //   }
-    // }
   };
 
   const rowSelection = {
@@ -666,10 +588,9 @@ function NewProductsNewFilters(props) {
     [searchWithTitle, filtersToPass]
   );
   useEffect(() => {
-    // if (filterTitleORsku !== "") {
     verify(filterTitleORsku);
-    // }
   }, [filterTitleORsku, searchWithTitle]);
+
   const renderTitleOrSKU = () => {
     return (
       <TextField
@@ -736,16 +657,6 @@ function NewProductsNewFilters(props) {
       Profile
     </Button>
   );
-  const productTypeActivator = (
-    <Button disclosure onClick={() => popOverHandler("productType")}>
-      Product Type
-    </Button>
-  );
-  const vendorActivator = (
-    <Button disclosure onClick={() => popOverHandler("brand")}>
-      Vendor
-    </Button>
-  );
 
   const gatherAllFilters = () => {
     let temp = {};
@@ -771,7 +682,6 @@ function NewProductsNewFilters(props) {
     } else {
       notify.warn("No filters applied");
     }
-    // setFiltersToPass({ ...temp });
   };
 
   const handleChange = (value, selectedType) => {
@@ -793,7 +703,6 @@ function NewProductsNewFilters(props) {
           >
             <div style={{ margin: "10px" }}>
               <ChoiceList
-                // allowMultiple
                 choices={connectedAccountsArray}
                 selected={selected["country"]}
                 onChange={(value) => handleChange(value, "country")}
@@ -826,53 +735,6 @@ function NewProductsNewFilters(props) {
               />
             </div>
           </Popover>
-          {/* <Popover
-            active={popOverStatus["productType"]}
-            activator={productTypeActivator}
-            onClose={() => popOverHandler("productType")}
-          >
-            <div style={{ margin: "10px" }}>
-              <ChoiceList
-                choices={productTypeList}
-                selected={selected["product_type"]}
-                onChange={(value) => handleChange(value, "product_type")}
-              />
-            </div>
-          </Popover> */}
-          {/* <Popover
-            active={popOverStatus["brand"]}
-            activator={vendorActivator}
-            onClose={() => popOverHandler("brand")}
-          >
-            <div style={{ margin: "10px" }}>
-              <ChoiceList
-                choices={vendorList}
-                selected={selected["brand"]}
-                onChange={(value) => handleChange(value, "brand")}
-              />
-            </div>
-          </Popover> */}
-          {/* {innerFilterCount ? (
-          <Badge count={innerFilterCount}>
-            <Button
-              icon={<FilterMajorMonotone />}
-              onClick={() => {
-                setFiltersDrawerVisible(true);
-              }}
-            >
-              More Filters
-            </Button>
-          </Badge>
-        ) : ( */}
-          {/* <Button
-          icon={<FilterMajorMonotone />}
-          onClick={() => {
-            setFiltersDrawerVisible(true);
-          }}
-        >
-          More Filters
-        </Button> */}
-          {/* )} */}
         </ButtonGroup>
         <Button
           icon={<Icon source={FilterMajorMonotone} color="base" />}
@@ -909,7 +771,6 @@ function NewProductsNewFilters(props) {
     let temp = { ...filters };
     temp["brand"]["options"] = vendorList;
     temp["product_type"]["options"] = productTypeList;
-    // temp["brand"]["value"] = vendorList[0].value;
     setFilters(temp);
     setProductTypeList(productTypeList);
     setVendorList(vendorList);
@@ -934,8 +795,6 @@ function NewProductsNewFilters(props) {
 
   const getProfilesProducttypeVendor = async () => {
     let profileDataToPost = {
-      // count: 25,
-      // activePage: 1,
       marketplace: "ebay",
       grid: true,
     };
@@ -1007,16 +866,11 @@ function NewProductsNewFilters(props) {
         return "SKU";
       case "profile_name":
         return "Profile";
-      // case "product_type":
-      //   return "Product Type";
-      // case "brand":
-      //   return "Vendor";
       default:
         return filtersFields.find((option) => option["value"] === field)?.[
           "label"
         ];
     }
-    // return 'vh'
   };
 
   const getOperatorLabel = (operator) => {
@@ -1084,37 +938,9 @@ function NewProductsNewFilters(props) {
     });
   };
 
-  const callVariantAPI = async (record) => {
-    const postData = { container_id: record.container_id, grid: true };
-    let {
-      success: variantDataSuccess,
-      data: variantData,
-      message,
-      code,
-    } = await getProducts(getVariantsURL, postData);
-    if (
-      variantDataSuccess &&
-      variantData &&
-      Array.isArray(variantData) &&
-      variantData.length
-    ) {
-      const { variants } = variantData[0];
-      if (variants && Array.isArray(variants) && variants.length) {
-        let tempProductData = [...productData];
-        tempProductData.forEach((product, index) => {
-          if (product.container_id === record.container_id) {
-            tempProductData[index]["variantsData"] = variants;
-          }
-        });
-        setProductData(tempProductData);
-      }
-    }
-  };
-
   return (
     <PageHeader
       className="site-page-header-responsive"
-      // title="Products"
       title={
         <Tooltip
           preferredPosition="above"
@@ -1134,26 +960,8 @@ function NewProductsNewFilters(props) {
       }
       ghost={true}
       extra={[
-        // <Button
-        //   type="primary"
-        //   onClick={async () => {
-        //     let data = {};
-        //     await testController(data);
-        //   }}
-        //   key={"test"}
-        // >
-        //   Test
-        // </Button>,
         <ProductMassMenu selectedRows={selectedRows} />,
         <ProductBulkMenu profileList={profileList} />,
-        // <ProductDisabledMenu selectedRows={selectedRows} />
-        // <Dropdown key="bulkAction" overlay={bulkMenu(props)} trigger={["click"]}>
-        //   <Button>
-        //     <div>
-        //       Bulk Actions <DownOutlined />
-        //     </div>
-        //   </Button>
-        // </Dropdown>,
       ]}
     >
       <Card sectioned>
@@ -1201,13 +1009,7 @@ function NewProductsNewFilters(props) {
           }}
           scroll={{ x: 1500, y: 500 }}
           expandable={{
-            // onExpand: (expanded, record) => {
-            //   if (expanded) {
-            //     callVariantAPI(record);
-            //   }
-            // },
             expandedRowRender: (record) => {
-              // console.log(record);
               return (
                 <TabsComponent
                   totalTabs={1}
@@ -1243,7 +1045,6 @@ function NewProductsNewFilters(props) {
         setFiltersDrawerVisible={setFiltersDrawerVisible}
         filtersDrawerVisible={filtersDrawerVisible}
         filters={filters}
-        // operatorOptions={operatorOptions}
         stringOperatorOptions={stringOperatorOptions}
         numberOperatorOptions={numberOperatorOptions}
         setFilters={setFilters}

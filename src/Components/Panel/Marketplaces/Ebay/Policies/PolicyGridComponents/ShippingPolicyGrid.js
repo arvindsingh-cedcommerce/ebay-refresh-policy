@@ -50,8 +50,12 @@ const getFitersInitially = () => {
 };
 
 const ShippingPolicyGrid = (props) => {
-  const { refreshPolicyBtnClicked, cbFuncCategory, refreshSuccessStatus, setRefreshSuccessStatus } =
-    props;
+  const {
+    refreshPolicyBtnClicked,
+    cbFuncCategory,
+    refreshSuccessStatus,
+    setRefreshSuccessStatus,
+  } = props;
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   // grid
   const [gridLoader, setGridLoader] = useState(false);
@@ -66,11 +70,6 @@ const ShippingPolicyGrid = (props) => {
       dataIndex: "policyConnectedAccount",
       key: "account",
     },
-    // {
-    //   title: "Type",
-    //   dataIndex: "policyType",
-    //   key: "policyType",
-    // },
     {
       title: <center>Actions</center>,
       key: "action",
@@ -82,8 +81,6 @@ const ShippingPolicyGrid = (props) => {
           <center>
             <ActionPopoverPolicy
               record={record}
-              // hitRequiredFuncs={() => deletePolicyCall(record)}
-              // getAllConnectedAccounts={getAllConnectedAccounts}
               hitRequiredFuncs={hitRequiredFuncs}
               cbFunc={cbFuncCategory}
             />
@@ -175,7 +172,6 @@ const ShippingPolicyGrid = (props) => {
       temp["country"]["options"] = [...tempArr];
       setFilters(temp);
       setconnectedAccountsArray(tempArr);
-      // setSelectedAccount(tempArr[0]["value"]);
     } else {
       notify.error(message);
     }
@@ -189,7 +185,7 @@ const ShippingPolicyGrid = (props) => {
   };
 
   const getAllPolicies = async (refresh = false) => {
-    setRefreshSuccessStatus(false)
+    setRefreshSuccessStatus(false);
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
@@ -312,12 +308,6 @@ const ShippingPolicyGrid = (props) => {
     }
   }, [refreshSuccessStatus]);
 
-  // useEffect(() => {
-  //   if (connectedAccountsArray.length) {
-  //     getAllPolicies();
-  //   }
-  // }, [connectedAccountsArray]);
-
   const renderShippingPolicySearch = () => {
     return (
       <TextField
@@ -383,15 +373,12 @@ const ShippingPolicyGrid = (props) => {
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
-      // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
     }, 200),
     [filtersToPass]
   );
 
   useEffect(() => {
-    // if (filterShippingPolicyName !== "") {
     verify(filterShippingPolicyName);
-    // }
   }, [filterShippingPolicyName]);
 
   const getFieldValue = (field) => {

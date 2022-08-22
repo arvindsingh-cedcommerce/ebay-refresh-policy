@@ -13,7 +13,6 @@ import { getTemplatesURL } from "../../../../../../../URLs/TemplateURLS";
 import NestedTableComponent from "../../../../../../AntDesignComponents/NestedTableComponent";
 import PaginationComponent from "../../../../../../AntDesignComponents/PaginationComponent";
 import { getCountryName } from "../../../../../Accounts/NewAccount";
-import ActionPopover from "../../../Products/ActionPopover";
 import NewFilterComponentSimilarPolaris from "../../../Products/NewFilterComponentSimilarPolaris";
 import {
   numberOperatorOptions,
@@ -75,7 +74,7 @@ const getFitersInitially = () => {
 };
 
 const CategoryTemplateGrid = (props) => {
-  const {cbFuncCategory} = props
+  const { cbFuncCategory } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
     siteID: "",
@@ -161,16 +160,13 @@ const CategoryTemplateGrid = (props) => {
       }
     }
     const postData = {
-      // marketplace: "ebay",
-      // multitype: ["category"],
       "filter[type][1]": "category",
       count: pageSize,
       activePage: activePage,
-      // ...filtersToPass,
       ...filterPostData,
     };
-    if(Object.keys(filterPostData).length) {
-      postData['activePage'] = 1
+    if (Object.keys(filterPostData).length) {
+      postData["activePage"] = 1;
     }
     const {
       success,
@@ -182,7 +178,9 @@ const CategoryTemplateGrid = (props) => {
         (template, index) => {
           const filteredTemplateData = {
             templateUniqueKey: index,
-            accountStatus: connectedAccountsArray.find(account => account.shopID == template['data']['shop_id'])?.['status'],
+            accountStatus: connectedAccountsArray.find(
+              (account) => account.shopID == template["data"]["shop_id"]
+            )?.["status"],
             templateType:
               template["type"] !== null
                 ? capitalizeFirstLetterofWords(template["type"])
@@ -230,7 +228,6 @@ const CategoryTemplateGrid = (props) => {
                 <Stack distribution="center" alignment="center" spacing="tight">
                   <>{getCountyrName(template["data"]["site_id"])}</>
                   <>
-                    {/* {getUsername(template["data"]["site_id"], ebayAccountsObj)} */}
                     {getUsername(
                       template["data"]["site_id"],
                       connectedAccountsArray
@@ -311,28 +308,17 @@ const CategoryTemplateGrid = (props) => {
     return ebayAccountsObj;
   };
 
-  // const hitRequiredFuncs = async () => {
-  //   let ebayAccountsObj = await getAllConnectedAccounts();
-  //   if (Array.isArray(ebayAccountsObj) && ebayAccountsObj.length) {
-  //     await getTemplatesList(ebayAccountsObj);
-  //   }
-  // };
-
   useEffect(() => {
-    // hitRequiredFuncs();
     if (connectedAccountsArray.length) {
       getTemplatesList();
     }
   }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
 
   useEffect(() => {
-    // hitRequiredFuncs();
     getAllConnectedAccounts();
   }, []);
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      // hitGetProductsAPI();
-      // hitRequiredFuncs(connectedAccountsArray);
       getTemplatesList();
     }
   }, [connectedAccountsArray]);
@@ -350,15 +336,12 @@ const CategoryTemplateGrid = (props) => {
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
-      // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
     }, 200),
     [filtersToPass]
   );
 
   useEffect(() => {
-    // if (filterCategoryTemplateName !== "") {
-      verify(filterCategoryTemplateName);
-    // }
+    verify(filterCategoryTemplateName);
   }, [filterCategoryTemplateName]);
 
   const renderCategorySearch = () => {

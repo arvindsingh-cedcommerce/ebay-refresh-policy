@@ -8,7 +8,6 @@ const NewProductsComponent = () => {
     <Switch>
       <Route
         path="/panel/ebay/products/grid"
-        // component={TemplateGridComponent}
         component={NewProductsNewFilters}
       />
       <Route

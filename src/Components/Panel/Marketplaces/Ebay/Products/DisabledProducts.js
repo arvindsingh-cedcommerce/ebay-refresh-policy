@@ -10,7 +10,7 @@ import {
   Button,
   Modal,
 } from "@shopify/polaris";
-import { Col, Dropdown, Image, Menu, PageHeader, Row } from "antd";
+import { Col, Image, PageHeader, Row } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
@@ -30,11 +30,6 @@ import NestedTableComponent from "../../../../AntDesignComponents/NestedTableCom
 import ActionPopover from "./ActionPopover";
 import NoProductImage from "../../../../../assets/notfound.png";
 import PaginationComponent from "../../../../AntDesignComponents/PaginationComponent";
-import {
-  DownloadOutlined,
-  DownOutlined,
-  SyncOutlined,
-} from "@ant-design/icons";
 import {
   filtersFields,
   getFitersInitially,
@@ -243,23 +238,6 @@ const DisabledProducts = (props) => {
   });
   const [btnLoader, setBtnLoader] = useState(false);
 
-  const getVariantsCountDetails = (variants, variant_attributes) => {
-    let text = "";
-    let inventoryCount = 0;
-    variants.forEach((variant) => {
-      inventoryCount += Number(variant?.quantity);
-    });
-    if (
-      variant_attributes &&
-      Array.isArray(variant_attributes) &&
-      variant_attributes.length
-    ) {
-      text = `${inventoryCount} in stock for ${variants.length} variant`;
-    } else {
-      text = `${inventoryCount} in stock`;
-    }
-    return text;
-  };
   const hitGetProductsAPI = async () => {
     setGridLoader(true);
     let postData = {
@@ -277,11 +255,9 @@ const DisabledProducts = (props) => {
       code,
     } = await getProducts(getProductsURL, postData);
     let { success: totalProductsCountSuccess, data: totalProductsCountData } =
-      // await getProductsCount(getProductsCountURL, postData);
       await getProductsCount(getProductsCountURL, {
         productOnly: true,
         status: "disabled",
-        // ...filtersToPass
         ...filtersToPass,
       });
     if (totalProductsCountSuccess) {
@@ -377,10 +353,7 @@ const DisabledProducts = (props) => {
             );
             tempObject["variantsCount"] = (
               <center>
-                <Paragraph>
-                  {/* {getVariantsCountDetails(variants, variant_attributes)} */}
-                  {quantity}
-                </Paragraph>
+                <Paragraph>{quantity}</Paragraph>
               </center>
             );
             tempObject["variantsData"] = variants;
@@ -828,24 +801,6 @@ const DisabledProducts = (props) => {
             });
           }}
           disabled={selectedRows.length == 0}
-          // onClick={async () => {
-          //   let postData = [];
-          //   selectedRows.forEach((selectedRow) => {
-          //     let { container_id } = selectedRow;
-          //     postData.push(container_id);
-          //   });
-          //   let { success, message } = await postActionOnProductById(
-          //     disableItemURL,
-          //     { product_id: postData, status: "Enable" }
-          //   );
-          //   if (success) {
-          //     notify.success(message);
-          //     // hitGetProductsAPI();
-          //     props.history.push("products");
-          //   } else {
-          //     notify.error(message);
-          //   }
-          // }}
         >
           Enable
         </Button>,

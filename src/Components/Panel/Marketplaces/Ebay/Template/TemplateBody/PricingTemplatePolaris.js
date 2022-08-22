@@ -247,7 +247,6 @@ const PricingTemplatePolaris = (props) => {
     if (id) {
       let { success, data, message } = await getTemplatebyId(id);
       if (success) {
-        // setDataReceivedFromAPI(true);
         templatedata = { ...data.data };
         setFormData({ ...formData, ...templatedata });
       } else {

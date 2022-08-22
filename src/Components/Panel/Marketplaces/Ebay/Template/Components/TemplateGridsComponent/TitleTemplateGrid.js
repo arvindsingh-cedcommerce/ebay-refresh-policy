@@ -1,18 +1,14 @@
-import { LineOutlined } from "@ant-design/icons";
 import { Button, Card, Icon, Stack, Tag, TextField } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
-import { Col, Image, Row } from "antd";
+import { Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { getConnectedAccounts } from "../../../../../../../Apirequest/accountsApi";
 import { getTemplates } from "../../../../../../../APIrequests/TemplatesAPI";
-import { json } from "../../../../../../../globalConstant/static-json";
 import { notify } from "../../../../../../../services/notify";
 import { getTemplatesURL } from "../../../../../../../URLs/TemplateURLS";
 import NestedTableComponent from "../../../../../../AntDesignComponents/NestedTableComponent";
 import PaginationComponent from "../../../../../../AntDesignComponents/PaginationComponent";
-import { getCountryName } from "../../../../../Accounts/NewAccount";
 import NewFilterComponentSimilarPolaris from "../../../Products/NewFilterComponentSimilarPolaris";
 import {
   numberOperatorOptions,
@@ -145,18 +141,7 @@ const TitleTemplateGrid = (props) => {
       success,
       data: fetchedTemplatesArray,
       message,
-    } = await getTemplates(
-      getTemplatesURL,
-      postData
-      // {
-      // // marketplace: "ebay",
-      // // multitype: ["title"],
-      // "filter[type][1]": "title",
-      // count: pageSize,
-      // activePage: activePage,
-      // ...filtersToPass,
-      // }
-    );
+    } = await getTemplates(getTemplatesURL, postData);
     if (success) {
       const overAllFilteredTemplateData = fetchedTemplatesArray.map(
         (template, index) => {
@@ -247,15 +232,12 @@ const TitleTemplateGrid = (props) => {
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
-      // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
     }, 200),
     [filtersToPass]
   );
 
   useEffect(() => {
-    // if (filterCategoryTemplateName !== "") {
     verify(filterCategoryTemplateName);
-    // }
   }, [filterCategoryTemplateName]);
 
   const renderCategorySearch = () => {

@@ -1,27 +1,18 @@
-import { Button, Card, TextField, TextStyle, Tooltip } from "@shopify/polaris";
+import { Button, TextStyle, Tooltip } from "@shopify/polaris";
 import { PageHeader } from "antd";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import {
   getProfilebyId,
   saveProfile,
 } from "../../../../../../Apirequest/ebayApirequest/profileApi";
-import {
-  getTemplates,
-  getTemplatesPost,
-} from "../../../../../../APIrequests/TemplatesAPI";
+import { getTemplatesPost } from "../../../../../../APIrequests/TemplatesAPI";
 import { parseQueryString } from "../../../../../../services/helperFunction";
 import { notify } from "../../../../../../services/notify";
 import { getTemplatesURL } from "../../../../../../URLs/TemplateURLS";
-import TabsComponent from "../../../../../AntDesignComponents/TabsComponent";
 import { getCountryName } from "../../../../Accounts/NewAccount";
-import AccountConnectionPolicyTemplate from "./Components/AccountConnectionPolicyTemplate";
 import AccountSelectionTab from "./Components/Tabs/AccountSelectionTab";
-import AmazonFilterProductsTab from "./Components/Tabs/AmazonFilterProductsTab";
-import FilterProductsTab from "./Components/Tabs/FilterProductsTab";
 import NewFilterProductsTab from "./Components/Tabs/NewFilterProductsTab";
-
-const createEditProfileTabs = ["Account Selection", "Filter Products"];
 
 const CreateProfilePolaris = (props) => {
   const [id, setId] = useState("");
@@ -167,7 +158,6 @@ const CreateProfilePolaris = (props) => {
         data: test,
       };
       if (id !== "") postData["profile_id"] = id;
-      // this.toggleLoaders("saveProfile", true);
       setProfileSaveBtnLoader(true);
       let { success, message, code, matching_profiles } = await saveProfile(
         postData
@@ -176,11 +166,6 @@ const CreateProfilePolaris = (props) => {
         notify.success(message);
         props.history.push("/panel/ebay/profiles/grid");
       } else {
-        // if (code && code === "duplicate_query") {
-        //     this.setState({ matching_profiles }, () => {
-        //         this.modalHandler(true, []);
-        //     });
-        // } else
         notify.error(message);
       }
       setProfileSaveBtnLoader(false);
@@ -286,9 +271,6 @@ const CreateProfilePolaris = (props) => {
         temp["shopId"] = account["id"];
         temp["errors"] = {
           category_template: false,
-          // inventory_template: false,
-          // title_template: false,
-          // price_template: false,
           payment_policy: false,
           shipping_policy: false,
           return_policy: false,
@@ -301,7 +283,6 @@ const CreateProfilePolaris = (props) => {
         temp["payment_policy"] = "";
         temp["shipping_policy"] = "";
         temp["return_policy"] = "";
-        // temp["warehouse_setting"] = [];
         ebayAccountsObj[
           `${getCountryName(account["warehouses"][0]["site_id"])}-${
             account["warehouses"][0]["user_id"]
@@ -310,7 +291,6 @@ const CreateProfilePolaris = (props) => {
       });
       setconnectedAccountsObject(ebayAccountsObj);
       setUpdatedConnectedAccountObject(true);
-      // setShopifyWarehouses(extractShopifyWarehouses(shopifyAccounts))
     } else {
       notify.error(message);
     }
@@ -378,27 +358,6 @@ const CreateProfilePolaris = (props) => {
     }
     setProfileDataSkeleton(false);
   };
-
-  // const getTabContent = () => {
-  //     let content = {};
-  //     createEditProfileTabs.forEach((tabName) => {
-  //         switch (tabName) {
-  //             case "Account Selection":
-  //                 content[tabName] = <AccountSelectionTab profileName={profileName} setProfileName={setProfileName} connectedAccountsObject={connectedAccountsObject} setconnectedAccountsObject={setconnectedAccountsObject} templateOptions={templateOptions} shopifyWarehouses={shopifyWarehouses} panes={panes} setPanes={setPanes} />;
-  //                 break;
-  //             case "Filter Products":
-  //                 // content[tabName] = <FilterProductsTab propsPassed={props} prepareQuery={prepareQuery}
-  //                 //     setPrepareQuery={setPrepareQuery}
-  //                 // />;
-  //                 content[tabName] = <AmazonFilterProductsTab />
-  //                 break
-  //             default:
-  //                 break;
-  //         }
-  //     });
-  //     return content;
-  // };
-
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -449,7 +408,6 @@ const CreateProfilePolaris = (props) => {
         </Button>,
       ]}
     >
-      {/* <TabsComponent totalTabs={2} tabContents={getTabContent()} /> */}
       <AccountSelectionTab
         profileName={profileName}
         setProfileName={setProfileName}
@@ -466,10 +424,6 @@ const CreateProfilePolaris = (props) => {
         profileDataSkeleton={profileDataSkeleton}
       />
       <br />
-      {/* <FilterProductsTab propsPassed={props} prepareQuery={prepareQuery} setMinProductFlag={setMinProductFlag}
-                        setPrepareQuery={setPrepareQuery}
-                    /> */}
-      {/* <AmazonFilterProductsTab /> */}
       {Object.keys(connectedAccountsObject).some(
         (account) => connectedAccountsObject[account].checked
       ) && (

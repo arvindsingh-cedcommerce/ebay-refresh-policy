@@ -1,42 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import Accounts from "./Accounts/accounts";
-import ebayactivity from "./Marketplaces/Ebay/Activity/ebayactivity";
-import Ebayconfiguration from "./Marketplaces/Ebay/Configurations/ebayconfiguration";
-import Ebaydashboard from "./Marketplaces/Ebay/Dashboard/Ebaydashboard";
-import Ebayhelp from "./Marketplaces/Ebay/Help/ebayhelp";
 import Ebaymessage from "./Marketplaces/Ebay/Message/ebaymessage";
-import Ebayorders from "./Marketplaces/Ebay/Orders/ebayorders";
-import Ebayorderview from "./Marketplaces/Ebay/Orders/ebayorderview";
-import Ebaypolicieslist from "./Marketplaces/Ebay/Policies/ebaypolicieslist";
-import EbayPolicyHandler from "./Marketplaces/Ebay/Policies/ebayPolicyHandler";
-import Ebaypricing from "./Marketplaces/Ebay/Pricing/ebaypricing";
-import Ebayprofile from "./Marketplaces/Ebay/Profile/ebayprofile";
-import EbayCreateprofile from "./Marketplaces/Ebay/Profile/Profilepages/ebayCreateprofile";
-import Ebaytemplate from "./Marketplaces/Ebay/Template/ebaytemplate";
-import {
-  Layout,
-  Menu,
-  Breadcrumb,
-  Image,
-  Col,
-  Row,
-  Avatar,
-  Drawer,
-  Typography,
-  Button,
-  Badge,
-  Popover,
-} from "antd";
-import { userDetails } from "./PanelData";
+import { Layout, Menu, Image, Avatar, Drawer } from "antd";
 import Logo from "../../assets/ced-ebay-logo.png";
 import CollapsedLogo from "../../assets/cedcommercelogoCollapsed.png";
 
 import {
-  DesktopOutlined,
-  PieChartOutlined,
   UserOutlined,
-  PhoneOutlined,
   BarChartOutlined,
   TagOutlined,
   DownloadOutlined,
@@ -53,50 +23,26 @@ import {
   BellOutlined,
 } from "@ant-design/icons";
 import PlansComponentAnt from "../Registration/PlansComponentAnt";
-import { plansSample } from "../Registration/NewRegistrationhelper";
 import OrdersComponent from "./Marketplaces/Ebay/Orders/OrdersComponent";
 import TemplateComponent from "./Marketplaces/Ebay/Template/TemplateComponent";
-import PolicyGridComponent from "./Marketplaces/Ebay/Policies/PolicyGridComponent";
-import ProfileGridComponent from "./Marketplaces/Ebay/Profile/ProfileGridComponent";
-import Createprofile from "./Marketplaces/Ebay/Profile/Profilepages/CreateProfile";
-import PolicyHandler from "./Marketplaces/Ebay/Policies/PolicyHandler";
-import ebayproducts from "./Marketplaces/Ebay/Products/ebayproducts";
-import Ebayproductview from "./Marketplaces/Ebay/Products/ebayproductview";
-import ViewOrders from "./Marketplaces/Ebay/Orders/ViewOrders";
 import EbayHelpComponent from "./Marketplaces/Ebay/Help/EbayHelpComponent";
 import Configuration from "./Marketplaces/Ebay/Configurations/Configuration";
 import ContactUs from "./Marketplaces/Ebay/Help/ContactUs";
 import NewAccountGrid from "./Accounts/NewAccountGrid";
 import ShopifyAccount from "./Accounts/ShopifyAccount";
-import NewProducts from "./Marketplaces/Ebay/Products/NewProducts";
 import ViewOrdersPolaris from "./Marketplaces/Ebay/Orders/ViewOrdersPolaris";
-import ProductViewPolaris from "./Marketplaces/Ebay/Products/ProductViewPolaris";
-import ActivityPolaris from "./Marketplaces/Ebay/Activity/ActivityPolaris";
-import DashboardPolaris from "./Marketplaces/Ebay/Dashboard/DashboardPolaris";
 import ActivityGrid from "./Marketplaces/Ebay/Activity/ActivityGrid";
-import CreateProfilePolaris from "./Marketplaces/Ebay/Profile/Profilepages/CreateProfilePolaris";
-import ProductViewPolarisNew from "./Marketplaces/Ebay/Products/ProductViewPolarisNew";
 import {
   Icon,
   Stack,
   Popover as ShopifyPopover,
-  Button as ShopifyButton,
   ActionList,
-  Banner,
 } from "@shopify/polaris";
 import ViewOrdersPolarisNew from "./Marketplaces/Ebay/Orders/ViewOrdersPolarisNew";
 import {
   CircleCancelMinor,
   CircleTickOutlineMinor,
-  MobileHamburgerMajorMonotone,
-  NotificationMajorMonotone,
-  PhoneMajorMonotone,
 } from "@shopify/polaris-icons";
-import ProductViewPolarisNewBKP from "./Marketplaces/Ebay/Products/ProductViewPolarisNewBKP";
-import NewProductsNewFilters from "./Marketplaces/Ebay/Products/NewProductsNewFilters";
-import DisabledProducts from "./Marketplaces/Ebay/Products/DisabledProducts";
-import FinalProductGrid from "./Marketplaces/Ebay/Products/FinalProductGrid";
-import FinalPolicyGrid from "./Marketplaces/Ebay/Policies/FinalPolicyGrid";
 import { getAllNotifications } from "../../APIrequests/ActivitiesAPI";
 import { allNotificationsURL } from "../../URLs/ActivitiesURL";
 import FinalDashboard from "./Marketplaces/Ebay/Dashboard/FinalDashboard";
@@ -106,11 +52,8 @@ import ProfileComponent from "./Marketplaces/Ebay/Profile/ProfileComponent";
 import PolicyComponent from "./Marketplaces/Ebay/Policies/PolicyComponent";
 import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsComponent";
 import DisbaledProductsWrapper from "./Marketplaces/Ebay/Products/DisbaledProductsWrapper";
-// import DashboardPolaris2 from "./Marketplaces/Ebay/Dashboard/DashboardPolaris2";
 
-const { Text } = Typography;
-
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const NewPanel = (props) => {
@@ -607,42 +550,6 @@ const NewPanel = (props) => {
                 </div>
               </Stack>
             </div>
-            {/* <Row>
-              {window.innerWidth <= 768 ? (
-                <Col span={2}>
-                  <Button onClick={() => setdrawerVisible(!drawerVisible)}>
-                    <Icon source={MobileHamburgerMajorMonotone} color="base" />
-                  </Button>
-                </Col>
-              ) : null}
-              <Col span={5} offset={15} style={{ color: "#fff" }}>
-                <Row justify="end">
-                  <Col span={4}>
-                    <PhoneOutlined />
-                  </Col>
-                  <Col
-                    span={20}
-                    onClick={() => props.history.push("/panel/ebay/appaccount")}
-                  >
-                    <Stack vertical={false} spacing="tight">
-                      <Avatar
-                        style={{
-                          color: "#084e8a",
-                          backgroundColor: "rgb(206 224 237 / 1)",
-                        }}
-                      >
-                        {userDetails["username"][0].toUpperCase()}
-                      </Avatar>
-                      {window.innerWidth > 768 ? (
-                        <Text strong style={{ color: "#fff" }}>
-                          {userDetails["username"]}
-                        </Text>
-                      ) : null}
-                    </Stack>
-                  </Col>
-                </Row>
-              </Col>
-            </Row> */}
           </Header>
           <Content
             // style={{ marginTop: "64px" }}
@@ -677,10 +584,6 @@ const NewPanel = (props) => {
                 path="/panel/ebay/products"
                 component={NewProductsComponent}
               />
-              <Route
-                path="/panel/ebay/disabledproducts"
-                component={DisbaledProductsWrapper}
-              />
               <Route path="/panel/ebay/accounts" component={NewAccountGrid} />
               <Route
                 path="/panel/ebay/appaccount"
@@ -691,6 +594,16 @@ const NewPanel = (props) => {
                   />
                 )}
               />
+              <Route path="/panel/ebay/profiles" component={ProfileComponent} />
+              <Route path="/panel/ebay/policy" component={PolicyComponent} />
+              <Route
+                path="/panel/ebay/templates"
+                component={TemplateComponent}
+              />
+              <Route
+                path="/panel/ebay/disabledproducts"
+                component={DisbaledProductsWrapper}
+              />
               <Route path="/panel/ebay/orders" component={OrdersComponent} />
               <Route
                 path="/panel/ebay/vieworders1"
@@ -700,20 +613,14 @@ const NewPanel = (props) => {
                 path="/panel/ebay/vieworders"
                 component={ViewOrdersPolarisNew}
               />
-              <Route path="/panel/ebay/profiles" component={ProfileComponent} />
-              <Route path="/panel/ebay/policy" component={PolicyComponent} />
-              <Route path="/panel/ebay/message" component={Ebaymessage} />
-              <Route
-                path="/panel/ebay/templates"
-                component={TemplateComponent}
-              />
-              <Route
-                path="/panel/ebay/pricing"
-                render={() => <PlansComponentAnt fromOnBoarding={false} />}
-              />
               <Route
                 path="/panel/ebay/configurations"
                 component={Configuration}
+              />
+              <Route path="/panel/ebay/message" component={Ebaymessage} />
+              <Route
+                path="/panel/ebay/pricing"
+                render={() => <PlansComponentAnt fromOnBoarding={false} />}
               />
               <Route path="/panel/ebay/activity" component={ActivityGrid} />
               <Route path="/panel/ebay/help" component={EbayHelpComponent} />

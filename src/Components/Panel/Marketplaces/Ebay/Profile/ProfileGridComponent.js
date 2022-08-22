@@ -1,4 +1,3 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import {
   Stack,
   Button as ShopifyButton,
@@ -12,25 +11,19 @@ import {
   Tooltip,
 } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
-import { Col, Image, PageHeader, Row, Space, Typography } from "antd";
+import { Col, Image, PageHeader, Row, Typography } from "antd";
 import React, { useState, useEffect, useCallback } from "react";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
-import { deleteProfile } from "../../../../../Apirequest/ebayApirequest/profileApi";
 import { getProfiles } from "../../../../../APIrequests/ProfilesAPI";
 import { getpaginationInfo } from "../../../../../services/helperFunction";
 import { notify } from "../../../../../services/notify";
-import FilterComponent from "../../../../../Subcomponents/Aggrid/filterComponent";
 import { prepareChoiceoption } from "../../../../../Subcomponents/Aggrid/gridHelper";
 import PaginationComponent from "../../../../../Subcomponents/Aggrid/paginationComponent";
 import { showingGridRange } from "../../../../../Subcomponents/Aggrid/showgridrange";
-import {
-  getProfilesURL,
-  getProfilesURLFilter,
-} from "../../../../../URLs/ProfilesURL";
+import { getProfilesURLFilter } from "../../../../../URLs/ProfilesURL";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
 import { mappingShopIDwithCountry } from "../Orders/SampleOrderData";
 import NewFilterComponentSimilarPolaris from "../Products/NewFilterComponentSimilarPolaris";
-// import { getFilterforRequest } from "../Products/ebayproducthelper";
 import {
   numberOperatorOptions,
   stringOperatorOptions,
@@ -110,30 +103,6 @@ const ProfileGridComponent = (props) => {
               getAllProfiles={getAllProfiles}
             />
           </Stack>
-          // <Space size="middle">
-          //   <Tooltip title="Edit">
-          //     <EditOutlined
-          //       style={{ cursor: "pointer" }}
-          //       onClick={() => {
-          //         let { id } = record;
-          //         props.history.push(`/panel/ebay/createprofileUS?id=${id}`);
-          //       }}
-          //     />
-          //   </Tooltip>
-          //   <Tooltip title="Delete">
-          //     <DeleteOutlined
-          //       style={{ cursor: "pointer" }}
-          //       onClick={async () => {
-          //         let { id } = record;
-          //         let { success, message } = await deleteProfile(id);
-          //         if (success) {
-          //           notify.success(message);
-          //           getAllProfiles();
-          //         } else notify.error(message);
-          //       }}
-          //     />
-          //   </Tooltip>
-          // </Space>
         );
       },
     },
@@ -184,9 +153,6 @@ const ProfileGridComponent = (props) => {
     temp["filters"] = [...componentFilters];
     setFiltersProps(temp);
   };
-  useEffect(() => {
-    // console.log("allProfiles", allProfiles);
-  }, [allProfiles]);
 
   const getFlag = (country) => {
     let testArr = Object.keys(mappingShopIDwithCountry).filter((siteId) => {
@@ -322,7 +288,6 @@ const ProfileGridComponent = (props) => {
       setPaginationProps(tempPaginationProps);
     } else {
       notify.error(message);
-      // props.history.push("/auth/login");
     }
   };
   const getAllProfiles = async () => {
@@ -365,11 +330,6 @@ const ProfileGridComponent = (props) => {
     prepareFilters();
     getAccounts();
   }, []);
-
-  useEffect(() => {
-    // getAllProfiles();
-    // console.log("paginationProps", paginationProps);
-  }, [paginationProps]);
 
   const onPaginationChange = (paginationProps) => {
     setPaginationProps(paginationProps);
@@ -530,9 +490,7 @@ const ProfileGridComponent = (props) => {
   );
 
   useEffect(() => {
-    // if (filterProfileNameORCountry !== "") {
     verify(filterProfileNameORCountry);
-    // }
   }, [filterProfileNameORCountry, searchWithProfileName]);
 
   const renderOtherFilters = () => {
@@ -578,7 +536,6 @@ const ProfileGridComponent = (props) => {
   return (
     <PageHeader
       className="site-page-header-responsive"
-      // title="Profiles"
       title={
         <Tooltip
           // content="For creating listings on eBay, profile is mandatory"
@@ -614,7 +571,6 @@ const ProfileGridComponent = (props) => {
           >
             <Stack wrap>
               <Stack.Item fill>{renderTitleOrSKU()}</Stack.Item>
-              {/* <Stack.Item>{renderChoiceListForProfilenameCountry()}</Stack.Item> */}
               <Stack.Item>{renderOtherFilters()}</Stack.Item>
             </Stack>
             <Stack spacing="tight">
@@ -651,7 +607,6 @@ const ProfileGridComponent = (props) => {
         setFiltersDrawerVisible={setFiltersDrawerVisible}
         filtersDrawerVisible={filtersDrawerVisible}
         filters={filters}
-        // operatorOptions={operatorOptions}
         stringOperatorOptions={stringOperatorOptions}
         numberOperatorOptions={numberOperatorOptions}
         setFilters={setFilters}

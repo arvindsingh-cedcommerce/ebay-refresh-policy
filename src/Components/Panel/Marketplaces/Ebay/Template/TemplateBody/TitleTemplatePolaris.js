@@ -137,10 +137,6 @@ const TitleTemplatePolaris = (props) => {
       let formDataCopy = { ...formData };
       formDataCopy[formFields[0]]["default_setting"]["value"] += `{{${value}}}`;
     }
-    // else if (formFields.length === 2)
-    //   temp[formFields[0]][formFields[1]] = value;
-    // else if (formData.length === 3)
-    //   temp[formFields[0]][formFields[1]][formFields[2]] = value;
     setDefault_settings(temp);
   };
 

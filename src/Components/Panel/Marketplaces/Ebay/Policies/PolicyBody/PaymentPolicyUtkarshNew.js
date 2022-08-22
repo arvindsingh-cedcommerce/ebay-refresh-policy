@@ -1,6 +1,4 @@
 import {
-  SkeletonBodyText,
-  SkeletonPage,
   Banner,
   Button,
   ButtonGroup,
@@ -20,17 +18,16 @@ import {
   saveBusinessPolicy,
 } from "../../../../../../Apirequest/ebayApirequest/policiesApi";
 import SkeletonPaymentPolicy from "../../SkeletonComponents/Policy/SkeletonPaymentPolicy";
-import PaymentPolicy from "./RenderComponent/PaymentPolicy";
 import { withRouter } from "react-router-dom";
 import { notify } from "../../../../../../services/notify";
 import { Typography } from "antd";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import { json } from "../../../../../../globalConstant/static-json";
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 const PaymentPolicyUtkarshNew = (props) => {
-  const { loader, recieveFormdata, site_id, type, shop_id, id } = props;
+  const { site_id, type, shop_id, id } = props;
   const [dataReceivedFromAPI, setDataReceivedFromAPI] = useState(true);
 
   // account status
@@ -141,8 +138,6 @@ const PaymentPolicyUtkarshNew = (props) => {
         }
       });
     } else {
-      // notify.error(message);
-      // props.history.push("/auth/login");
     }
   };
   useEffect(() => {
@@ -346,21 +341,7 @@ const PaymentPolicyUtkarshNew = (props) => {
             url: `https://www.bizpolicy.ebay${domainName}/businesspolicy/${type}?profileId=${id}`,
             external: true,
           },
-          // {
-          //   content: "Save",
-          //   loading: saveLoader,
-          //   onAction: () => {
-          //     saveFunc();
-          //   },
-          // },
         ]}
-        // primaryFooterAction={{
-        //   content: "Save",
-        //   loading: saveLoader,
-        //   onAction: () => {
-        //     saveFunc();
-        //   },
-        // }}
       >
         <div
           style={{

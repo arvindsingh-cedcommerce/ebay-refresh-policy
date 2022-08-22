@@ -1,37 +1,18 @@
-import {
-  Col,
-  Image,
-  PageHeader,
-  Row,
-  TreeSelect,
-  Typography,
-  List,
-  Modal,
-  Progress,
-  Steps,
-  Collapse,
-  Divider,
-  Alert,
-} from "antd";
+import { Col, Image, PageHeader, Row, Typography, Modal, Steps } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
-import { blogData, newsData, planData } from "./DashboardData";
+import { blogData, newsData } from "./DashboardData";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
-import { Line, RingProgress, Column, Sunburst } from "@ant-design/plots";
 import {
   dashboardAnalyticsURL,
   newsBlogsURL,
-  orderAnalyticsURL,
-  productAnalyticsURL,
 } from "../../../../../URLs/DashboardURL";
 import {
   Select,
   Card,
   Stack,
-  Button,
   Tabs,
   Thumbnail,
   Link,
-  DescriptionList,
   ResourceList,
   TextStyle,
   Label,
@@ -48,8 +29,6 @@ import {
   getCountryName,
 } from "../../../Accounts/NewAccountGrid";
 import { getSiteID } from "../../../Accounts/NewAccount";
-import { getAllNotifications } from "../../../../../APIrequests/ActivitiesAPI";
-import { allNotificationsURL } from "../../../../../URLs/ActivitiesURL";
 import { notify } from "../../../../../services/notify";
 import MyResponsivePieChild from "./MyResponsiveChild";
 import { withRouter } from "react-router-dom";
@@ -61,16 +40,10 @@ import StackedBarAnt from "./StackedBarAnt";
 import StackedLineAnt from "./StackedLineAnt";
 import MyResponsivePie2TotalOrder from "./MyResponsivePie2TotalOrder";
 import MyResponsiveChildOrders from "./MyResponsiveChildOrders";
-import {
-  ArrowDownMinor,
-  ArrowUpMinor,
-  RefreshMinor,
-} from "@shopify/polaris-icons";
+import { ArrowDownMinor, ArrowUpMinor } from "@shopify/polaris-icons";
 import { SyncOutlined } from "@ant-design/icons";
 import { faqs } from "../Products/SampleProductData";
 import { TextLoop } from "react-text-loop-next";
-import Marquee from "react-fast-marquee";
-import AntPieProductAnalytics from "./AntPieProductAnalytics";
 import { getParsedProductAnalyticsDataAntD } from "./ProductCountAnalyticsHelper";
 import WhatsApp from "../../../../../assets/whatsapp.png";
 import Skype from "../../../../../assets/skype.png";
@@ -78,7 +51,6 @@ import Mail from "../../../../../assets/mail.png";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
-const { Panel } = Collapse;
 
 const FinalDashboard = (props) => {
   const { queuedTasks } = props;
@@ -501,7 +473,6 @@ const FinalDashboard = (props) => {
       }
       if (policy && categoryTemplate && profile) {
         setReqiuredCurrentStep(2);
-        // setReqiuredCurrentStep(5);
       }
       if (
         policy &&
@@ -530,31 +501,11 @@ const FinalDashboard = (props) => {
   const format = (input) => {
     var datePart = input.match(/\d+/g),
       year = datePart[0],
-      // .substring(2), // get only two digits
       month = datePart[1],
       day = datePart[2];
 
     return day + "-" + month + "-" + year;
   };
-  const addedDate = (activedDate, validity) => {
-    console.log(activedDate);
-
-    // let month = next_date.getUTCMonth() + 1; //months from 1-12
-    // let day = next_date.getUTCDate();
-    // let year = next_date.getUTCFullYear();
-    // let newdate = year + "-" + month + "-" + day;
-    // console.log(someDate, newdate, next_date);
-    return activedDate;
-  };
-  // const format = (inputDate) => {
-  //   var date = new Date(inputDate);
-  //   if (!isNaN(date.getTime())) {
-  //     // Months use 0 index.
-  //     return (
-  //       date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-  //     );
-  //   }
-  // }
   const hitDashoboardAPI = async (refresh) => {
     setDashboardSkeleton(true);
     let postData = {};
@@ -697,36 +648,12 @@ const FinalDashboard = (props) => {
     }
   }, [connectedAccountsArray]);
 
-  const hitCurrentPlanDetails = () => {
-    let tempPlanDetails = { ...currentPlanDetails };
-    const { name, price, activated_on, billing_on } = planData;
-    tempPlanDetails["Current Plan"] = name;
-    tempPlanDetails["Current Plan Price"] = "$ " + price;
-    tempPlanDetails["Plan Activated On"] = activated_on;
-    tempPlanDetails["Next Billing Cycle"] = billing_on;
-    setCurrentPlanDetails(tempPlanDetails);
-  };
-
   useEffect(() => {
     getAllConnectedAccounts();
     hitNews();
     hitBlogs();
-    // hitCurrentPlanDetails();
     hitFAQs();
   }, []);
-
-  // useEffect(() => {
-  //   console.log(accountClicked);
-  // }, [accountClicked]);
-
-  const generateRandomColor = () => {
-    var letters = "0123456789ABCDEF";
-    var color = "#";
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
 
   const get21uniqueColors = () => {
     let arr = [];
@@ -813,14 +740,6 @@ const FinalDashboard = (props) => {
         >
           <Text type="secondary">Refresh Dashboard Stats</Text>
         </AntButton>,
-        // <Button
-        //   monochrome
-        //   icon={<Icon source={RefreshMinor} color="base" />}
-        //   onClick={() => hitDashoboardAPI(true)}
-        //   key={"test"}
-        // >
-        //   Refresh
-        // </Button>,
       ]}
     >
       <Row gutter={[0, 24]}>
@@ -841,36 +760,7 @@ const FinalDashboard = (props) => {
         <Col span={24}>
           <Row gutter={[16, 8]}>
             <Col span={16}>
-              <Card
-                sectioned
-                // primaryFooterAction={
-                //   reqiuredCurrentStep < 2
-                //     ? {
-                //         content: getButton(),
-                //         onAction: () => {
-                //           switch (reqiuredCurrentStep) {
-                //             case -1:
-                //               props.history.push("policiesUS");
-                //               break;
-                //             case 0:
-                //               props.history.push("templatesUS/grid");
-                //               break;
-                //             case 1:
-                //               props.history.push("createprofileUS");
-                //               break;
-                //           }
-                //         },
-                //       }
-                //     : notProfiledProductCount > 0
-                //     ? {
-                //         content: "Create Profile",
-                //         onAction: () => {
-                //           props.history.push("createprofileUS");
-                //         },
-                //       }
-                //     : false
-                // }
-              >
+              <Card sectioned>
                 <Card.Section>
                   {dashboardSkeleton ? (
                     <SkeletonDisplayText size="extraLarge" />
@@ -898,12 +788,7 @@ const FinalDashboard = (props) => {
                       {reqiuredCurrentStep >= 2 ? (
                         <>
                           {reqiuredCurrentStep === 3 ? (
-                            <Stack
-                              // distribution="equalSpacing"
-                              // alignment="center"
-                              wrap={false}
-                              vertical
-                            >
+                            <Stack wrap={false} vertical>
                               <Text strong>
                                 Complete{" "}
                                 <Link
@@ -1055,8 +940,6 @@ const FinalDashboard = (props) => {
           <Row gutter={[16, 8]}>
             <Col span={6}>
               <Card
-                // title="Connected Accounts"
-                // title="Acive Accounts"
                 title={
                   <Tooltip content="Number of active accounts connected on app">
                     <TextStyle variation="strong">
@@ -1081,21 +964,6 @@ const FinalDashboard = (props) => {
                 ) : (
                   <Stack distribution="center">
                     <div style={{ padding: "36px 0px" }}>
-                      {/* <Progress
-                      type="circle"
-                      width={80}
-                      format={() =>
-                        `${connectedAccountsArray.length}/${accountConnectionCount}`
-                      }
-                      percent={
-                        (connectedAccountsArray.length * 100) /
-                        accountConnectionCount
-                      }
-                      strokeWidth={8}
-                      strokeColor="#1890ff"
-                      // status={remainingProductCredits === 100 && "active"}
-                      status="active"
-                    /> */}
                       <Title
                         level={1}
                         style={{ marginBottom: "-15px", fontSize: "65px" }}
@@ -1106,7 +974,6 @@ const FinalDashboard = (props) => {
                         type="secondary"
                         style={{ fontSize: "18px", marginLeft: "5px" }}
                       >
-                        {/* left of {accountConnectionCount} */}
                         out of {connectedAccountsArray.length}
                       </Text>
                     </div>
@@ -1116,7 +983,6 @@ const FinalDashboard = (props) => {
             </Col>
             <Col span={6}>
               <Card
-                // title="Product Credits Remaining"
                 title={
                   <Tooltip content="Number of products can list on eBay from app">
                     <TextStyle variation="strong">
@@ -1141,16 +1007,6 @@ const FinalDashboard = (props) => {
                 ) : (
                   <Stack distribution="center">
                     <div style={{ padding: "36px 0px" }}>
-                      {/* <Progress
-                      type="circle"
-                      width={80}
-                      format={() => remainingProductCreditsFormatted}
-                      percent={remainingProductCredits}
-                      strokeWidth={8}
-                      strokeColor="#1890ff"
-                      // status={remainingProductCredits === 100 && "active"}
-                      status="active"
-                    /> */}
                       <Title
                         level={1}
                         style={{ marginBottom: "-15px", fontSize: "65px" }}
@@ -1174,7 +1030,6 @@ const FinalDashboard = (props) => {
             </Col>
             <Col span={6}>
               <Card
-                // title="Order Credits Remaining"
                 title={
                   <Tooltip content="Number of orders can create on Shopify">
                     <TextStyle variation="strong">
@@ -1190,7 +1045,6 @@ const FinalDashboard = (props) => {
                   </Tooltip>
                 }
                 sectioned={dashboardSkeleton ? true : false}
-                // sectioned={dashboardSkeleton ? true : false}
                 bordered={false}
               >
                 {dashboardSkeleton ? (
@@ -1200,16 +1054,6 @@ const FinalDashboard = (props) => {
                 ) : (
                   <Stack distribution="center">
                     <div style={{ padding: "36px 0px" }}>
-                      {/* <Progress
-                      type="circle"
-                      width={80}
-                      format={() => remainingOrderCreditsFormatted}
-                      percent={remainingOrderCredits}
-                      strokeWidth={8}
-                      strokeColor="#1890ff"
-                      // status={remainingOrderCredits === 100 && "active"}
-                      status="active"
-                    /> */}
                       <Title
                         level={1}
                         style={{ marginBottom: "-15px", fontSize: "65px" }}
@@ -1259,7 +1103,6 @@ const FinalDashboard = (props) => {
               <Card
                 sectioned
                 size="small"
-                // title="Product Analytics"
                 title={
                   <Tooltip content="Check eBay product status with account specification">
                     <TextStyle variation="strong">
@@ -1297,13 +1140,6 @@ const FinalDashboard = (props) => {
                   ) : (
                     <>
                       {accountClicked && !accountClicked.status && (
-                        // <AntPieProductAnalytics
-                        //   productAnalyticsData={productCountAnalyticsDataAnt}
-                        //   // uniquesColors={uniquesColors}
-                        //   // accountClicked={accountClicked}
-                        //   // setAccountClicked={setAccountClicked}
-                        //   // accountClickedDetails={accountClickedDetails}
-                        // />
                         <MyResponsivePie2
                           productAnalyticsData={productAnalyticsData}
                           uniquesColors={uniquesColors}
@@ -1314,7 +1150,6 @@ const FinalDashboard = (props) => {
                       )}
                       {accountClicked && accountClicked.status && (
                         <>
-                          {/* <b></b> */}
                           {accountClicked.data.flag}
                           <MyResponsivePieChild
                             accountClicked={accountClicked}
@@ -1330,7 +1165,6 @@ const FinalDashboard = (props) => {
               <Card
                 sectioned
                 size="small"
-                // title="Order Analytics"
                 title={
                   <Tooltip content="Check shopify order status with account specification">
                     <TextStyle variation="strong">
@@ -1383,7 +1217,6 @@ const FinalDashboard = (props) => {
                       )}
                       {accountClickedOrders && accountClickedOrders.status && (
                         <>
-                          {/* <b>{accountClickedOrders.data.label}</b> */}
                           {accountClickedOrders.data.flag}
                           <MyResponsiveChildOrders
                             accountClickedOrders={accountClickedOrders}
@@ -1436,7 +1269,6 @@ const FinalDashboard = (props) => {
             </Col>
             <Col span={8}>
               <Card
-                // title="Lifetime Revenue"
                 title={
                   <Tooltip content="Total amount of orders created on Shopify">
                     <TextStyle variation="strong">
@@ -1499,24 +1331,16 @@ const FinalDashboard = (props) => {
                 <ResourceList
                   items={faqsData}
                   renderItem={(item) => {
-                    const { content_link, title, image_url } = item;
-
+                    const { title } = item;
                     return (
-                      // <a
-                      //   href={content_link}
-                      //   target="_blank"
-                      //   style={{ textDecoration: "none", color: "#000" }}
-                      // >
                       <ResourceList.Item
                         onClick={(e) => props.history.push("help")}
-                        // media={<Thumbnail source={image_url} alt="News Logo" />}
                         accessibilityLabel={`View details for ${title}`}
                       >
                         <h3>
                           <TextStyle variation="strong">{title}</TextStyle>
                         </h3>
                       </ResourceList.Item>
-                      // </a>
                     );
                   }}
                 />
@@ -1603,31 +1427,6 @@ const FinalDashboard = (props) => {
                     );
                   }}
                 />
-                {/* <List
-                  size="small"
-                  dataSource={blogs}
-                  renderItem={(blog) => (
-                    <List.Item>
-                      <Stack alignment="center">
-                        <Thumbnail
-                          source={blog.image_url}
-                          alt="Black choker necklace"
-                        />
-                        <Link
-                          url={blog.content_link}
-                          monochrome
-                          external
-                          removeUnderline
-                        >
-                          <Stack vertical spacing="extraTight">
-                            <Title level={5}>{blog.title}</Title>
-                            <Text type="secondary">{blog.description}</Text>
-                          </Stack>
-                        </Link>
-                      </Stack>
-                    </List.Item>
-                  )}
-                /> */}
               </Card>
             </Col>
             <Col span={8}>
@@ -1721,8 +1520,6 @@ const FinalDashboard = (props) => {
 };
 
 export default withRouter(FinalDashboard);
-
-const { TreeNode } = TreeSelect;
 
 export const TestModalComponent = ({ passedState, passedSetState }) => {
   return (

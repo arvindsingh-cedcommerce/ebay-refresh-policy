@@ -1,12 +1,10 @@
 import {
-  Button,
   Card,
-  Stack,
   SkeletonBodyText,
   SkeletonPage,
   SkeletonDisplayText,
 } from "@shopify/polaris";
-import { Checkbox, Divider, message } from "antd";
+import { Divider } from "antd";
 import React, { useEffect, useState } from "react";
 import { getConnectedAccounts } from "../../../../../../../Apirequest/accountsApi";
 // import { getEbayshopSettings } from "../../../../../../../Apirequest/ebayApirequest/policiesApi";
@@ -14,10 +12,8 @@ import { configurationAPI } from "../../../../../../../APIrequests/Configuration
 import { notify } from "../../../../../../../services/notify";
 import { getAppSettingsURL } from "../../../../../../../URLs/ConfigurationURL";
 import { getCountryName } from "../../../../../Accounts/NewAccount";
-import AppToEbay from "../ProductSettings/AppToEbay";
-import ShopifyToApp from "../ProductSettings/ShopifyToApp";
 import AppToEbayNew from "./AppToEbayNew";
-import { countryArray, packageTypeArray, stateArray } from "./countryData";
+import { countryArray, stateArray } from "./countryData";
 import ShopifyToAppNew from "./ShopifyToAppNew";
 
 const FinalProductSettings = () => {
@@ -291,7 +287,7 @@ const FinalProductSettings = () => {
                           "product_settings"
                         ]["app_to_ebay"][field]["attributeMapping"]
                       : [];
-                  } 
+                  }
                   // else if (field === "packageType") {
                   //   temp[key]["fields"][field]["packageTypeValue"] =
                   //     data.marketplace.ebay.shop[id]["data"][

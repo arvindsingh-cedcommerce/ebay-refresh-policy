@@ -114,30 +114,16 @@ const FinalInventoryTemplate = (props) => {
             errorsCount++;
           } else temp[key] = false;
           break;
-        // case "customiseInventoryType":
-        //   if (formData[key] === "") {
-        //     temp[key] = true;
-        //     errorsCount++;
-        //   } else temp[key] = false;
         case "fixedInventory":
           console.log(key, formData[key]);
-          if (
-            formData[key] !== "" &&
-            formData[key] < 1
-            // formData["customiseInventoryType"] === "fixedInventory" &&
-            // (formData[key] !== "" || formData[key] < 1)
-          ) {
+          if (formData[key] !== "" && formData[key] < 1) {
             temp[key] = "value must be greater than 1";
             errorsCount++;
           } else temp[key] = false;
           break;
 
         case "reservedInventory":
-          if (
-            // formData["customiseInventoryType"] === "reserveInventory" &&
-            formData[key] !== "" &&
-            formData[key] < 1
-          ) {
+          if (formData[key] !== "" && formData[key] < 1) {
             temp[key] = "value must be greater than 1";
             errorsCount++;
           } else temp[key] = false;
@@ -155,17 +141,7 @@ const FinalInventoryTemplate = (props) => {
           ) {
             temp[key] = "value must be less than fixed inventory";
             errorsCount++;
-          }
-          //   else if (
-          //     formData.customiseInventoryType === "fixedInventory" &&
-          //     Number(formData.thresholdInventory) > Number(formData.fixedInventory)
-          //   ) {
-          //     console.log('118');
-          //     temp[key] = true;
-          //   console.log('temp', temp[key]);
-          //     errorsCount++;
-          //   }
-          else {
+          } else {
             temp[key] = false;
           }
           break;
@@ -175,15 +151,12 @@ const FinalInventoryTemplate = (props) => {
             errorsCount++;
           } else temp[key] = false;
           break;
-        // default:
-        //   break;
       }
     });
     setErrors(temp);
     return errorsCount === 0;
   };
   const saveFormdata = async () => {
-    // console.log(formValidator());
     if (formValidator()) {
       setSaveBtnLoader(true);
       let tempObj = {
@@ -380,12 +353,7 @@ const FinalInventoryTemplate = (props) => {
                 min={1}
                 value={formData.thresholdInventory}
                 onChange={(e) => changeHandler(e, "thresholdInventory")}
-                error={
-                  // (formData.customiseInventoryType === "fixedInventory" &&
-                  //   formData.thresholdInventory > formData.fixedInventory &&
-                  //   "should be less than fixed inventory") ||
-                  errors.thresholdInventory
-                }
+                error={errors.thresholdInventory}
               />
             </Card>
           </Layout.AnnotatedSection>

@@ -34,31 +34,6 @@ export const recentActivities = [
   },
 ];
 
-export const announcementData = [
-  {
-    date: "Jan 6, 2022",
-    title: "First Announcement",
-    content:
-      "This is first test announcementkjlbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    url: "",
-    type: "success",
-  },
-  {
-    date: "Jan 4, 2022",
-    title: "Second Announcement",
-    content: "This is second test announcement",
-    url: "",
-    type: "info",
-  },
-  {
-    date: "Jan 3, 2022",
-    title: "Third Announcement",
-    content: "This is third test announcement",
-    url: "",
-    type: "error",
-  },
-];
-
 export const newsData = [
   {
     _id: "5f12c0002c66a",

@@ -1,13 +1,6 @@
 import {
-  // Button,
-  Col,
   PageHeader,
-  Row,
   Typography,
-  Alert,
-  Spin,
-  Collapse,
-  Dropdown,
   Menu,
   Popover,
   Tag,
@@ -18,7 +11,6 @@ import {
   editProductById,
   fetchProductById,
   postActionOnProductById,
-  uploadProductById,
 } from "../../../../../APIrequests/ProductsAPI";
 import { json } from "../../../../../globalConstant/static-json";
 import { parseQueryString } from "../../../../../services/helperFunction";
@@ -27,23 +19,20 @@ import {
   editProductByIdURL,
   endProductByIdURL,
   getMetafieldsURL,
-  getProductDataURL,
   relistItemURL,
   uploadProductByIdURL,
   viewProductDataURL,
 } from "../../../../../URLs/ProductsURL";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import { notify } from "../../../../../services/notify";
-import DetailsComponentBckp from "./Components/DetailsComponentBckp";
 import DetailsComponent from "./Components/DetailsComponent";
 import DescriptionComponent from "./DescriptionComponent";
 import _ from "lodash";
 import VariantsComponent from "./Components/VariantsComponent";
 import { globalState } from "../../../../../services/globalstate";
-import { isUndefined } from "lodash";
 import ReactJson from "react-json-view";
 import ImagesComponent from "./Components/ImagesComponent";
-import { DownOutlined, SyncOutlined, UploadOutlined } from "@ant-design/icons";
+import { SyncOutlined, UploadOutlined } from "@ant-design/icons";
 import DetailsComponentNew from "./Components/DetailsComponentNew";
 import ProductDataComponentNew from "./Components/ProductDataComponentNew";
 import {
@@ -66,7 +55,6 @@ import { AlertMinor } from "@shopify/polaris-icons";
 import PopoverProduct from "./PopoverProduct";
 import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import NoProductImage from "../../../../../assets/notfound.png";
-import VariantsComponentBackup from "./Components/VariantsComponentBackup";
 import AdditionalDetailsComponent from "./Components/AdditionalDetailsComponent";
 
 const columns = [
@@ -1367,16 +1355,6 @@ const DisabledProductsView = (props) => {
             />
           ),
           Variants: (
-            // <VariantComponentDataBackup size={"small"} dataSource={variants} variantColumns={variantColumns} />
-            // <VariantsComponentBackup
-            //   size={"small"}
-            //   dataSource={variants}
-            //   variantColumns={variantColumns}
-            //   setVariantColumns={setVariantColumns}
-            //   variantData={variantData}
-            //   setVariantData={setVariantData}
-            //   editedProductDataFromAPI={editedProductDataFromAPI}
-            // />
             <VariantsComponent
               size={"small"}
               dataSource={variants}

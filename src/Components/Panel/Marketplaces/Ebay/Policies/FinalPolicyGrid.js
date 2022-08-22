@@ -1,13 +1,4 @@
-import {
-  Col,
-  Image,
-  PageHeader,
-  Row,
-  Select,
-  Space,
-  Tooltip,
-  Typography,
-} from "antd";
+import { PageHeader, Select, Typography } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Banner,
@@ -39,7 +30,7 @@ import {
 import { json } from "../../../../../globalConstant/static-json";
 
 const { Option } = Select;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const tabs = [
   {
@@ -204,11 +195,8 @@ const FinalPolicyGrid = (props) => {
       setaccountSelectionModal({
         ...accountSelectionModal,
         options: ebayAccountsObj,
-        // siteID: ebayAccountsObj[0]?.siteID,
         siteID: "",
-        // accountName: ebayAccountsObj[0]?.value,
         accountName: "",
-        // shopID: ebayAccountsObj[0]?.shopID,
         shopID: "",
         status: "",
       });
@@ -283,7 +271,6 @@ const FinalPolicyGrid = (props) => {
   }, []);
 
   const getAllPoliciesRefresh = async (refresh = false) => {
-    // setRefreshPolicyBtnClicked(true);
     setRefreshPolicyLoader(true);
     let requestData = {
       multitype: ["shipping", "payment", "return"],
@@ -309,7 +296,6 @@ const FinalPolicyGrid = (props) => {
       notify.error(message);
     }
     setRefreshPolicyLoader(false);
-    // setRefreshPolicyBtnClicked(false);
   };
 
   return (
@@ -410,24 +396,13 @@ const FinalPolicyGrid = (props) => {
         onClose={() =>
           setaccountSelectionModal({ ...accountSelectionModal, active: false })
         }
-        // title="Select account for business policy"
         title="Create policy on eBay"
         primaryAction={{
           content: "Add",
           disabled:
-            // !accountSelectionModal.selectedPolicyValue &&
             !accountSelectionModal.siteID && !accountSelectionModal.shopID,
           url: `https://www.bizpolicy.ebay${accountSelectionModal.domainName}/businesspolicy/${accountSelectionModal.selectedPolicyValue}`,
           external: true,
-          // onAction: () => {
-          //   console.log(
-          //     accountSelectionModal.domainName,
-          //     accountSelectionModal.selectedPolicyValue
-          //   );
-          //   // props.history.push(
-          //   //   `/panel/ebay/policyUS/handler?type=${accountSelectionModal.selectedPolicyValue}&site_id=${accountSelectionModal.siteID}&shop_id=${accountSelectionModal.shopID}`
-          //   // );
-          // },
         }}
       >
         <Modal.Section>
@@ -435,7 +410,6 @@ const FinalPolicyGrid = (props) => {
             Please refresh policies on app after creating it on eBay.
           </Banner>
           <br />
-          {/* <Stack distribution="center" alignment="center"> */}
           <div
             style={{
               display: "flex",
@@ -467,7 +441,6 @@ const FinalPolicyGrid = (props) => {
               />
             </div>
           </div>
-          {/* </Stack> */}
         </Modal.Section>
       </Modal>
     </PageHeader>

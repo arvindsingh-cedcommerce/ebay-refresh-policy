@@ -1,46 +1,11 @@
-import {
-  Col,
-  Image,
-  PageHeader,
-  Row,
-  Select,
-  Space,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Image, PageHeader, Select, Typography } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  deleteTemplateID,
-  getTemplates,
-} from "../../../../../../APIrequests/TemplatesAPI";
+import { getTemplates } from "../../../../../../APIrequests/TemplatesAPI";
 import { json } from "../../../../../../globalConstant/static-json";
-import {
-  deleteTempalteURL,
-  getTemplatesURL,
-} from "../../../../../../URLs/TemplateURLS";
-import NestedTableComponent from "../../../../../AntDesignComponents/NestedTableComponent";
-import TabsComponent from "../../../../../AntDesignComponents/TabsComponent";
-import {
-  getTemplatesCountTabLabel,
-  capitalizeFirstLetterofWords,
-  addTemplatesOptions,
-} from "../Helper/TemplateHelper";
-import {
-  CopyOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  LineOutlined,
-} from "@ant-design/icons";
+import { getTemplatesURL } from "../../../../../../URLs/TemplateURLS";
+import { addTemplatesOptions } from "../Helper/TemplateHelper";
 import { notify } from "../../../../../../services/notify";
-import {
-  Banner,
-  Card,
-  Modal,
-  Select as PolarisSelect,
-  Stack,
-  Tabs,
-  TextStyle,
-} from "@shopify/polaris";
+import { Card, Modal, Select as PolarisSelect, Tabs } from "@shopify/polaris";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import { getCountryName } from "../../../../Accounts/NewAccount";
 import CategoryTemplateGrid from "./TemplateGridsComponent/CategoryTemplateGrid";
@@ -50,7 +15,7 @@ import TitleTemplateGrid from "./TemplateGridsComponent/TitleTemplateGrid";
 import { withRouter } from "react-router-dom";
 
 const { Option } = Select;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 export const getCountyrName = (siteId) => {
   let countryName = json.flag_country.filter((sites) => sites.value === siteId);
@@ -187,13 +152,9 @@ const FinalTemplateGridComponent = (props) => {
       setaccountSelectionModal({
         ...accountSelectionModal,
         options: ebayAccountsObj,
-        // siteID: ebayAccountsObj[0]?.siteID,
         siteID: "",
-        // accountName: ebayAccountsObj[0]?.value,
         accountName: "",
-        // shopID: ebayAccountsObj[0]?.shopID,
         shopID: "",
-        // status: ebayAccountsObj[0]?.status,
         status: "",
       });
     } else {
@@ -350,7 +311,6 @@ const FinalTemplateGridComponent = (props) => {
         }}
       >
         <Modal.Section>
-          {/* <Stack distribution="center" alignment="center"> */}
           <div
             style={{
               display: "flex",
@@ -381,7 +341,6 @@ const FinalTemplateGridComponent = (props) => {
               />
             </div>
           </div>
-          {/* </Stack> */}
         </Modal.Section>
       </Modal>
     </PageHeader>

@@ -1,17 +1,6 @@
 import { Page } from "@shopify/polaris";
 import React, { useEffect, useState } from "react";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
-import AppSettings from "./Components/AppSettings";
-import DefaultProfile from "./Components/DefaultProfile";
-import GlobalConfiguration from "./Components/GlobalConfiguration";
-// import OrderSettingsBCKP from "./Components/OrderSettingsBCKP";
-import OrderSettingsBackup from "./Components/OrderSettingsBackup";
-import ProductSettings from "./Components/ProductSettings";
-import WebhookSettings from "./Components/WebhookSettings";
-import ImportSettingsBckp from "./Components/ImportSettingsBckp";
-import ProductSettingsNew from "./Components/ProductSettingsNew/ProductSettingsNew";
-import OrderSettingsNew from "./Components/OrderSettingsNew/OrderSettingsNew";
-import ImportSettingsNew from "./Components/ImportSettingsNew/ImportSettingsNew";
 import { configurationAPI } from "../../../../../APIrequests/ConfigurationAPI";
 import { getAppSettingsURL } from "../../../../../URLs/ConfigurationURL";
 import { notify } from "../../../../../services/notify";
@@ -76,50 +65,34 @@ const Configuration = (props) => {
     configurationTabs.forEach((tabName) => {
       switch (tabName) {
         case "Product Settings":
-          // content[tabName] = <ProductSettings />;
-          content[tabName] = 
-          <FinalProductSettings />
-          // <ProductSettingsNew />;
+          content[tabName] = <FinalProductSettings />;
           break;
-        // case "Product Settings Prev":
-        //   content[tabName] = <ProductSettings />;
+        // case "App Settings":
+        //   content[tabName] = <AppSettings />;
         //   break;
-        // case "Default Profile":
-        //   content[tabName] = <DefaultProfile />;
-        //   break;
-        case "App Settings":
-          content[tabName] = <AppSettings />;
-          break;
         case "Product Import Settings":
           content[tabName] = (
             <FinalImportSettings
               importSettingsFromSavedAPIData={importSettingsFromSavedAPIData}
             />
-            // <ImportSettingsNew
-            //   importSettingsFromSavedAPIData={importSettingsFromSavedAPIData}
-            // />
           );
           break;
-        case "Import Settings Prev":
-          content[tabName] = <ImportSettingsBckp />;
-          break;
-        case "Global Configuration":
-          content[tabName] = <GlobalConfiguration />;
-          break;
+        // case "Import Settings Prev":
+        //   content[tabName] = <ImportSettingsBckp />;
+        //   break;
+        // case "Global Configuration":
+        //   content[tabName] = <GlobalConfiguration />;
+        //   break;
         case "Order Settings":
-          // content[tabName] = <OrderSettingsBackup />;
           content[tabName] = (
             <FinalOrderSettings
               orderSettingsFromSavedAPIData={orderSettingsFromSavedAPIData}
             />
-            // <OrderSettingsNew
-            //   orderSettingsFromSavedAPIData={orderSettingsFromSavedAPIData}
-            // />
           );
           break;
-        case "Webhook Settings":
-          content[tabName] = <WebhookSettings />;
-          break;
+        // case "Webhook Settings":
+        //   content[tabName] = <WebhookSettings />;
+        //   break;
         default:
           break;
       }

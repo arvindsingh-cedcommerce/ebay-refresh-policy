@@ -8,7 +8,6 @@ const ProfileComponent = () => {
         <Switch>
           <Route
             path="/panel/ebay/profiles/grid"
-            // component={TemplateGridComponent}
             component={ProfileGridComponent}
           />
           <Route

@@ -1,6 +1,5 @@
 import {
   ActionList,
-  Banner,
   Button,
   Card,
   Checkbox,
@@ -10,24 +9,12 @@ import {
   Layout,
   Modal,
   Popover,
-  Select,
   Stack,
   TextContainer,
   TextField,
   TextStyle,
 } from "@shopify/polaris";
-import {
-  Alert,
-  Avatar,
-  Badge,
-  Col,
-  Divider,
-  Input,
-  PageHeader,
-  Row,
-  Tag,
-  Typography,
-} from "antd";
+import { Avatar, Badge, PageHeader, Tag, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import ReactJson from "react-json-view";
 import { getOrder, massAction } from "../../../../../APIrequests/OrdersAPI";
@@ -41,11 +28,10 @@ import {
   syncShipmentURL,
   updateOrderURL,
 } from "../../../../../URLs/OrdersURL";
-import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import OrderSkeleton from "../../../SkeletonComponents/OrderSkeleton";
 
-const { Paragraph, Text } = Typography;
+const { Text } = Typography;
 
 const ViewOrdersPolarisNew = (props) => {
   const [flag, setFlag] = useState(false);
@@ -401,7 +387,9 @@ const ViewOrdersPolarisNew = (props) => {
       </Form>
     );
   };
-  return flag ? <OrderSkeleton /> : (
+  return flag ? (
+    <OrderSkeleton />
+  ) : (
     <PageHeader
       onBack={() => props.history.push("/panel/ebay/orders")}
       title={shopifyOrderName ? `Order ${shopifyOrderName}` : "Order"}
@@ -443,19 +431,6 @@ const ViewOrdersPolarisNew = (props) => {
               />
             </>
           ),
-          //   "Buyer Details": (
-          //     <BuyerDetailsComponent
-          //       buyerAddress={buyerAddress}
-          //       buyerName={buyerName}
-          //       buyerEmail={buyerEmail}
-          //     />
-          //   ),
-          //   "Payment Details": <PaymentDetails paymentDetails={paymentDetails} />,
-          //   Shipping: <ShippingDetails shippingDetails={shippingDetails} />,
-          //   Fulfillments: (
-          //     <FulfillmentsDetails fulfillmentsDetails={fulfillmentsDetails} />
-          //   ),
-          //   "Billing Address": <></>,
           "eBay Order Data": (
             <ReactJson
               style={{ maxHeight: 400, overflowY: "scroll" }}
@@ -634,30 +609,6 @@ export const OrderDetailsComponent = ({
           <Card sectioned>
             <PaymentDetails paymentDetails={paymentDetails} />
           </Card>
-          {/* <Card title={"Line items"} sectioned>
-            <Stack vertical spacing="extraTight">
-              <Stack>
-                <Badge count={orderData[0]?.["quantity"]}>
-                  <Avatar shape="square" size="large" />
-                </Badge>
-                <Stack vertical spacing="extraTight">
-                  <Text strong>{orderData[0]?.["title"]}</Text>
-                  <Text type="secondary">SKU: {orderData[0]?.["sku"]}</Text>
-                </Stack>
-              </Stack>
-              <Stack distribution="equalSpacing">
-                <Text strong>Total</Text>
-                <Text strong>{orderData[0]?.["price"]}</Text>
-              </Stack>
-            </Stack> */}
-          {/* <NestedTableComponent
-              size={"small"}
-              pagination={false}
-              columns={orderColumns}
-              dataSource={orderData}
-              bordered={true}
-            /> */}
-          {/* </Card> */}
         </Layout.Section>
         <Layout.Section secondary>
           <Card title="Customer Information">

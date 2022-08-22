@@ -107,18 +107,6 @@ const NewFilterProductsTab = ({
       width: 250,
       fixed: window.innerWidth <= 768 ? false : "left",
     },
-    // {
-    //   title: <center>Status</center>,
-    //   dataIndex: "productStatus",
-    //   key: "productStatus",
-    //   className: "show",
-    //   label: "Status",
-    //   value: "status",
-    //   checked: true,
-    //   editable: true,
-    //   onCell: () => {},
-    //   width: 250,
-    // },
     {
       title: <center>Inventory</center>,
       dataIndex: "variantsCount",
@@ -149,16 +137,6 @@ const NewFilterProductsTab = ({
       checked: true,
       editable: true,
     },
-    // {
-    //   title: <center>Variant Attributes</center>,
-    //   dataIndex: "variantAttributes",
-    //   key: "variantAttributes",
-    //   className: "show",
-    //   label: "Variant Attributes",
-    //   value: "Variant Attributes",
-    //   checked: true,
-    //   editable: true,
-    // },
     {
       title: <center>Vendor</center>,
       dataIndex: "vendor",
@@ -463,11 +441,6 @@ const NewFilterProductsTab = ({
             />
           </Stack>
         );
-        // tempObject["productStatus"] = (
-        //   <Stack alignment="center" distribution="center">
-        //     <PopoverProduct>{getProductStatus(edited)}</PopoverProduct>
-        //   </Stack>
-        // );
         tempObject["productType"] = (
           <center>
             <Text>{product_type}</Text>
@@ -483,13 +456,6 @@ const NewFilterProductsTab = ({
             <Text>{profile_name}</Text>
           </center>
         );
-        // tempObject["variantAttributes"] = (
-        //   <center>
-        //     <Text copyable={variant_attributes.length && true}>
-        //       {variant_attributes.map((attibute) => attibute).join(", ")}
-        //     </Text>
-        //   </center>
-        // );
         tempObject["variantsCount"] = (
           <center>
             <Text>{quantity}</Text>
@@ -662,7 +628,6 @@ const NewFilterProductsTab = ({
         <Layout.AnnotatedSection
           id="filterProducts"
           title="Filter Products"
-          // description="Create rules to filter, group and assign Shopify Products to this newly created Template."
           description={
             <>
               <>
@@ -689,7 +654,6 @@ const NewFilterProductsTab = ({
           <Card
             primaryFooterAction={{
               content: "Test Query",
-              // disabled: query === "",
               onAction: () => {
                 const validatorFlag = validorFilterProducts();
                 if (!validatorFlag) {
@@ -703,22 +667,6 @@ const NewFilterProductsTab = ({
               loading: testQueryLoader,
             }}
           >
-            {/* <Card.Section>
-              <Banner title="Add Group" status="info">
-                <p>
-                  Add Group corresponds to || (OR) condition . i.e. If any one
-                  group condition is true then results will be shown based on
-                  applied filters
-                </p>
-              </Banner>
-              <Banner title="Add More" status="info">
-                <p>
-                  Add More corresponds to && (AND) condition. i.e. If all the
-                  conditions within that one group are true then results will be
-                  shown based on applied filters
-                </p>
-              </Banner>
-            </Card.Section> */}
             {sentenceQuery !== "  " && (
               <Card.Section>
                 <Banner status="info" icon={MarketingMajorFilled}>

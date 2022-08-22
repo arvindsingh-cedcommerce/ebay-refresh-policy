@@ -1,24 +1,10 @@
-import {
-  // Button,
-  Col,
-  PageHeader,
-  Row,
-  Typography,
-  Alert,
-  Spin,
-  Collapse,
-  Dropdown,
-  Menu,
-  Popover,
-  Tag,
-} from "antd";
+import { PageHeader, Typography, Dropdown, Menu, Popover, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
 import {
   editProductById,
   fetchProductById,
   postActionOnProductById,
-  uploadProductById,
 } from "../../../../../APIrequests/ProductsAPI";
 import { json } from "../../../../../globalConstant/static-json";
 import { parseQueryString } from "../../../../../services/helperFunction";
@@ -26,33 +12,26 @@ import {
   editProductByIdURL,
   endProductByIdURL,
   getMetafieldsURL,
-  getProductDataURL,
   relistItemURL,
   uploadProductByIdURL,
   viewProductDataURL,
 } from "../../../../../URLs/ProductsURL";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import { notify } from "../../../../../services/notify";
-import DetailsComponentBckp from "./Components/DetailsComponentBckp";
-import DetailsComponent from "./Components/DetailsComponent";
 import DescriptionComponent from "./DescriptionComponent";
 import _ from "lodash";
 import VariantsComponent from "./Components/VariantsComponent";
 import { globalState } from "../../../../../services/globalstate";
-import { isUndefined } from "lodash";
-import ReactJson from "react-json-view";
 import ImagesComponent from "./Components/ImagesComponent";
 import { DownOutlined, SyncOutlined, UploadOutlined } from "@ant-design/icons";
 import DetailsComponentNew from "./Components/DetailsComponentNew";
 import ProductDataComponentNew from "./Components/ProductDataComponentNew";
 import {
-  Badge,
   Link,
   Thumbnail,
   Stack,
   Button,
   Icon,
-  // Popover,
   Card,
   Modal,
   SkeletonPage,
@@ -62,10 +41,8 @@ import {
   SkeletonDisplayText,
 } from "@shopify/polaris";
 import { AlertMinor } from "@shopify/polaris-icons";
-import PopoverProduct from "./PopoverProduct";
 import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import NoProductImage from "../../../../../assets/notfound.png";
-import VariantsComponentBackup from "./Components/VariantsComponentBackup";
 import AdditionalDetailsComponent from "./Components/AdditionalDetailsComponent";
 
 const columns = [
@@ -208,10 +185,6 @@ const ProductViewPolarisNew = (props) => {
   // producrt type: simple/variation
   const [productType, setProductType] = useState("");
 
-  useEffect(() => {
-    // console.log(variants);
-  }, [variants]);
-
   //
   const [editedProductDataFromAPI, seteditedProductDataFromAPI] = useState([]);
 
@@ -317,24 +290,10 @@ const ProductViewPolarisNew = (props) => {
         tempURLs.push(matchedAccount);
       }
     }
-    // statusShopIDs.forEach((val) => {
-    //   if (itemUrls.length) {
-    //     itemUrls.forEach((item) => {
-    //       if (val.itemId === item.itemId) {
-    //         tempURLs.push({ ...val, ...item });
-    //       }
-    //     });
-    //   } else if (itemUrls.length < statusShopIDs.length) {
-    //     console.log(val);
-    //     tempURLs.push({ ...val });
-    //   }
-    // });
-    // setItemUrls(itemUrls);
     setItemUrls(tempURLs);
   };
 
   const extractProductUploadErrorData = (errors, ebay_product_response) => {
-    // console.log(errors, ebay_product_response);
     let errorsObj = {};
     let itemIdObj = {};
     Object.keys(errors).map((shopId) => {
@@ -347,22 +306,7 @@ const ProductViewPolarisNew = (props) => {
         };
       }
     });
-    // if (ebay_product_response) {
-    //   Object.keys(errors).map((shopId) => {
-    //     ebay_product_response.forEach((data) => {
-    //       if (data?.["ItemID"] === errors[shopId]?.["ItemID"]) {
-    //         itemIdObj[shopId] = {
-    //           itemId: errors[shopId]?.itemId,
-    //           jsonResponse: ebay_product_response,
-    //         };
-    //       }
-    //     });
-    //   });
-    // }
-    // console.log(itemIdObj);
-    // ebay_product_response &&
     getUploadedItemDetails(errors, ebay_product_response);
-    // errors && getUploadedItemDetails(errors);
     return { itemIdObj, errorsObj };
   };
 
@@ -391,7 +335,6 @@ const ProductViewPolarisNew = (props) => {
         shopsForErrors,
         ebay_product_response
       );
-      // console.log("dataForErrors", dataForErrors);
       if (Object.keys(dataForErrors).length > 0) {
         setErrorsData(dataForErrors);
       }
@@ -452,11 +395,9 @@ const ProductViewPolarisNew = (props) => {
         variations = [...rows.filter((variant, index) => index !== 0)];
       }
 
-      // let productDataClone = { ...productData };
       let productDataClone = [...productData];
       let mainProductData = {};
       let variantProductsData = [];
-      // sortedProductData = productDataClone["rows"].reduce((acc, element) => {
       sortedProductData = productDataClone.reduce((acc, element) => {
         if (!element.hasOwnProperty("sku")) {
           return [element, ...acc];
@@ -465,24 +406,19 @@ const ProductViewPolarisNew = (props) => {
       }, []);
       let editedData = sortedProductData.filter(
         (row) =>
-          // row.hasOwnProperty("edited")
           row.hasOwnProperty("source_marketplace") &&
           row["source_marketplace"] === "app"
       );
-      sortedProductData = sortedProductData.filter(
-        // (row) => !row.hasOwnProperty("edited")
-        (row) => {
-          if (
-            row.hasOwnProperty("source_marketplace") &&
-            row["source_marketplace"] === "app"
-          ) {
-          } else {
-            return row;
-          }
+      sortedProductData = sortedProductData.filter((row) => {
+        if (
+          row.hasOwnProperty("source_marketplace") &&
+          row["source_marketplace"] === "app"
+        ) {
+        } else {
+          return row;
         }
-      );
+      });
       if (editedData.length) {
-        // editedProductDataFromAPI = extractEditedData(editedData)
         seteditedProductDataFromAPI(
           extractEditedData(
             editedData,
@@ -519,9 +455,6 @@ const ProductViewPolarisNew = (props) => {
         privateListing,
       } = mainProductData;
       variant_attributes = Object.values(variant_attributes);
-      // additional_images_arr = Object.values(additional_images).length
-      //   ? [...Object.values(additional_images)]
-      //   : [];
 
       variantProductsData.forEach((variant) => {
         if (!tags) {
@@ -650,18 +583,14 @@ const ProductViewPolarisNew = (props) => {
     let { id, source_product_id } = parseQueryString(props.location.search);
     setProductId(id);
     let postData = {
-      // "filter[container_id][1]": id,
-      // source_marketplace: "ebay",
       container_id: id,
       source_product_id,
-      // source_marketplace: "ebay",
     };
     let { success, data, message } = await fetchProductById(
       viewProductDataURL,
       postData
     );
     if (success) {
-      // extractDataFromAPI(data, data.rows);
       extractDataFromAPI(
         data?.product_data,
         data?.product_data,
@@ -705,11 +634,6 @@ const ProductViewPolarisNew = (props) => {
       );
 
       let tempObj = {};
-      // ebayAccounts.forEach((account, key) => {
-      //   tempObj[account["id"]] = `${getCountryName(
-      //     account["warehouses"][0]["site_id"]
-      //   )}`;
-      // });
 
       let tempArr = ebayAccounts.map((account, key) => {
         let accountName = {
@@ -751,9 +675,7 @@ const ProductViewPolarisNew = (props) => {
   };
 
   useEffect(() => {
-    // getProductData();
     getAllConnectedAccounts();
-    // getMetaFields();
     return () => {
       globalState.removeLocalStorage("variantDataFromAPI");
     };
@@ -770,20 +692,6 @@ const ProductViewPolarisNew = (props) => {
       }
     }
   }, [errors]);
-  function differenceObjectDeep(source, other) {
-    return _.reduce(
-      source,
-      function (result, value, key) {
-        if (_.isObject(value) && _.isObject(other[key])) {
-          result[key] = differenceObjectDeep(value, other[key]);
-        } else if (!_.isEqual(value, other[key])) {
-          result[key] = other[key];
-        }
-        return result;
-      },
-      _.omit(other, _.keys(source))
-    );
-  }
 
   const mergeContainerAndVariation = (containerData, variantionData) => {
     let postData = [];
@@ -807,11 +715,7 @@ const ProductViewPolarisNew = (props) => {
         // variation: []
       },
       container_id: apiCallMainProduct["container_id"],
-      source_product_id:
-        // productType === "variation"
-        // ?
-        apiCallMainProduct["source_product_id"],
-      // : apiCallMainProduct["container_id"],
+      source_product_id: apiCallMainProduct["source_product_id"],
     };
     if (productType === "variation") {
       postData["edited_fields"] = {
@@ -849,13 +753,7 @@ const ProductViewPolarisNew = (props) => {
           for (const key in e) {
             tempObj[key] = e[key];
           }
-          // if (
-          //   tempObj.hasOwnProperty("source_product_id") &&
-          //   Object.keys(tempObj).length === 1
-          // ) {
-          // } else {
           tempForVariation.push(tempObj);
-          // }
         });
         postData["edited_fields"]["variation"] = [...tempForVariation];
       }
@@ -901,9 +799,6 @@ const ProductViewPolarisNew = (props) => {
 
   const menu = (
     <Menu>
-      {/* <Menu.Item key="SyncWithShopify">
-        <SyncOutlined /> Sync
-      </Menu.Item> */}
       <Menu.Item
         key="upload"
         onClick={() => {
@@ -962,35 +857,6 @@ const ProductViewPolarisNew = (props) => {
     </Menu>
   );
 
-  const differenceArrayDeep = () => {
-    let source = JSON.parse(globalState.getLocalStorage("variantDataFromAPI"));
-    let target = variantData;
-    let temp = [];
-    Object.keys(source).forEach((s1) => {
-      temp[s1] = {};
-      Object.keys(source[s1]).forEach((field) => {
-        if (
-          [
-            "sku",
-            "quantity",
-            "price",
-            "barcode",
-            "weight",
-            "source_product_id",
-            "weight_unit",
-          ].includes(field)
-        ) {
-          if (source[s1][field] != target[s1][field]) {
-            temp[s1][field] = target[s1][field];
-          } else if (field === "source_product_id") {
-            temp[s1][field] = target[s1][field];
-          }
-        }
-      });
-    });
-    return temp.filter((obj) => Object.keys(obj).length > 0);
-  };
-
   const differenceArrayDeepNew = (data) => {
     console.log(data);
     let parsedDataArray = data.map((variantData) => {
@@ -1007,9 +873,6 @@ const ProductViewPolarisNew = (props) => {
   const prepareDataForSave = () => {
     let variantCommonFieldsChanges = [];
     let variantCommonFieldsChangesNew = [];
-    // if (variantData.length) {
-    //   variantCommonFieldsChanges = differenceArrayDeep(variants, variantData);
-    // }
     if (customVariantData.length) {
       variantCommonFieldsChangesNew = differenceArrayDeepNew(customVariantData);
     }
@@ -1065,10 +928,6 @@ const ProductViewPolarisNew = (props) => {
     } else if (test?.itemId && test?.hasError) {
       return (
         <div style={{ display: "flex" }}>
-          {/* <Badge status="success" progress="complete">
-            <Icon source={AlertMinor} color={"red"} />
-            Uploaded
-          </Badge> */}
           <Tag color="#aee9d1" style={{ color: "#000", borderRadius: "10px" }}>
             <Stack spacing="extraTight">
               <Icon source={AlertMinor} color={"red"} />
@@ -1086,9 +945,6 @@ const ProductViewPolarisNew = (props) => {
           <Tag color="#aee9d1" style={{ color: "#000", borderRadius: "10px" }}>
             Uploaded
           </Tag>
-          {/* <Badge status="success" progress="complete">
-            Uploaded
-          </Badge> */}
           <Link url={test?.url} external removeUnderline>
             {test?.itemId}
           </Link>
@@ -1101,14 +957,6 @@ const ProductViewPolarisNew = (props) => {
         </Tag>
       );
     }
-    //  else {
-    //   // return <Badge status="attention">Not Uploaded</Badge>;
-    //   return (
-    //     <Tag color="#ffea8a" style={{ color: "#000", borderRadius: "10px" }}>
-    //       Not Uploaded
-    //     </Tag>
-    //   );
-    // }
   };
 
   const getItemURLs = () => {
@@ -1124,99 +972,8 @@ const ProductViewPolarisNew = (props) => {
       statusStructures.push(structStatus);
     });
     return statusStructures;
-    return (
-      <Stack vertical>
-        {itemUrls.map((itemUrl, index) => {
-          return itemUrl["endStatus"] ? (
-            <Stack spacing="extraTight">
-              <Badge getBadgestatus="info">{itemUrl?.abbreviation} </Badge>
-              <Text style={{ fontSize: "1.5rem" }}>Ended</Text>
-            </Stack>
-          ) : itemUrl["itemId"] ? (
-            <React.Fragment key={index}>
-              <Badge status="success">
-                {itemUrl?.abbreviation}
-                {itemUrl["hasError"] && (
-                  <Icon source={AlertMinor} color={"red"} />
-                )}
-              </Badge>
-              <Text style={{ fontSize: "1.5rem" }}>
-                <Link
-                  url={itemUrl?.url}
-                  removeUnderline
-                  external
-                  onClick={() => setViewItemURLsPopoverActive(false)}
-                >
-                  {/* {itemUrl?.url.split("/").reverse()[0]} */}
-                  {itemUrl?.itemId}
-                </Link>
-              </Text>
-            </React.Fragment>
-          ) : (
-            !itemUrl?.["itemId"] &&
-            itemUrl?.["hasError"] && (
-              <Stack spacing="extraTight">
-                <Badge status="info">{itemUrl?.abbreviation} </Badge>
-                <Text style={{ fontSize: "1.5rem" }}>Error</Text>
-              </Stack>
-            )
-          );
-          // return itemUrl.status ? (
-          //   <Stack spacing="extraTight">
-          //     <Badge status="info">{itemUrl?.site} </Badge>
-          //     <Text style={{ fontSize: "1.5rem" }}>Ended</Text>
-          //   </Stack>
-          // ) : (
-          //   <React.Fragment key={index}>
-          //     <Badge status="success">{itemUrl?.site}</Badge>
-          //     <Text style={{ fontSize: "1.5rem" }}>
-          //       <Link
-          //         url={itemUrl?.url}
-          //         removeUnderline
-          //         external
-          //         onClick={() => setViewItemURLsPopoverActive(false)}
-          //       >
-          //         {itemUrl?.url.split("/").reverse()[0]}
-          //       </Link>
-          //     </Text>
-          //   </React.Fragment>
-          // );
-        })}
-      </Stack>
-    );
   };
-  const activator = (
-    <Button
-      plain
-      disclosure="down"
-      onClick={() => {
-        setViewItemURLsPopoverActive(!viewItemURLsPopoverActive);
-      }}
-    >
-      View Status
-    </Button>
-  );
 
-  const checkFieldsEditedOrNot = (data) => {
-    const { edited_fields } = data;
-    console.log(edited_fields);
-    let flag = false;
-    // if (editedProductDataFromAPI.length) {
-    for (const key in edited_fields) {
-      if (key === "privateListing" && edited_fields[key] === "no") {
-        // flag = true;
-      } else if (key === "unit" && edited_fields[key] === "in") {
-        // flag = true;
-      } else if (edited_fields[key] === "") {
-        // flag = true;
-      } else {
-        flag = true;
-      }
-    }
-    // }
-    console.log(flag);
-    return flag;
-  };
   return showSkeleton ? (
     <SkeletonPage primaryAction fullWidth>
       <SkeletonBodyText lines={2} />
@@ -1267,7 +1024,6 @@ const ProductViewPolarisNew = (props) => {
     </SkeletonPage>
   ) : (
     <PageHeader
-      // className="site-page-header-responsive"
       title={
         <Stack alignment="center">
           <Thumbnail
@@ -1283,13 +1039,6 @@ const ProductViewPolarisNew = (props) => {
             <>{mainProduct["title"]}</>
             {itemUrls.length && (
               <Popover
-                // preferredAlignment="right"
-                // hideOnPrint={true}
-                // active={viewItemURLsPopoverActive}
-                // fluidContent={true}
-                // activator={activator}
-                // autofocusTarget="first-node"
-                // onClose={() => setViewItemURLsPopoverActive(false)}
                 placement="right"
                 content={getItemURLs()}
                 trigger="click"
@@ -1297,26 +1046,11 @@ const ProductViewPolarisNew = (props) => {
                 onVisibleChange={(e) => setViewItemURLsPopoverActive(e)}
               >
                 <Button plain>View Status</Button>
-                {/* <Popover.Pane>
-                  <Card sectioned>{getItemURLs()}</Card>
-                </Popover.Pane> */}
               </Popover>
             )}
           </Stack>
         </Stack>
       }
-      // subTitle={
-      //   <Popover
-      //     placement="right"
-      //     content={getItemURLs()}
-      //     title="Item ID(s)"
-      //     trigger="click"
-      //     visible={viewItemURLsPopoverActive}
-      //     onVisibleChange={(e) => setViewItemURLsPopoverActive(e)}
-      //   >
-      //     <Button plain>View on eBay</Button>
-      //   </Popover>
-      // }
       ghost={true}
       onBack={() => props.history.push("/panel/ebay/products")}
       extra={[
@@ -1369,16 +1103,6 @@ const ProductViewPolarisNew = (props) => {
             />
           ),
           Variants: (
-            // <VariantComponentDataBackup size={"small"} dataSource={variants} variantColumns={variantColumns} />
-            // <VariantsComponentBackup
-            //   size={"small"}
-            //   dataSource={variants}
-            //   variantColumns={variantColumns}
-            //   setVariantColumns={setVariantColumns}
-            //   variantData={variantData}
-            //   setVariantData={setVariantData}
-            //   editedProductDataFromAPI={editedProductDataFromAPI}
-            // />
             <VariantsComponent
               size={"small"}
               dataSource={variants}
@@ -1438,7 +1162,6 @@ const ProductViewPolarisNew = (props) => {
                     notify.success(message ? message : data);
                     setModal({ ...modal, active: false });
                     getProductData(connectedAccounts);
-                    // props.history.push("activity");
                   } else {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });
@@ -1457,75 +1180,3 @@ const ProductViewPolarisNew = (props) => {
 };
 
 export default ProductViewPolarisNew;
-
-// export const ProductDataComponent = ({ data, errors }) => {
-//   return (
-//     <Collapse onChange={() => {}}>
-//       {!isUndefined(data.ebay_product_data) && (
-//         <Collapse.Panel header="eBay Product Data" key="1">
-//           <ReactJson
-//             style={{ maxHeight: 200, overflowY: "scroll" }}
-//             src={!isUndefined(data.ebay_product_data) && data.ebay_product_data}
-//           />
-//         </Collapse.Panel>
-//       )}
-//       {/* {!isUndefined(data.report) && (
-//         <Collapse.Panel header="eBay Error(s) & Warnings" key="2">
-//           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 12]}>
-//             {data.report.map((error) => {
-//               return (
-//                 <Col span={24}>
-//                   <Alert
-//                     message={error["SeverityCode"]}
-//                     description={error["ShortMessage"]}
-//                     type={error["SeverityCode"].toLowerCase()}
-//                     showIcon
-//                   />
-//                 </Col>
-//               );
-//             })}
-//           </Row>
-//         </Collapse.Panel>
-//       )} */}
-//       {!isUndefined(errors) && (
-//         <Collapse.Panel header="eBay Error(s) & Warnings" key="2">
-//           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 12]}>
-//             {Object.keys(errors).map((error) => {
-//               return (
-//                 <Col span={24}>
-//                   <Alert
-//                     message={error}
-//                     description={errors[error]["Errors"].map((e) => (
-//                       <p>{e}</p>
-//                     ))}
-//                     showIcon
-//                   />
-//                 </Col>
-//               );
-//             })}
-//             {/* {data.report.map((error) => {
-//               return (
-//                 <Col span={24}>
-//                   <Alert
-//                     message={error["SeverityCode"]}
-//                     description={error["ShortMessage"]}
-//                     type={error["SeverityCode"].toLowerCase()}
-//                     showIcon
-//                   />
-//                 </Col>
-//               );
-//             })} */}
-//           </Row>
-//         </Collapse.Panel>
-//       )}
-//       {!isUndefined(data.details) && (
-//         <Collapse.Panel header="Shopify Product Data" key="3">
-//           <ReactJson
-//             style={{ maxHeight: 200, overflowY: "scroll" }}
-//             src={!isUndefined(data.details) && data.details}
-//           />
-//         </Collapse.Panel>
-//       )}
-//     </Collapse>
-//   );
-// };

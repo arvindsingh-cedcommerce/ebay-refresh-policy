@@ -1,23 +1,16 @@
 import {
-  Autocomplete,
   Banner,
   Button,
   ButtonGroup,
   Card,
   Checkbox,
-  ChoiceList,
   FormLayout,
-  Icon,
   Layout,
-  Modal,
   Select,
   Stack,
-  Tag,
-  TextContainer,
   TextField,
 } from "@shopify/polaris";
-import { SearchMinor } from "@shopify/polaris-icons";
-import { AutoComplete, Col, Image, Input, Row, Spin } from "antd";
+import { AutoComplete } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import {
@@ -1108,14 +1101,6 @@ const CategoryTemplatePolarisNew = (props) => {
       "secondary"
     );
   };
-  // useEffect(() => {
-  //   console.log("1112");
-  //   if (configurableAttributes.length) {
-  //     if (configurableAttributesRecieved) {
-  //       getTemplate();
-  //     }
-  //   }
-  // }, [configurableAttributesRecieved]);
   const getTemplate = async () => {
     if (id) {
       let { success, data, message, code } = await getTemplatebyId(id);
@@ -1586,7 +1571,9 @@ const CategoryTemplatePolarisNew = (props) => {
         <Layout>
           <Layout.AnnotatedSection
             id={`${categoryType}CategoryMapping`}
-            title={`${categoryType} Category Mapping`.toUpperCase()}
+            title={`${categoryType[0].toUpperCase()}${categoryType.slice(
+              1
+            )} Category Mapping`}
             description={
               "Select the secondary category for eBay listng. it is optional and charable eBay. also it should be related to primary category because attributes/ item specifics will be shared."
             }
@@ -1633,7 +1620,9 @@ const CategoryTemplatePolarisNew = (props) => {
         <>
           <Layout.AnnotatedSection
             id="primaryCategoryMapping"
-            title={`${categoryType} Category Mapping`.toUpperCase()}
+            title={`${categoryType[0].toUpperCase()}${categoryType.slice(
+              1
+            )} Category Mapping`}
             description={
               "Select the Primary category for eBay listings. Search option is available."
             }
@@ -1837,74 +1826,6 @@ const CategoryTemplatePolarisNew = (props) => {
             })}
           </Stack>
         )}
-
-        {/* <Stack distribution="leading">
-          {selectedConfigurableAttributes.map((attribute) => (
-            <Tag
-              onRemove={() => {
-                let temp = [...selectedConfigurableAttributes];
-                let index = temp.indexOf(attribute);
-                if (index >= 0) {
-                  temp.splice(index, 1);
-                }
-                setSelectedConfigurableAttributes(temp);
-              }}
-            >
-              {attribute}
-            </Tag>
-          ))}
-        </Stack> */}
-
-        {/* <Modal
-          open={modalEnableVariationImageSettings}
-          onClose={() => {
-            setSelectedConfigurableAttributes([]);
-            setModalEnableVariationImageSettings(false);
-            setEnableVariationImageSettings(false);
-          }}
-          title="Select Variation Image Settings"
-          secondaryActions={[
-            {
-              content: "Cancel",
-              onAction: () => {
-                setSelectedConfigurableAttributes([]);
-                setModalEnableVariationImageSettings(false);
-                setEnableVariationImageSettings(false);
-              },
-            },
-          ]}
-          primaryAction={{
-            content: "Save",
-            onAction: () => {
-              let temp = configurableAttributes
-                .filter((attribute) => attribute.checked)
-                .map((attribute) => attribute.value);
-              setSelectedConfigurableAttributes(temp);
-              setModalEnableVariationImageSettings(false);
-              !temp.length && setEnableVariationImageSettings(false);
-            },
-          }}
-        >
-          <Modal.Section>
-            <TextContainer>
-              <Stack distribution="fillEvenly">
-                {configurableAttributes.map((attribute, index) => {
-                  return (
-                    <Checkbox
-                      label={attribute.label}
-                      checked={attribute.checked}
-                      onChange={(e) => {
-                        let temp = [...configurableAttributes];
-                        temp[index]["checked"] = e;
-                        setConfigurableAttributes(temp);
-                      }}
-                    />
-                  );
-                })}
-              </Stack>
-            </TextContainer>
-          </Modal.Section>
-        </Modal> */}
       </Stack>
     );
   };

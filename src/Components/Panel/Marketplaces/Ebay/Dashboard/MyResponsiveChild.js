@@ -1,12 +1,8 @@
 import { ResponsivePie } from "@nivo/pie";
 import React, { useEffect, useState } from "react";
 import { animated } from "@react-spring/web";
-import { Stack } from "@shopify/polaris";
 
 const MyResponsiveChild = ({ accountClicked }) => {
-  // let tempData = accountClicked
-//   console.log(accountClicked.data);
-  // let tempData = [];
   const [tempData, setTempData] = useState([])
   useEffect(() => {
     let temp = [...tempData]

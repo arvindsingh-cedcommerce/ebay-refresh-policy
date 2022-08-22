@@ -1,4 +1,4 @@
-import { Alert, Card as AntCard, Input } from "antd";
+import { Alert, Input } from "antd";
 import {
   FormLayout,
   ButtonGroup,
@@ -17,7 +17,6 @@ import React, { useEffect, useState } from "react";
 import {
   getBusinessPolicy,
   getEbayshopSettings,
-  saveBusinessPolicy,
 } from "../../../../../../Apirequest/ebayApirequest/policiesApi";
 import { prepareChoiceoption } from "../../../../../../Subcomponents/Aggrid/gridHelper";
 import {
@@ -25,11 +24,10 @@ import {
   countriestoInclude,
   extractShippingDetails,
 } from "../ebaypolicyhelper";
-import { notify } from "../../../../../../services/notify";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import { withRouter } from "react-router-dom";
 import { json } from "../../../../../../globalConstant/static-json";
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 const ShippingPolicyUtkarsh = (props) => {
   const { site_id, shop_id, id, type } = props;
@@ -112,7 +110,6 @@ const ShippingPolicyUtkarsh = (props) => {
     });
 
   const prepareOptions = async () => {
-    // let {optionsRecieved, site_id, shop_id} = this.state;
     let optionsRecievedCopy = { ...optionsRecieved };
     let { success, data } = await getEbayshopSettings({ site_id, shop_id });
     if (success) {
@@ -143,7 +140,6 @@ const ShippingPolicyUtkarsh = (props) => {
         ...extractShippingDetails(ShippingServiceDetails),
       };
 
-      // this.setState({optionsRecieved});
       setOptionsRecieved(optionsRecievedCopy);
     }
   };
@@ -342,8 +338,6 @@ const ShippingPolicyUtkarsh = (props) => {
         }
       });
     } else {
-      // notify.error(message);
-      // props.history.push("/auth/login");
     }
   };
 
@@ -366,9 +360,6 @@ const ShippingPolicyUtkarsh = (props) => {
     }
   }, []);
 
-  const redirect = (url) => {
-    props.history.push(url);
-  };
   return (
     <div
       style={
@@ -408,52 +399,6 @@ const ShippingPolicyUtkarsh = (props) => {
                 url: `https://www.bizpolicy.ebay${domainName}/businesspolicy/${type}?profileId=${id}`,
                 external: true,
               },
-              // {
-              //   content: (
-              //     <Button loading={saveLoader} primary onClick={async () => {
-              //       setSaveLoader(true);
-              //       let tempRegionExcluded = regionExcluded.map((region) => {
-              //         // return { regionName: region };
-              //         return region
-              //       });
-              //       let ShippingProfile = {
-              //         name,
-              //         costType,
-              //         globalShipping,
-              //         domestic: domesticShippingServices,
-              //         international: internationalShippingServices,
-              //         // regionExcluded: tempRegionExcluded,
-              //       };
-              //       if(tempRegionExcluded.length) {
-              //         ShippingProfile['regionExcluded'] = [...tempRegionExcluded]
-              //       }
-              //       if (id) {
-              //         ShippingProfile["profileId"] = id;
-              //       }
-              //       let tempObj = {};
-              //       tempObj["ShippingProfile"] = { ...ShippingProfile };
-              //       tempObj["site_id"] = site_id;
-              //       tempObj["type"] = "ShippingProfile";
-              //       let postData = {
-              //         data: tempObj,
-              //         shop_id: shop_id,
-              //         site_id: site_id
-              //       };
-              //       let { success, data, code, message } = await saveBusinessPolicy(
-              //         postData
-              //       );
-              //       if (success) {
-              //         notify.success(message);
-              //         redirect("/panel/ebay/policiesUS");
-              //       } else {
-              //         notify.error(message);
-              //       }
-              //       setSaveLoader(false);
-              //     }}>
-              //       Save
-              //     </Button>
-              //   ),
-              // },
             ]}
           >
             <div
@@ -1155,22 +1100,6 @@ const ShippingPolicyUtkarsh = (props) => {
                                     })}
                                   </Card.Section>
                                 </Card>
-
-                                {/* <Checkbox.Group
-                options={countriestoInclude}
-                onChange={(e) => {
-            let internationalShippingServicesCopy = {
-              ...internationalShippingServices,
-            };
-            internationalShippingServicesCopy[
-              "shippingServiceInternational"
-            ][index]["regionIncluded"] = e;
-            setInternationalShippingServices(
-              internationalShippingServicesCopy
-            );
-                }}
-                value={service["regionIncluded"]}
-              /> */}
                               </Modal>
                             </Stack>
                           </FormLayout>

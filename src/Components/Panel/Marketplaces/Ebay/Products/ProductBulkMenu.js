@@ -348,7 +348,6 @@ const ProductBulkMenu = (props) => {
                 onClick={async () => {
                   setBtnLoader(true);
                   if (selectedProfle === "all") {
-                    // props.history.push("activity");
                     let { success, message, data } =
                       await uploadAndReviseOnEbay.modal.actionName(
                         uploadAndReviseOnEbay.modal.apiByAll,
@@ -356,7 +355,7 @@ const ProductBulkMenu = (props) => {
                       );
                     if (success) {
                       notify.success(message ? message : data);
-                      props.history.push("activity");
+                      props.history.push("/panel/ebay/activity");
                     } else {
                       notify.error(message ? message : data);
                       setModal({ ...modal, active: false });
@@ -372,7 +371,7 @@ const ProductBulkMenu = (props) => {
                       );
                     if (success) {
                       notify.success(message ? message : data);
-                      props.history.push("activity");
+                      props.history.push("/panel/ebay/activity");
                     } else {
                       notify.error(message ? message : data);
                       setModal({ ...modal, active: false });
@@ -493,7 +492,7 @@ const ProductBulkMenu = (props) => {
                     );
                   if (success) {
                     notify.success(message ? message : data);
-                    props.history.push("activity");
+                    props.history.push("/panel/ebay/activity");
                   } else {
                     notify.error(message ? message : data);
                     let temp = { ...importProductById };
@@ -532,14 +531,13 @@ const ProductBulkMenu = (props) => {
                 loading={btnLoader}
                 onClick={async () => {
                   setBtnLoader(true);
-                  // props.history.push("activity");
                   let { success, message, data } = await modal.actionName(
                     modal.api,
                     modal.actionPayload
                   );
                   if (success) {
                     notify.success(message ? message : data);
-                    props.history.push("activity");
+                    props.history.push("/panel/ebay/activity");
                   } else {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });

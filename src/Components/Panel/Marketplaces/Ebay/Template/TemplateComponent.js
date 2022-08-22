@@ -1,7 +1,6 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import TemplateHandlerComponent from "./TemplateHandlerComponent";
-import TemplateGridComponent from "./Components/TemplateGridComponent";
 import FinalTemplateGridComponent from "./Components/FinalTemplateGridComponent";
 
 const TemplateComponent = () => {
@@ -9,7 +8,6 @@ const TemplateComponent = () => {
     <Switch>
       <Route
         path="/panel/ebay/templates/grid"
-        // component={TemplateGridComponent}
         component={FinalTemplateGridComponent}
       />
       <Route

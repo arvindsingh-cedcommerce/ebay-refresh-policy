@@ -1,11 +1,8 @@
 import {
-  Banner,
   Button,
-  ButtonGroup,
   Card,
   Checkbox,
   ChoiceList,
-  FormLayout,
   Icon,
   Layout,
   Link,
@@ -16,38 +13,19 @@ import {
   TextContainer,
   TextField,
   TextStyle,
-  Thumbnail,
   Tooltip,
-  ProgressBar,
   DisplayText,
-  Heading,
 } from "@shopify/polaris";
-import {
-  ArrowLeftMinor,
-  ArrowRightMinor,
-  CircleInformationMajorTwotone,
-  ImportMinor,
-  InfoMinor,
-  MobileBackArrowMajorMonotone,
-  QuestionMarkMinor,
-  ViewMajorMonotone,
-} from "@shopify/polaris-icons";
+import { ImportMinor, QuestionMarkMinor } from "@shopify/polaris-icons";
 import React, { useState, useEffect } from "react";
 import { json } from "../../globalConstant/static-json";
 import { term_and_conditon } from "../../globalConstant/term&condition";
-import {
-  downloadPrivacyPolicy,
-  getMobileCode,
-} from "../../Subcomponents/Registration/UserDetailsAcceptTerms";
-import { optionsAccountType, plansSample } from "./NewRegistrationhelper";
+import { downloadPrivacyPolicy } from "../../Subcomponents/Registration/UserDetailsAcceptTerms";
+import { plansSample } from "./NewRegistrationhelper";
 import {
   checkAccountsConnected,
   checkStepCompleted,
   getImportAttribute,
-  // getAccountsConnection,
-  getInstallationForm,
-  getPlans,
-  getSiteID,
   getUserDetails,
   importCollectionProduct,
   importProduct,
@@ -57,10 +35,6 @@ import {
 } from "../../Apirequest/registrationApi";
 import { globalState } from "../../services/globalstate";
 import { environment } from "../../environment/environment";
-import Switch from "react-switch";
-import PlansComponent from "./PlansComponent";
-import { requests } from "../../services/request";
-import { isUndefined } from "lodash";
 import { getConnectedAccounts } from "../../Apirequest/accountsApi";
 import PlansComponentAnt from "./PlansComponentAnt";
 import { Progress } from "antd";
@@ -77,7 +51,6 @@ import {
   product_settings,
 } from "./StaticData/importSettings";
 import { countryArray } from "../Panel/Marketplaces/Ebay/Configurations/Components/ProductSettingsNew/countryData";
-import Text from "antd/lib/typography/Text";
 import { refreshPoliciesURL } from "../../URLs/PoliciesURL";
 import { getRefreshPolicies } from "../../APIrequests/PoliciesAPI";
 
@@ -106,7 +79,6 @@ export const accountTypeOptions = [
 ];
 
 let siteID = false;
-let domain = [];
 
 export const FinalRegistrationItemLocation = (props) => {
   const [username, setUsername] = useState("");
@@ -114,11 +86,6 @@ export const FinalRegistrationItemLocation = (props) => {
   const [similarShopifyApp, setSimilarShopifyApp] = useState(false);
 
   const totalSteps = 4;
-  const steps = [
-    "Tell Us About Yourself",
-    "Get your account linked",
-    "Choose a plan",
-  ];
 
   const [currentStep, setCurrentStep] = useState(undefined);
 
@@ -129,23 +96,14 @@ export const FinalRegistrationItemLocation = (props) => {
   });
 
   const [viewPlanModal, setViewPlanModal] = useState(false);
-  const [accountTypeValue, setAccountTypeValue] = useState(
-    accountTypeOptions[0]["value"]
-  );
 
-  const { country_mobile_code, sources, flag_country } = json;
+  const { flag_country } = json;
   const [accountConnection, setAccountConnection] = useState({
     accountType: accountTypeOptions[0]["value"],
     countryConnected: flag_country[0]["value"],
     countryImage: flag_country[0]["flag"],
     connectAccountModal: false,
   });
-
-  const [alreadySellingOnEbayValue, setAlreadySellingOnEbay] = useState(
-    alreadySellingOnEbayOptions[0]["value"]
-  );
-
-  const [necessaryFilterValue, setNecessaryFilterValue] = useState([""]);
 
   const [plans, setPlans] = useState(plansSample);
   const [importSettingsStatus, setImportSettingsStatus] = useState(true);
@@ -227,14 +185,6 @@ export const FinalRegistrationItemLocation = (props) => {
   const [next1Loader, setNext1Loader] = useState(false);
   const [next2Loader, setNext2Loader] = useState(false);
   const [next3Loader, setNext3Loader] = useState(false);
-
-  const hitGetPlans = async () => {
-    let plans = await getPlans();
-  };
-
-  const hitGetSideID = async () => {
-    let data = await getSiteID();
-  };
 
   const plansComponentCallback = () => {
     setCurrentStep(currentStep + 1);
@@ -477,36 +427,6 @@ export const FinalRegistrationItemLocation = (props) => {
     }
   };
 
-  const checkForValidation = (data) => {
-    const tempErrObj = {};
-    let errorFlag = false;
-    Object.keys(data).forEach((key) => {
-      switch (key) {
-        case "vendor":
-          if (
-            data?.[key]?.["enable"] === "yes" &&
-            data?.[key]?.["value"] === ""
-          ) {
-            tempErrObj[key] = "Please select vendor...";
-            errorFlag = true;
-          }
-          break;
-        case "productType":
-          if (
-            data?.[key]?.["enable"] === "yes" &&
-            data?.[key]?.["value"] === ""
-          ) {
-            tempErrObj[key] = "Please select product type...";
-            errorFlag = true;
-          }
-          break;
-        default:
-          break;
-      }
-    });
-    setErrors(tempErrObj);
-    return errorFlag;
-  };
   const prepareDataForImportProductFilters = () => {
     const temp = {};
     Object.keys(importProductFilters).forEach((obj) => {
@@ -554,10 +474,6 @@ export const FinalRegistrationItemLocation = (props) => {
     };
     const temp1 = {};
     if (importByAttribute) {
-      // temp1["import_collection"] = {
-      //   selected_collection: [],
-      //   enable: "no",
-      // };
       Object.keys(importProductFilters).forEach((obj) => {
         if (obj !== "import_collection") {
           if (importProductFilters[obj]["value"] === "") {
@@ -664,13 +580,6 @@ export const FinalRegistrationItemLocation = (props) => {
             },
           ]}
         >
-          {/* <Stack vertical spacing="extraTight"> */}
-          {/* <Stack>
-                <div>Additional Filter(s)</div>
-                <Tooltip content="If all options not listed then please wait while data fetching process running you can reload the page to check the options">
-                  <Icon source={QuestionMarkMinor} color="base" />
-                </Tooltip>
-              </Stack> */}
           <Stack vertical>
             <Stack distribution="fillEvenly">
               <Select
@@ -678,22 +587,12 @@ export const FinalRegistrationItemLocation = (props) => {
                 value={importProductFilters["vendor"]["value"]}
                 options={importProductFilters["vendor"]["options"]}
                 onChange={(e) => {
-                  // setErrors({
-                  //   ...errors,
-                  //   vendor: false,
-                  // });
                   let temp = {
                     ...importProductFilters,
                   };
                   temp["vendor"]["value"] = e;
                   setImportProductFilters(temp);
                 }}
-                // error={errors["vendor"]}
-                // disabled={
-                //   importProductFilters["vendor"][
-                //     "enable"
-                //   ] === "no"
-                // }
                 disabled={restrictImportByAttribute}
               />
               <Select
@@ -701,22 +600,12 @@ export const FinalRegistrationItemLocation = (props) => {
                 value={importProductFilters["productType"]["value"]}
                 options={importProductFilters["productType"]["options"]}
                 onChange={(e) => {
-                  // setErrors({
-                  //   ...errors,
-                  //   productType: false,
-                  // });
                   let temp = {
                     ...importProductFilters,
                   };
                   temp["productType"]["value"] = e;
                   setImportProductFilters(temp);
                 }}
-                // error={errors["productType"]}
-                // disabled={
-                //   importProductFilters["productType"][
-                //     "enable"
-                //   ] === "no"
-                // }
                 disabled={restrictImportByAttribute}
               />
             </Stack>
@@ -984,30 +873,6 @@ export const FinalRegistrationItemLocation = (props) => {
                                     accept_terms_conditions:
                                       registration_details["term_and_conditon"],
                                   });
-                                  // let {
-                                  //   success: checkAccountsConnectedSuccess,
-                                  //   account_connected: accountConnectedArray,
-                                  // } = await checkAccountsConnected();
-                                  // if (
-                                  //   checkAccountsConnectedSuccess &&
-                                  //   Array.isArray(accountConnectedArray) &&
-                                  //   accountConnectedArray.length > 0
-                                  // ) {
-                                  //   let ebayAccountConnectedFlag =
-                                  //     accountConnectedArray.includes("ebay");
-                                  //   if (ebayAccountConnectedFlag) {
-                                  //     console.log("660 checkStepCompleted");
-                                  //     await saveCompletedStep(1);
-                                  //     let { success, data } =
-                                  //       await checkStepCompleted();
-                                  //     if (success) {
-                                  //       setCurrentStep(data);
-                                  //       let { success, registration_details } =
-                                  //         await getUserDetails();
-                                  //       await hitAPIsForVendorProductType();
-                                  //     }
-                                  //   }
-                                  // }
                                 }
                               }
                             }
@@ -1035,27 +900,14 @@ export const FinalRegistrationItemLocation = (props) => {
                                   eBay Seller Account should be active and
                                   available for selling
                                 </Title>
-                                {/* <Stack vertical spacing="extraTight">
-                                  <Link removeUnderline external>
-                                    Opt Business Policy
-                                  </Link>
-                                  <Link removeUnderline external>
-                                    Automatic Payment Account Added
-                                  </Link>
-                                  <Link removeUnderline external>
-                                    Listing Limit Not Exausted
-                                  </Link>
-                                </Stack> */}
                               </Stack>
                             }
                             checked={userData["ebaySellerAccountActive"]}
                             disabled={
                               restrictAfterSave["ebaySellerAccountActive"]
                             }
-                            onChange={
-                              (e) =>
-                                callBackFunction(e, "ebaySellerAccountActive")
-                              // setEbaySellerAccountActive(!ebaySellerAccountActive)
+                            onChange={(e) =>
+                              callBackFunction(e, "ebaySellerAccountActive")
                             }
                           />
                           <div
@@ -1085,9 +937,8 @@ export const FinalRegistrationItemLocation = (props) => {
                             }
                             checked={userData["similarShopifyApp"]}
                             disabled={restrictAfterSave["similarShopifyApp"]}
-                            onChange={
-                              (e) => callBackFunction(e, "similarShopifyApp")
-                              // setSimilarShopifyApp(!similarShopifyApp)
+                            onChange={(e) =>
+                              callBackFunction(e, "similarShopifyApp")
                             }
                             helpText={
                               <Stack vertical spacing="extraTight">
@@ -1110,26 +961,10 @@ export const FinalRegistrationItemLocation = (props) => {
                                     </Link>{" "}
                                     to the shopify store to disconnect them.
                                   </b>
-                                  {/* <b>
-                                    To disconnect these app(s)/sales-channel{" "}
-                                    <Link
-                                      removeUnderline
-                                      external
-                                      url={shopUrlLink}
-                                    >
-                                      please visit
-                                    </Link>{" "}
-                                    to the shopify store.
-                                  </b> */}
                                 </div>
                               </Stack>
                             }
                           />
-                          {/* <Card sectioned>
-                            <div style={{ maxHeight: 170, overflowY: "scroll" }}>
-                              {term_and_conditon()}
-                            </div>
-                          </Card> */}
                           <Stack wrap={false} alignment="baseline">
                             <Checkbox
                               label={
@@ -1200,14 +1035,9 @@ export const FinalRegistrationItemLocation = (props) => {
                             },
                             loading: next2Loader,
                             disabled: !ebayAccountConnected?.id,
-                            // disabled:
-                            //   currentStep !== 1 || !ebayAccountConnected?.id,
                           }}
                         >
-                          <Card.Section
-                          // title="Account Connection"
-                          //   title="Connect eBay account"
-                          >
+                          <Card.Section>
                             <Stack vertical spacing="extraLoose">
                               <TextStyle variation="subdued">
                                 Connect your eBay seller account with the app to
@@ -1365,12 +1195,9 @@ export const FinalRegistrationItemLocation = (props) => {
                       primaryFooterAction={{
                         content: "Next",
                         loading: next3Loader,
-                        // onAction: () => setCurrentStep(currentStep + 1),
                         onAction: async () => {
                           const temp = prepareDataForImportProductFilters();
                           setNext3Loader(true);
-                          // const errorInValidation = checkForValidation(temp);
-                          // if (!errorInValidation) {
                           let dataToPost = {
                             ebaySellerAccountActive:
                               userData["ebaySellerAccountActive"],
@@ -1380,7 +1207,6 @@ export const FinalRegistrationItemLocation = (props) => {
                             importSettingsStatus,
                             orderSettingsStatus,
                           };
-                          // await saveConfiguration(temp);
 
                           let { success, message } = await saveUserDetails(
                             dataToPost
@@ -1389,7 +1215,6 @@ export const FinalRegistrationItemLocation = (props) => {
                           if (success) {
                             await saveCompletedStep(2);
                             await saveConfiguration(temp);
-                            // await importProduct();
                             if (importByAttribute) await importProduct();
                             else if (importByCollection)
                               await importCollectionProduct();
@@ -1405,7 +1230,6 @@ export const FinalRegistrationItemLocation = (props) => {
                           }
                           setNext3Loader(false);
                         },
-                        //   disabled: currentStep !== 3,
                       }}
                     >
                       <Card.Section>
@@ -1425,17 +1249,9 @@ export const FinalRegistrationItemLocation = (props) => {
                               </span>
                             </TextStyle>
                           </Tooltip>
-                          {/* <b>Import Shopify Products</b> */}
-                          {/* <Checkbox
-                            label="Import Settings"
-                            checked={importSettingsStatus}
-                            onChange={(e) => setImportSettingsStatus(e)}
-                            disabled={restrictImportSettingsStatus}
-                          /> */}
                           <ChoiceList
                             choices={[
                               {
-                                // label: "Import By Filter(s)",
                                 label: (
                                   <Tooltip
                                     preferredPosition="mostSpace"
@@ -1475,220 +1291,7 @@ export const FinalRegistrationItemLocation = (props) => {
                               setSelectImportShopifyProduct(e);
                             }}
                           />
-                          {/* <div
-                            style={
-                              importSettingsStatus
-                                ? {}
-                                : {
-                                    pointerEvents: "none",
-                                    opacity: 0.8,
-                                  }
-                            }
-                          > */}
-                          {/* <Card>
-                              <Card.Section>
-                                <Checkbox
-                                  label="Import By Filter(s)"
-                                  checked={importByAttribute}
-                                  onChange={(e) => setImportByAttribute(e)}
-                                  disabled={
-                                    importByCollection ||
-                                    restrictImportByAttribute
-                                  }
-                                /> */}
-                          {/* <div
-                                  style={
-                                    importByAttribute
-                                      ? {}
-                                      : {
-                                          pointerEvents: "none",
-                                          opacity: 0.8,
-                                        }
-                                  }
-                                >
-                                  <Card.Section>
-                                    <Stack distribution="fillEvenly">
-                                      <Select
-                                        title="Kindly select the published status you want to import"
-                                        options={publishedStatusOptions}
-                                        value={
-                                          importProductFilters["publishedStatus"][
-                                            "value"
-                                          ]
-                                        }
-                                        onChange={(e) => {
-                                          let temp = { ...importProductFilters };
-                                          temp["publishedStatus"]["value"] = e;
-                                          setImportProductFilters(temp);
-                                        }}
-                                        label="Published Status"
-                                        disabled={restrictImportByAttribute}
-                                      />
-                                      <Select
-                                        title="Kindly select the product status you want to import"
-                                        options={productStatusOptions}
-                                        value={
-                                          importProductFilters["productStatus"][
-                                            "value"
-                                          ]
-                                        }
-                                        onChange={(e) => {
-                                          let temp = { ...importProductFilters };
-                                          temp["productStatus"]["value"] = e;
-                                          setImportProductFilters(temp);
-                                        }}
-                                        label="Product Status"
-                                        disabled={restrictImportByAttribute}
-                                      />
-                                    </Stack>
-                                  </Card.Section>
-                                  <Card.Section
-                                    // title="Optional Filters"
-                                    title="Additional Filter(s)"
-                                    actions={[
-                                      {
-                                        content:
-                                          "Refetch vendor and product type",
-                                        onAction: () =>
-                                          initiatefetchVendorProductType(),
-                                      },
-                                    ]}
-                                  >
-                                    <Stack vertical>
-                                      <Stack distribution="fillEvenly">
-                                        <Select
-                                          label="Vendor"
-                                          value={
-                                            importProductFilters["vendor"][
-                                              "value"
-                                            ]
-                                          }
-                                          options={
-                                            importProductFilters["vendor"][
-                                              "options"
-                                            ]
-                                          }
-                                          onChange={(e) => {
-                                            // setErrors({
-                                            //   ...errors,
-                                            //   vendor: false,
-                                            // });
-                                            let temp = {
-                                              ...importProductFilters,
-                                            };
-                                            temp["vendor"]["value"] = e;
-                                            setImportProductFilters(temp);
-                                          }}
-                                          // error={errors["vendor"]}
-                                          // disabled={
-                                          //   importProductFilters["vendor"][
-                                          //     "enable"
-                                          //   ] === "no"
-                                          // }
-                                          disabled={restrictImportByAttribute}
-                                        />
-                                        <Select
-                                          label="Product Type"
-                                          value={
-                                            importProductFilters["productType"][
-                                              "value"
-                                            ]
-                                          }
-                                          options={
-                                            importProductFilters["productType"][
-                                              "options"
-                                            ]
-                                          }
-                                          onChange={(e) => {
-                                            // setErrors({
-                                            //   ...errors,
-                                            //   productType: false,
-                                            // });
-                                            let temp = {
-                                              ...importProductFilters,
-                                            };
-                                            temp["productType"]["value"] = e;
-                                            setImportProductFilters(temp);
-                                          }}
-                                          // error={errors["productType"]}
-                                          // disabled={
-                                          //   importProductFilters["productType"][
-                                          //     "enable"
-                                          //   ] === "no"
-                                          // }
-                                          disabled={restrictImportByAttribute}
-                                        />
-                                      </Stack>
-                                    </Stack>
-                                  </Card.Section>
-                                </div> */}
-                          {/* </Card.Section> */}
-                          {/* <Card.Section>
-                                <Checkbox
-                                  label="Import Collection"
-                                  checked={importByCollection}
-                                  onChange={(e) => setImportByCollection(e)}
-                                  disabled={
-                                    importByAttribute ||
-                                    restrictImportByCollection
-                                  }
-                                />
-                                <div
-                                  style={
-                                    importByCollection
-                                      ? {}
-                                      : {
-                                          pointerEvents: "none",
-                                          opacity: 0.8,
-                                        }
-                                  }
-                                >
-                                  <Card.Section>
-                                    <Select
-                                      options={
-                                        importProductFilters["import_collection"][
-                                          "options"
-                                        ]
-                                      }
-                                      // label={"Collections"}
-                                      value={
-                                        importProductFilters["import_collection"][
-                                          "value"
-                                        ]
-                                      }
-                                      onChange={(e) => {
-                                        let temp = { ...importProductFilters };
-                                        temp["import_collection"]["value"] = e;
-                                        setImportProductFilters(temp);
-                                      }}
-                                      disabled={restrictImportByCollection}
-                                    />
-                                  </Card.Section>
-                                </div>
-                              </Card.Section> */}
-                          {/* </Card> */}
-                          {/* </div> */}
-                          {/* <b>Manage eBay orders?</b> */}
-                          {/* <Stack distribution="equalSpacing">
-                            <ButtonGroup segmented>
-                              <Button
-                                pressed={orderSettingsStatus}
-                                primary={orderSettingsStatus}
-                                onClick={() => setOrderSettingsStatus(true)}
-                              >
-                                Yes
-                              </Button>
-                              <Button
-                                pressed={!orderSettingsStatus}
-                                primary={!orderSettingsStatus}
-                                onClick={() => setOrderSettingsStatus(false)}
-                              >
-                                No
-                              </Button>
-                            </ButtonGroup>
-                          </Stack> */}
                           <Select
-                            // label={<b>Manage eBay orders?</b>}
                             label={
                               <Tooltip
                                 preferredPosition="above"
@@ -1717,12 +1320,6 @@ export const FinalRegistrationItemLocation = (props) => {
                               } else setOrderSettingsStatus(false);
                             }}
                           />
-                          {/* <Checkbox
-                            label="Manage eBay orders"
-                            checked={orderSettingsStatus}
-                            onChange={(e) => setOrderSettingsStatus(e)}
-                            disabled={restrictOrderSettingsStatus}
-                          /> */}
                         </Stack>
                       </Card.Section>
                     </Card>
@@ -1767,7 +1364,6 @@ export const FinalRegistrationItemLocation = (props) => {
           title="Redirect to eBay?"
           primaryAction={{
             content: "Redirect",
-            // onAction: handleChange,
             onAction: () => {
               setCurrentStep(currentStep + 1);
               setAccountConnection({

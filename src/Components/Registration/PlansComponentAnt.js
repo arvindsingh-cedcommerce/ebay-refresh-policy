@@ -37,7 +37,7 @@ import { notify } from "../../services/notify";
 import { withRouter } from "react-router-dom";
 
 const { Title, Text, Link } = Typography;
-const PlansComponent = ({
+const PlansComponentAnt = ({
   // plans,
   plansComponentCallback,
   fromOnBoarding,
@@ -468,4 +468,4 @@ const PlansComponent = ({
   );
 };
 
-export default withRouter(PlansComponent);
+export default withRouter(PlansComponentAnt);

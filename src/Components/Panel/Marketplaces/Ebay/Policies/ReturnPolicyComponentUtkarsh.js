@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card as AntCard, Row, Col, Input, Form, Checkbox } from "antd";
+import { Input } from "antd";
 import {
   Card,
   FormLayout,
@@ -7,33 +7,18 @@ import {
   Button,
   Layout,
   Stack,
-  ChoiceList,
   SkeletonBodyText,
   SkeletonPage,
   ButtonGroup,
 } from "@shopify/polaris";
-import {
-  getBusinessPolicy,
-  saveBusinessPolicy,
-} from "../../../../../Apirequest/ebayApirequest/policiesApi";
+import { getBusinessPolicy } from "../../../../../Apirequest/ebayApirequest/policiesApi";
 import { Typography } from "antd";
-import { notify } from "../../../../../services/notify";
 import { withRouter } from "react-router-dom";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
 import { json } from "../../../../../globalConstant/static-json";
 
 const { Title } = Typography;
 const { TextArea } = Input;
-const layout =
-  // {
-  //   labelCol: {
-  //     span: 4,
-  //   },
-  //   wrapperCol: {
-  //     span: 20,
-  //   },
-  // }
-  null;
 
 const returnPeriodOptions = [
   { label: "30 days", value: 30 },
@@ -42,7 +27,6 @@ const returnPeriodOptions = [
 
 const ReturnPolicyComponentUtkarsh = (props) => {
   const { shop_id, site_id, id, type } = props;
-  const [form] = Form.useForm();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [returnsAccepted, setReturnsAccepted] = useState(false);
@@ -53,51 +37,11 @@ const ReturnPolicyComponentUtkarsh = (props) => {
   });
   const [saveLoader, setSaveLoader] = useState(false);
 
-  const onFinish = (values) => {
-    console.log(values);
-  };
   // account status
   const [accountStatus, setAccountStatus] = useState("active");
 
   // domain name
   const [domainName, setDomainName] = useState("");
-
-  const prepareDataForPost = () => {
-    let tempObj = {};
-    let ReturnProfile = {};
-    ReturnProfile["name"] = name;
-    ReturnProfile["returnsAccepted"] = returnsAccepted;
-    if (description !== "") {
-      ReturnProfile["description"] = description;
-    } else {
-      ReturnProfile["description"] = "";
-    }
-    tempObj["site_id"] = site_id;
-    tempObj["type"] = "ReturnProfile";
-    // tempObj["returnsAccepted"] = returnsAccepted ? returnsAccepted : false;
-    // tempObj["shop_id"] = shop_id;
-    if (returnsAccepted) {
-      let domestic = {};
-      domestic["returnShippingCostPayer"] =
-        domesticObj["returnShippingCostPayer"];
-      domestic["returnPeriod"] = Number(domesticObj["returnPeriod"]);
-      ReturnProfile["domestic"] = domestic;
-      ReturnProfile["domestic"]["returnsAccepted"] = returnsAccepted;
-
-      // let international = {};
-      // international["returnShippingCostPayer"] =
-      //   internationalObj["returnShippingCostPayer"];
-      // international["returnPeriod"] = Number(internationalObj["returnPeriod"]);
-      // ReturnProfile["international"] = international;
-    }
-    if (id) {
-      ReturnProfile["profileId"] = id;
-    }
-    tempObj["ReturnProfile"] = { ...ReturnProfile };
-    let returnData = { data: tempObj, shop_id, site_id };
-    return returnData;
-  };
-  // useEffect(() => console.log(domesticObj), [domesticObj]);
 
   const extractData = (data) => {
     setName(data["title"]);
@@ -145,8 +89,6 @@ const ReturnPolicyComponentUtkarsh = (props) => {
         }
       });
     } else {
-      // notify.error(message);
-      // props.history.push("/auth/login");
     }
   };
   useEffect(() => {
@@ -195,27 +137,6 @@ const ReturnPolicyComponentUtkarsh = (props) => {
                 content: <Button primary>Edit</Button>,
                 url: `https://www.bizpolicy.ebay${domainName}/businesspolicy/${type}?profileId=${id}`,
                 external: true,
-                // content: (
-                //   <Button
-                //     loading={saveLoader}
-                //     primary
-                //     onClick={async () => {
-                //       setSaveLoader(true);
-                //       let postData = prepareDataForPost();
-                //       let { success, data, code, message } =
-                //         await saveBusinessPolicy(postData);
-                //       if (success) {
-                //         notify.success(message);
-                //         redirect("/panel/ebay/policiesUS");
-                //       } else {
-                //         notify.error(message);
-                //       }
-                //       setSaveLoader(false);
-                //     }}
-                //   >
-                //     Save
-                //   </Button>
-                // ),
               },
             ]}
           >
@@ -279,14 +200,6 @@ const ReturnPolicyComponentUtkarsh = (props) => {
                             No
                           </Button>
                         </ButtonGroup>
-                        {/* <Checkbox
-            checked={returnsAccepted}
-            onChange={() => {
-              setReturnsAccepted(!returnsAccepted);
-            }}
-          >
-            Returns accepted
-          </Checkbox> */}
                       </FormLayout>
                     </Card>
                   </Layout.AnnotatedSection>
@@ -344,15 +257,6 @@ const ReturnPolicyComponentUtkarsh = (props) => {
                                 });
                               }}
                             />
-                            {/* <Input
-                        value={domesticObj["returnPeriod"]}
-                        onChange={(e) => {
-                          setDomesticObj({
-                            ...domesticObj,
-                            returnPeriod: e.target.value,
-                          });
-                        }}
-                      /> */}
                           </Stack>
                         </FormLayout>
                       </Card>
@@ -362,61 +266,6 @@ const ReturnPolicyComponentUtkarsh = (props) => {
               </Card>
             )}
           </div>
-          {/* {returnsAccepted && (
-  <Card
-    sectioned
-    title={<Title level={4}>International Returns</Title>}
-  >
-  <FormLayout>
-    <Layout>
-      <Layout.AnnotatedSection
-        title={"Return Shipping Cost Payer"}
-      >
-        <Card sectioned>
-          <FormLayout>
-          <Stack vertical spacing="extraTight">
-          <Select
-            options={[
-              { label: "Seller", value: "SELLER" },
-              { label: "Buyer", value: "BUYER" },
-            ]}
-            value={internationalObj["returnShippingCostPayer"]}
-            onChange={(e) =>
-              setinternationalObj({
-                ...internationalObj,
-                returnShippingCostPayer: e,
-              })
-            }
-          />
-          </Stack>
-          </FormLayout>
-        </Card>
-      </Layout.AnnotatedSection>
-    </Layout>
-
-    <Layout>
-      <Layout.AnnotatedSection
-        title={"Return Period"}
-      >
-        <Card sectioned>
-          <FormLayout>
-            <Stack vertical spacing="extraTight">
-            <Input
-              value={internationalObj["returnPeriod"]}
-              onChange={(e) =>
-                setinternationalObj({
-                  ...internationalObj,
-                  returnPeriod: e.target.value,
-                })
-              }
-            />
-            </Stack>
-          </FormLayout>
-        </Card>
-      </Layout.AnnotatedSection>
-    </Layout>
-  </FormLayout>
-  </Card>)}   */}
         </Card>
       )}
     </div>

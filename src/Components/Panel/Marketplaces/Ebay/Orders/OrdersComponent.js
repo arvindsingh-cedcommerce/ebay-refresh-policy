@@ -1,44 +1,20 @@
+import { SyncOutlined, UploadOutlined } from "@ant-design/icons";
 import {
-  DownOutlined,
-  FilterOutlined,
-  SyncOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import {
-  Alert,
-  Badge,
-  Button,
   Checkbox,
   Col,
-  Dropdown,
   Form,
   Image,
   Input,
-  InputNumber,
-  List,
   Menu,
   PageHeader,
   Radio,
   Row,
   Select,
-  Slider,
-  Tabs,
-  Tag,
-  Tooltip,
   Typography,
 } from "antd";
 import React, { useState, useEffect, useCallback } from "react";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
-import {
-  orderAlertBoxData,
-  orderGridHeadings,
-  orderGridTabs,
-  // ordersData,
-} from "../Orders/SampleOrderData";
 import ModalComponent from "../../../../AntDesignComponents/ModalComponent";
-import ModalService from "../../../../../modules/modals/services/ModalService";
-import TestModal from "../Orders/TestModal";
-import ModalRoot from "../../../../../modules/modals/components/ModalRoot";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
 import { getCountryName, getSiteID } from "../../../Accounts/NewAccount";
 import {
@@ -55,9 +31,7 @@ import {
   syncShipmentURL,
 } from "../../../../../URLs/OrdersURL";
 import PaginationComponent from "../../../../AntDesignComponents/PaginationComponent";
-import FilterComponent, {
-  operatorOptions,
-} from "../../../../AntDesignComponents/FilterComponent";
+import { operatorOptions } from "../../../../AntDesignComponents/FilterComponent";
 import { notify } from "../../../../../services/notify";
 import {
   Stack,
@@ -70,20 +44,14 @@ import {
   Popover,
   ChoiceList,
   Icon,
-  Select as ShopifySelect,
 } from "@shopify/polaris";
-import NewFilterComponent from "../../../../AntDesignComponents/NewFilterComponent";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
 import NewFilterComponentSimilarPolaris from "../Products/NewFilterComponentSimilarPolaris";
 import { stringOperatorOptions } from "../Products/NewProductsNewFilters";
 import OrderMassMenu from "../Products/OrderMassMenu";
-// import ActionPopover from "./ActionPopover";
-// import { getFitersInitially } from "../Products/NewProducts";
 
-const { Option } = Select;
-const { Text, Paragraph } = Typography;
-const { TabPane } = Tabs;
+const { Text } = Typography;
 let demo = {
   syncShipment: {
     status: false,
@@ -232,44 +200,6 @@ const OrdersComponent = (props) => {
       dataIndex: "createdAt",
       key: "createdAt",
     },
-    // {
-    //   title: (
-    //     <center>
-    //       <Text >Actions</Text>
-    //     </center>
-    //   ),
-    //   dataIndex: "actions",
-    //   key: "actions",
-    //   className: "show",
-    //   label: "Actions",
-    //   value: "Actions",
-    //   checked: true,
-    //   editable: false,
-    //   width: 100,
-    //   fixed: "right",
-    //   render: (text, record) => {
-    //     return (
-    //       <Stack distribution="equalSpacing" alignment="leading">
-    //         <ActionPopover record={record} />
-    //       </Stack>
-    //     );
-    //   },
-    // },
-    //   {
-    //     title: "Shipped Date",
-    //     dataIndex: "shippedDate",
-    //     key: "shippedDate",
-    //   },
-    //   {
-    //     title: "Tracking Number",
-    //     dataIndex: "trackingNumber",
-    //     key: "trackingNumber",
-    //   },
-    //   {
-    //     title: "Tracking URL",
-    //     dataIndex: "trackingURL",
-    //     key: "trackingURL",
-    //   },
   ]);
   const [orderData, setOrderData] = useState([]);
   const [
@@ -415,16 +345,12 @@ const OrdersComponent = (props) => {
           />
         </center>
       );
-      // tempObject["fulfillment"] = <Tag color="success">{order["status"]}</Tag>;
       tempObject["fulfillment"] = (
-        // <PolarisTag>
         <center>
           <PolarisBadge status={targetStatus} progress={progressBarStatus}>
-            {/* {order?.target_order_data?.fulfillment_status} */}
             {order?.target_status}
           </PolarisBadge>
         </center>
-        // {/* </PolarisTag> */}
       );
       tempObject["customerName"] = (
         <center>{order["client_details"]["name"]}</center>
@@ -463,16 +389,12 @@ const OrdersComponent = (props) => {
     );
     if (ordersDataSuccess) {
       setTotalOrdersCount(ordersData.count);
-      // if (filtersDrawerVisible) {
-      //   setFiltersDrawerVisible(false);
-      // }
       getAllOrders(ordersData);
     }
     setGridLoader(false);
   };
 
   useEffect(() => {
-    // getAllOrders();
     hitGetOrdersAPI();
   }, [activePage, pageSize, filtersToPass]);
 
@@ -483,19 +405,6 @@ const OrdersComponent = (props) => {
     },
   };
 
-  const massMenu = (
-    <Menu onClick={(e) => console.log("selectedRows", selectedRows, e)}>
-      <Menu.Item key="Remove For App" onClick={() => {}}>
-        <UploadOutlined /> Remove For App
-      </Menu.Item>
-      <Menu.Item key="Sync Shipment">
-        <SyncOutlined /> Sync Shipment
-      </Menu.Item>
-    </Menu>
-  );
-  const addModal = () => {
-    // ModalService.open(TestModal, massActionsModal);
-  };
   useEffect(() => {
     let test = [];
     Object.keys(demo).forEach((massAction) => {
@@ -505,12 +414,6 @@ const OrdersComponent = (props) => {
     });
     setMassActionsModal(test);
   }, [massActionSelected]);
-
-  const importEbayOrdersMoreFiltersArray = [
-    "Order IDs",
-    "Orders Created",
-    "Order modified at",
-  ];
 
   useEffect(() => {
     getAllConnectedAccounts();
@@ -529,9 +432,6 @@ const OrdersComponent = (props) => {
 
       let tempArr = ebayAccounts.map((account, key) => {
         let accountName = {
-          // label: `${getCountryName(account["warehouses"][0]["site_id"])}-${
-          //   account["warehouses"][0]["user_id"]
-          // }`,
           label: (
             <Stack alignment="fill" spacing="tight">
               <Image
@@ -556,7 +456,6 @@ const OrdersComponent = (props) => {
       });
 
       setconnectedAccountsArray(tempArr);
-      // setSelectedAccount(tempArr[0]["label"]);
     } else {
       notify.error(message);
       props.history.push("/auth/login");
@@ -569,11 +468,6 @@ const OrdersComponent = (props) => {
     )[0]["label"];
   };
 
-  const getCondition = (operator) => {
-    let temp = operatorOptions.filter((e) => e.value === operator);
-    return temp[0]["label"];
-  };
-
   const gatherAllFilters = () => {
     let temp = {};
     Object.keys(filters).forEach((filter) => {
@@ -582,7 +476,6 @@ const OrdersComponent = (props) => {
           filters[filter]["value"];
       }
     });
-    // setInnerFilterCount(Object.keys(temp).length);
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPass, ...temp });
     } else {
@@ -590,46 +483,9 @@ const OrdersComponent = (props) => {
     }
   };
 
-  // const gatherAllFilters = () => {
-  //   let temp = {};
-  //   Object.keys(filters).forEach((filter) => {
-  //     if (filters[filter]["value"]) {
-  //       temp[`filter[${filter}][${filters[filter]["operator"]}]`] =
-  //         filters[filter]["value"];
-  //     }
-  //   });
-  //   setFiltersToPass(temp);
-  // };
-
   const getFormElement = () => {
     let returnFormElement = <></>;
     switch (selectedImportedOrderFilter) {
-      // case "days":
-      //   returnFormElement = (
-      //     <>
-      //       Specify number of days(0-30) for which you want your order to be
-      //       synced
-      //       <Row gutter={16}>
-      //         <Col span={18}>
-      //           <Slider
-      //             min={1}
-      //             max={30}
-      //             onChange={(e) => setNumberOfDatesForSync(e)}
-      //             value={numberOfDatesForSync}
-      //           />
-      //         </Col>
-      //         <Col span={4}>
-      //           <InputNumber
-      //             min={1}
-      //             max={30}
-      //             value={numberOfDatesForSync}
-      //             onChange={(e) => setNumberOfDatesForSync(e)}
-      //           />
-      //         </Col>
-      //       </Row>
-      //     </>
-      //   );
-      //   break;
       case "orderIds":
         returnFormElement = (
           <Input
@@ -906,60 +762,13 @@ const OrdersComponent = (props) => {
       ghost={true}
       extra={[
         <OrderMassMenu selectedRows={selectedRows} />,
-        // <Select
-        //   onChange={(value) => {
-        //     // addModal(value);
-        //     setMassActionSelected(value);
-        //     setMassActionsModal({
-        //       ...massActionsModal,
-        //       [value]: { ...massActionsModal[value], status: true },
-        //     });
-        //   }}
-        //   disabled={selectedRows.length ? false : true}
-        //   placeholder={
-        //     selectedRows.length
-        //       ? `${selectedRows.length} order(s) selected`
-        //       : "Mass Actions"
-        //   }
-        // >
-        //   <Option value="removeForApp">Remove from App</Option>
-        //   <Option value="syncShipment">Sync Shipment</Option>
-        //   <Option value="cancel">Cancel Order</Option>
-        //   <Option value="delete">Delete Order</Option>
-        // </Select>,
         <ShopifyButton primary onClick={() => setImportEbayOrdersModal(true)}>
           Import eBay Order(s)
         </ShopifyButton>,
       ]}
     >
-      {/* <Alert
-        message={
-          <List
-            size="small"
-            dataSource={orderAlertBoxData}
-            renderItem={(item) => (
-              <List.Item style={{ marginBottom: "0px", padding: "0px 16px" }}>
-                {item}
-              </List.Item>
-            )}
-          />
-        }
-        banner
-        type="info"
-      /> */}
       <Card sectioned>
-        {/* <Card.Section> */}
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          {/* <Tabs
-          defaultActiveKey={tab}
-          onChange={(e) => setTab(e)}
-          animated={true}
-          type="line"
-          activeKey={tab}
-        >
-          {orderGridTabs.map((orderGridTab, index) => {
-            return (
-              <TabPane tab={orderGridTab} key={index}> */}
           <div
             style={{
               display: "flex",
@@ -991,54 +800,8 @@ const OrdersComponent = (props) => {
                 simple={false}
               />
             </Col>
-            {/* <Col className="gutter-row" span={6}>
-                <Stack distribution="trailing" vertical={false}>
-                  <ShopifyButton
-                    // type="primary"
-                    primary
-                    icon={<FilterOutlined />}
-                    // size={"middle"}
-                    // style={{ marginBottom: 5 }}
-                    onClick={() => {
-                      setFiltersDrawerVisible(true);
-                    }}
-                  >
-                    Filters
-                  </ShopifyButton>
-                </Stack>
-              </Col> */}
-            {/* <Col className="gutter-row" span={5}>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-around" }}
-                  >
-                    <Tooltip
-                      placement="bottom"
-                      arrowPointAtCenter
-                      title={
-                        Object.keys(filters).length
-                          ? getAppliedFiltersTitle()
-                          : ""
-                      }
-                    >
-                      <Badge count={Object.keys(filters).length}>
-                        <Button
-                          type="primary"
-                          icon={<FilterOutlined />}
-                          size={"middle"}
-                          style={{ marginBottom: 5 }}
-                          onClick={() => {
-                            setFiltersDrawerVisible(true);
-                          }}
-                        >
-                          Filters
-                        </Button>
-                      </Badge>
-                    </Tooltip>
-                  </div>
-                </Col> */}
           </Row>
         </div>
-        {/* </Card.Section> */}
         <NestedTableComponent
           pagination={false}
           columns={orderColumns}
@@ -1047,24 +810,13 @@ const OrdersComponent = (props) => {
             type: selectionType,
             ...rowSelection,
           }}
-          // scroll={{ x: 1000 }}
           scroll={{
             x: 1500,
             y: 500,
-            // , y: "55vh"
           }}
-          // bordered={true}
           loading={gridLoader}
         />
       </Card>
-      {/* <NewFilterComponent
-        setFiltersDrawerVisible={setFiltersDrawerVisible}
-        filtersDrawerVisible={filtersDrawerVisible}
-        filters={filters}
-        operatorOptions={operatorOptions}
-        setFilters={setFilters}
-        gatherAllFilters={gatherAllFilters}
-      /> */}
       <NewFilterComponentSimilarPolaris
         setFiltersDrawerVisible={setFiltersDrawerVisible}
         filtersDrawerVisible={filtersDrawerVisible}
@@ -1077,10 +829,6 @@ const OrdersComponent = (props) => {
         setFilterTitleORsku={setEbayOrderId}
         setSelected={setSelected}
       />
-      {/* </TabPane>
-            );
-          })}
-        </Tabs> */}
       <ModalComponent
         title={massActionsModal.length && massActionsModal[0]["title"]}
         isModalVisible={
@@ -1105,57 +853,11 @@ const OrdersComponent = (props) => {
         isModalVisible={importEbayOrdersModal}
         handleCancel={() => setImportEbayOrdersModal(false)}
         handleOk={() => {}}
-        // footer={
-        //   <Button
-        //     key="back"
-        //     onClick={async () => {
-        //       let postData = {
-        //         shop_id: shopId,
-        //         site_id: Number(siteID),
-        //       };
-        //       if (filtersChecked) {
-        //         switch (selectedImportedOrderFilter) {
-        //           // case "days":
-        //           //   postData[selectedImportedOrderFilter] = numberOfDatesForSync;
-        //           //   break;
-        //           case "orderIds":
-        //             postData["order_ids"] = multipleOrderIds;
-        //             break;
-        //           case "orderCreatedAt":
-        //             postData["create_time_from"] = orderCreatedAtStartDate;
-        //             postData["create_time_to"] = orderCreatedAtEndDate;
-        //             break;
-        //           case "orderModifiedAt":
-        //             postData["mod_time_from"] = orderModifiedAtStartDate;
-        //             postData["mod_time_to"] = orderModifiedAtEndDate;
-        //             break;
-        //           default:
-        //             break;
-        //         }
-        //       }
-        //       let { success, message } = await importOrders(
-        //         importOrdersURL,
-        //         // fetch_orders: postData,
-        //         postData
-        //       );
-        //     }}
-        //     type="primary"
-        //     // disabled={!selectedAccount}
-        //     disabled={getDisabledSync()}
-        //   >
-        //     Sync
-        //   </Button>
-        // }
         modalContent={
           <>
-            {/* // <Row justify="center" align="middle" gutter={[0, 8]}> */}
-            {/* <Col span={24}>You are about to perform Order sync</Col> */}
-            {/* // <Col span={24}> */}
             <Stack vertical distribution="center">
               <Form
                 name="basic"
-                // labelCol={{ span: 4 }}
-                // wrapperCol={{ span: 20 }}
                 initialValues={{ remember: true }}
                 autoComplete="off"
                 layout="vertical"
@@ -1190,13 +892,7 @@ const OrdersComponent = (props) => {
                   </Col>
                 </Row>
                 {selectedAccount && filtersChecked && (
-                  <Form.Item
-                    // label="Filters"
-                    name="filters"
-                    // rules={[
-                    //   { required: true, message: "Please fill any value" },
-                    // ]}
-                  >
+                  <Form.Item name="filters">
                     <Radio.Group
                       onChange={(e) => {
                         setSelectedImportedOrderFilter(e.target.value);
@@ -1232,9 +928,6 @@ const OrdersComponent = (props) => {
                     };
                     if (filtersChecked) {
                       switch (selectedImportedOrderFilter) {
-                        // case "days":
-                        //   postData[selectedImportedOrderFilter] = numberOfDatesForSync;
-                        //   break;
                         case "orderIds":
                           postData["order_ids"] = multipleOrderIds;
                           break;
@@ -1253,73 +946,15 @@ const OrdersComponent = (props) => {
                     }
                     let { success, message } = await importOrders(
                       importOrdersURL,
-                      // fetch_orders: postData,
                       postData
                     );
                   }}
-                  // disabled={!selectedAccount}
                   disabled={getDisabledSync()}
                 >
                   Sync
                 </ShopifyButton>
               </Stack>
             </Stack>
-            {/* </Col> */}
-            {/* <Col span={24}>
-              Specify number of days(0-30) for which you want your order to be
-              synced
-            </Col> */}
-            {/* <Col span={24}>
-              <Row gutter={16}>
-                <Col span={18}>
-                  <Slider
-                    min={1}
-                    max={30}
-                    onChange={(e) => setNumberOfDatesForSync(e)}
-                    value={numberOfDatesForSync}
-                  />
-                </Col>
-                <Col span={4}>
-                  <InputNumber
-                    min={1}
-                    max={20}
-                    value={numberOfDatesForSync}
-                    onChange={(e) => setNumberOfDatesForSync(e)}
-                  />
-                </Col>
-              </Row>
-            </Col> */}
-            {/* <Col span={24}>
-              <Row>
-                <Col span={24}>
-                  <Checkbox
-                    checked={importEbayOrderMoreFilterCheckbox}
-                    onChange={() =>
-                      setImportEbayOrderMoreFilterCheckbox(
-                        !importEbayOrderMoreFilterCheckbox
-                      )
-                    }
-                  >
-                    Checkbox
-                  </Checkbox>
-                </Col>
-                <Col span={24} push={1}>
-                  <Text>
-                    * check this box for adding more filters for fetching orders
-                  </Text>
-                </Col>
-                {importEbayOrderMoreFilterCheckbox && (
-                  <Col span={24} push={1}>
-                    <Checkbox.Group onChange={(checkedValues) => {}}>
-                      {importEbayOrdersMoreFiltersArray.map((option) => {
-                        return <Checkbox value="A">{option}</Checkbox>;
-                      })}
-                    </Checkbox.Group>
-                  </Col>
-                )}
-              </Row>
-            </Col> */}
-            {/* // </Row> */}
           </>
         }
       />
