@@ -365,19 +365,19 @@ const ActivityGrid = (props) => {
             status="info"
           />
           <br /> */}
-              {/* <Stack vertical> */}
+              <Stack vertical>
               {queuedTasks.map((task) => {
                 return task["progressBar"] ? (
                   <Stack key={task["id"]}>
                     <Progress
                       type="circle"
-                      percent={task["progress"]}
+                      percent={Math.floor(task["progress"])}
                       width={50}
                     />
                     <Stack.Item fill>
                       <Stack vertical spacing="extraTight">
                         <>{task["message"]}</>
-                        <Progress percent={task["progress"]} />
+                        <Progress percent={Math.floor(task["progress"])} />
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -392,7 +392,7 @@ const ActivityGrid = (props) => {
                   </Banner>
                 );
               })}
-              {/* </Stack> */}
+              </Stack>
               {/* {queuedActivities.map((activity) => {
               return (
                 <Row justify="space-around">
