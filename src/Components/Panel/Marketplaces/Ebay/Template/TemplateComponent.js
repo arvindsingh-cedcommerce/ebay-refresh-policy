@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import TemplateHandlerComponent from "./TemplateHandlerComponent";
 import FinalTemplateGridComponent from "./Components/FinalTemplateGridComponent";
 
 const TemplateComponent = () => {
+  useEffect(() => {
+    document.title =
+      "Create/Edit templates on eBay Marketplace Integration - CedCommerce";
+    document.description =
+      "Users can create or edit Title, Inventory, Price & Category Templates to make selling on eBay automated.";
+  }, []);
+
   return (
     <Switch>
       <Route

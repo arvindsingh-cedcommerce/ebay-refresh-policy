@@ -166,6 +166,17 @@ const FinalDashboard = (props) => {
   const [dashboardSkeleton, setDashboardSkeleton] = useState(true);
 
   useEffect(() => {
+    document.title =
+      "Sell on eBay with eBay Marketplace Integration App | CedCommerce";
+    document.description =
+      "CedCommerce introduces the eBay Marketplace Integration App enabling the Shopify merchants to sell on eBay by helping them to manage their products & orders.";
+    getAllConnectedAccounts();
+    hitNews();
+    hitBlogs();
+    hitFAQs();
+  }, []);
+
+  useEffect(() => {
     if (productGraphStoreSelected) {
       let { siteID, shopId } = getSiteID(
         productGraphStoreSelected,
@@ -647,13 +658,6 @@ const FinalDashboard = (props) => {
       hitDashoboardAPI();
     }
   }, [connectedAccountsArray]);
-
-  useEffect(() => {
-    getAllConnectedAccounts();
-    hitNews();
-    hitBlogs();
-    hitFAQs();
-  }, []);
 
   const get21uniqueColors = () => {
     let arr = [];

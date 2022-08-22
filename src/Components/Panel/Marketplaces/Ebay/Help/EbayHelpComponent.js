@@ -1,5 +1,5 @@
 import { Card, Col, Collapse, Divider, PageHeader, Row } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import { faqs, videos } from "../Products/SampleProductData";
 import YoutubeEmbed from "./YoutubeEmbed";
@@ -16,6 +16,11 @@ const site = {
 };
 
 const EbayHelpComponent = () => {
+  useEffect(() => {
+    document.title = "Help";
+    document.description = "Help";
+  }, []);
+
   return (
     <PageHeader title="Help">
       <TabsComponent

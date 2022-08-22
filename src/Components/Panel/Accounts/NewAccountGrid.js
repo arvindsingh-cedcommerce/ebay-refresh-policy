@@ -312,6 +312,8 @@ const NewAccount = (props) => {
   };
 
   useEffect(() => {
+    document.title = "Accounts";
+    document.description = "Accounts";
     getAllConnectedAccounts();
   }, []);
 

@@ -57,6 +57,8 @@ const Configuration = (props) => {
   const redirect = (url) => props.history.push(url);
 
   useEffect(() => {
+    document.title = "Configuration";
+    document.description = "Configuration";
     getSavedData();
   }, []);
 

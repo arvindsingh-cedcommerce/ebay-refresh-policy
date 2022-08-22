@@ -107,6 +107,8 @@ const ContactUs = () => {
   };
 
   useEffect(() => {
+    document.title = "Contact Us";
+    document.description = "Contact Us";
     getAllConnectedAccounts();
   }, []);
 

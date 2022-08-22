@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import DisabledProducts from "./DisabledProducts";
 import DisabledProductsView from "./DisabledProductsView";
 
 const DisbaledProductsWrapper = () => {
+  useEffect(() => {
+    document.title = "Disabled Products";
+    document.description = "Disabled Products";
+  }, []);
   return (
     <Switch>
       <Route

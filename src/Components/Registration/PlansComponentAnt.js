@@ -60,7 +60,7 @@ const PlansComponentAnt = ({
   // const [choosePlanBtnLoader, setChoosePlanBtnLoader] = useState(false);
   const [freePlan, setFreePlan] = useState({});
 
-  const [okPlanLoader, setOkPlanLoader] = useState(false)
+  const [okPlanLoader, setOkPlanLoader] = useState(false);
 
   const hitRequiredFuncs = async () => {
     let { success, data: apiData, message } = await getPlans();
@@ -84,10 +84,12 @@ const PlansComponentAnt = ({
       // console.log(planData.rows[2], plans[0]);
     } else {
       notify.error(message);
-      props.history.push('/auth/login')
+      props.history.push("/auth/login");
     }
   };
   useEffect(() => {
+    document.title = "Plans";
+    document.description = "Plans";
     hitRequiredFuncs();
     fromOnBoarding && checkActivePlan();
   }, []);
@@ -454,7 +456,7 @@ const PlansComponentAnt = ({
                 primary
                 loading={okPlanLoader}
                 onClick={() => {
-                  setOkPlanLoader(true)
+                  setOkPlanLoader(true);
                   window.open(openPaymentRedirectModal.url, "_self");
                 }}
               >

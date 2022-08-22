@@ -332,7 +332,10 @@ const ActivityGrid = (props) => {
       );
     });
   };
-  useEffect(() => console.log(refreshBtnLoader), [refreshBtnLoader]);
+  useEffect(() => {
+    document.title = "Activity";
+    document.description = "Activity";
+  }, []);
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -366,32 +369,32 @@ const ActivityGrid = (props) => {
           />
           <br /> */}
               <Stack vertical>
-              {queuedTasks.map((task) => {
-                return task["progressBar"] ? (
-                  <Stack key={task["id"]}>
-                    <Progress
-                      type="circle"
-                      percent={Math.floor(task["progress"])}
-                      width={50}
-                    />
-                    <Stack.Item fill>
-                      <Stack vertical spacing="extraTight">
-                        <>{task["message"]}</>
-                        <Progress percent={Math.floor(task["progress"])} />
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                ) : (
-                  <Banner title={task["message"]} status="success">
-                    {/* <p>{task["created_at"]}</p> */}
-                    <p>
-                      Processes will keep running in background. It may take
-                      some time. You can close the app and do any other thing in
-                      mean time.
-                    </p>
-                  </Banner>
-                );
-              })}
+                {queuedTasks.map((task) => {
+                  return task["progressBar"] ? (
+                    <Stack key={task["id"]}>
+                      <Progress
+                        type="circle"
+                        percent={Math.floor(task["progress"])}
+                        width={50}
+                      />
+                      <Stack.Item fill>
+                        <Stack vertical spacing="extraTight">
+                          <>{task["message"]}</>
+                          <Progress percent={Math.floor(task["progress"])} />
+                        </Stack>
+                      </Stack.Item>
+                    </Stack>
+                  ) : (
+                    <Banner title={task["message"]} status="success">
+                      {/* <p>{task["created_at"]}</p> */}
+                      <p>
+                        Processes will keep running in background. It may take
+                        some time. You can close the app and do any other thing
+                        in mean time.
+                      </p>
+                    </Banner>
+                  );
+                })}
               </Stack>
               {/* {queuedActivities.map((activity) => {
               return (
