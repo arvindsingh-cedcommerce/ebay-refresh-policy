@@ -115,8 +115,12 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     // },
   });
 
-  const [refreshProductTypeVendorBtnLoader, setRefreshProductTypeVendorBtnLoader] = useState(false)
-  const [refreshCollectionBtnLoader, setRefreshCollectionBtnLoader] = useState(false)
+  const [
+    refreshProductTypeVendorBtnLoader,
+    setRefreshProductTypeVendorBtnLoader,
+  ] = useState(false);
+  const [refreshCollectionBtnLoader, setRefreshCollectionBtnLoader] =
+    useState(false);
 
   const handleBtnPres = (e, field, innerFieldLevel1 = "") => {
     let temp = { ...importProductFilters };
@@ -193,14 +197,14 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
   }, []);
 
   const importCollections = async () => {
-    setRefreshCollectionBtnLoader(true)
+    setRefreshCollectionBtnLoader(true);
     const { success, message } = await configurationAPI(collectionFetchURL);
     if (success) {
       notify.success(message);
     } else {
       notify.error(message);
     }
-    setRefreshCollectionBtnLoader(false)
+    setRefreshCollectionBtnLoader(false);
   };
 
   const saveData = async () => {
@@ -303,14 +307,15 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     );
 
     const importProductTypeVendor = async () => {
-      setRefreshProductTypeVendorBtnLoader(true)
+      setRefreshProductTypeVendorBtnLoader(true);
       let { success, message } = await initiateVendorProductTypeFetch();
       if (success) {
         notify.success(message);
+        hitAPIsInitialRender();
       } else {
         notify.error(message);
       }
-      setRefreshProductTypeVendorBtnLoader(false)
+      setRefreshProductTypeVendorBtnLoader(false);
     };
 
     return (
@@ -318,7 +323,10 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
         sectioned
         actions={{
           content: (
-            <Button onClick={importProductTypeVendor} loading={refreshProductTypeVendorBtnLoader}>
+            <Button
+              onClick={importProductTypeVendor}
+              loading={refreshProductTypeVendorBtnLoader}
+            >
               Refresh Product Type & Vendor
             </Button>
           ),
@@ -349,7 +357,12 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
         sectioned
         actions={{
           content: (
-            <Button onClick={importCollections} loading={refreshCollectionBtnLoader}>Refresh Collections</Button>
+            <Button
+              onClick={importCollections}
+              loading={refreshCollectionBtnLoader}
+            >
+              Refresh Collections
+            </Button>
           ),
         }}
       >
@@ -397,7 +410,10 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
 
   return flag ? (
     <Card sectioned>
-      <SkeletonPage fullWidth={true} title={<SkeletonDisplayText size="small" />}>
+      <SkeletonPage
+        fullWidth={true}
+        title={<SkeletonDisplayText size="small" />}
+      >
         <Card.Section>
           <SkeletonBodyText lines={2} />
         </Card.Section>
