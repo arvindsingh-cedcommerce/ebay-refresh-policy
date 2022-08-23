@@ -127,6 +127,7 @@ const NewFilterComponentSimilarPolaris = ({
                       cloneObj[filter]["value"] = e;
                       setFilters(cloneObj);
                     }}
+                    showSearch
                   />
                 ) : (
                   <Input

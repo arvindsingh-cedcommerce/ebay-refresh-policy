@@ -161,6 +161,9 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
   }, [importSettingsFromSavedAPIData]);
 
   const prepareOptions = (data) => {
+    data
+      .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+      .reverse();
     const options = data.map((value) => {
       let tempObj = {};
       tempObj["label"] = value;
@@ -300,6 +303,8 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
                 return getDropDownStructure(importProductFilterSetting);
               case "productType":
                 return getDropDownStructure(importProductFilterSetting);
+              default:
+                break;
             }
           }
         )}

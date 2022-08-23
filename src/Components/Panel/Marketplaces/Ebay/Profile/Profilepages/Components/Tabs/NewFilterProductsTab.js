@@ -168,6 +168,12 @@ const NewFilterProductsTab = ({
     let { success, data } = await getImportAttribute();
     if (success && data) {
       const { product_type, vendor } = data;
+      product_type
+        .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+        .reverse();
+      vendor
+        .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+        .reverse();
       const productTypeList = product_type.map((type) => {
         return { label: type, value: type };
       });

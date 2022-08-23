@@ -762,6 +762,12 @@ function NewProductsNewFilters(props) {
 
   const prepareProductTypeVendor = (data) => {
     const { product_type, vendor } = data;
+    product_type
+      .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+      .reverse();
+    vendor
+      .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+      .reverse();
     const productTypeList = product_type.map((type) => {
       return { label: type, value: type };
     });
