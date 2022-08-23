@@ -70,6 +70,10 @@ const FinalInventoryTemplate = (props) => {
       } else if (value === "reserveInventory") {
         temp["fixedInventory"] = "";
         temp["useShopifyInventory"] = false;
+      } else if (value === "") {
+        temp["fixedInventory"] = "";
+        temp["useShopifyInventory"] = false;
+        temp["reservedInventory"] = "";
       }
     }
     if (formFields.length === 1) temp[formFields[0]] = value;
@@ -115,7 +119,6 @@ const FinalInventoryTemplate = (props) => {
           } else temp[key] = false;
           break;
         case "fixedInventory":
-          console.log(key, formData[key]);
           if (formData[key] !== "" && formData[key] < 1) {
             temp[key] = "value must be greater than 1";
             errorsCount++;
@@ -137,7 +140,7 @@ const FinalInventoryTemplate = (props) => {
             formData[key] !== "" &&
             formData[key] >= 1 &&
             formData["fixedInventory"] !== "" &&
-            formData["fixedInventory"] <= formData[key]
+            Number(formData["fixedInventory"]) <= Number(formData[key])
           ) {
             temp[key] = "value must be less than fixed inventory";
             errorsCount++;
@@ -150,6 +153,8 @@ const FinalInventoryTemplate = (props) => {
             temp[key] = "value must be greater than 1";
             errorsCount++;
           } else temp[key] = false;
+          break;
+        default:
           break;
       }
     });
