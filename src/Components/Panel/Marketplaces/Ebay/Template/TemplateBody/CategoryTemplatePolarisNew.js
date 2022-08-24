@@ -1265,7 +1265,7 @@ const CategoryTemplatePolarisNew = (props) => {
     }
     let returnedResponse = await props.recieveFormdata(data);
     if (returnedResponse) {
-      redirect("/panel/ebay/templatesUS");
+      redirect("/panel/ebay/templates");
     } else {
       // notify.error(message);
       notify.error("Kindly fill all the required fields with proper values");

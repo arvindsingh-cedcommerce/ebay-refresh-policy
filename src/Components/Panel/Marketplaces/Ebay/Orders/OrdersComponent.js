@@ -852,7 +852,7 @@ const OrdersComponent = (props) => {
         }
       />
       <ModalComponent
-        title="Sync Orders"
+        title="Import Orders"
         isModalVisible={importEbayOrdersModal}
         handleCancel={() => setImportEbayOrdersModal(false)}
         handleOk={() => {}}
