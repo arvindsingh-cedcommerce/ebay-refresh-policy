@@ -30,6 +30,9 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
 
   const [saveBtnLoader, setSaveBtnLoader] = useState(false);
 
+  // // errors
+  // const [errors, setErrors] = useState({})
+
   const getSavedData = () => {
     if (Object.keys(orderSettingsFromSavedAPIData).length) {
       let temp = { ...connectedAccountsObject };
@@ -1318,7 +1321,15 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
         }
       }
     }
-    return tempData;
+    let dataToReturn = {
+      setting_type: ["order_settings"],
+      order_settings: {...tempData}
+    }
+    return dataToReturn;
+  };
+
+  const getValidatedData = (data) => {
+    console.log(data);
   };
 
   const saveData = async () => {
@@ -1385,6 +1396,8 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
         );
       }
     }
+    // let errorCount = getValidatedData(tempObj);
+    // if (errorCount) {
     let filteredData = getFilteredData(tempObj);
     let { success, message } = await configurationAPI(
       saveAppSettingsShopifyToAppURL,
@@ -1395,6 +1408,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
     } else {
       notify.error(message);
     }
+    // }
     setSaveBtnLoader(false);
   };
 
