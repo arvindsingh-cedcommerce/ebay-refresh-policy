@@ -159,7 +159,6 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 //       ][attributeKey]["value"];
                 //   }
                 // }
-                console.log(field);
                 if (
                   [
                     "setBuyerNotes",
@@ -348,7 +347,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 "Enable to include taxes in the order subtotal while creating order on Shopify.",
             },
             inventoryBehavioursetting: {
-              label: "Inventory Behaviour Setting",
+              label: "Inventory Behaviour",
               value: "decrement_obeying_policy",
               enable: "yes",
               type: "dropdown",
@@ -399,14 +398,14 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   value: "no",
                 },
               ],
-              type: "segmentedBtn",
+              // type: "segmentedBtn",
               attribute: {
                 mappingOfOrderNote: {
                   label: "Mapping of Order Note",
                   enable: "yes",
                   type: "mappingBoolean",
                   value: "yes",
-                  orderNoteMapping: "",
+                  orderNoteMapping: "default",
                   default_setting: {
                     value: "",
                   },
@@ -429,14 +428,14 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   value: "no",
                 },
               ],
-              type: "segmentedBtn",
+              // type: "segmentedBtn",
               attribute: {
                 mappingOfOrderTag: {
                   label: "Mapping of Order Tag",
                   enable: "yes",
                   type: "mappingBoolean",
                   value: "yes",
-                  orderTagMapping: "",
+                  orderTagMapping: "default",
                   default_setting: {
                     value: "",
                   },
@@ -459,14 +458,14 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   value: "no",
                 },
               ],
-              type: "segmentedBtn",
+              // type: "segmentedBtn",
               attribute: {
                 mappingOfOrderName: {
                   label: "Mapping of Order Name",
                   enable: "yes",
                   type: "mappingBoolean",
                   value: "yes",
-                  orderNameMapping: "",
+                  orderNameMapping: "default",
                   default_setting: {
                     value: "",
                   },
@@ -519,7 +518,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
             //     "Map shipping services for Shopify with the shipping services of eBay. For example; Shopify shipping service USPS can be mapped to eBay FedEx Ground shipping services, in case you use different shipping services Shopify and eBay.",
             // },
             userRealCustomerDetails: {
-              label: "Use Real Customer Details",
+              label: "Use eBay Customer Details",
               enable: "yes",
               options: [
                 {
@@ -633,7 +632,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                   value: "no",
                 },
               ],
-              type: "segmentedBtn",
+              // type: "segmentedBtn",
               attribute: {
                 mappingOfOrderCancellation: {
                   label: "Mapping of Order Cancellation",
@@ -750,7 +749,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
               "Enable to include taxes in the order subtotal while creating order on Shopify.",
           },
           inventoryBehavioursetting: {
-            label: "Inventory Behaviour Setting",
+            label: "Inventory Behaviour",
             value: "decrement_obeying_policy",
             enable: "yes",
             type: "dropdown",
@@ -801,14 +800,14 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 value: "no",
               },
             ],
-            type: "segmentedBtn",
+            // type: "segmentedBtn",
             attribute: {
               mappingOfOrderNote: {
                 label: "Mapping of Order Note",
                 enable: "yes",
                 type: "mappingBoolean",
                 value: "yes",
-                orderNoteMapping: "",
+                orderNoteMapping: "default",
                 default_setting: {
                   value: "",
                 },
@@ -831,14 +830,14 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 value: "no",
               },
             ],
-            type: "segmentedBtn",
+            // type: "segmentedBtn",
             attribute: {
               mappingOfOrderTag: {
                 label: "Mapping of Order Tag",
                 enable: "yes",
                 type: "mappingBoolean",
                 value: "yes",
-                orderTagMapping: "",
+                orderTagMapping: "default",
                 default_setting: {
                   value: "",
                 },
@@ -861,14 +860,14 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 value: "no",
               },
             ],
-            type: "segmentedBtn",
+            // type: "segmentedBtn",
             attribute: {
               mappingOfOrderName: {
                 label: "Mapping of Order Name",
                 enable: "yes",
                 type: "mappingBoolean",
                 value: "yes",
-                orderNameMapping: "",
+                orderNameMapping: "default",
                 default_setting: {
                   value: "",
                 },
@@ -921,7 +920,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
           //     "Map shipping services for Shopify with the shipping services of eBay. For example; Shopify shipping service USPS can be mapped to eBay FedEx Ground shipping services, in case you use different shipping services Shopify and eBay.",
           // },
           userRealCustomerDetails: {
-            label: "Use Real Customer Details",
+            label: "Use eBay Customer Details",
             enable: "yes",
             options: [
               {
@@ -1035,7 +1034,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
                 value: "no",
               },
             ],
-            type: "segmentedBtn",
+            // type: "segmentedBtn",
             attribute: {
               mappingOfOrderCancellation: {
                 label: "Mapping of Order Cancellation",
@@ -1060,7 +1059,7 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
               },
             },
             description:
-                "Enable if you want to sync order cancellation from Shopify to eBay. you can also map cancellation reason.",
+              "Enable if you want to sync order cancellation from Shopify to eBay. you can also map cancellation reason.",
           },
           // useShopifyProductTitleInOrder: {
           //   label: "Use Shopify Product Title",
@@ -1123,6 +1122,204 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
   useEffect(() => {
     getAllConnectedAccounts();
   }, []);
+
+  const getFilteredData = (data) => {
+    const { order_settings } = data;
+    console.log(data);
+    let tempData = {};
+    for (const account in order_settings) {
+      tempData[account] = {};
+      for (const settingType in order_settings[account]) {
+        tempData[account][settingType] = {};
+        if (settingType === "inventoryBehavioursetting") {
+          tempData[account][settingType] =
+            order_settings[account][settingType]["value"];
+        } else if (settingType === "setOrderNote") {
+          if (
+            order_settings[account][settingType]?.["attribute"]?.[
+              "mappingOfOrderNote"
+            ]?.["orderNoteMapping"] !== "custom"
+          ) {
+            tempData[account][settingType] =
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderNote"
+              ]?.["orderNoteMapping"];
+          } else if (
+            order_settings[account][settingType]?.["attribute"]?.[
+              "mappingOfOrderNote"
+            ]?.["orderNoteMapping"] === "custom"
+          ) {
+            let tempObj = {};
+            tempObj[
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderNote"
+              ]?.["orderNoteMapping"]
+            ] =
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderNote"
+              ]?.["default_setting"]["value"];
+            tempData[account][settingType] = { ...tempObj };
+          }
+        } else if (settingType === "setOrderTags") {
+          if (
+            order_settings[account][settingType]?.["attribute"]?.[
+              "mappingOfOrderTag"
+            ]?.["orderTagMapping"] !== "custom"
+          ) {
+            tempData[account][settingType] =
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderTag"
+              ]?.["orderTagMapping"];
+          } else if (
+            order_settings[account][settingType]?.["attribute"]?.[
+              "mappingOfOrderTag"
+            ]?.["orderTagMapping"] === "custom"
+          ) {
+            let tempObj = {};
+            tempObj[
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderTag"
+              ]?.["orderTagMapping"]
+            ] =
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderTag"
+              ]?.["default_setting"]["value"];
+            tempData[account][settingType] = { ...tempObj };
+          }
+        } else if (settingType === "setOrderName") {
+          if (
+            order_settings[account][settingType]?.["attribute"]?.[
+              "mappingOfOrderName"
+            ]?.["orderNameMapping"] !== "custom"
+          ) {
+            tempData[account][settingType] =
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderName"
+              ]?.["orderNameMapping"];
+          } else if (
+            order_settings[account][settingType]?.["attribute"]?.[
+              "mappingOfOrderName"
+            ]?.["orderNameMapping"] === "custom"
+          ) {
+            let tempObj = {};
+            tempObj[
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderName"
+              ]?.["orderNameMapping"]
+            ] =
+              order_settings[account][settingType]?.["attribute"]?.[
+                "mappingOfOrderName"
+              ]?.["default_setting"]["value"];
+            tempData[account][settingType] = { ...tempObj };
+          }
+        } else if (settingType === "userRealCustomerDetails") {
+          if (order_settings[account][settingType]["enable"] === "no") {
+            let tempObj = {};
+            tempObj["email"] =
+              order_settings[account][settingType]["attribute"]["email"][
+                "value"
+              ];
+            tempObj["name"] =
+              order_settings[account][settingType]["attribute"]["name"][
+                "value"
+              ];
+            tempData[account][settingType] = { ...tempObj };
+          } else {
+            tempData[account][settingType] =
+              order_settings[account][settingType]["enable"];
+          }
+        } else if (settingType === "shipmentSync") {
+          if (order_settings[account][settingType]["enable"] === "yes") {
+            let tempObj = {};
+            tempObj["withoutTrackingDetails"] =
+              order_settings[account][settingType]["attribute"][
+                "withoutTrackingDetails"
+              ]["value"];
+            if (
+              order_settings[account][settingType]["attribute"][
+                "mappingOfShippingCarrier"
+              ]["value"] === "yes"
+            ) {
+              tempObj["mappingOfShippingCarrier"] = [];
+              if (
+                order_settings[account][settingType]["attribute"][
+                  "mappingOfShippingCarrier"
+                ]["value"] === "yes"
+              ) {
+                let tempArr = [];
+                for (const key in order_settings[account][settingType][
+                  "attribute"
+                ]["mappingOfShippingCarrier"]["shippingCarrierMapping"][
+                  "mapping"
+                ]) {
+                  let cancelTempObj = {};
+
+                  cancelTempObj["shopifyAttribute"] =
+                    order_settings[account][settingType]["attribute"][
+                      "mappingOfShippingCarrier"
+                    ]["shippingCarrierMapping"]["mapping"][key][
+                      "customAttribute"
+                    ]["value"];
+
+                  cancelTempObj["ebayAttribute"] =
+                    order_settings[account][settingType]["attribute"][
+                      "mappingOfShippingCarrier"
+                    ]["shippingCarrierMapping"]["mapping"][key][
+                      "shopifyAttribute"
+                    ]["value"];
+
+                  tempArr.push(cancelTempObj);
+                }
+                tempObj["mappingOfShippingCarrier"] = [...tempArr];
+              }
+            } else {
+              tempObj["mappingOfShippingCarrier"] =
+                order_settings[account][settingType]["attribute"][
+                  "mappingOfShippingCarrier"
+                ]["value"];
+            }
+            tempData[account][settingType] = { ...tempObj };
+          } else {
+            tempData[account][settingType] =
+              order_settings[account][settingType]["enable"];
+          }
+        } else if (settingType === "orderCancelation") {
+          if (order_settings[account][settingType]["enable"] === "yes") {
+            let tempArr = [];
+            for (const key in order_settings[account][settingType]["attribute"][
+              "mappingOfOrderCancellation"
+            ]["orderCancellationReasonMapping"]["mapping"]) {
+              let cancelTempObj = {};
+
+              cancelTempObj["shopifyAttribute"] =
+                order_settings[account][settingType]["attribute"][
+                  "mappingOfOrderCancellation"
+                ]["orderCancellationReasonMapping"]["mapping"][key][
+                  "customAttribute"
+                ]["value"];
+
+              cancelTempObj["ebayAttribute"] =
+                order_settings[account][settingType]["attribute"][
+                  "mappingOfOrderCancellation"
+                ]["orderCancellationReasonMapping"]["mapping"][key][
+                  "shopifyAttribute"
+                ]["value"];
+
+              tempArr.push(cancelTempObj);
+            }
+            tempData[account][settingType] = [...tempArr];
+          } else {
+            tempData[account][settingType] =
+              order_settings[account][settingType]["enable"];
+          }
+        } else {
+          tempData[account][settingType] =
+            order_settings[account][settingType]["enable"];
+        }
+      }
+    }
+    return tempData;
+  };
 
   const saveData = async () => {
     setSaveBtnLoader(true);
@@ -1188,9 +1385,10 @@ const FinalOrderSettings = ({ orderSettingsFromSavedAPIData }) => {
         );
       }
     }
+    let filteredData = getFilteredData(tempObj);
     let { success, message } = await configurationAPI(
       saveAppSettingsShopifyToAppURL,
-      tempObj
+      filteredData
     );
     if (success) {
       notify.success(message);

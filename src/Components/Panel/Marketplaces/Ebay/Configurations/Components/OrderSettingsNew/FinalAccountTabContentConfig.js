@@ -532,6 +532,12 @@ const FinalAccountTabContentConfig = ({
                         shippingCarrierMappingReal,
                         service
                       ),
+                    disabled:
+                      Object.keys(
+                        fields?.[field]?.[attribute]?.[innerFieldLevel1]?.[
+                          shippingCarrierMappingReal
+                        ]?.["mapping"]
+                      ).length < 2,
                   },
                 ]}
                 key={index}
@@ -621,6 +627,12 @@ const FinalAccountTabContentConfig = ({
                         orderCancellationReasonMappingReal,
                         service
                       ),
+                    disabled:
+                      Object.keys(
+                        fields?.[field]?.[attribute]?.[innerFieldLevel1]?.[
+                          orderCancellationReasonMappingReal
+                        ]?.["mapping"]
+                      ).length < 2,
                   },
                 ]}
                 key={index}
@@ -801,7 +813,7 @@ const FinalAccountTabContentConfig = ({
                             />
                           )}
                           {fields[field]["label"] ===
-                            "Use Real Customer Details" &&
+                            "Use eBay Customer Details" &&
                             fields[field]["enable"] === "no" && (
                               <FormLayout>
                                 {Object.keys(fields[field]["attribute"]).map(
@@ -1067,18 +1079,23 @@ const FinalAccountTabContentConfig = ({
                                         <Stack vertical spacing="tight">
                                           <Select
                                             // label="Mapping Options"
+                                            placeholder="Please Select..."
                                             options={[
-                                              {
-                                                label: "Please Select...",
-                                                value: "",
-                                              },
+                                              // {
+                                              //   label: "Please Select...",
+                                              //   value: "",
+                                              // },
                                               {
                                                 label: "eBay Order Id",
                                                 value: "ebayOrderId",
                                               },
                                               {
-                                                label: "Set custom value",
+                                                label: "Set default value",
                                                 value: "default",
+                                              },
+                                              {
+                                                label: "Set custom value",
+                                                value: "custom",
                                               },
                                             ]}
                                             value={
@@ -1101,7 +1118,7 @@ const FinalAccountTabContentConfig = ({
                                           {fields[field]["attribute"][
                                             innerFieldLevel1
                                           ]["orderNoteMapping"] ===
-                                            "default" && (
+                                            "custom" && (
                                             <Stack vertical={false}>
                                               <Stack.Item>
                                                 <Select
@@ -1183,7 +1200,7 @@ const FinalAccountTabContentConfig = ({
                             )}
                           </FormLayout>
                         )}
-                      {fields[field]["label"] === "Set Shopify Order Tag" &&
+                      {fields[field]["label"] === "Set Shopify Order Tag(s)" &&
                         fields[field]["enable"] === "yes" && (
                           <FormLayout>
                             {Object.keys(fields[field]["attribute"]).map(
@@ -1201,18 +1218,23 @@ const FinalAccountTabContentConfig = ({
                                         <Stack vertical spacing="tight">
                                           <Select
                                             // label="Mapping Options"
+                                            placeholder="Please Select..."
                                             options={[
-                                              {
-                                                label: "Please Select...",
-                                                value: "",
-                                              },
+                                              // {
+                                              //   label: "Please Select...",
+                                              //   value: "",
+                                              // },
                                               {
                                                 label: "eBay Order Id",
                                                 value: "ebayOrderId",
                                               },
                                               {
-                                                label: "Set custom value",
+                                                label: "Set default value",
                                                 value: "default",
+                                              },
+                                              {
+                                                label: "Set custom value",
+                                                value: "custom",
                                               },
                                             ]}
                                             value={
@@ -1234,8 +1256,7 @@ const FinalAccountTabContentConfig = ({
                                           />
                                           {fields[field]["attribute"][
                                             innerFieldLevel1
-                                          ]["orderTagMapping"] ===
-                                            "default" && (
+                                          ]["orderTagMapping"] === "custom" && (
                                             <Stack vertical={false}>
                                               <Stack.Item>
                                                 <Select
@@ -1335,18 +1356,23 @@ const FinalAccountTabContentConfig = ({
                                         <Stack vertical spacing="tight">
                                           <Select
                                             // label="Mapping Options"
+                                            placeholder="Please Select..."
                                             options={[
-                                              {
-                                                label: "Please Select...",
-                                                value: "",
-                                              },
+                                              // {
+                                              //   label: "Please Select...",
+                                              //   value: "",
+                                              // },
                                               {
                                                 label: "eBay Order Id",
                                                 value: "ebayOrderId",
                                               },
                                               {
-                                                label: "Set custom value",
+                                                label: "Set default value",
                                                 value: "default",
+                                              },
+                                              {
+                                                label: "Set custom value",
+                                                value: "custom",
                                               },
                                             ]}
                                             value={
@@ -1369,7 +1395,7 @@ const FinalAccountTabContentConfig = ({
                                           {fields[field]["attribute"][
                                             innerFieldLevel1
                                           ]["orderNameMapping"] ===
-                                            "default" && (
+                                            "custom" && (
                                             <Stack vertical={false}>
                                               <Stack.Item>
                                                 <Select
