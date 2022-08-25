@@ -7,6 +7,7 @@ import { notify } from "../../../../../services/notify";
 import FinalImportSettings from "./Components/ImportSettingsNew/FinalImportSettings";
 import FinalOrderSettings from "./Components/OrderSettingsNew/FinalOrderSettings";
 import FinalProductSettings from "./Components/ProductSettingsNew/FinalProductSettings";
+import FinalOrderSettingsNew from "./Components/OrderSettingsNew/FinalOrderSettingsNew";
 
 const configurationTabs = [
   "Product Settings",
@@ -87,7 +88,10 @@ const Configuration = (props) => {
         //   break;
         case "Order Settings":
           content[tabName] = (
-            <FinalOrderSettings
+            // <FinalOrderSettings
+            //   orderSettingsFromSavedAPIData={orderSettingsFromSavedAPIData}
+            // />
+            <FinalOrderSettingsNew
               orderSettingsFromSavedAPIData={orderSettingsFromSavedAPIData}
             />
           );
