@@ -353,13 +353,7 @@ const OrdersComponent = (props) => {
         </center>
       );
       tempObject["customerName"] = (
-        <center>
-          {order["client_details"]?.["name"]
-            ? order["client_details"]["name"]
-            : order["customer"]["first_name"]
-            ? order["customer"]["first_name"]
-            : "NA"}
-        </center>
+        <center>{order["customer"]["first_name"]}</center>
       );
       tempObject["importedAt"] = <center>{order["imported_at"]}</center>;
       tempObject["createdAt"] = <center>{order["created_at"]}</center>;

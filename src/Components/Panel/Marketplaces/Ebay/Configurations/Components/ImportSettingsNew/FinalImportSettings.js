@@ -178,21 +178,100 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     let { success, data } = await getImportAttribute();
     if (success) {
       let temp = { ...importProductFilters };
-      if (data?.product_type)
+      if (data?.product_type) {
+        let productTypeList = [...data.product_type];
+        // if (data?.product_type) {
+        //   productTypeList = data.product_type.filter(
+        //     (val) => val !== "Apparel & Accessories"
+        //   );
+        // }
         temp["productType"]["options"] = prepareOptions(data?.product_type);
-      if (data?.vendor)
-        temp["vendor"]["options"] = prepareOptions(data?.vendor);
+        if (
+          temp["productType"]["value"] &&
+          !productTypeList.includes(temp["productType"]["value"])
+        ) {
+          temp["productType"]["enable"] = "no";
+          temp["productType"]["value"] = "";
+          setImportProductFilters(temp);
+          saveData(true);
+        }
+      }
+      if (data?.vendor) {
+        let vendorList = [...data.vendor];
+        // if (data?.vendor) {
+        //   vendorList = data.vendor.filter((val) => val !== "Aglini");
+        // }
+        temp["vendor"]["options"] = prepareOptions(vendorList);
+        if (
+          temp["vendor"]["value"] &&
+          !vendorList.includes(temp["vendor"]["value"])
+        ) {
+          temp["vendor"]["enable"] = "no";
+          temp["vendor"]["value"] = "";
+          setImportProductFilters(temp);
+          saveData(true);
+        }
+      }
       if (data?.collection) {
-        const options = Object.keys(data.collection).map((key) => {
+        let collectionList = { ...data.collection };
+
+        collectionList = Object.keys(data.collection)
+          // .filter((val) => !["155237777487", "155728478287"].includes(val))
+          .map((val) => ({ [val]: data.collection[val] }));
+
+        const options = collectionList.map((key) => {
           let tempObj = {};
-          tempObj["label"] = data.collection[key];
-          tempObj["value"] = key;
+          tempObj["value"] = Object.keys(key)[0];
+          tempObj["label"] = key[Object.keys(key)[0]];
           return tempObj;
         });
+
         temp["import_collection"]["collections_options"] = options;
+
+        let uniquesValuesArr = getMatchedCollectionValues(
+          options,
+          temp["import_collection"]["selected_collection"]
+        );
+        if (temp["import_collection"]["selected_collection"].length > 0) {
+          if (uniquesValuesArr.length > 0)
+            temp["import_collection"]["enable"] = "yes";
+          else temp["import_collection"]["enable"] = "no";
+          temp["import_collection"]["selected_collection"] = [
+            ...uniquesValuesArr,
+          ];
+          setImportProductFilters(temp);
+          saveData(true);
+        }
       }
       setImportProductFilters(temp);
     }
+  };
+
+  const getMatchedCollectionValues = (options, selectedCollections) => {
+    // let matchedValuesFlag = false;
+    let uniquesValuesArr = [];
+    for (let i = 0; i < selectedCollections.length; i++) {
+      let matchedValuesFlag1 = false;
+      for (let j = 0; j < options.length; j++) {
+        if (selectedCollections[i] == options[j]["value"]) {
+          matchedValuesFlag1 = true;
+          break;
+        }
+      }
+      if (matchedValuesFlag1) {
+        uniquesValuesArr.push(selectedCollections[i]);
+      } else {
+      }
+    }
+    console.log("uniquesValuesArr", uniquesValuesArr, uniquesValuesArr.length);
+    // return uniquesValuesArr.length > 0 ? true : false;
+    return uniquesValuesArr;
+    // options.forEach((option) => {
+    //   if (selectedCollections.includes(option["value"])) {
+    //     matchedValuesFlag = true;
+    //   }
+    // });
+    // return matchedValuesFlag;
   };
 
   useEffect(() => {
@@ -210,7 +289,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     setRefreshCollectionBtnLoader(false);
   };
 
-  const saveData = async () => {
+  const saveData = async (force) => {
     setSaveBtnLoader(true);
     let tempObj = {
       import_settings: {},
@@ -246,13 +325,13 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
         }
       }
     }
-    console.log("tempObj", tempObj);
+    // console.log("tempObj", tempObj);
     let { success, message } = await configurationAPI(
       saveAppSettingsShopifyToAppURL,
       tempObj
     );
     if (success) {
-      notify.success(message);
+      !force && notify.success(message);
     } else {
       notify.error(message);
     }
