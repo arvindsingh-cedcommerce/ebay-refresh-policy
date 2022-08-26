@@ -203,9 +203,9 @@ const FinalPolicyGrid = (props) => {
       setRefreshPoliciesAccountSelectionModal({
         ...accountSelectionModal,
         options: ebayAccountsObj,
-        siteID: ebayAccountsObj[0]?.siteID,
-        accountName: ebayAccountsObj[0]?.value,
-        shopID: ebayAccountsObj[0]?.shopID,
+        // siteID: ebayAccountsObj[0]?.siteID,
+        // accountName: ebayAccountsObj[0]?.value,
+        // shopID: ebayAccountsObj[0]?.shopID,
       });
     } else {
       notify.error(message);
@@ -372,7 +372,7 @@ const FinalPolicyGrid = (props) => {
                 "-" &&
                 getCountyrName(refreshPoliciesAccountSelectionModal.siteID)}
             </>
-            <Select
+            <PolarisSelect
               options={refreshPoliciesAccountSelectionModal.options}
               value={refreshPoliciesAccountSelectionModal.accountName}
               placeholder="Please Select..."
