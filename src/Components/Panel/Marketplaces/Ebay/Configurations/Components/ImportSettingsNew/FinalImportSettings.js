@@ -289,8 +289,8 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     setRefreshCollectionBtnLoader(false);
   };
 
-  const saveData = async (force) => {
-    setSaveBtnLoader(true);
+  const saveData = async (force = false) => {
+    !force && setSaveBtnLoader(true);
     let tempObj = {
       import_settings: {},
       setting_type: ["import_settings"],
@@ -335,7 +335,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     } else {
       notify.error(message);
     }
-    setSaveBtnLoader(false);
+    !force && setSaveBtnLoader(false);
   };
 
   const getDropDownStructure = (importProductFilterSetting) => {
@@ -519,7 +519,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
       actions={[
         {
           content: (
-            <Button primary onClick={saveData} loading={saveBtnLoader}>
+            <Button primary onClick={() => saveData(false)} loading={saveBtnLoader}>
               Save
             </Button>
           ),
