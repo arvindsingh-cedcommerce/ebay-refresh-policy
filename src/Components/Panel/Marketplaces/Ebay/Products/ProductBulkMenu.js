@@ -18,11 +18,13 @@ import { Dropdown, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import {
+  fetchProductById,
   getrequest,
   postActionOnProductById,
 } from "../../../../../APIrequests/ProductsAPI";
 import { notify } from "../../../../../services/notify";
 import {
+  exportProductItemURL,
   importByIdURL,
   importCollectionProductURL,
   importMetaFieldURL,
@@ -160,12 +162,24 @@ const ProductBulkMenu = (props) => {
               </Menu.Item>
             </Menu.ItemGroup>
             <Menu.ItemGroup key="g1" title="CSV Actions">
-              <Menu.Item key="Export">
-                <UploadOutlined /> Export
+              <Menu.Item
+                key="Export"
+                onClick={() => {
+                  setModal({
+                    ...modal,
+                    active: true,
+                    content: "Export Products",
+                    actionName: fetchProductById,
+                    actionPayload: {},
+                    api: exportProductItemURL,
+                  });
+                }}
+              >
+                <UploadOutlined key="Export Products" /> Export Products
               </Menu.Item>
-              <Menu.Item key="Bulk Update">
+              {/* <Menu.Item key="Bulk Update">
                 <DownloadOutlined /> Bulk Update
-              </Menu.Item>
+              </Menu.Item> */}
             </Menu.ItemGroup>
             <Menu.Divider />
             <Menu.ItemGroup key="g2" title="Shopify Actions">
