@@ -13,6 +13,7 @@ import {
   TextContainer,
   TextField,
   TextStyle,
+  Page,
 } from "@shopify/polaris";
 import { Avatar, Badge, PageHeader, Tag, Typography } from "antd";
 import React, { useEffect, useState } from "react";
@@ -39,6 +40,8 @@ const ViewOrdersPolarisNew = (props) => {
   const [financialStatus, setFinancialStatus] = useState(null);
   const [shopifyOrderID, setShopifyOrderID] = useState(null);
   const [ebayOrderID, setEbayOrderID] = useState(null);
+  const [orderDate, setOrderDate] = useState(null);
+  const [totalItems, setTotalItems] = useState(null);
   const [eBayRefrenceID, setEbayRefrenceID] = useState(null);
   const [lineItems, setLineItems] = useState([]);
   const [ebayOrderData, setEbayOrderData] = useState(null);
@@ -136,17 +139,20 @@ const ViewOrdersPolarisNew = (props) => {
     let { id } = parseQueryString(props.location.search);
     let postData = { order_id: id };
     let { success, data, message } = await getOrder(getOrderURL, postData);
+    console.log(data);
     if (success) {
       setShopifyOrderName(data["shopify_order_name"]);
       setFinancialStatus(data["financial_status"]);
       setShopifyOrderID(data["target_order_id"]);
       setEbayOrderID(data["source_order_id"]);
+      setOrderDate(data["created_at"]);
+      setTotalItems(data["qty"]);
       setLineItems(data["line_items"]);
       setEbayRefrenceID(data["source_order_data"]["ExtendedOrderID"]);
       setEbayOrderData(data["source_order_data"]);
 
-      setBuyerEmail(data["client_details"]["email"]);
-      setBuyerName(data["client_details"]["name"]);
+      setBuyerEmail(data["customer"]["email"]);
+      setBuyerName(data["customer"]["first_name"]);
       let tempAddress = buyerAddress;
       tempAddress["address"] = data["shipping_address"]["address1"];
       tempAddress["phone"] = data["shipping_address"]["phone_number"];
@@ -167,7 +173,7 @@ const ViewOrdersPolarisNew = (props) => {
       tempPaymentDetails["inclusiveTax"] = data["total_tax"];
       tempPaymentDetails["taxesApplied"] = taxesArray.length
         ? taxesArray.join(",")
-        : "";
+        : "N/A";
       setPaymentDetails(tempPaymentDetails);
 
       let { shipping_cost_details } = data;
@@ -390,11 +396,32 @@ const ViewOrdersPolarisNew = (props) => {
   return flag ? (
     <OrderSkeleton />
   ) : (
+    // <Page
     <PageHeader
       onBack={() => props.history.push("/panel/ebay/orders")}
       title={shopifyOrderName ? `Order ${shopifyOrderName}` : "Order"}
+      // title={
+      //   shopifyOrderName ? (
+      //     <Stack alignment="center">
+      //       <>Order ${shopifyOrderName}</>
+      //       <Tag color="blue">{financialStatus}</Tag>
+      //     </Stack>
+      //   ) : (
+      //     "Order"
+      //   )
+      // }
       tags={<Tag color="blue">{financialStatus}</Tag>}
-      style={{ minHeight: "90vh" }}
+      // style={{ minHeight: "90vh" }}
+      // actionGroups={[
+      //   {
+      //     title: "Copy",
+      //     onClick: (openActions) => {
+      //       alert("Copy action");
+      //       openActions();
+      //     },
+      //     actions: [{ content: "Copy to clipboard" }],
+      //   },
+      // ]}
       extra={[
         <Popover
           active={actionPopoverActive}
@@ -421,6 +448,8 @@ const ViewOrdersPolarisNew = (props) => {
               <OrderDetailsComponent
                 shopifyOrderID={shopifyOrderID}
                 ebayOrderID={ebayOrderID}
+                orderDate={orderDate}
+                totalItems={totalItems}
                 eBayRefrenceID={eBayRefrenceID}
                 lineItems={lineItems}
                 buyerAddress={buyerAddress}
@@ -506,6 +535,7 @@ const ViewOrdersPolarisNew = (props) => {
           )}
         </Modal.Section>
       </Modal>
+      {/* </Page> */}
     </PageHeader>
   );
 };
@@ -515,6 +545,8 @@ export default ViewOrdersPolarisNew;
 export const OrderDetailsComponent = ({
   shopifyOrderID,
   ebayOrderID,
+  orderDate,
+  totalItems,
   lineItems,
   eBayRefrenceID,
   buyerAddress,
@@ -599,11 +631,11 @@ export const OrderDetailsComponent = ({
             </Stack>
             <Stack vertical={false} distribution="equalSpacing">
               <Heading>Order Date</Heading>
-              <p>{shopifyOrderID}</p>
+              <p>{orderDate}</p>
             </Stack>
             <Stack vertical={false} distribution="equalSpacing">
               <Heading>Total Items</Heading>
-              <p>{ebayOrderID}</p>
+              <p>{totalItems}</p>
             </Stack>
           </Card>
           <Card sectioned>
