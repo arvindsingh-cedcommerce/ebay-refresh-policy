@@ -326,7 +326,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
               </Menu.Item>
             </Menu.ItemGroup>
             <Menu.ItemGroup key="g3" title="Other Actions">
-            <Menu.Item
+              <Menu.Item
                 key="Export"
                 onClick={() => {
                   let postData = [];
@@ -337,7 +337,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   setModal({
                     ...modal,
                     active: true,
-                    content: "Disable Product",
+                    content: "Export Product",
                     actionName: postActionOnProductById,
                     actionPayload: {
                       product_id: postData,
