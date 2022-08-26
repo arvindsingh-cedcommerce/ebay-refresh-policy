@@ -538,8 +538,8 @@ const ProfileGridComponent = (props) => {
       className="site-page-header-responsive"
       title={
         <Tooltip
-          // content="For creating listings on eBay, profile is mandatory"
-          content="To create listings on eBay, profile is mandatory"
+          content="For creating listings on eBay, profile is mandatory"
+          // content="To create listings on eBay, profile is mandatory"
           preferredPosition="above"
         >
           <TextStyle variation="strong">

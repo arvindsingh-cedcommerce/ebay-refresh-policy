@@ -249,7 +249,7 @@ const FinalTemplateGridComponent = (props) => {
     <PageHeader
       className="site-page-header-responsive"
       title="Templates"
-      subTitle="Manage templates for choosing eBay category and customise your products details like price, inventory, title, description etc)."
+      subTitle="Manage templates for choosing eBay category and customise your products details like price, inventory, title, description etc."
       ghost={true}
       extra={[
         <Select

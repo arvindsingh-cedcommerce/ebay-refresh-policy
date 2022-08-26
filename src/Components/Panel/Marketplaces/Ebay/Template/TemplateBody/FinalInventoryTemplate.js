@@ -323,7 +323,7 @@ const FinalInventoryTemplate = (props) => {
           <Layout.AnnotatedSection
             id="customise"
             title="Customise Inventory"
-            description="Customise product inventory while create listing on eBay. you can set fixed inventory or reserve shopify inventory before sending inventory details on eBay. i.e. Fixed inventory value will ignore the shopify inventory and Reserve inventory value will reduse shopify inventory before sending to eBay."
+            description="Customise product inventory while create listing on eBay. You can set fixed inventory or reserve shopify inventory before sending inventory details on eBay. i.e. Fixed inventory value will ignore the shopify inventory and Reserve inventory value will reduce shopify inventory before sending to eBay."
           >
             <Card sectioned>
               <FormLayout>

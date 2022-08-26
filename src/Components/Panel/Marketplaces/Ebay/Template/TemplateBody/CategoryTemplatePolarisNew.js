@@ -1575,7 +1575,7 @@ const CategoryTemplatePolarisNew = (props) => {
               1
             )} Category Mapping`}
             description={
-              "Select the secondary category for eBay listng. it is optional and charable eBay. also it should be related to primary category because attributes/ item specifics will be shared."
+              "Select the secondary category for eBay listng. It is optional and chargable on eBay. Also it should be related to primary category because attributes/ item specifics will be shared."
             }
           >
             <Card sectioned title="Category Mapping">
@@ -1680,7 +1680,7 @@ const CategoryTemplatePolarisNew = (props) => {
               id="optionalAttributeMapping"
               title="Optional Attributes (Item Specifics)"
               description={
-                "These attributes are optional and can be used for enhacning the product's specification on eBay."
+                "These attributes are optional and can be used for enhancing the product's specification on eBay."
               }
             >
               <Card
@@ -1723,7 +1723,7 @@ const CategoryTemplatePolarisNew = (props) => {
               id="productCondition"
               title="Product condition"
               description={
-                "Most eBay listing categories require an item condition. It ensure the product's condition."
+                "Most eBay listing categories require an item condition. It ensures the product's condition."
               }
             >
               <Card sectioned>{getProductConditionStructure()}</Card>
@@ -1857,7 +1857,7 @@ const CategoryTemplatePolarisNew = (props) => {
           <Banner status="info">
             <p>
               Set category related components for eBay listing. Here you can set
-              Primary Category and it's attributes. You can set product
+              primary category and it's attributes. You can set product
               condition, store front category and secondary category also.
             </p>
           </Banner>

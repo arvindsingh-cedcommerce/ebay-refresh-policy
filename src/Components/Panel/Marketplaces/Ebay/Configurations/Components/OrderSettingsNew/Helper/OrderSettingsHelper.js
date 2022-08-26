@@ -33,21 +33,21 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
         value: "default",
         customValue: "",
         description:
-          "Set Shopify Order note. you can customise it as per your need.",
+          "Set Shopify Order Note. You can customise it as per your need.",
       },
       setOrderTags: {
         label: "Set Shopify Order Tag(s)",
         value: "default",
         customValue: "",
         description:
-          "Set Shopify Order Tags. you can customise it as per your need.",
+          "Set Shopify Order Tags. You can customise it as per your need.",
       },
       setOrderName: {
         label: "Set Shopify Order Name",
         value: "default",
         customValue: "",
         description:
-          "Set Shopify Order Name. you can customise it as per your need.",
+          "Set Shopify Order Name. You can customise it as per your need.",
       },
       useEbayCustomerDetails: {
         label: "Use eBay Customer Details",
@@ -55,7 +55,7 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
         email: "",
         name: "",
         description:
-          "Enable this to use ebay customer details for order creation. you can set customer details if you don't want eBay Customer details for Order creation.",
+          "Enable this to use ebay customer details for order creation. You can set custom customer details if you don't want eBay customer details for Order creation.",
       },
       shipmentSync: {
         label: "Shipment Sync",
@@ -96,7 +96,7 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
           },
         ],
         description:
-          "Enable if you want to sync order cancellation from Shopify to eBay. you can also map cancellation reason.",
+          "Enable if you want to sync order cancellation from Shopify to eBay. You can also map cancellation reason.",
       },
     };
     parsedEbayAccountsData[value] = { ...ebayAccount };

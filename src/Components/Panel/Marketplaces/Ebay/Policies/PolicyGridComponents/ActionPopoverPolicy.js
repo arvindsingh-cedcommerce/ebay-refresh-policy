@@ -117,7 +117,7 @@ const ActionPopoverPolicy = ({
       >
         <Modal.Section>
           <Stack vertical spacing="extraTight">
-            <p>Are you sure, you want to delete this template?</p>
+            <p>Are you sure, you want to delete this policy?</p>
             <Stack distribution="center" spacing="tight">
               <ShopifyButton onClick={handleChange}>Cancel</ShopifyButton>
               <ShopifyButton

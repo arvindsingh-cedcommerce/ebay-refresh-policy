@@ -1274,7 +1274,7 @@ const FinalDashboard = (props) => {
             <Col span={8}>
               <Card
                 title={
-                  <Tooltip content="Total amount of orders created on Shopify">
+                  <Tooltip content="Total revenue of orders created on Shopify">
                     <TextStyle variation="strong">
                       <span
                         style={{
