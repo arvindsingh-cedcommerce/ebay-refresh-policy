@@ -13,6 +13,7 @@ import { notify } from "../../../../../services/notify";
 import {
   deleteItemURL,
   disableItemURL,
+  exportProductItemURL,
   importMetaFieldURL,
   matchFromEbayURL,
   relistItemURL,
@@ -325,6 +326,28 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
               </Menu.Item>
             </Menu.ItemGroup>
             <Menu.ItemGroup key="g3" title="Other Actions">
+            <Menu.Item
+                key="Export"
+                onClick={() => {
+                  let postData = [];
+                  selectedRows.forEach((selectedRow) => {
+                    let { container_id } = selectedRow;
+                    postData.push(container_id);
+                  });
+                  setModal({
+                    ...modal,
+                    active: true,
+                    content: "Disable Product",
+                    actionName: postActionOnProductById,
+                    actionPayload: {
+                      product_id: postData,
+                    },
+                    api: exportProductItemURL,
+                  });
+                }}
+              >
+                <SyncOutlined /> Export Products
+              </Menu.Item>
               <Menu.Item
                 key="Disable"
                 onClick={() => {
