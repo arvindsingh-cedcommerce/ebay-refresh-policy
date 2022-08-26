@@ -363,6 +363,7 @@ const FinalPolicyGrid = (props) => {
           content: "Refresh",
           onAction: () => getAllPoliciesRefresh(),
           loading: refreshPolicyLoader,
+          disabled: !refreshPoliciesAccountSelectionModal.accountName
         }}
       >
         <Modal.Section>
