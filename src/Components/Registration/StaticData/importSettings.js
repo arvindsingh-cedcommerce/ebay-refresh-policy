@@ -266,8 +266,10 @@ export const productSettingsDataShop = {
   currencyConversion: {
     enable: "yes",
     attribute: {
-      shopifyCurrency: "",
-      ebayCurrency: "",
+      shopifyCurrencyName: "",
+      shopifyCurrencyValue: "",
+      ebayCurrencyName: "",
+      ebayCurrencyValue: "",
     },
   },
   match_from_ebay: {

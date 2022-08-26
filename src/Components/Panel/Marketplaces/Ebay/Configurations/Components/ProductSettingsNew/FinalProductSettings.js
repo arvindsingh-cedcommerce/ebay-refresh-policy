@@ -8,9 +8,15 @@ import { Divider } from "antd";
 import React, { useEffect, useState } from "react";
 import { getConnectedAccounts } from "../../../../../../../Apirequest/accountsApi";
 // import { getEbayshopSettings } from "../../../../../../../Apirequest/ebayApirequest/policiesApi";
-import { configurationAPI } from "../../../../../../../APIrequests/ConfigurationAPI";
+import {
+  configurationAPI,
+  currencyFunc,
+} from "../../../../../../../APIrequests/ConfigurationAPI";
 import { notify } from "../../../../../../../services/notify";
-import { getAppSettingsURL } from "../../../../../../../URLs/ConfigurationURL";
+import {
+  currencyConvertorURL,
+  getAppSettingsURL,
+} from "../../../../../../../URLs/ConfigurationURL";
 import { getCountryName } from "../../../../../Accounts/NewAccount";
 import AppToEbayNew from "./AppToEbayNew";
 import { countryArray, stateArray } from "./countryData";
@@ -85,7 +91,7 @@ const FinalProductSettings = () => {
       label: "Auto Delete Product",
       enable: "yes",
       description:
-        "Enable the option to allow automatic delete product from app. Which means if the product delated on Shopify then it will automatically deleted on app as well.",
+        "Enable the option to allow automatic delete product from app. Which means if the product deleted on Shopify then it will automatically deleted on app as well.",
       options: [
         {
           label: "Yes",
@@ -250,17 +256,24 @@ const FinalProductSettings = () => {
                     data?.marketplace?.ebay?.shop[id]?.data?.product_settings
                       ?.app_to_ebay[field]
                   ) {
-                    temp[key]["fields"][field]["enable"] =
-                      data.marketplace.ebay.shop[
-                        id
-                      ].data.product_settings.app_to_ebay[field]["enable"];
+                    if (
+                      field === "currencyConversion" &&
+                      data.marketplace.ebay.shop[id].data.product_settings
+                        .app_to_ebay[field]["enable"] === "no"
+                    ) {
+                      temp[key]["fields"][field]["enable"] = "yes";
+                    } else
+                      temp[key]["fields"][field]["enable"] =
+                        data.marketplace.ebay.shop[
+                          id
+                        ].data.product_settings.app_to_ebay[field]["enable"];
                   }
                   if (
                     [
                       "autoProductSync",
                       "salesTaxDetails",
                       "vatDetails",
-                      "currencyConversion",
+                      // "currencyConversion",
                       "itemLocation",
                       "vehicleDetails",
                     ].includes(field)
@@ -273,6 +286,54 @@ const FinalProductSettings = () => {
                           "product_settings"
                         ]?.["app_to_ebay"]?.[field]?.["attribute"]?.[key1];
                     }
+                  } else if (field === "currencyConversion") {
+                    // console.log(
+                    //   key,
+                    //   data.marketplace.ebay.shop[id]["data"][
+                    //     "product_settings"
+                    //   ]?.["app_to_ebay"]?.[field],
+                    //   temp[key]["fields"][field]["attribute"]
+                    // );
+                    if (
+                      Object.keys(
+                        data.marketplace.ebay.shop[id]["data"][
+                          "product_settings"
+                        ]?.["app_to_ebay"]?.[field]?.["attribute"]?.[
+                          "shopifyCurrency"
+                        ]
+                      ).length == 0 ||
+                      Object.keys(
+                        data.marketplace.ebay.shop[id]["data"][
+                          "product_settings"
+                        ]?.["app_to_ebay"]?.[field]?.["attribute"]?.[
+                          "ebayCurrency"
+                        ]
+                      ).length == 0
+                    ) {
+                      temp[key]["fields"][field]["attribute"] = {
+                        shopifyCurrency: {
+                          label: "Shopify Currency",
+                          enable: "yes",
+                          type: "textfield",
+                          shopifyCurrencyValue: "",
+                          disabled: true,
+                          shopifyCurrencyName: "",
+                        },
+                        ebayCurrency: {
+                          label: "eBay Currency",
+                          enable: "yes",
+                          type: "textfield",
+                          ebayCurrencyValue: "",
+                          numberType: "number",
+                          ebayCurrencyName: "",
+                        },
+                      };
+                    } else
+                      temp[key]["fields"][field]["attribute"] = {
+                        ...data.marketplace.ebay.shop[id]["data"][
+                          "product_settings"
+                        ]?.["app_to_ebay"]?.[field]?.["attribute"],
+                      };
                   } else if (field === "shopifyWarehouses") {
                     temp[key]["fields"][field]["shopifyWarehouseValue"] =
                       data.marketplace.ebay.shop[id]["data"][
@@ -766,7 +827,7 @@ const FinalProductSettings = () => {
             enable: "yes",
             type: "form",
             description:
-              "VAT is not applicable to all countries. Allowed VAT percentage rates can vary by region/country, so sellers should be aware of the rates they are legally required/allowed to charge. Sellers must be registered as Business Sellers on the site they are selling on in order to use the Business Seller-related fields.",
+              "VAT is not applicable to all countries, including the US.Allowed VAT percentage rates can vary by region/country, so sellers should be aware of the rates they are legally required/allowed to charge. Sellers must be registered as Business Sellers on the site they are selling on in order to use the Business Seller-related fields.",
             options: [
               {
                 label: "Yes",
@@ -867,8 +928,8 @@ const FinalProductSettings = () => {
           },
           currencyConversion: {
             label: "Currency Converter",
-            enable: "no",
-            type: "segmentedBtn",
+            enable: "yes",
+            // type: "segmentedBtn",
             options: [
               {
                 label: "Yes",
@@ -886,15 +947,17 @@ const FinalProductSettings = () => {
                 label: "Shopify Currency",
                 enable: "yes",
                 type: "textfield",
-                value: "",
+                shopifyCurrencyValue: "",
                 disabled: true,
+                shopifyCurrencyName: "",
               },
               ebayCurrency: {
                 label: "eBay Currency",
                 enable: "yes",
                 type: "textfield",
-                value: "",
+                ebayCurrencyValue: "",
                 numberType: "number",
+                ebayCurrencyName: "",
               },
             },
           },

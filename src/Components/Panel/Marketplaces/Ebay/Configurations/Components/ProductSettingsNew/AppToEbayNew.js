@@ -9,9 +9,15 @@ import {
 import { Checkbox, Divider, Image, Tabs, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { getConnectedAccounts } from "../../../../../../../Apirequest/accountsApi";
-import { configurationAPI } from "../../../../../../../APIrequests/ConfigurationAPI";
+import {
+  configurationAPI,
+  currencyFunc,
+} from "../../../../../../../APIrequests/ConfigurationAPI";
 import { notify } from "../../../../../../../services/notify";
-import { saveAppSettingsShopifyToAppURL } from "../../../../../../../URLs/ConfigurationURL";
+import {
+  currencyConvertorURL,
+  saveAppSettingsShopifyToAppURL,
+} from "../../../../../../../URLs/ConfigurationURL";
 import { getCountryName } from "../../../../../Accounts/NewAccount";
 import AccountTabContent from "../../../Profile/Profilepages/Components/AccountTabContent";
 import AccountTabContentConfig from "./AccountTabContentConfig";
@@ -52,6 +58,9 @@ const AppToEbayNew = ({
                   connectedAccountsObject={connectedAccountsObject}
                   setconnectedAccountsObject={setconnectedAccountsObject}
                   connectedAccountsObjectErrors={connectedAccountsObjectErrors}
+                  setConnectedAccountsObjectErrors={
+                    setConnectedAccountsObjectErrors
+                  }
                 />
               ),
             },
@@ -72,33 +81,29 @@ const AppToEbayNew = ({
     };
     for (const account in connectedAccountsObject) {
       if (connectedAccountsObject[account]["checked"]) {
-        tempObjError
-        // ["product_settings"]["app_to_ebay"]
-        [
+        tempObjError[
+          // ["product_settings"]["app_to_ebay"]
           connectedAccountsObject[account]["value"]
         ] = { fields: {} };
         Object.keys(connectedAccountsObject[account]["fields"]).forEach(
           (field) => {
             if (field === "itemLocation") {
-              tempObjError
-              // ["product_settings"]["app_to_ebay"]
-              [
+              tempObjError[
+                // ["product_settings"]["app_to_ebay"]
                 connectedAccountsObject[account]["value"]
               ]["fields"][field] = {};
               for (const key in connectedAccountsObject[account]["fields"][
                 field
               ]) {
                 if (key === "enable") {
-                  tempObjError
-                  // ["product_settings"]["app_to_ebay"]
-                  [
+                  tempObjError[
+                    // ["product_settings"]["app_to_ebay"]
                     connectedAccountsObject[account]["value"]
                   ]["fields"][field][key] =
                     connectedAccountsObject[account]["fields"][field][key];
                 } else if (key === "attribute") {
-                  tempObjError
-                  // ["product_settings"]["app_to_ebay"]
-                  [
+                  tempObjError[
+                    // ["product_settings"]["app_to_ebay"]
                     connectedAccountsObject[account]["value"]
                   ]["fields"][field][key] = {};
                   for (const attribute1 in connectedAccountsObject[account][
@@ -111,9 +116,8 @@ const AppToEbayNew = ({
                     ) {
                       errorCount++;
                     }
-                    tempObjError
-                    // ["product_settings"]["app_to_ebay"]
-                    [
+                    tempObjError[
+                      // ["product_settings"]["app_to_ebay"]
                       connectedAccountsObject[account]["value"]
                     ]["fields"][field][key][attribute1] =
                       connectedAccountsObject[account]["fields"][field][key][
@@ -123,25 +127,48 @@ const AppToEbayNew = ({
                         : "*required";
                   }
                 } else if (key === "shopifyWarehouseValue") {
-                  tempObjError
-                  // ["product_settings"]["app_to_ebay"]
-                  [
+                  tempObjError[
+                    // ["product_settings"]["app_to_ebay"]
                     connectedAccountsObject[account]["value"]
                   ]["fields"][field][key] = [];
-                  tempObjError
-                  // ["product_settings"]["app_to_ebay"]
-                  [
+                  tempObjError[
+                    // ["product_settings"]["app_to_ebay"]
                     connectedAccountsObject[account]["value"]
                   ]["fields"][field][key] =
                     connectedAccountsObject[account]["fields"][field][key];
                 } else if (key === "match_from_ebay") {
-                  tempObjError
-                  // ["product_settings"]["app_to_ebay"]
-                  [
+                  tempObjError[
+                    // ["product_settings"]["app_to_ebay"]
                     connectedAccountsObject[account]["value"]
                   ]["fields"][field][key] =
                     connectedAccountsObject[account]["fields"][field][key];
                 }
+              }
+            } else if (field === "currencyConversion") {
+              let tempObj = {
+                attribute: {
+                  ebayCurrency: {
+                    ebayCurrencyValue: false,
+                  },
+                },
+              };
+              if (
+                connectedAccountsObject[account]["fields"][field]["enable"] ===
+                  "yes" &&
+                !connectedAccountsObject[account]["fields"][field]["attribute"][
+                  "ebayCurrency"
+                ]["ebayCurrencyValue"]
+              ) {
+                tempObjError[connectedAccountsObject[account]["value"]][
+                  "fields"
+                ][field] = { ...tempObj };
+
+                tempObjError[connectedAccountsObject[account]["value"]][
+                  "fields"
+                ][field]["attribute"]["ebayCurrency"][
+                  "ebayCurrencyValue"
+                ] = true;
+                errorCount++;
               }
             }
           }
@@ -188,12 +215,22 @@ const AppToEbayNew = ({
                   for (const attribute1 in connectedAccountsObject[account][
                     "fields"
                   ][field][key]) {
-                    tempObj["product_settings"]["app_to_ebay"][
-                      connectedAccountsObject[account]["shopId"]
-                    ][field][key][attribute1] =
-                      connectedAccountsObject[account]["fields"][field][key][
-                        attribute1
-                      ]["value"];
+                    if (
+                      ["shopifyCurrency", "ebayCurrency"].includes(attribute1)
+                    ) {
+                      tempObj["product_settings"]["app_to_ebay"][
+                        connectedAccountsObject[account]["shopId"]
+                      ][field][key][attribute1] =
+                        connectedAccountsObject[account]["fields"][field][key][
+                          attribute1
+                        ];
+                    } else
+                      tempObj["product_settings"]["app_to_ebay"][
+                        connectedAccountsObject[account]["shopId"]
+                      ][field][key][attribute1] =
+                        connectedAccountsObject[account]["fields"][field][key][
+                          attribute1
+                        ]["value"];
                   }
                 } else if (key === "shopifyWarehouseValue") {
                   tempObj["product_settings"]["app_to_ebay"][

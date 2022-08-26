@@ -10,3 +10,5 @@ export const getAppSettingsURL = "ebay/configuration/getConfiguration";
 export const getSourceAttributesURL = "frontend/app/checkDefaultConfiguration";
 
 export const collectionFetchURL = "ebay/account/collectionFetch";
+
+export const currencyConvertorURL = "ebay/request/currencyConvertor";

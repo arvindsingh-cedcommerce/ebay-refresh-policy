@@ -38,9 +38,13 @@ import { environment } from "../../environment/environment";
 import { getConnectedAccounts } from "../../Apirequest/accountsApi";
 import PlansComponentAnt from "./PlansComponentAnt";
 import { Progress } from "antd";
-import { configurationAPI } from "../../APIrequests/ConfigurationAPI";
+import {
+  configurationAPI,
+  currencyFunc,
+} from "../../APIrequests/ConfigurationAPI";
 import {
   collectionFetchURL,
+  currencyConvertorURL,
   getAppSettingsURL,
   saveAppSettingsShopifyToAppURL,
 } from "../../URLs/ConfigurationURL";
@@ -186,6 +190,17 @@ export const FinalRegistrationItemLocation = (props) => {
   const [next2Loader, setNext2Loader] = useState(false);
   const [next3Loader, setNext3Loader] = useState(false);
 
+  // currency
+  const [currencyData, setCurrencyData] = useState({
+    enable: "yes",
+    attribute: {
+      shopifyCurrencyName: "",
+      shopifyCurrencyValue: "",
+      ebayCurrencyName: "",
+      ebayCurrencyValue: "",
+    },
+  });
+
   const plansComponentCallback = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -200,6 +215,41 @@ export const FinalRegistrationItemLocation = (props) => {
   };
   useEffect(() => {
     async function fetchMyAPI() {
+      let { success, data: currencyData } = await currencyFunc(
+        currencyConvertorURL,
+        { site_id: accountConnection["countryConnected"] }
+      );
+      if (success) {
+        const { source, rate } = currencyData;
+        let tempObj = {};
+        tempObj["attribute"] = {
+          shopifyCurrency: {
+            label: "Shopify Currency",
+            enable: "yes",
+            type: "textfield",
+            shopifyCurrencyValue: "",
+            disabled: true,
+            shopifyCurrencyName: "",
+          },
+          ebayCurrency: {
+            label: "eBay Currency",
+            enable: "yes",
+            type: "textfield",
+            ebayCurrencyValue: "",
+            numberType: "number",
+            ebayCurrencyName: "",
+          },
+        };
+        tempObj["enable"] = "yes";
+        tempObj["attribute"]["shopifyCurrency"]["shopifyCurrencyName"] =
+          source["shopify"];
+        tempObj["attribute"]["shopifyCurrency"]["shopifyCurrencyValue"] =
+          source["amount"];
+        tempObj["attribute"]["ebayCurrency"]["ebayCurrencyName"] =
+          source["ebay"];
+        tempObj["attribute"]["ebayCurrency"]["ebayCurrencyValue"] = rate;
+        setCurrencyData(tempObj);
+      }
       await callConnectedAccounts();
       // await importCollections();
       let { success: checkStepCompletedSuccess, data } =
@@ -726,6 +776,9 @@ export const FinalRegistrationItemLocation = (props) => {
         product_settings["app_to_ebay"][id][key] = productSettingsDataShop[key];
       }
       product_settings["app_to_ebay"][id]["itemLocation"] = { ...itemLocation };
+      product_settings["app_to_ebay"][id]["currencyConversion"] = {
+        ...currencyData,
+      };
       await makeListOfCalls(product_settings);
       await getAllPoliciesRefresh();
     }
