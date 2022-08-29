@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Page } from "@shopify/polaris";
 import { checkStepCompleted } from "../../Apirequest/registrationApi";
+import { getDashboardData } from "../../APIrequests/DashboardAPI";
+import { dashboardAnalyticsURL } from "../../URLs/DashboardURL";
 const welcomeScreen = require("./../../assets/Sell-on-ebay-marketplace-08.jpg");
 
 class Welcome extends Component {
@@ -20,7 +22,8 @@ class Welcome extends Component {
       if (data < 4) {
         this.redirect("/registrations");
       } else {
-        this.redirect("/panel/ebay/dashboard");
+        // this.redirect("/panel/ebay/dashboard?refresh=true");
+        this.props.history.push("/panel/ebay/dashboard", { refresh: true });
       }
     }
   };

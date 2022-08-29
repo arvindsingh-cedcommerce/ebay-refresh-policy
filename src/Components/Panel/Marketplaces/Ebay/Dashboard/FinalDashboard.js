@@ -53,7 +53,7 @@ const { Title, Text } = Typography;
 const { Step } = Steps;
 
 const FinalDashboard = (props) => {
-  const { queuedTasks } = props;
+  const { queuedTasks, refresh } = props;
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [activeAccounts, setActiveAccounts] = useState(0);
 
@@ -517,12 +517,12 @@ const FinalDashboard = (props) => {
 
     return day + "-" + month + "-" + year;
   };
-  const hitDashoboardAPI = async (refresh) => {
+  const hitDashoboardAPI = async (refresh, msg = true) => {
     setDashboardSkeleton(true);
     let postData = {};
     if (refresh) {
       postData = { refreshDashboard: true };
-      setRefreshDashboardStatsBtnLoader(true);
+      msg && setRefreshDashboardStatsBtnLoader(true);
     }
     let { success, data } = await getDashboardData(
       dashboardAnalyticsURL,
@@ -531,7 +531,7 @@ const FinalDashboard = (props) => {
     if (success) {
       setDashboardSkeleton(false);
       if (refresh) {
-        notify.success("Dashboard data refreshed");
+        msg && notify.success("Dashboard data refreshed");
       }
       const {
         productAnalytics,
@@ -655,7 +655,7 @@ const FinalDashboard = (props) => {
   useEffect(() => {
     if (connectedAccountsArray.length) {
       get21uniqueColors();
-      hitDashoboardAPI();
+      refresh ? hitDashoboardAPI(refresh, false) : hitDashoboardAPI();
     }
   }, [connectedAccountsArray]);
 

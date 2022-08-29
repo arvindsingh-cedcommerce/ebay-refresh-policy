@@ -303,9 +303,7 @@ const NewPanel = (props) => {
                 <Menu.Item
                   style={{ margin: "0px" }}
                   key="activity"
-                  icon={
-                    <BellOutlined style={{ fontSize: "22px" }} />
-                  }
+                  icon={<BellOutlined style={{ fontSize: "22px" }} />}
                 >
                   Activities
                 </Menu.Item>
@@ -454,9 +452,7 @@ const NewPanel = (props) => {
               <Menu.Item
                 style={{ margin: "0px" }}
                 key="activity"
-                icon={
-                  <BellOutlined style={{ fontSize: "22px" }} />
-                }
+                icon={<BellOutlined style={{ fontSize: "22px" }} />}
               >
                 Activities
               </Menu.Item>
@@ -578,9 +574,19 @@ const NewPanel = (props) => {
               />
               <Route
                 path="/panel/ebay/dashboard"
-                render={(props) => (
-                  <FinalDashboard queuedTasks={queuedTasks} {...props} />
-                )}
+                render={(props) => {
+                  let refresh=false
+                  if(props.location.state) {
+                    refresh = props.location.state?.refresh
+                  }
+                  return (
+                    <FinalDashboard
+                      queuedTasks={queuedTasks}
+                      refresh={refresh}
+                      {...props}
+                    />
+                  );
+                }}
               />
               <Route
                 path="/panel/ebay/products"
