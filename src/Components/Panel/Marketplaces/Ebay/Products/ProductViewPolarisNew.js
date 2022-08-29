@@ -797,10 +797,12 @@ const ProductViewPolarisNew = (props) => {
           data.variantionData
         )[0];
         if (postData["edited_fields"].hasOwnProperty("source_product_id")) {
-          delete postData["edited_fields"].source_product_id;
+          // check for this line
+          // delete postData["edited_fields"].source_product_id;
         }
       }
     }
+    // console.log('postData', postData);
     return postData;
   };
 
@@ -883,7 +885,7 @@ const ProductViewPolarisNew = (props) => {
   );
 
   const differenceArrayDeepNew = (data) => {
-    console.log(data);
+    // console.log(data);
     let parsedDataArray = data.map((variantData) => {
       let tempObj = {};
       for (const key in variantData) {
@@ -992,7 +994,7 @@ const ProductViewPolarisNew = (props) => {
 
   const getItemURLs = () => {
     let statusStructures = [];
-    console.log(itemUrls);
+    // console.log(itemUrls);
     itemUrls.forEach((itemUrl) => {
       const structStatus = (itemUrl.itemId || itemUrl.hasError) && (
         <Stack alignment="center" vertical={false}>
