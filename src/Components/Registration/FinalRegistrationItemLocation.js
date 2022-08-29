@@ -57,6 +57,7 @@ import {
 import { countryArray } from "../Panel/Marketplaces/Ebay/Configurations/Components/ProductSettingsNew/countryData";
 import { refreshPoliciesURL } from "../../URLs/PoliciesURL";
 import { getRefreshPolicies } from "../../APIrequests/PoliciesAPI";
+import WelcomeImage from '../../assets/Sell-on-ebay-marketplace-08.jpg'
 
 export const alreadySellingOnEbayOptions = [
   { label: "Yes", value: "yes" },
@@ -201,6 +202,9 @@ export const FinalRegistrationItemLocation = (props) => {
     },
   });
 
+  // welcome screen
+  const [showWelcomImage, setShowWelcomImage] = useState(true);
+
   const plansComponentCallback = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -215,6 +219,7 @@ export const FinalRegistrationItemLocation = (props) => {
   };
   useEffect(() => {
     async function fetchMyAPI() {
+      // setShowWelcomImage()
       let { success, data: currencyData } = await currencyFunc(
         currencyConvertorURL,
         { site_id: accountConnection["countryConnected"] }
@@ -394,6 +399,7 @@ export const FinalRegistrationItemLocation = (props) => {
           setRestrictOrderSettingsStatus(true);
         }
       }
+      setShowWelcomImage(false);
     }
     fetchMyAPI();
   }, []);
@@ -783,7 +789,15 @@ export const FinalRegistrationItemLocation = (props) => {
       await getAllPoliciesRefresh();
     }
   };
-  return (
+  return showWelcomImage ? (
+    <Page fullWidth>
+      <img
+        src={WelcomeImage}
+        alt={""}
+        style={{ height: "95vh", width: "100%" }}
+      />
+    </Page>
+  ) : (
     <div style={{ margin: "35px 0px" }}>
       <Page fullWidth>
         <Card>
