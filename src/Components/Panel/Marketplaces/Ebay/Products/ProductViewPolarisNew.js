@@ -768,9 +768,15 @@ const ProductViewPolarisNew = (props) => {
         Object.keys(data.containerData).length > 0 &&
         data.variantionData.length > 0
       ) {
+        //
+        let tempDataVariation = [...data.variantionData]
+        variants.forEach((variant, index) => {
+          tempDataVariation[index]["source_product_id"] = variant["source_product_id"];
+        });
         postData["edited_fields"]["variation"] = mergeContainerAndVariation(
           data.containerData,
-          data.variantionData
+          // data.variantionData
+          tempDataVariation
         );
       }
     }
@@ -785,7 +791,7 @@ const ProductViewPolarisNew = (props) => {
         data.variantionData.length > 0
       ) {
         if (data.variantionData[0].hasOwnProperty("source_product_id")) {
-          delete data.variantionData[0].source_product_id;
+          // delete data.variantionData[0].source_product_id;
         }
         postData["edited_fields"] = { ...data.variantionData[0] };
       } else if (
@@ -802,7 +808,6 @@ const ProductViewPolarisNew = (props) => {
         }
       }
     }
-    // console.log('postData', postData);
     return postData;
   };
 
