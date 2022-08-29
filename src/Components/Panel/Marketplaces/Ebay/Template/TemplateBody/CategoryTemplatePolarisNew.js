@@ -785,6 +785,7 @@ const CategoryTemplatePolarisNew = (props) => {
           site_id: siteID,
           shop_id: shopID,
         });
+        console.log('yhn',dataCategoryFeatures);
         if (Object.keys(dataCategoryFeatures).length) {
           if (dataCategoryFeatures["0"]) {
             extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
@@ -827,6 +828,16 @@ const CategoryTemplatePolarisNew = (props) => {
           });
           setShowAttributeMapping(true);
         } else {
+          setRequiredAttributesMapping({
+            mapping: [],
+            counter: 0,
+            options: [],
+          });
+          setOptionalAttributesMapping({
+            mapping: [],
+            counter: 0,
+            options: [],
+          });
         }
         setAttributesLoader(false);
       }
@@ -1167,7 +1178,7 @@ const CategoryTemplatePolarisNew = (props) => {
     await getAllConnectedAccounts();
   };
   useEffect(() => {
-    console.log("1185");
+    // console.log("1185");
     setsiteIDSelection(siteID);
     setshopIDSelection(shopID);
     // getTemplate();
@@ -1178,7 +1189,7 @@ const CategoryTemplatePolarisNew = (props) => {
     // getStorefrontcategory();
   }, []);
   useEffect(() => {
-    console.log("1196");
+    // console.log("1196");
     if (configurableAttributes.length) {
       if (configurableAttributesRecieved) {
         getTemplate();
@@ -1297,13 +1308,13 @@ const CategoryTemplatePolarisNew = (props) => {
     }
   };
   useEffect(() => {
-    console.log("1307");
+    // console.log("1307");
     if (primaryCategorySearchPredictionOptions.length) {
       setLoaderOverlayActive(false);
     }
   }, [primaryCategorySearchPredictionOptions]);
   useEffect(() => {
-    console.log("1313");
+    // console.log("1313");
     if (secondaryCategorySearchPredictionOptions.length) {
       setLoaderOverlayActive(false);
     }
@@ -1342,7 +1353,7 @@ const CategoryTemplatePolarisNew = (props) => {
     []
   );
   useEffect(() => {
-    console.log("1352");
+    // console.log("1352");
     if (inputValue !== "") {
       verify(inputValue);
     }
@@ -1382,13 +1393,13 @@ const CategoryTemplatePolarisNew = (props) => {
     []
   );
   useEffect(() => {
-    console.log("1392");
+    // console.log("1392");
     if (secondaryInputValue !== "") {
       verifySecondary(secondaryInputValue);
     }
   }, [secondaryInputValue]);
   useEffect(() => {
-    console.log("1398");
+    // console.log("1398");
     if (enableSecondaryCategory) {
       getCategory(
         { level: 1 },
