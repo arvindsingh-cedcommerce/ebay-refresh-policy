@@ -919,7 +919,13 @@ const ProductViewPolarisNew = (props) => {
   };
 
   const getBadge = (test) => {
-    if (test?.endStatus) {
+    if (test?.endStatus && test?.hasError) {
+      return (
+        <Tag color="#fed3d1" style={{ color: "#000", borderRadius: "10px" }}>
+          Errors
+        </Tag>
+      );
+    } else if (test?.endStatus) {
       return (
         <Tag color="#ffd79d" style={{ color: "#000", borderRadius: "10px" }}>
           Ended
@@ -961,6 +967,7 @@ const ProductViewPolarisNew = (props) => {
 
   const getItemURLs = () => {
     let statusStructures = [];
+    console.log(itemUrls);
     itemUrls.forEach((itemUrl) => {
       const structStatus = (itemUrl.itemId || itemUrl.hasError) && (
         <Stack alignment="center" vertical={false}>
