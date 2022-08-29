@@ -14,6 +14,7 @@ import {
   TextField,
   TextStyle,
   Page,
+  Badge as ShopifyBadge,
 } from "@shopify/polaris";
 import { Avatar, Badge, PageHeader, Tag, Typography } from "antd";
 import React, { useEffect, useState } from "react";
@@ -396,49 +397,72 @@ const ViewOrdersPolarisNew = (props) => {
   return flag ? (
     <OrderSkeleton />
   ) : (
-    // <Page
-    <PageHeader
-      onBack={() => props.history.push("/panel/ebay/orders")}
-      title={shopifyOrderName ? `Order ${shopifyOrderName}` : "Order"}
-      // title={
-      //   shopifyOrderName ? (
-      //     <Stack alignment="center">
-      //       <>Order ${shopifyOrderName}</>
-      //       <Tag color="blue">{financialStatus}</Tag>
-      //     </Stack>
-      //   ) : (
-      //     "Order"
-      //   )
-      // }
-      tags={<Tag color="blue">{financialStatus}</Tag>}
+    <Page
+      // <PageHeader
+      // onBack={() => props.history.push("/panel/ebay/orders")}
+      // title={shopifyOrderName ? `Order ${shopifyOrderName}` : "Order"}
+      title={
+        shopifyOrderName ? (
+          <Stack alignment="center">
+            <>Order {shopifyOrderName}</>
+            <ShopifyBadge status="info">{financialStatus}</ShopifyBadge>
+          </Stack>
+        ) : (
+          "Order"
+        )
+      }
+      // tags={<Tag color="blue">{financialStatus}</Tag>}
       // style={{ minHeight: "90vh" }}
-      // actionGroups={[
-      //   {
-      //     title: "Copy",
-      //     onClick: (openActions) => {
-      //       alert("Copy action");
-      //       openActions();
-      //     },
-      //     actions: [{ content: "Copy to clipboard" }],
-      //   },
-      // ]}
-      extra={[
-        <Popover
-          active={actionPopoverActive}
-          activator={
-            <Button
-              onClick={() => setActionPopoverActive(!actionPopoverActive)}
-              disclosure
-            >
-              Actions
-            </Button>
-          }
-          //   autofocusTarget="first-node"
-          onClose={() => setActionPopoverActive(!actionPopoverActive)}
-        >
-          <ActionList actionRole="menuitem" items={actionOptions} />
-        </Popover>,
+      actionGroups={[
+        {
+          title: "Actions",
+          onClick: (openActions) => {
+            alert("Copy action");
+            openActions();
+          },
+          actions: [
+            {
+              content: "Remove from app",
+              onAction: () =>
+                getModalStructure("Remove from app", true, "removeFromApp"),
+            },
+            // { content: "Update Order" },
+            {
+              content: "Sync Shipment",
+              onAction: () =>
+                getModalStructure("Sync Shipment", true, "syncShipment"),
+            },
+            {
+              content: "Cancel eBay Order",
+              onAction: () =>
+                getModalStructure("Cancel eBay Order", true, "cancelOrder"),
+            },
+            {
+              content: "Delete Shopify Order",
+              onAction: () =>
+                getModalStructure("Delete Shopify Order", true, "deleteOrder"),
+            },
+          ],
+        },
       ]}
+      breadcrumbs={[{content: 'Orders', onAction: () => props.history.push('/panel/ebay/orders')}]}
+      // extra={[
+      //   <Popover
+      //     active={actionPopoverActive}
+      //     activator={
+      //       <Button
+      //         onClick={() => setActionPopoverActive(!actionPopoverActive)}
+      //         disclosure
+      //       >
+      //         Actions
+      //       </Button>
+      //     }
+      //     //   autofocusTarget="first-node"
+      //     onClose={() => setActionPopoverActive(!actionPopoverActive)}
+      //   >
+      //     <ActionList actionRole="menuitem" items={actionOptions} />
+      //   </Popover>,
+      // ]}
     >
       <TabsComponent
         totalTabs={2}
@@ -535,8 +559,8 @@ const ViewOrdersPolarisNew = (props) => {
           )}
         </Modal.Section>
       </Modal>
-      {/* </Page> */}
-    </PageHeader>
+    </Page>
+    // {/* </PageHeader> */}
   );
 };
 

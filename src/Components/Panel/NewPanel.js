@@ -30,7 +30,6 @@ import Configuration from "./Marketplaces/Ebay/Configurations/Configuration";
 import ContactUs from "./Marketplaces/Ebay/Help/ContactUs";
 import NewAccountGrid from "./Accounts/NewAccountGrid";
 import ShopifyAccount from "./Accounts/ShopifyAccount";
-import ViewOrdersPolaris from "./Marketplaces/Ebay/Orders/ViewOrdersPolaris";
 import ActivityGrid from "./Marketplaces/Ebay/Activity/ActivityGrid";
 import {
   Icon,
@@ -38,7 +37,6 @@ import {
   Popover as ShopifyPopover,
   ActionList,
 } from "@shopify/polaris";
-import ViewOrdersPolarisNew from "./Marketplaces/Ebay/Orders/ViewOrdersPolarisNew";
 import {
   CircleCancelMinor,
   CircleTickOutlineMinor,
@@ -605,14 +603,6 @@ const NewPanel = (props) => {
                 component={DisbaledProductsWrapper}
               />
               <Route path="/panel/ebay/orders" component={OrdersComponent} />
-              <Route
-                path="/panel/ebay/vieworders1"
-                component={ViewOrdersPolaris}
-              />
-              <Route
-                path="/panel/ebay/vieworders"
-                component={ViewOrdersPolarisNew}
-              />
               <Route
                 path="/panel/ebay/configurations"
                 component={Configuration}
