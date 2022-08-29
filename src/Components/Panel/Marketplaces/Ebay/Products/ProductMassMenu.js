@@ -3,6 +3,14 @@ import {
   DownOutlined,
   SyncOutlined,
   UploadOutlined,
+  RollbackOutlined,
+  DeleteOutlined,
+  ShrinkOutlined,
+  FileTextOutlined,
+  DollarOutlined,
+  RedoOutlined,
+  ExportOutlined,
+  EyeInvisibleOutlined
 } from "@ant-design/icons";
 import { Button, Modal, Stack } from "@shopify/polaris";
 import { Dropdown, Menu } from "antd";
@@ -60,7 +68,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <UploadOutlined /> Upload and Revise on eBay
+                <RedoOutlined /> Upload and Revise on eBay
               </Menu.Item>
               {/* <Menu.Item
                 key="Disable Product"
@@ -105,7 +113,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Relist Item
+                <RollbackOutlined /> Relist Item
               </Menu.Item>
               <Menu.Item
                 key="End from eBay"
@@ -127,7 +135,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> End from eBay
+                <DeleteOutlined /> End from eBay
               </Menu.Item>
               <Menu.Item
                 key="Match from eBay"
@@ -149,7 +157,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Match from eBay
+                <ShrinkOutlined /> Match from eBay
               </Menu.Item>
               <Menu.Item
                 key="Sync Inventory eBay"
@@ -173,7 +181,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Sync Inventory
+                <FileTextOutlined /> Sync Inventory
               </Menu.Item>
               <Menu.Item
                 key="Sync Price eBay"
@@ -197,7 +205,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Sync Price
+                <DollarOutlined /> Sync Price
               </Menu.Item>
               {/* <Menu.Item key="Sync Images">
                 <SyncOutlined /> Sync Images
@@ -274,7 +282,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Sync Inventory
+                <FileTextOutlined /> Sync Inventory
               </Menu.Item>
               <Menu.Item
                 key="Sync Price eBay"
@@ -300,7 +308,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Sync Price
+                <DollarOutlined /> Sync Price
               </Menu.Item>
               <Menu.Item
                 key="Import metafileds of products"
@@ -322,7 +330,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Import metafileds of products
+                <DownloadOutlined /> Import metafileds of products
               </Menu.Item>
             </Menu.ItemGroup>
             <Menu.ItemGroup key="g3" title="Other Actions">
@@ -346,7 +354,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Export Products
+                <ExportOutlined /> Export Products
               </Menu.Item>
               <Menu.Item
                 key="Disable"
@@ -369,7 +377,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                   });
                 }}
               >
-                <SyncOutlined /> Disable Products
+                <EyeInvisibleOutlined /> Disable Products
               </Menu.Item>
             </Menu.ItemGroup>
           </Menu>

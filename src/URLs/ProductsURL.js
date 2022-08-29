@@ -27,7 +27,7 @@ export const importCollectionProductURL =
 export const relistItemURL = "ebay/product/relistItem"; // productId in array Form
 export const deleteItemURL = "ebay/product/deleteProduct"; // productId in array Form
 export const disableItemURL = "ebay/product/changeProductStatus";
-export const exportProductItemURL = "ebay/csv/exportProduct";
+export const exportProductItemURL = "ebay/csv/exportCSV";
 
 // common actions
 export const syncInventoryPrice = "ebay/product/syncInventoryAndPrice";

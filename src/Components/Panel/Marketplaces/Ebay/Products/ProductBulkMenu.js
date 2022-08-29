@@ -1,6 +1,11 @@
 import {
+  DollarOutlined,
   DownloadOutlined,
   DownOutlined,
+  ExportOutlined,
+  FileTextOutlined,
+  RedoOutlined,
+  ShrinkOutlined,
   SyncOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
@@ -90,7 +95,7 @@ const ProductBulkMenu = (props) => {
                   })
                 }
               >
-                <UploadOutlined /> Match from eBay
+                <ShrinkOutlined /> Match from eBay
               </Menu.Item>
               <Menu.Item
                 key="Upload and Revise"
@@ -107,7 +112,7 @@ const ProductBulkMenu = (props) => {
                   setUploadAndReviseOnEbay(temp);
                 }}
               >
-                <UploadOutlined /> Upload and Revise
+                <RedoOutlined /> Upload and Revise
               </Menu.Item>
               <Menu.Item
                 key="Sync Inventory"
@@ -125,7 +130,7 @@ const ProductBulkMenu = (props) => {
                   })
                 }
               >
-                <SyncOutlined /> Sync Inventory
+                <FileTextOutlined /> Sync Inventory
               </Menu.Item>
               <Menu.Item
                 key="Sync Price"
@@ -143,7 +148,7 @@ const ProductBulkMenu = (props) => {
                   })
                 }
               >
-                <SyncOutlined /> Sync Price
+                <DollarOutlined /> Sync Price
               </Menu.Item>
               <Menu.Item
                 key="Upload Products"
@@ -175,7 +180,7 @@ const ProductBulkMenu = (props) => {
                   });
                 }}
               >
-                <UploadOutlined key="Export Products" /> Export Products
+                <ExportOutlined /> Export Products
               </Menu.Item>
               {/* <Menu.Item key="Bulk Update">
                 <DownloadOutlined /> Bulk Update
@@ -214,7 +219,7 @@ const ProductBulkMenu = (props) => {
                   })
                 }
               >
-                <SyncOutlined /> Sync Inventory
+                <FileTextOutlined /> Sync Inventory
               </Menu.Item>
               <Menu.Item
                 key="Sync Price Shopify"
@@ -232,7 +237,7 @@ const ProductBulkMenu = (props) => {
                   })
                 }
               >
-                <SyncOutlined /> Sync Price
+                <DollarOutlined /> Sync Price
               </Menu.Item>
               <Menu.Item
                 key="Sync Details"

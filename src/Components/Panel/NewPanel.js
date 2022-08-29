@@ -21,6 +21,10 @@ import {
   UploadOutlined,
   DeleteOutlined,
   BellOutlined,
+  EyeInvisibleOutlined,
+  DropboxOutlined,
+  GroupOutlined,
+  PieChartOutlined,
 } from "@ant-design/icons";
 import PlansComponentAnt from "../Registration/PlansComponentAnt";
 import OrdersComponent from "./Marketplaces/Ebay/Orders/OrdersComponent";
@@ -249,14 +253,14 @@ const NewPanel = (props) => {
                   <Menu.Item
                     style={{ margin: "0px" }}
                     key="products"
-                    icon={<UploadOutlined style={{ fontSize: "16px" }} />}
+                    icon={<DropboxOutlined style={{ fontSize: "16px" }} />}
                   >
                     Manage Products
                   </Menu.Item>
                   <Menu.Item
                     style={{ margin: "0px" }}
                     key="profiles"
-                    icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
+                    icon={<GroupOutlined style={{ fontSize: "16px" }} />}
                   >
                     Profiles
                   </Menu.Item>
@@ -270,14 +274,14 @@ const NewPanel = (props) => {
                   <Menu.Item
                     style={{ margin: "0px" }}
                     key="templates"
-                    icon={<LinkOutlined style={{ fontSize: "16px" }} />}
+                    icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
                   >
                     Templates
                   </Menu.Item>
                   <Menu.Item
                     style={{ margin: "0px" }}
                     key="disabledproducts"
-                    icon={<DeleteOutlined style={{ fontSize: "16px" }} />}
+                    icon={<EyeInvisibleOutlined style={{ fontSize: "16px" }} />}
                   >
                     Disabled Products
                   </Menu.Item>
@@ -285,7 +289,7 @@ const NewPanel = (props) => {
                 <Menu.Item
                   style={{ margin: "0px" }}
                   key="orders"
-                  icon={<DownloadOutlined style={{ fontSize: "22px" }} />}
+                  icon={<PieChartOutlined style={{ fontSize: "22px" }} />}
                 >
                   Orders
                 </Menu.Item>
@@ -300,7 +304,7 @@ const NewPanel = (props) => {
                   style={{ margin: "0px" }}
                   key="activity"
                   icon={
-                    <ExclamationCircleOutlined style={{ fontSize: "22px" }} />
+                    <BellOutlined style={{ fontSize: "22px" }} />
                   }
                 >
                   Activities
@@ -400,14 +404,14 @@ const NewPanel = (props) => {
                 <Menu.Item
                   style={{ margin: "0px" }}
                   key="products"
-                  icon={<UploadOutlined style={{ fontSize: "16px" }} />}
+                  icon={<DropboxOutlined style={{ fontSize: "16px" }} />}
                 >
                   Manage Products
                 </Menu.Item>
                 <Menu.Item
                   style={{ margin: "0px" }}
                   key="profiles"
-                  icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
+                  icon={<GroupOutlined style={{ fontSize: "16px" }} />}
                 >
                   Profiles
                 </Menu.Item>
@@ -421,14 +425,14 @@ const NewPanel = (props) => {
                 <Menu.Item
                   style={{ margin: "0px" }}
                   key="templates"
-                  icon={<LinkOutlined style={{ fontSize: "16px" }} />}
+                  icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
                 >
                   Templates
                 </Menu.Item>
                 <Menu.Item
                   style={{ margin: "0px" }}
                   key="disabledproducts"
-                  icon={<DeleteOutlined style={{ fontSize: "16px" }} />}
+                  icon={<EyeInvisibleOutlined style={{ fontSize: "16px" }} />}
                 >
                   Disabled Products
                 </Menu.Item>
@@ -436,7 +440,7 @@ const NewPanel = (props) => {
               <Menu.Item
                 style={{ margin: "0px" }}
                 key="orders"
-                icon={<DownloadOutlined style={{ fontSize: "22px" }} />}
+                icon={<PieChartOutlined style={{ fontSize: "22px" }} />}
               >
                 Orders
               </Menu.Item>
@@ -451,7 +455,7 @@ const NewPanel = (props) => {
                 style={{ margin: "0px" }}
                 key="activity"
                 icon={
-                  <ExclamationCircleOutlined style={{ fontSize: "22px" }} />
+                  <BellOutlined style={{ fontSize: "22px" }} />
                 }
               >
                 Activities

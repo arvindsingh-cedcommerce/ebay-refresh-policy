@@ -13,6 +13,7 @@ import {
   endProductByIdURL,
   getMetafieldsURL,
   relistItemURL,
+  syncProductDetails,
   uploadProductByIdURL,
   viewProductDataURL,
 } from "../../../../../URLs/ProductsURL";
@@ -23,7 +24,13 @@ import _ from "lodash";
 import VariantsComponent from "./Components/VariantsComponent";
 import { globalState } from "../../../../../services/globalstate";
 import ImagesComponent from "./Components/ImagesComponent";
-import { DownOutlined, SyncOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  DownOutlined,
+  RollbackOutlined,
+  SyncOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import DetailsComponentNew from "./Components/DetailsComponentNew";
 import ProductDataComponentNew from "./Components/ProductDataComponentNew";
 import {
@@ -819,6 +826,24 @@ const ProductViewPolarisNew = (props) => {
         <UploadOutlined /> Upload and Revise on eBay
       </Menu.Item>
       <Menu.Item
+        key="Sync from Shopify"
+        onClick={() => {
+          let postData = {
+            product_id: [apiCallMainProduct["container_id"]],
+          };
+          setModal({
+            ...modal,
+            active: true,
+            content: "Sync from Shopify",
+            actionName: postActionOnProductById,
+            actionPayload: postData,
+            api: syncProductDetails,
+          });
+        }}
+      >
+        <SyncOutlined /> Sync from Shopify
+      </Menu.Item>
+      <Menu.Item
         key="end"
         onClick={() => {
           let postData = {
@@ -834,7 +859,7 @@ const ProductViewPolarisNew = (props) => {
           });
         }}
       >
-        <UploadOutlined /> End
+        <DeleteOutlined /> End
       </Menu.Item>
       <Menu.Item
         key="Relist Item"
@@ -852,7 +877,7 @@ const ProductViewPolarisNew = (props) => {
           });
         }}
       >
-        <SyncOutlined /> Relist Item
+        <RollbackOutlined /> Relist Item
       </Menu.Item>
     </Menu>
   );

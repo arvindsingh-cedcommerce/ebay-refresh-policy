@@ -353,7 +353,7 @@ const NewOrdersGrid = (props) => {
         </center>
       );
       tempObject["customerName"] = (
-        <center>{order["customer"]["first_name"]}</center>
+        <center>{order["customer"]?.["first_name"]}</center>
       );
       tempObject["importedAt"] = <center>{order["imported_at"]}</center>;
       tempObject["createdAt"] = <center>{order["created_at"]}</center>;

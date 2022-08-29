@@ -72,12 +72,6 @@ const ActionPopover = (props) => {
             <>Edit</>
           </Stack>
         </Button>
-        <Button type="text" onClick={async () => {}}>
-          <Stack>
-            <SyncOutlined />
-            <>Sync</>
-          </Stack>
-        </Button>
         <Button
           type="text"
           onClick={() => {
@@ -95,21 +89,10 @@ const ActionPopover = (props) => {
             });
             setActionPopoverVisible(false);
           }}
-          // onClick={async () => {
-          //   const { source_product_id } = record;
-          //   let postData = {
-          //     product_id: source_product_id,
-          //   };
-          //   let data = await postActionOnProductById(
-          //     uploadProductByIdURL,
-          //     postData
-          //   );
-          //   setActionPopoverVisible(false);
-          // }}
         >
           <Stack>
             <UploadOutlined />
-            <>Upload</>
+            <>Upload & Revise</>
           </Stack>
         </Button>
         <Button type="text" danger onClick={() => {}}>
