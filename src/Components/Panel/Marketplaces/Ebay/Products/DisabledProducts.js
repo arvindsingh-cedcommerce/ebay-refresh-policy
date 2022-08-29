@@ -310,11 +310,11 @@ const DisabledProducts = (props) => {
               >
                 <Text
                   strong
-                  onClick={(e) => {
-                    return props.history.push(
-                      `/panel/ebay/disabledproducts/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
-                    );
-                  }}
+                  // onClick={(e) => {
+                  //   return props.history.push(
+                  //     `/panel/ebay/disabledproducts/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
+                  //   );
+                  // }}
                   style={{ cursor: "pointer" }}
                   title={title}
                 >
