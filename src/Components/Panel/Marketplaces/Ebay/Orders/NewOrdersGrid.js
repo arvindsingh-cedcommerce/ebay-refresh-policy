@@ -317,6 +317,11 @@ const NewOrdersGrid = (props) => {
             style={{ cursor: "pointer" }}
           >
             {order["source_order_id"]}
+            <Text
+              copyable={{
+                text: order["source_order_id"],
+              }}
+            />
           </Text>
         </center>
       );
