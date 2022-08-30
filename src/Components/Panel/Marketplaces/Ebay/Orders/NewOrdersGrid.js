@@ -268,6 +268,9 @@ const NewOrdersGrid = (props) => {
   ]);
   const [filterTitleORsku, setFilterTitleORsku] = useState("");
 
+  // loader
+  const [syncBtnLoader, setSyncBtnLoader] = useState(false)
+
   const getAllOrders = (ordersData) => {
     let tempOrderData = [];
     tempOrderData = ordersData["rows"].map((order, index) => {
@@ -930,6 +933,7 @@ const NewOrdersGrid = (props) => {
                   primary
                   // key="back"
                   onClick={async () => {
+                    setSyncBtnLoader(true)
                     let postData = {
                       shop_id: shopId,
                       site_id: Number(siteID),
@@ -956,8 +960,15 @@ const NewOrdersGrid = (props) => {
                       importOrdersURL,
                       postData
                     );
+                    if(success) {
+                      notify.success(message)
+                    } else {
+                      notify.error(message)
+                    }
+                    setSyncBtnLoader(false)
                   }}
                   disabled={getDisabledSync()}
+                  loading={syncBtnLoader}
                 >
                   Sync
                 </ShopifyButton>
