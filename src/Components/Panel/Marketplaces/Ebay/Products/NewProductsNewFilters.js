@@ -948,9 +948,9 @@ function NewProductsNewFilters(props) {
     <PageHeader
       className="site-page-header-responsive"
       title={
-        <Tooltip
-          preferredPosition="above"
-          content="Manage your shopify products"
+        <div title={'Manage your shopify products'}
+          // preferredPosition="above"
+          // content="Manage your shopify products"
         >
           <TextStyle variation="strong">
             <span
@@ -959,10 +959,10 @@ function NewProductsNewFilters(props) {
                 borderColor: "#00000069",
               }}
             >
-              Products
+              Products123
             </span>
           </TextStyle>
-        </Tooltip>
+        </div>
       }
       ghost={true}
       extra={[
