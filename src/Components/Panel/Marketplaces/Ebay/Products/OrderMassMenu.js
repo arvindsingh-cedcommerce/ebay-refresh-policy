@@ -72,7 +72,12 @@ const OrderMassMenu = ({ selectedRows, ...props }) => {
                 key="Sync Shipment"
                 onClick={() => {
                   let shopifyOrdersIdsToPost = selectedRows.map(
-                    (selectedRow) => selectedRow["shopifyOrderId"]
+                    (selectedRow) => {
+                      return {
+                        order_id: selectedRow["ebayOrderId1"],
+                        shop_id: selectedRow["shopId"],
+                      };
+                    }
                   );
                   setModal({
                     ...modal,

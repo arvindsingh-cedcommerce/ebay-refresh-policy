@@ -5,7 +5,13 @@ import { json } from "../../../../../../globalConstant/static-json";
 import { getTemplatesURL } from "../../../../../../URLs/TemplateURLS";
 import { addTemplatesOptions } from "../Helper/TemplateHelper";
 import { notify } from "../../../../../../services/notify";
-import { Card, Modal, Select as PolarisSelect, Tabs } from "@shopify/polaris";
+import {
+  Banner,
+  Card,
+  Modal,
+  Select as PolarisSelect,
+  Tabs,
+} from "@shopify/polaris";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import { getCountryName } from "../../../../Accounts/NewAccount";
 import CategoryTemplateGrid from "./TemplateGridsComponent/CategoryTemplateGrid";
@@ -249,7 +255,7 @@ const FinalTemplateGridComponent = (props) => {
     <PageHeader
       className="site-page-header-responsive"
       title="Templates"
-      subTitle="Manage templates for choosing eBay category and customise your products details like price, inventory, title, description etc."
+      // subTitle="Manage templates for choosing eBay category and customise your products details like price, inventory, title, description etc."
       ghost={true}
       extra={[
         <Select
@@ -284,6 +290,13 @@ const FinalTemplateGridComponent = (props) => {
         </Select>,
       ]}
     >
+      <Banner status="info">
+        <>
+          Manage templates for choosing eBay category and customise your
+          products details like price, inventory, title, description etc.
+        </>
+      </Banner>
+      <br />
       <Card>
         <Tabs
           tabs={tabsData}

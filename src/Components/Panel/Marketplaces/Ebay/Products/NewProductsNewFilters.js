@@ -948,21 +948,21 @@ function NewProductsNewFilters(props) {
     <PageHeader
       className="site-page-header-responsive"
       title={
-        <div title={'Manage your shopify products'}
-          // preferredPosition="above"
-          // content="Manage your shopify products"
-        >
-          <TextStyle variation="strong">
-            <span
-              style={{
-                borderBottomStyle: "dashed",
-                borderColor: "#00000069",
-              }}
-            >
-              Products123
-            </span>
-          </TextStyle>
-        </div>
+        // <div title={'Manage your shopify products'}
+        //   // preferredPosition="above"
+        //   // content="Manage your shopify products"
+        // >
+        //   <TextStyle variation="strong">
+        //     <span
+        //       style={{
+        //         borderBottomStyle: "dashed",
+        //         borderColor: "#00000069",
+        //       }}
+        //     >
+              "Products"
+        //     {/* </span>
+        //   </TextStyle>
+        // </div> */}
       }
       ghost={true}
       extra={[

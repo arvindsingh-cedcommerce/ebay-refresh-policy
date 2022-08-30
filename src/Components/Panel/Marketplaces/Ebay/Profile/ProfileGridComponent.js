@@ -9,6 +9,7 @@ import {
   Icon,
   TextStyle,
   Tooltip,
+  Banner,
 } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, PageHeader, Row, Typography } from "antd";
@@ -537,22 +538,22 @@ const ProfileGridComponent = (props) => {
     <PageHeader
       className="site-page-header-responsive"
       title={
-        <Tooltip
-          content="For creating listings on eBay, profile is mandatory"
-          // content="To create listings on eBay, profile is mandatory"
-          preferredPosition="above"
-        >
-          <TextStyle variation="strong">
-            <span
-              style={{
-                borderBottomStyle: "dashed",
-                borderColor: "#00000069",
-              }}
-            >
-              Profiles
-            </span>
-          </TextStyle>
-        </Tooltip>
+        // <Tooltip
+        //   content="For creating listings on eBay, profile is mandatory"
+        //   // content="To create listings on eBay, profile is mandatory"
+        //   preferredPosition="above"
+        // >
+        //   <TextStyle variation="strong">
+        //     <span
+        //       style={{
+        //         borderBottomStyle: "dashed",
+        //         borderColor: "#00000069",
+        //       }}
+        //     >
+        "Profiles"
+        //     </span>
+        //   </TextStyle>
+        // </Tooltip>
       }
       ghost={true}
       extra={[
@@ -564,6 +565,10 @@ const ProfileGridComponent = (props) => {
         </ShopifyButton>,
       ]}
     >
+      <Banner status="info">
+        <>For creating listings on eBay, profile is mandatory</>
+      </Banner>
+      <br />
       <Card sectioned>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <div

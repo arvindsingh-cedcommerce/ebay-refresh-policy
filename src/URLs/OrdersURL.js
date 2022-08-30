@@ -10,4 +10,4 @@ export const syncShipmentURL = "ebay/order/syncShipment";
 export const cancelOrdersURl = "ebay/order/cancelOrders";
 export const deleteOrdersURL = "ebay/order/deleteOrders";
 export const removeOrdersURL = "ebay/order/removeOrders";
-export const updateOrderURL = "";
+export const updateOrderURL = "ebay/order/updateOrder";

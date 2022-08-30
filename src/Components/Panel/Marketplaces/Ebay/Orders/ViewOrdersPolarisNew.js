@@ -15,6 +15,7 @@ import {
   TextStyle,
   Page,
   Badge as ShopifyBadge,
+  Banner,
 } from "@shopify/polaris";
 import { Avatar, Badge, PageHeader, Tag, Typography } from "antd";
 import React, { useEffect, useState } from "react";
@@ -36,6 +37,10 @@ import OrderSkeleton from "../../../SkeletonComponents/OrderSkeleton";
 const { Text } = Typography;
 
 const ViewOrdersPolarisNew = (props) => {
+  const [erroModal, setErroModal] = useState({
+    show: "",
+    msg: "",
+  });
   const [shopId, setShopId] = useState("");
   const [flag, setFlag] = useState(false);
   const [shopifyOrderName, setShopifyOrderName] = useState(null);
@@ -141,8 +146,9 @@ const ViewOrdersPolarisNew = (props) => {
     let { id } = parseQueryString(props.location.search);
     let postData = { order_id: id };
     let { success, data, message } = await getOrder(getOrderURL, postData);
-    console.log(data);
     if (success) {
+      data["target_error_message"] &&
+        setErroModal({ ...erroModal, msg: data["target_error_message"] });
       setShopId(data["shop_id"]);
       setShopifyOrderName(data["shopify_order_name"]);
       setFinancialStatus(data["financial_status"]);
@@ -413,15 +419,25 @@ const ViewOrdersPolarisNew = (props) => {
       // title={shopifyOrderName ? `Order ${shopifyOrderName}` : "Order"}
       title={
         shopifyOrderName ? (
-          <Stack alignment="center">
+          <Stack alignment="center" spacing="tight">
             <>Order {shopifyOrderName}</>
             <ShopifyBadge status="info">{financialStatus}</ShopifyBadge>
+            {erroModal.msg && (
+              <ShopifyBadge status="critical">
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setErroModal({ ...erroModal, show: true })}
+                >
+                  Failed
+                </div>
+              </ShopifyBadge>
+            )}
           </Stack>
         ) : (
           "Order"
         )
       }
-      fullWidth
+      // fullWidth
       // tags={<Tag color="blue">{financialStatus}</Tag>}
       // style={{ minHeight: "90vh" }}
       actionGroups={[
@@ -433,6 +449,11 @@ const ViewOrdersPolarisNew = (props) => {
           },
           actions: shopifyOrderID
             ? [
+                {
+                  content: "Update Order",
+                  onAction: () =>
+                    getModalStructure("Update Order", true, "updateOrder"),
+                },
                 {
                   content: "Sync Shipment",
                   onAction: () =>
@@ -459,16 +480,16 @@ const ViewOrdersPolarisNew = (props) => {
                   onAction: () =>
                     getModalStructure("Remove from app", true, "removeFromApp"),
                 },
-                {
-                  content: "Sync Shipment",
-                  onAction: () =>
-                    getModalStructure("Sync Shipment", true, "syncShipment"),
-                },
-                {
-                  content: "Cancel eBay Order",
-                  onAction: () =>
-                    getModalStructure("Cancel eBay Order", true, "cancelOrder"),
-                },
+                // {
+                //   content: "Sync Shipment",
+                //   onAction: () =>
+                //     getModalStructure("Sync Shipment", true, "syncShipment"),
+                // },
+                // {
+                //   content: "Cancel eBay Order",
+                //   onAction: () =>
+                //     getModalStructure("Cancel eBay Order", true, "cancelOrder"),
+                // },
               ],
         },
       ]}
@@ -551,8 +572,8 @@ const ViewOrdersPolarisNew = (props) => {
                   let { success, message, data } = await massAction(
                     updateOrderURL,
                     {
-                      order_ids: shopifyOrderID,
-                      updateOrder,
+                      id: shopifyOrderID,
+                      ...updateOrder,
                     }
                   );
                   if (success) {
@@ -588,9 +609,12 @@ const ViewOrdersPolarisNew = (props) => {
                 (async () => {
                   let { success, message, data } = await massAction(
                     syncShipmentURL,
-                    {
-                      order_ids: shopifyOrderID,
-                    }
+                    [
+                      {
+                        order_ids: shopifyOrderID,
+                        shop_id: shopId,
+                      },
+                    ]
                   );
                   if (success) {
                     notify.success(message ? message : data);
@@ -603,9 +627,12 @@ const ViewOrdersPolarisNew = (props) => {
                 (async () => {
                   let { success, message, data } = await massAction(
                     cancelOrdersURl,
-                    {
-                      order_ids: ebayOrderID,
-                    }
+                    [
+                      {
+                        order_ids: ebayOrderID,
+                        shop_id: shopId,
+                      },
+                    ]
                   );
                   if (success) {
                     notify.success(message ? message : data);
@@ -620,12 +647,9 @@ const ViewOrdersPolarisNew = (props) => {
                   (async () => {
                     let { success, message, data } = await massAction(
                       deleteOrdersURL,
-                      // {
-                      //   order_ids: shopifyOrderID,
-                      // }
                       [
                         {
-                          order_ids: ebayOrderID,
+                          order_ids: shopifyOrderID,
                           shop_id: shopId,
                         },
                       ]
@@ -663,6 +687,15 @@ const ViewOrdersPolarisNew = (props) => {
               <p>Do you want to perfrom this action?</p>
             </TextContainer>
           )}
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={erroModal.show}
+        onClose={() => setErroModal({ ...erroModal, show: false })}
+        title={<>Order ID: {shopifyOrderName}</>}
+      >
+        <Modal.Section>
+          <Banner status="critical">{erroModal.msg}</Banner>
         </Modal.Section>
       </Modal>
     </Page>
@@ -781,6 +814,13 @@ export const OrderDetailsComponent = ({
           <Card sectioned>
             <PaymentDetails paymentDetails={paymentDetails} />
           </Card>
+          <Card sectioned title="eBay Order Data">
+            <ReactJson
+              style={{ maxHeight: 400, overflowY: "scroll" }}
+              src={ebayOrderData}
+              collapsed={true}
+            />
+          </Card>
         </Layout.Section>
         <Layout.Section secondary>
           <Card title="Customer Information">
@@ -810,15 +850,6 @@ export const OrderDetailsComponent = ({
             <Card.Section title="Fulfillments">
               <FulfillmentsDetails fulfillmentsDetails={fulfillmentsDetails} />
             </Card.Section>
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
-          <Card sectioned title="eBay Order Data">
-            <ReactJson
-              style={{ maxHeight: 400, overflowY: "scroll" }}
-              src={ebayOrderData}
-              collapsed={true}
-            />
           </Card>
         </Layout.Section>
       </Layout>

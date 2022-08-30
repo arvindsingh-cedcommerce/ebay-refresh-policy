@@ -44,6 +44,9 @@ import {
   Popover,
   ChoiceList,
   Icon,
+  Modal,
+  TextContainer,
+  Banner,
 } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
@@ -269,7 +272,14 @@ const NewOrdersGrid = (props) => {
   const [filterTitleORsku, setFilterTitleORsku] = useState("");
 
   // loader
-  const [syncBtnLoader, setSyncBtnLoader] = useState(false)
+  const [syncBtnLoader, setSyncBtnLoader] = useState(false);
+
+  // error msg
+  const [targetMsg, setTargetMsg] = useState({
+    show: false,
+    msg: "",
+    id: "",
+  });
 
   const getAllOrders = (ordersData) => {
     let tempOrderData = [];
@@ -354,8 +364,18 @@ const NewOrdersGrid = (props) => {
           />
         </center>
       );
+      tempObject["targetErrorMessage"] = order["target_error_message"];
       tempObject["fulfillment"] = (
-        <center>
+        <center
+          onClick={() =>
+            setTargetMsg({
+              show: true,
+              msg: order["target_error_message"],
+              id: order["source_order_id"],
+            })
+          }
+          style={{ cursor: "pointer" }}
+        >
           <PolarisBadge status={targetStatus} progress={progressBarStatus}>
             {order?.target_status}
           </PolarisBadge>
@@ -860,6 +880,15 @@ const NewOrdersGrid = (props) => {
           </Row>
         }
       />
+      <Modal
+        open={targetMsg.show}
+        onClose={() => setTargetMsg({ show: false, msg: "", id: "" })}
+        title={`Order ID: ${targetMsg.id}`}
+      >
+        <Modal.Section>
+          <Banner status="critical">{targetMsg.msg}</Banner>
+        </Modal.Section>
+      </Modal>
       <ModalComponent
         title="Import Orders"
         isModalVisible={importEbayOrdersModal}
@@ -934,7 +963,7 @@ const NewOrdersGrid = (props) => {
                   primary
                   // key="back"
                   onClick={async () => {
-                    setSyncBtnLoader(true)
+                    setSyncBtnLoader(true);
                     let postData = {
                       shop_id: shopId,
                       site_id: Number(siteID),
@@ -961,12 +990,12 @@ const NewOrdersGrid = (props) => {
                       importOrdersURL,
                       postData
                     );
-                    if(success) {
-                      notify.success(message)
+                    if (success) {
+                      notify.success(message);
                     } else {
-                      notify.error(message)
+                      notify.error(message);
                     }
-                    setSyncBtnLoader(false)
+                    setSyncBtnLoader(false);
                   }}
                   disabled={getDisabledSync()}
                   loading={syncBtnLoader}
