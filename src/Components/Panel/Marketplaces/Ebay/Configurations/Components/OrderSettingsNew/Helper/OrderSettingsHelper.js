@@ -61,12 +61,13 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
         label: "Shipment Sync",
         value: true,
         withoutTrackingDetails: true,
-        mappingOfShippingCarrier: [
-          {
-            shopifyAttribute: "",
-            ebayAttribute: "",
-          },
-        ],
+        // mappingOfShippingCarrier: [
+        //   {
+        //     shopifyAttribute: "",
+        //     ebayAttribute: "",
+        //   },
+        // ],
+        mappingOfShippingCarrier: false,
         description: (
           <>
             Enable for syncing the Shipment from Shopify to eBay. You can choose
