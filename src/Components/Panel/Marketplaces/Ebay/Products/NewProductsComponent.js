@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+import ImportProducts from "./ImportProducts";
 import NewProductsNewFilters from "./NewProductsNewFilters";
 import ProductViewPolarisNew from "./ProductViewPolarisNew";
 
@@ -21,6 +22,7 @@ const NewProductsComponent = () => {
         path="/panel/ebay/products/viewproducts"
         component={ProductViewPolarisNew}
       />
+      <Route path='/panel/ebay/products/bulkupdate' component={ImportProducts}/>
       <Route
         exact
         path="/panel/ebay/products"
