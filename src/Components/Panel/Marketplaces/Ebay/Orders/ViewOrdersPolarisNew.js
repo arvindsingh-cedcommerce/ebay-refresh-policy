@@ -36,6 +36,7 @@ import OrderSkeleton from "../../../SkeletonComponents/OrderSkeleton";
 const { Text } = Typography;
 
 const ViewOrdersPolarisNew = (props) => {
+  const [shopId, setShopId] = useState("");
   const [flag, setFlag] = useState(false);
   const [shopifyOrderName, setShopifyOrderName] = useState(null);
   const [financialStatus, setFinancialStatus] = useState(null);
@@ -142,6 +143,7 @@ const ViewOrdersPolarisNew = (props) => {
     let { success, data, message } = await getOrder(getOrderURL, postData);
     console.log(data);
     if (success) {
+      setShopId(data["shop_id"]);
       setShopifyOrderName(data["shopify_order_name"]);
       setFinancialStatus(data["financial_status"]);
       setShopifyOrderID(data["target_order_id"]);
@@ -419,6 +421,7 @@ const ViewOrdersPolarisNew = (props) => {
           "Order"
         )
       }
+      fullWidth
       // tags={<Tag color="blue">{financialStatus}</Tag>}
       // style={{ minHeight: "90vh" }}
       actionGroups={[
@@ -428,29 +431,45 @@ const ViewOrdersPolarisNew = (props) => {
             alert("Copy action");
             openActions();
           },
-          actions: [
-            {
-              content: "Remove from app",
-              onAction: () =>
-                getModalStructure("Remove from app", true, "removeFromApp"),
-            },
-            // { content: "Update Order" },
-            {
-              content: "Sync Shipment",
-              onAction: () =>
-                getModalStructure("Sync Shipment", true, "syncShipment"),
-            },
-            {
-              content: "Cancel eBay Order",
-              onAction: () =>
-                getModalStructure("Cancel eBay Order", true, "cancelOrder"),
-            },
-            {
-              content: "Delete Shopify Order",
-              onAction: () =>
-                getModalStructure("Delete Shopify Order", true, "deleteOrder"),
-            },
-          ],
+          actions: shopifyOrderID
+            ? [
+                {
+                  content: "Sync Shipment",
+                  onAction: () =>
+                    getModalStructure("Sync Shipment", true, "syncShipment"),
+                },
+                {
+                  content: "Cancel eBay Order",
+                  onAction: () =>
+                    getModalStructure("Cancel eBay Order", true, "cancelOrder"),
+                },
+                {
+                  content: "Delete Shopify Order",
+                  onAction: () =>
+                    getModalStructure(
+                      "Delete Shopify Order",
+                      true,
+                      "deleteOrder"
+                    ),
+                },
+              ]
+            : [
+                {
+                  content: "Remove from app",
+                  onAction: () =>
+                    getModalStructure("Remove from app", true, "removeFromApp"),
+                },
+                {
+                  content: "Sync Shipment",
+                  onAction: () =>
+                    getModalStructure("Sync Shipment", true, "syncShipment"),
+                },
+                {
+                  content: "Cancel eBay Order",
+                  onAction: () =>
+                    getModalStructure("Cancel eBay Order", true, "cancelOrder"),
+                },
+              ],
         },
       ]}
       breadcrumbs={[
@@ -477,7 +496,21 @@ const ViewOrdersPolarisNew = (props) => {
       //   </Popover>,
       // ]}
     >
-      <TabsComponent
+      <OrderDetailsComponent
+        shopifyOrderID={shopifyOrderID}
+        ebayOrderID={ebayOrderID}
+        orderDate={orderDate}
+        totalItems={totalItems}
+        eBayRefrenceID={eBayRefrenceID}
+        lineItems={lineItems}
+        buyerAddress={buyerAddress}
+        buyerName={buyerName}
+        buyerEmail={buyerEmail}
+        paymentDetails={paymentDetails}
+        fulfillmentsDetails={fulfillmentsDetails}
+        ebayOrderData={ebayOrderData}
+      />
+      {/* <TabsComponent
         totalTabs={2}
         tabContents={{
           "Order Details": (
@@ -504,7 +537,7 @@ const ViewOrdersPolarisNew = (props) => {
             />
           ),
         }}
-      />
+      /> */}
       <Modal
         open={actionModal["active"]}
         onClose={() => setActionModal(false)}
@@ -515,39 +548,99 @@ const ViewOrdersPolarisNew = (props) => {
             switch (actionModal["value"]) {
               case "updateOrder":
                 (async () => {
-                  let {} = await massAction(updateOrderURL, {
-                    order_ids: shopifyOrderID,
-                    updateOrder,
-                  });
+                  let { success, message, data } = await massAction(
+                    updateOrderURL,
+                    {
+                      order_ids: shopifyOrderID,
+                      updateOrder,
+                    }
+                  );
+                  if (success) {
+                    notify.success(message ? message : data);
+                  } else {
+                    notify.error(message ? message : data);
+                  }
                 })();
                 break;
               case "removeFromApp":
-                (async () => {
-                  let {} = await massAction(removeOrdersURL, {
-                    order_ids: ebayOrderID,
-                  });
-                })();
+                if (!shopifyOrderID) {
+                  (async () => {
+                    let { success, message, data } = await massAction(
+                      removeOrdersURL,
+                      [
+                        {
+                          order_ids: ebayOrderID,
+                          shop_id: shopId,
+                        },
+                      ]
+                    );
+                    if (success) {
+                      notify.success(message ? message : data);
+                    } else {
+                      notify.error(message ? message : data);
+                    }
+                  })();
+                } else {
+                  notify.error("Can't be removed");
+                }
                 break;
               case "syncShipment":
                 (async () => {
-                  let {} = await massAction(syncShipmentURL, {
-                    order_ids: shopifyOrderID,
-                  });
+                  let { success, message, data } = await massAction(
+                    syncShipmentURL,
+                    {
+                      order_ids: shopifyOrderID,
+                    }
+                  );
+                  if (success) {
+                    notify.success(message ? message : data);
+                  } else {
+                    notify.error(message ? message : data);
+                  }
                 })();
                 break;
               case "cancelOrder":
                 (async () => {
-                  let {} = await massAction(cancelOrdersURl, {
-                    order_ids: ebayOrderID,
-                  });
+                  let { success, message, data } = await massAction(
+                    cancelOrdersURl,
+                    {
+                      order_ids: ebayOrderID,
+                    }
+                  );
+                  if (success) {
+                    notify.success(message ? message : data);
+                  } else {
+                    notify.error(message ? message : data);
+                  }
                 })();
                 break;
               case "deleteOrder":
-                (async () => {
-                  let {} = await massAction(deleteOrdersURL, {
-                    order_ids: shopifyOrderID,
-                  });
-                })();
+                console.log(shopifyOrderID, ebayOrderID);
+                if (shopifyOrderID) {
+                  (async () => {
+                    let { success, message, data } = await massAction(
+                      deleteOrdersURL,
+                      // {
+                      //   order_ids: shopifyOrderID,
+                      // }
+                      [
+                        {
+                          order_ids: ebayOrderID,
+                          shop_id: shopId,
+                        },
+                      ]
+                    );
+                    if (success) {
+                      notify.success(message ? message : data);
+                    } else {
+                      notify.error(message ? message : data);
+                    }
+                  })();
+                } else {
+                  notify.error(
+                    "Order does not exist on Shopify so can't be deleted"
+                  );
+                }
                 break;
               default:
                 break;
@@ -591,6 +684,7 @@ export const OrderDetailsComponent = ({
   buyerEmail,
   paymentDetails,
   fulfillmentsDetails,
+  ebayOrderData,
 }) => {
   // line items
   let [orderColumns, setOrderColumns] = useState([
@@ -642,18 +736,27 @@ export const OrderDetailsComponent = ({
         <Layout.Section>
           <Card title={"Line items"} sectioned>
             <Stack vertical spacing="extraTight">
-              <Stack>
-                <Badge count={orderData[0]?.["quantity"]}>
-                  <Avatar shape="square" size="large" />
-                </Badge>
-                <Stack vertical spacing="extraTight">
-                  <Text strong>{orderData[0]?.["title"]}</Text>
-                  <Text type="secondary">SKU: {orderData[0]?.["sku"]}</Text>
-                </Stack>
-              </Stack>
+              {orderData.map((order) => {
+                return (
+                  <Stack wrap={false}>
+                    <Badge count={order?.["quantity"]}>
+                      <Avatar shape="square" size={70} />
+                    </Badge>
+                    <Stack vertical spacing="extraTight">
+                      <Text strong>{order?.["title"]}</Text>
+                      <Text type="secondary">SKU: {order?.["sku"]}</Text>
+                      <Text strong>Price: {order?.["price"]}</Text>
+                    </Stack>
+                  </Stack>
+                );
+              })}
               <Stack distribution="equalSpacing">
                 <Text strong>Total</Text>
-                <Text strong>{orderData[0]?.["price"]}</Text>
+                <Text strong>
+                  {orderData.reduce((prev, curr) => {
+                    return Number(prev) + Number(curr?.["price"]);
+                  }, 0)}
+                </Text>
               </Stack>
             </Stack>
           </Card>
@@ -707,6 +810,15 @@ export const OrderDetailsComponent = ({
             <Card.Section title="Fulfillments">
               <FulfillmentsDetails fulfillmentsDetails={fulfillmentsDetails} />
             </Card.Section>
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <Card sectioned title="eBay Order Data">
+            <ReactJson
+              style={{ maxHeight: 400, overflowY: "scroll" }}
+              src={ebayOrderData}
+              collapsed={true}
+            />
           </Card>
         </Layout.Section>
       </Layout>

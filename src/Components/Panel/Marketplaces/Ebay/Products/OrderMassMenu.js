@@ -48,12 +48,14 @@ const OrderMassMenu = ({ selectedRows, ...props }) => {
               <Menu.Item
                 key="Remove from App"
                 onClick={() => {
-                  let ebayOrdersIdsToPost = selectedRows.map((selectedRow) => {
-                    return {
-                      order_id: selectedRow["ebayOrderId1"],
-                      shop_id: selectedRow["shopId"],
-                    };
-                  });
+                  let ebayOrdersIdsToPost = selectedRows
+                    .filter((selectedRow) => !selectedRow?.["shopifyOrderId1"])
+                    .map((selectedRow) => {
+                      return {
+                        order_id: selectedRow["ebayOrderId1"],
+                        shop_id: selectedRow["shopId"],
+                      };
+                    });
                   setModal({
                     ...modal,
                     active: true,
@@ -108,9 +110,17 @@ const OrderMassMenu = ({ selectedRows, ...props }) => {
               <Menu.Item
                 key="Delete Shopify Order"
                 onClick={() => {
-                  let shopifyOrdersIdsToPost = selectedRows.map(
-                    (selectedRow) => selectedRow["shopifyOrderId"]
-                  );
+                  // let shopifyOrdersIdsToPost = selectedRows.map(
+                  //   (selectedRow) => selectedRow["shopifyOrderId"]
+                  // );
+                  let shopifyOrdersIdsToPost = selectedRows
+                    .filter((selectedRow) => selectedRow?.["shopifyOrderId1"])
+                    .map((selectedRow) => {
+                      return {
+                        order_id: selectedRow["ebayOrderId1"],
+                        shop_id: selectedRow["shopId"],
+                      };
+                    });
                   setModal({
                     ...modal,
                     active: true,

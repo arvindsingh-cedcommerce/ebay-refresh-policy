@@ -340,6 +340,7 @@ const NewOrdersGrid = (props) => {
         </center>
       );
       tempObject["ebayOrderId1"] = order["source_order_id"];
+      tempObject["shopifyOrderId1"] = order["target_order_id"];
       tempObject["accountConnected"] = (
         <center>
           <Image
