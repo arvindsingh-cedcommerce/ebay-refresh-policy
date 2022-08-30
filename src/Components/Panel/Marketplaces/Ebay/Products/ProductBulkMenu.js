@@ -4,6 +4,7 @@ import {
   DownOutlined,
   ExportOutlined,
   FileTextOutlined,
+  ImportOutlined,
   RedoOutlined,
   ShrinkOutlined,
   SyncOutlined,
@@ -182,9 +183,14 @@ const ProductBulkMenu = (props) => {
               >
                 <ExportOutlined /> Export Products
               </Menu.Item>
-              {/* <Menu.Item key="Bulk Update">
-                <DownloadOutlined /> Bulk Update
-              </Menu.Item> */}
+              <Menu.Item
+                key="Import"
+                onClick={() => {
+                  props.history.push('/panel/ebay/products/bulkupdate')
+                }}
+              >
+                <ImportOutlined /> Bulk Update
+              </Menu.Item>
             </Menu.ItemGroup>
             <Menu.Divider />
             <Menu.ItemGroup key="g2" title="Shopify Actions">
