@@ -152,8 +152,16 @@ const ViewOrdersPolarisNew = (props) => {
       setEbayRefrenceID(data["source_order_data"]["ExtendedOrderID"]);
       setEbayOrderData(data["source_order_data"]);
 
-      setBuyerEmail(data["customer"]["email"]);
-      setBuyerName(data["customer"]["first_name"]);
+      setBuyerEmail(
+        data["customer"]
+          ? data["customer"]["email"]
+          : data["client_details"]["email"]
+      );
+      setBuyerName(
+        data["customer"]
+          ? data["customer"]["first_name"]
+          : data["client_details"]["first_name"]
+      );
       let tempAddress = buyerAddress;
       tempAddress["address"] = data["shipping_address"]["address1"];
       tempAddress["phone"] = data["shipping_address"]["phone_number"];
@@ -445,7 +453,12 @@ const ViewOrdersPolarisNew = (props) => {
           ],
         },
       ]}
-      breadcrumbs={[{content: 'Orders', onAction: () => props.history.push('/panel/ebay/orders')}]}
+      breadcrumbs={[
+        {
+          content: "Orders",
+          onAction: () => props.history.push("/panel/ebay/orders"),
+        },
+      ]}
       // extra={[
       //   <Popover
       //     active={actionPopoverActive}
