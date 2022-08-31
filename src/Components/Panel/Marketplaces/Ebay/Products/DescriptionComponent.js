@@ -57,7 +57,12 @@ const DescriptionComponent = ({
           <FormLayout>
             <Stack vertical spacing="extraTight">
               <Text strong>
-                {apiCallMainProduct["description"].replace(/<[^>]*>/g, "")}
+                {/* {apiCallMainProduct["description"].replace(/<[^>]*>/g, "")} */}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: apiCallMainProduct["description"],
+                  }}
+                />
               </Text>
               <Checkbox
                 label={"Set Custom"}
