@@ -109,7 +109,7 @@ const ViewOrdersPolarisNew = (props) => {
       zip: "",
       country: "",
     },
-    customer: "no",
+    customer: 'yes',
     tags: "",
     note: "",
   });
@@ -381,8 +381,8 @@ const ViewOrdersPolarisNew = (props) => {
           </FormLayout>
           <Checkbox
             label="Customer"
-            checked={updateOrder.customer}
-            onChange={() => {}}
+            checked={updateOrder.customer === 'yes' ? true : false}
+            onChange={() => setUpdateOrder({...updateOrder, customer: updateOrder['customer'] === 'yes' ? null : 'yes'})}
           />
           <TextField
             value={updateOrder.tags}
