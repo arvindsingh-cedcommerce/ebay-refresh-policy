@@ -134,13 +134,18 @@ const ActivityGrid = (props) => {
         <Stack alignment="center" spacing="tight">
           <>{getSeverityIcon(activity["severity"])}</>
           <>{activity["message"]}</>
-          <Tooltip content={"Download Report"}>
-            <div style={{ cursor: "pointer", fontSize: "0.25rem" }} title="Download Report">
-              <Link url={activity["url"]} external>
-                <Icon source={ImportMinor} color={"blueDark"} />
-              </Link>
-            </div>
-          </Tooltip>
+          {activity["url"] && (
+            <Tooltip content={"Download Report"}>
+              <div
+                style={{ cursor: "pointer", fontSize: "0.25rem" }}
+                title="Download Report"
+              >
+                <Link url={activity["url"]} external>
+                  <Icon source={ImportMinor} color={"blueDark"} />
+                </Link>
+              </div>
+            </Tooltip>
+          )}
         </Stack>
       );
       tempObject["created_at"] = activity["created_at"];
