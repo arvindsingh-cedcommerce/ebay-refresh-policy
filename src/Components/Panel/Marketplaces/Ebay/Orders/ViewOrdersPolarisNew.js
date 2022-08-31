@@ -109,7 +109,7 @@ const ViewOrdersPolarisNew = (props) => {
       zip: "",
       country: "",
     },
-    customer: 'yes',
+    customer: "yes",
     tags: "",
     note: "",
   });
@@ -381,8 +381,13 @@ const ViewOrdersPolarisNew = (props) => {
           </FormLayout>
           <Checkbox
             label="Customer"
-            checked={updateOrder.customer === 'yes' ? true : false}
-            onChange={() => setUpdateOrder({...updateOrder, customer: updateOrder['customer'] === 'yes' ? null : 'yes'})}
+            checked={updateOrder.customer === "yes" ? true : false}
+            onChange={() =>
+              setUpdateOrder({
+                ...updateOrder,
+                customer: updateOrder["customer"] === "yes" ? null : "yes",
+              })
+            }
           />
           <TextField
             value={updateOrder.tags}
@@ -563,128 +568,243 @@ const ViewOrdersPolarisNew = (props) => {
         open={actionModal["active"]}
         onClose={() => setActionModal(false)}
         title={actionModal["title"]}
-        primaryAction={{
-          content: "OK",
-          onAction: () => {
-            switch (actionModal["value"]) {
-              case "updateOrder":
-                (async () => {
-                  let { success, message, data } = await massAction(
-                    updateOrderURL,
-                    {
-                      id: shopifyOrderID,
-                      ...updateOrder,
-                    }
-                  );
-                  if (success) {
-                    notify.success(message ? message : data);
-                  } else {
-                    notify.error(message ? message : data);
-                  }
-                })();
-                break;
-              case "removeFromApp":
-                if (!shopifyOrderID) {
-                  (async () => {
-                    let { success, message, data } = await massAction(
-                      removeOrdersURL,
-                      [
-                        {
-                          order_ids: ebayOrderID,
-                          shop_id: shopId,
-                        },
-                      ]
-                    );
-                    if (success) {
-                      notify.success(message ? message : data);
-                    } else {
-                      notify.error(message ? message : data);
-                    }
-                  })();
-                } else {
-                  notify.error("Can't be removed");
-                }
-                break;
-              case "syncShipment":
-                (async () => {
-                  let { success, message, data } = await massAction(
-                    syncShipmentURL,
-                    [
-                      {
-                        order_ids: shopifyOrderID,
-                        shop_id: shopId,
-                      },
-                    ]
-                  );
-                  if (success) {
-                    notify.success(message ? message : data);
-                  } else {
-                    notify.error(message ? message : data);
-                  }
-                })();
-                break;
-              case "cancelOrder":
-                (async () => {
-                  let { success, message, data } = await massAction(
-                    cancelOrdersURl,
-                    [
-                      {
-                        order_ids: ebayOrderID,
-                        shop_id: shopId,
-                      },
-                    ]
-                  );
-                  if (success) {
-                    notify.success(message ? message : data);
-                  } else {
-                    notify.error(message ? message : data);
-                  }
-                })();
-                break;
-              case "deleteOrder":
-                console.log(shopifyOrderID, ebayOrderID);
-                if (shopifyOrderID) {
-                  (async () => {
-                    let { success, message, data } = await massAction(
-                      deleteOrdersURL,
-                      [
-                        {
-                          order_ids: shopifyOrderID,
-                          shop_id: shopId,
-                        },
-                      ]
-                    );
-                    if (success) {
-                      notify.success(message ? message : data);
-                    } else {
-                      notify.error(message ? message : data);
-                    }
-                  })();
-                } else {
-                  notify.error(
-                    "Order does not exist on Shopify so can't be deleted"
-                  );
-                }
-                break;
-              default:
-                break;
-            }
-            setActionModal(false);
-          },
-        }}
-        secondaryActions={[
-          {
-            content: "Cancel",
-            onAction: () => setActionModal(false),
-          },
-        ]}
+        // primaryAction={{
+        //   content: "OK",
+        //   onAction: () => {
+        //     switch (actionModal["value"]) {
+        //       case "updateOrder":
+        //         (async () => {
+        //           let { success, message, data } = await massAction(
+        //             updateOrderURL,
+        //             {
+        //               id: shopifyOrderID,
+        //               ...updateOrder,
+        //             }
+        //           );
+        //           if (success) {
+        //             notify.success(message ? message : data);
+        //           } else {
+        //             notify.error(message ? message : data);
+        //           }
+        //         })();
+        //         break;
+        //       case "removeFromApp":
+        //         if (!shopifyOrderID) {
+        //           (async () => {
+        //             let { success, message, data } = await massAction(
+        //               removeOrdersURL,
+        //               [
+        //                 {
+        //                   order_id: ebayOrderID,
+        //                   shop_id: shopId,
+        //                 },
+        //               ]
+        //             );
+        //             if (success) {
+        //               notify.success(message ? message : data);
+        //             } else {
+        //               notify.error(message ? message : data);
+        //             }
+        //           })();
+        //         } else {
+        //           notify.error("Can't be removed");
+        //         }
+        //         break;
+        //       case "syncShipment":
+        //         (async () => {
+        //           let { success, message, data } = await massAction(
+        //             syncShipmentURL,
+        //             [
+        //               {
+        //                 order_id: shopifyOrderID,
+        //                 shop_id: shopId,
+        //               },
+        //             ]
+        //           );
+        //           if (success) {
+        //             notify.success(message ? message : data);
+        //           } else {
+        //             notify.error(message ? message : data);
+        //           }
+        //         })();
+        //         break;
+        //       case "cancelOrder":
+        //         (async () => {
+        //           let { success, message, data } = await massAction(
+        //             cancelOrdersURl,
+        //             [
+        //               {
+        //                 order_id: ebayOrderID,
+        //                 shop_id: shopId,
+        //               },
+        //             ]
+        //           );
+        //           if (success) {
+        //             notify.success(message ? message : data);
+        //           } else {
+        //             notify.error(message ? message : data);
+        //           }
+        //         })();
+        //         break;
+        //       case "deleteOrder":
+        //         console.log(shopifyOrderID, ebayOrderID);
+        //         if (shopifyOrderID) {
+        //           (async () => {
+        //             let { success, message, data } = await massAction(
+        //               deleteOrdersURL,
+        //               [
+        //                 {
+        //                   order_id: shopifyOrderID,
+        //                   shop_id: shopId,
+        //                 },
+        //               ]
+        //             );
+        //             if (success) {
+        //               notify.success(message ? message : data);
+        //             } else {
+        //               notify.error(message ? message : data);
+        //             }
+        //           })();
+        //         } else {
+        //           notify.error(
+        //             "Order does not exist on Shopify so can't be deleted"
+        //           );
+        //         }
+        //         break;
+        //       default:
+        //         break;
+        //     }
+        //     setActionModal(false);
+        //   },
+        // }}
+        // secondaryActions={[
+        //   {
+        //     content: "Cancel",
+        //     onAction: () => setActionModal(false),
+        //   },
+        // ]}
       >
         <Modal.Section>
           {actionModal.value === "updateOrder" ? (
             updateOrderActionStructure()
           ) : (
             <TextContainer>
-              <p>Do you want to perfrom this action?</p>
+              <div>Do you want to perfrom this action?</div>
+              <Stack distribution="center">
+                <Button onClick={() => setActionModal(false)}>Cancel</Button>
+                <Button
+                  primary
+                  onClick={() => {
+                    switch (actionModal["value"]) {
+                      case "updateOrder":
+                        (async () => {
+                          let { success, message, data } = await massAction(
+                            updateOrderURL,
+                            {
+                              id: shopifyOrderID,
+                              ...updateOrder,
+                            }
+                          );
+                          if (success) {
+                            notify.success(message ? message : data);
+                          } else {
+                            notify.error(message ? message : data);
+                          }
+                        })();
+                        break;
+                      case "removeFromApp":
+                        if (!shopifyOrderID) {
+                          (async () => {
+                            let { success, message, data } = await massAction(
+                              removeOrdersURL,
+                              [
+                                {
+                                  order_id: ebayOrderID,
+                                  shop_id: shopId,
+                                },
+                              ]
+                            );
+                            if (success) {
+                              notify.success(message ? message : data);
+                              props.history.push("/panel/ebay/orders");
+                            } else {
+                              notify.error(message ? message : data);
+                            }
+                          })();
+                        } else {
+                          notify.error("Can't be removed");
+                        }
+                        break;
+                      case "syncShipment":
+                        (async () => {
+                          let { success, message, data } = await massAction(
+                            syncShipmentURL,
+                            [
+                              {
+                                order_id: shopifyOrderID,
+                                shop_id: shopId,
+                              },
+                            ]
+                          );
+                          if (success) {
+                            notify.success(message ? message : data);
+                          } else {
+                            notify.error(message ? message : data);
+                          }
+                        })();
+                        break;
+                      case "cancelOrder":
+                        (async () => {
+                          let { success, message, data } = await massAction(
+                            cancelOrdersURl,
+                            [
+                              {
+                                order_id: ebayOrderID,
+                                shop_id: shopId,
+                              },
+                            ]
+                          );
+                          if (success) {
+                            notify.success(message ? message : data);
+                          } else {
+                            notify.error(message ? message : data);
+                          }
+                        })();
+                        break;
+                      case "deleteOrder":
+                        console.log(shopifyOrderID, ebayOrderID);
+                        if (shopifyOrderID) {
+                          (async () => {
+                            let { success, message, data } = await massAction(
+                              deleteOrdersURL,
+                              [
+                                {
+                                  order_id: shopifyOrderID,
+                                  shop_id: shopId,
+                                },
+                              ]
+                            );
+                            if (success) {
+                              notify.success(message ? message : data);
+                            } else {
+                              notify.error(message ? message : data);
+                            }
+                          })();
+                        } else {
+                          notify.error(
+                            "Order does not exist on Shopify so can't be deleted"
+                          );
+                        }
+                        break;
+                      default:
+                        break;
+                    }
+                    setActionModal(false);
+                  }}
+                >
+                  OK
+                </Button>
+              </Stack>
             </TextContainer>
           )}
         </Modal.Section>

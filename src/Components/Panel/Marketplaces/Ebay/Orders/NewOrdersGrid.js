@@ -402,12 +402,25 @@ const NewOrdersGrid = (props) => {
 
   const hitGetOrdersAPI = async () => {
     setGridLoader(true);
+    let filterPostData = {};
+    for (const key in filtersToPass) {
+      if (key === "filter[country][1]") {
+        let matchedAccoount = connectedAccountsArray.find(
+          (connectedAccount) =>
+            connectedAccount["value"] === filtersToPass["filter[country][1]"]
+        );
+        filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
+      } else {
+        filterPostData[key] = filtersToPass[key];
+      }
+    }
     let postData = {
       count: pageSize,
       activePage: activePage,
       markteplace: "ebay",
       // ...filters,
-      ...filtersToPass,
+      // ...filtersToPass,
+      ...filterPostData
     };
     if (Object.keys(filtersToPass).length) {
       postData["activePage"] = 1;
@@ -483,6 +496,8 @@ const NewOrdersGrid = (props) => {
           }`,
           siteID: account["warehouses"][0]["site_id"],
           shopId: account["id"],
+          disabled:
+            account["warehouses"][0]["status"] === "inactive" ? true : false,
         };
         return accountName;
       });
@@ -639,6 +654,8 @@ const NewOrdersGrid = (props) => {
 
   const getFieldValue = (field) => {
     switch (field) {
+      case "country":
+        return "Account";
       case "source_order_id":
         return "Ebay Order Id";
       case "status":
@@ -746,6 +763,11 @@ const NewOrdersGrid = (props) => {
     temp[type] = !popOverStatus[type];
     setPopOverStatus(temp);
   };
+  const countryActivator = (
+    <ShopifyButton disclosure onClick={() => popOverHandler("country")}>
+      Account
+    </ShopifyButton>
+  );
   const statusActivator = (
     <ShopifyButton disclosure onClick={() => popOverHandler("status")}>
       Status
@@ -762,6 +784,19 @@ const NewOrdersGrid = (props) => {
     return (
       <Stack wrap>
         <ButtonGroup segmented>
+          <Popover
+            active={popOverStatus["country"]}
+            activator={countryActivator}
+            onClose={() => popOverHandler("country")}
+          >
+            <div style={{ margin: "10px" }}>
+              <ChoiceList
+                choices={connectedAccountsArray}
+                selected={selected["country"]}
+                onChange={(value) => handleChange(value, "country")}
+              />
+            </div>
+          </Popover>
           <Popover
             active={popOverStatus["status"]}
             activator={statusActivator}
@@ -996,6 +1031,8 @@ const NewOrdersGrid = (props) => {
                       notify.error(message);
                     }
                     setSyncBtnLoader(false);
+                    setImportEbayOrdersModal(false);
+                    hitGetOrdersAPI();
                   }}
                   disabled={getDisabledSync()}
                   loading={syncBtnLoader}
