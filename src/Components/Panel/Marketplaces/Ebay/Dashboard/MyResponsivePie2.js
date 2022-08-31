@@ -82,7 +82,7 @@ const MyResponsivePie2 = ({
             dominantBaseline="central"
             fill={style.textColor}
             style={{
-              fontSize: 20,
+              fontSize: 14,
               fontWeight: 800,
             }}
           >
