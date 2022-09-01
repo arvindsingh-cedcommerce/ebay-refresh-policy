@@ -48,6 +48,7 @@ import {
 } from "../Template/Components/TemplatesType/CategoryTemplateComponent";
 import { withRouter } from "react-router-dom";
 import NewFilterComponentSimilarPolaris from "./NewFilterComponentSimilarPolaris";
+import { getVariantsCountDetails } from "./helperFunctions/commonHelper";
 
 const DisabledProducts = (props) => {
   const [gridLoader, setGridLoader] = useState(false);
@@ -244,7 +245,7 @@ const DisabledProducts = (props) => {
       productOnly: true,
       count: pageSize,
       activePage: activePage,
-      grid: true,
+      // grid: true,
       status: "disabled",
       ...filtersToPass,
     };
@@ -309,7 +310,7 @@ const DisabledProducts = (props) => {
                 distribution="center"
               >
                 <Text
-                  strong
+                  // strong
                   // onClick={(e) => {
                   //   return props.history.push(
                   //     `/panel/ebay/disabledproducts/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
@@ -353,7 +354,8 @@ const DisabledProducts = (props) => {
             );
             tempObject["variantsCount"] = (
               <center>
-                <Paragraph>{quantity}</Paragraph>
+                {/* <Paragraph>{quantity}</Paragraph> */}
+                <Paragraph>{getVariantsCountDetails(variants, variant_attributes)}</Paragraph>
               </center>
             );
             tempObject["variantsData"] = variants;

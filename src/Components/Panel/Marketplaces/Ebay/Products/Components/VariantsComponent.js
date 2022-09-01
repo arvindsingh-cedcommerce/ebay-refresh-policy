@@ -140,8 +140,8 @@ const VariantsComponent = ({
       }
     });
     tempObject["key"] = index.toString();
-    tempObject["variantImage"] = key["main_image"] ? (
-      <Image width={25} src={key["main_image"]} />
+    tempObject["variantImage"] = key["variant_image"] ? (
+      <Image width={25} src={key["variant_image"]} />
     ) : (
       <Image width={25} preview={false} src={NoProductImage} />
     );
