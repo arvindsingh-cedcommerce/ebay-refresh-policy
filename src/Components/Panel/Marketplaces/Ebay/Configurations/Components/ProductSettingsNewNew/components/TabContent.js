@@ -261,8 +261,10 @@ const TabContent = ({
   const removeErrors = (value, field, innerField) => {
     let temp = { ...errorsData };
     if (value && innerField) {
-      temp[account]["fields"][field][innerField] = false;
-      setErrorsData(temp);
+      if (temp?.[account]?.["fields"]?.[field]?.[innerField]) {
+        temp[account]["fields"][field][innerField] = false;
+        setErrorsData(temp);
+      }
     }
   };
 
