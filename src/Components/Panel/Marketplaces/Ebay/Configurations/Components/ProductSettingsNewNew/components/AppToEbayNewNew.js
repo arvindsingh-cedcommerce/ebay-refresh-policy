@@ -161,16 +161,15 @@ const AppToEbayNewNew = ({
         },
         setting_type: ["product_settings"],
       };
-      console.log(tempObj);
-      //   let { success, message } = await configurationAPI(
-      //     saveAppSettingsShopifyToAppURL,
-      //     tempObj
-      //   );
-      //   if (success) {
-      //     notify.success(message);
-      //   } else {
-      //     notify.error(message);
-      //   }
+      let { success, message } = await configurationAPI(
+        saveAppSettingsShopifyToAppURL,
+        tempObj
+      );
+      if (success) {
+        notify.success(message);
+      } else {
+        notify.error(message);
+      }
       setSaveBtnLoader(false);
     }
   };
