@@ -390,9 +390,10 @@ function NewProductsNewFilters(props) {
       for (const shopId in response) {
         let matchedAccount = connectedAccountsArray.find(
           (connectedAccount) =>
-            connectedAccount["shopId"] == shopId && connectedAccount["active"]
+            connectedAccount["shopId"] == shopId 
+            // && connectedAccount["active"]
         );
-        if (matchedAccount) {
+        // if (matchedAccount) {
           let test = {
             ...matchedAccount,
             ...response[shopId],
@@ -401,11 +402,13 @@ function NewProductsNewFilters(props) {
             <Stack>
               {test?.image}
               <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
-              {test?.image && getBadge(test)}
+              {
+              // test?.image && 
+              getBadge(test)}
             </Stack>
           );
           statusStructures.push(structStatus);
-        }
+        // }
       }
       return <PopoverProduct>{statusStructures}</PopoverProduct>;
     } else {
