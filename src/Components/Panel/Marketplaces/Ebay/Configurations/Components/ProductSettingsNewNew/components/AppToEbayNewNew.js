@@ -141,6 +141,9 @@ const AppToEbayNewNew = ({
           const { ebayCurrencyValue } = fields[field];
           if (ebayCurrencyValue === "same") {
             parsedData[shopId][field] = false;
+          } else {
+            const { label, description, ...remainingKeys } = fields[field];
+            parsedData[shopId][field] = {...remainingKeys}
           }
         } else parsedData[shopId][field] = fields[field]["value"];
       }

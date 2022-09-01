@@ -1,5 +1,6 @@
-import { Link } from "@shopify/polaris";
+import { Icon, Link, List, Stack, TextStyle, Tooltip } from "@shopify/polaris";
 import React from "react";
+import { QuestionMarkMinor } from "@shopify/polaris-icons";
 
 export const getParsedEbayAccounts = (ebayAccounts) => {
   let parsedEbayAccountsData = {};
@@ -19,8 +20,31 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
       inventoryBehavioursetting: {
         label: "Inventory Behaviour",
         value: "decrement_obeying_policy",
-        description:
-          "Select behaviour to use updating inventory while creating order on Shopify.",
+        description: (
+          <Stack spacing="extraTight" wrap={false} alignment='center'>
+            <TextStyle>
+              Select behaviour to use updating inventory while creating order on
+              Shopify.
+            </TextStyle>
+            <Tooltip
+              content={
+                <List type="bullet">
+                  <List.Item>
+                    Decrement Obeying Policy: Follow the product's inventory
+                    policy and claim inventory, if possible.
+                  </List.Item>
+                  <List.Item>
+                    Decrement Ignoring Policy: Ignore the product's inventory
+                    policy and claim inventory.
+                  </List.Item>
+                  <List.Item>Bypass: Do not claim inventory.</List.Item>
+                </List>
+              }
+            >
+              <Icon source={QuestionMarkMinor} color="base" />
+            </Tooltip>
+          </Stack>
+        ),
       },
       syncWithoutProductdetails: {
         label: "Sync Without Product details",

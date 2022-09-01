@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { configurationAPI } from "../../../../../../../../APIrequests/ConfigurationAPI";
 import { notify } from "../../../../../../../../services/notify";
 import { saveAppSettingsShopifyToAppURL } from "../../../../../../../../URLs/ConfigurationURL";
+import { getParsedData, getSavedData } from "../Helper/ProductSettingsHelper";
 const { Text, Title } = Typography;
 
 const yesNoButtonList = [
@@ -64,7 +65,7 @@ const getAttributeLabel = (attribute) => {
   return label;
 };
 
-const ShopifyToAppNewNew = () => {
+const ShopifyToAppNewNew = ({ shopifyToAppData }) => {
   const [fields, setFields] = useState({
     autoProductSync: {
       label: "Auto Product Syncing",
@@ -101,16 +102,6 @@ const ShopifyToAppNewNew = () => {
 
   const [saveBtnLoader, setSaveBtnLoader] = useState(false);
 
-  const getParsedData = (data) => {
-    let parsedData = {};
-    for (const key in data) {
-      if (key === "autoProductSync" && data[key]["value"]) {
-        parsedData[key] = { ...data[key]["attributes"] };
-      } else parsedData[key] = data[key]["value"];
-    }
-    return parsedData;
-  };
-
   const saveData = async () => {
     setSaveBtnLoader(true);
     const parsedData = getParsedData(fields);
@@ -139,6 +130,12 @@ const ShopifyToAppNewNew = () => {
     } else temp[field]["value"] = value;
     setFields(temp);
   };
+
+  useEffect(() => {
+    if (Object.keys(shopifyToAppData).length) {
+      getSavedData(shopifyToAppData, fields, setFields);
+    }
+  }, [shopifyToAppData]);
 
   return (
     <Card

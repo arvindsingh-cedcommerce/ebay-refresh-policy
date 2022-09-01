@@ -68,7 +68,7 @@ export const getParsedEbayAccounts = (ebayAccounts, shopifyWarehouses) => {
         options: shopifyWarehouses,
         description:
           "Choose shopify location to use location's inventory for eBay listing.",
-        value: [],
+        value: shopifyWarehouses.map((warehouse) => warehouse.value),
       },
       currencyConversion: {
         label: "Currency Converter",
@@ -101,4 +101,120 @@ export const getParsedEbayAccounts = (ebayAccounts, shopifyWarehouses) => {
   });
   // console.log(parsedEbayAccountsData);
   return parsedEbayAccountsData;
+};
+
+export const getSavedData = (data, fields, setFields) => {
+  // console.log(data, fields);
+  let temp = { ...fields };
+  for (const field in data) {
+    if (field === "autoProductSync" && Object.keys(data[field]).length) {
+      temp[field]["attributes"] = data[field];
+    } else temp[field]["value"] = data[field];
+  }
+  setFields(temp);
+};
+
+export const getParsedData = (data) => {
+  let parsedData = {};
+  for (const key in data) {
+    if (key === "autoProductSync" && data[key]["value"]) {
+      parsedData[key] = { ...data[key]["attributes"] };
+    } else parsedData[key] = data[key]["value"];
+  }
+  return parsedData;
+};
+
+export const getAppToEbaySavedData = (
+  data,
+  connectedAccountsObject,
+  setconnectedAccountsObject
+) => {
+  let temp = { ...connectedAccountsObject };
+  console.log(temp, data);
+  for (const account in connectedAccountsObject) {
+    for (const shopid in data) {
+      if (connectedAccountsObject[account]["shopId"] == shopid) {
+        temp[account]["checked"] = true;
+        for (const field in data[shopid]["data"]["product_settings"][
+          "app_to_ebay"
+        ]) {
+          if (
+            field === "autoProductSync" &&
+            Object.keys(
+              data[shopid]["data"]["product_settings"]["app_to_ebay"][field]
+            ).length
+          ) {
+            temp[account]["fields"][field]["attributes"] = {
+              ...data[shopid]["data"]["product_settings"]["app_to_ebay"][field],
+            };
+          } else if (field === "currencyConversion") {
+            const {
+              ebayCurrencyName,
+              ebayCurrencyValue,
+              shopifyCurrencyName,
+              shopifyCurrencyValue,
+            } = data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
+            temp[account]["fields"][field]["ebayCurrencyName"] =
+              ebayCurrencyName;
+            temp[account]["fields"][field]["ebayCurrencyValue"] =
+              ebayCurrencyValue;
+            temp[account]["fields"][field]["shopifyCurrencyName"] =
+              shopifyCurrencyName;
+            temp[account]["fields"][field]["shopifyCurrencyValue"] =
+              shopifyCurrencyValue;
+          } else if (field === "itemLocation") {
+            const { country, location, zipcode } =
+              data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
+            temp[account]["fields"][field]["country"] = country;
+            temp[account]["fields"][field]["location"] = location;
+            temp[account]["fields"][field]["zipcode"] = zipcode;
+          } else if (field === "salesTaxDetails") {
+            const {
+              useEbayTaxRateTable,
+              state,
+              taxPercentage,
+              alsoApplyToShippingAndHandlingCosts,
+            } = data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
+            temp[account]["fields"][field]["useEbayTaxRateTable"] =
+              useEbayTaxRateTable;
+            temp[account]["fields"][field]["state"] = state;
+            temp[account]["fields"][field]["taxPercentage"] = taxPercentage;
+            temp[account]["fields"][field][
+              "alsoApplyToShippingAndHandlingCosts"
+            ] = alsoApplyToShippingAndHandlingCosts;
+          } else if (field === "vatDetails") {
+            const { businessSeller, restrictedToBusiness, vatPercentage } =
+              data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
+            temp[account]["fields"][field]["businessSeller"] = businessSeller;
+            temp[account]["fields"][field]["restrictedToBusiness"] =
+              restrictedToBusiness;
+            temp[account]["fields"][field]["vatPercentage"] = vatPercentage;
+          } else if (field === "match_from_ebay") {
+            temp[account]["fields"][field]["value"] = [
+              ...data[shopid]["data"]["product_settings"]["app_to_ebay"][field],
+            ];
+          } else if (field === "shopifyWarehouses") {
+            temp[account]["fields"][field]["value"] =
+              data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
+          } else if (field === "vehicleDetails") {
+            const { vehicleIdentificationNumber, restrictedToBusiness } =
+              data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
+            temp[account]["fields"][field]["vehicleIdentificationNumber"] =
+              vehicleIdentificationNumber;
+            temp[account]["fields"][field]["restrictedToBusiness"] =
+              restrictedToBusiness;
+          } else if (
+            ["autoProductSync", "autoListProduct", "autoEndProduct"].includes(
+              field
+            )
+          ) {
+            temp[account]["fields"][field]["value"] =
+              data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
+          }
+        }
+      }
+    }
+  }
+  // console.log(temp);
+  setconnectedAccountsObject(temp);
 };

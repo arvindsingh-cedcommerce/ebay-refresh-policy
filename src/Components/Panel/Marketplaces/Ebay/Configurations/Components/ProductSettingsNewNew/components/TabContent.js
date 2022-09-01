@@ -490,27 +490,35 @@ const TabContent = ({
                       )}
                       {field === "shopifyWarehouses" && (
                         <Stack vertical spacing="extraTight">
-                          {fields[field]["options"].map((warehouse, index) => {
-                            return (
-                              <Checkbox
-                                label={warehouse.label}
-                                checked={warehouse.value}
-                                onChange={(e) => {
-                                  let temp = { ...connectedAccountsObject };
-                                  temp[account]["fields"][field]["options"][
-                                    index
-                                  ]["value"] = e;
-                                  if (e) {
-                                    temp[account]["fields"][field][
-                                      "value"
-                                    ].push(warehouse.label);
-                                  }
-                                  setconnectedAccountsObject(temp);
-                                }}
-                                //   disabled={fields[field]["value"].length === 1}
-                              />
-                            );
-                          })}
+                          <ChoiceList
+                            allowMultiple
+                            choices={fields[field]["options"]}
+                            selected={fields[field]["value"]}
+                            onChange={(e) => {
+                              let temp = { ...connectedAccountsObject };
+                              if (e.length == 1) {
+                                temp[account]["fields"][field]["options"] =
+                                  connectedAccountsObject[account]["fields"][
+                                    field
+                                  ]["options"].map((option) => {
+                                    if (option["value"] == e[0]) {
+                                      return { ...option, disabled: true };
+                                    } else {
+                                      return { ...option, disabled: false };
+                                    }
+                                  });
+                              } else {
+                                temp[account]["fields"][field]["options"] =
+                                  connectedAccountsObject[account]["fields"][
+                                    field
+                                  ]["options"].map((option) => {
+                                    return { ...option, disabled: false };
+                                  });
+                              }
+                              temp[account]["fields"][field]["value"] = e;
+                              setconnectedAccountsObject(temp);
+                            }}
+                          />
                         </Stack>
                       )}
                       {field === "currencyConversion" && currencyLoader && (
