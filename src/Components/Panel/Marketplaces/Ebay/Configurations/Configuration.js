@@ -8,6 +8,7 @@ import FinalImportSettings from "./Components/ImportSettingsNew/FinalImportSetti
 import FinalOrderSettings from "./Components/OrderSettingsNew/FinalOrderSettings";
 import FinalProductSettings from "./Components/ProductSettingsNew/FinalProductSettings";
 import FinalOrderSettingsNew from "./Components/OrderSettingsNew/FinalOrderSettingsNew";
+import FinalProductSettingsNewNew from "./Components/ProductSettingsNewNew/components/FinalProductSettingsNewNew";
 
 const configurationTabs = [
   "Product Settings",
@@ -68,7 +69,9 @@ const Configuration = (props) => {
     configurationTabs.forEach((tabName) => {
       switch (tabName) {
         case "Product Settings":
-          content[tabName] = <FinalProductSettings />;
+          content[tabName] = 
+          <FinalProductSettingsNewNew />
+          // <FinalProductSettings />;
           break;
         // case "App Settings":
         //   content[tabName] = <AppSettings />;
