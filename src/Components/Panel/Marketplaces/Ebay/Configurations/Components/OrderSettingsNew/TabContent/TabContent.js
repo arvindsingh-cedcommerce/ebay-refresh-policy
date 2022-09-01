@@ -27,12 +27,12 @@ const shopifyOrderNoteTagsNameList = [
 
 const inventoryBehavioursettingOptions = [
   {
-    label: "Decrement Ignoring Policy",
-    value: "decrement_ignoring_policy",
-  },
-  {
     label: "Decrement Obeying Policy",
     value: "decrement_obeying_policy",
+  },
+  {
+    label: "Decrement Ignoring Policy",
+    value: "decrement_ignoring_policy",
   },
   {
     label: "Bypass",
