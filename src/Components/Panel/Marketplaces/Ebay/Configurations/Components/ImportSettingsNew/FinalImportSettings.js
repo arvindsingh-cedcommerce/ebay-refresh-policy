@@ -136,7 +136,6 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
 
   useEffect(() => {
     if (Object.keys(importSettingsFromSavedAPIData).length) {
-      setflag(false);
       let temp = { ...importProductFilters };
       Object.keys(importSettingsFromSavedAPIData).forEach((field) => {
         if (field !== "match_from_ebay" && field !== "productID") {
@@ -158,6 +157,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
         }
       });
     }
+    setflag(false);
   }, [importSettingsFromSavedAPIData]);
 
   const prepareOptions = (data) => {
