@@ -385,25 +385,27 @@ function NewProductsNewFilters(props) {
     );
   };
   const getProductStatusEbayResponse = (response) => {
-    // console.log(response);
     let statusStructures = [];
     if (response) {
       for (const shopId in response) {
         let matchedAccount = connectedAccountsArray.find(
-          (connectedAccount) => connectedAccount["shopId"] == shopId
+          (connectedAccount) =>
+            connectedAccount["shopId"] == shopId && connectedAccount["active"]
         );
-        let test = {
-          ...matchedAccount,
-          ...response[shopId],
-        };
-        const structStatus = (test.ItemId || test.Errors) && (
-          <Stack>
-            {test?.image}
-            <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
-            {getBadge(test)}
-          </Stack>
-        );
-        statusStructures.push(structStatus);
+        if (matchedAccount) {
+          let test = {
+            ...matchedAccount,
+            ...response[shopId],
+          };
+          const structStatus = (test.ItemId || test.Errors) && (
+            <Stack>
+              {test?.image}
+              <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
+              {test?.image && getBadge(test)}
+            </Stack>
+          );
+          statusStructures.push(structStatus);
+        }
       }
       return <PopoverProduct>{statusStructures}</PopoverProduct>;
     } else {
@@ -842,6 +844,8 @@ function NewProductsNewFilters(props) {
             account["warehouses"][0]["site_id"]
           ),
           username: account["warehouses"][0]["user_id"],
+          active:
+            account["warehouses"][0]["status"] === "inactive" ? true : false,
         };
         return accountName;
       });
