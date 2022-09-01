@@ -950,7 +950,7 @@ function NewProductsNewFilters(props) {
       title={"Products"}
       ghost={true}
       extra={[
-        <ProductMassMenu selectedRows={selectedRows} />,
+        // <ProductMassMenu selectedRows={selectedRows} />,
         <ProductBulkMenu profileList={profileList} />,
       ]}
     >
@@ -973,17 +973,22 @@ function NewProductsNewFilters(props) {
             justify="space-between"
             style={{ marginBottom: 10 }}
           >
+            <Col className="gutter-row" span={6}>
+              <ProductMassMenu selectedRows={selectedRows} />
+            </Col>
             <Col className="gutter-row" span={18}>
-              <PaginationComponent
-                totalCount={totalProductsCount}
-                pageSizeOptions={pageSizeOptions}
-                activePage={activePage}
-                setActivePage={setActivePage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                size={"default"}
-                simple={false}
-              />
+              <Stack distribution="trailing">
+                <PaginationComponent
+                  totalCount={totalProductsCount}
+                  pageSizeOptions={pageSizeOptions}
+                  activePage={activePage}
+                  setActivePage={setActivePage}
+                  pageSize={pageSize}
+                  setPageSize={setPageSize}
+                  size={"default"}
+                  simple={false}
+                />
+              </Stack>
             </Col>
           </Row>
         </div>

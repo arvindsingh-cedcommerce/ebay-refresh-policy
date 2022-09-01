@@ -385,7 +385,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
         trigger={["click"]}
         disabled={selectedRows.length > 0 ? false : true}
       >
-        <Button>
+        <Button primary={selectedRows.length}>
           <div>
             {selectedRows.length
               ? `${selectedRows.length} product(s) selected`

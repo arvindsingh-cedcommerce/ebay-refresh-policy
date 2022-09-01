@@ -152,7 +152,9 @@ const ViewOrdersPolarisNew = (props) => {
       setShopId(data["shop_id"]);
       setShopifyOrderName(data["shopify_order_name"]);
       setFinancialStatus(data["financial_status"]);
-      setShopifyOrderID(data["target_order_id"]);
+      setShopifyOrderID(
+        data["target_order_id"] ? data["target_order_id"] : "---"
+      );
       setEbayOrderID(data["source_order_id"]);
       setOrderDate(data["created_at"]);
       setTotalItems(data["qty"]);
@@ -430,7 +432,7 @@ const ViewOrdersPolarisNew = (props) => {
             {erroModal.msg && (
               <ShopifyBadge status="critical">
                 <div
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", borderBottom: "2px solid black" }}
                   onClick={() => setErroModal({ ...erroModal, show: true })}
                 >
                   Failed
@@ -439,7 +441,19 @@ const ViewOrdersPolarisNew = (props) => {
             )}
           </Stack>
         ) : (
-          "Order"
+          <Stack alignment="center">
+            <>Order</>
+            {erroModal.msg && (
+              <ShopifyBadge status="critical">
+                <div
+                  style={{ cursor: "pointer", borderBottom: "2px solid black" }}
+                  onClick={() => setErroModal({ ...erroModal, show: true })}
+                >
+                  Failed
+                </div>
+              </ShopifyBadge>
+            )}
+          </Stack>
         )
       }
       // fullWidth

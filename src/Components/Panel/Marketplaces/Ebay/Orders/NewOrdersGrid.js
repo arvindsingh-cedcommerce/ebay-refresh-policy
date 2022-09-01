@@ -368,6 +368,7 @@ const NewOrdersGrid = (props) => {
       tempObject["fulfillment"] = (
         <center
           onClick={() =>
+            order?.["target_error_message"] &&
             setTargetMsg({
               show: true,
               msg: order["target_error_message"],
@@ -420,7 +421,7 @@ const NewOrdersGrid = (props) => {
       markteplace: "ebay",
       // ...filters,
       // ...filtersToPass,
-      ...filterPostData
+      ...filterPostData,
     };
     if (Object.keys(filtersToPass).length) {
       postData["activePage"] = 1;

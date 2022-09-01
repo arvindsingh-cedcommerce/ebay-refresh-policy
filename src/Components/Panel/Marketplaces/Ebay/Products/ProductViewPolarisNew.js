@@ -469,10 +469,11 @@ const ProductViewPolarisNew = (props) => {
             tags = variant["tags"];
           }
         }
-        additional_images_arr = [
-          ...additional_images_arr,
-          ...Object.values(variant["additional_images"]),
-        ];
+        additional_images_arr = [...additional_images]
+        // additional_images_arr = [
+        //   ...additional_images_arr,
+        //   ...Object.values(variant["additional_images"]),
+        // ];
       });
 
       let tempObj = {
@@ -603,9 +604,11 @@ const ProductViewPolarisNew = (props) => {
         data?.product_data,
         data?.ebay_product_response
       );
+    } else if (message.includes("Product not found")) {
+      redirect.push("/panel/ebay/products");
     } else {
       notify.error(message);
-      redirect("/auth/login");
+      // redirect("/auth/login");
     }
     setShowSkeleton(false);
     setPageLoader(false);
@@ -769,9 +772,10 @@ const ProductViewPolarisNew = (props) => {
         data.variantionData.length > 0
       ) {
         //
-        let tempDataVariation = [...data.variantionData]
+        let tempDataVariation = [...data.variantionData];
         variants.forEach((variant, index) => {
-          tempDataVariation[index]["source_product_id"] = variant["source_product_id"];
+          tempDataVariation[index]["source_product_id"] =
+            variant["source_product_id"];
         });
         postData["edited_fields"]["variation"] = mergeContainerAndVariation(
           data.containerData,
