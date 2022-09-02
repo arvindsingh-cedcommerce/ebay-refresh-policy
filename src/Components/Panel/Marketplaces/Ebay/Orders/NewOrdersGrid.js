@@ -304,6 +304,9 @@ const NewOrdersGrid = (props) => {
         case "failed":
           targetStatus = "critical";
           break;
+        case "error":
+          targetStatus = "critical";
+          break;
         default:
           break;
       }
@@ -378,7 +381,9 @@ const NewOrdersGrid = (props) => {
           style={{ cursor: "pointer" }}
         >
           <PolarisBadge status={targetStatus} progress={progressBarStatus}>
-            {order?.target_status}
+            {["error", "failed"].includes(order?.target_status)
+              ? "Failed"
+              : order?.target_status}
           </PolarisBadge>
         </center>
       );

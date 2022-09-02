@@ -23,7 +23,6 @@ export const parseDataForSave = (data) => {
 };
 
 export const extractUpdateOrderData = (data, updateOrder, setUpdateOrder) => {
-  console.log(data);
   let extractedData = { ...updateOrder };
   for (const key in data) {
     switch (key) {
@@ -58,6 +57,5 @@ export const extractUpdateOrderData = (data, updateOrder, setUpdateOrder) => {
         break;
     }
   }
-  console.log(extractedData);
   setUpdateOrder(extractedData);
 };
