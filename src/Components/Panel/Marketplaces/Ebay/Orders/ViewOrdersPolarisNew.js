@@ -303,91 +303,85 @@ const ViewOrdersPolarisNew = (props) => {
           <TextField
             value={updateOrder.email}
             onChange={(e) => updateOrderOnChange(e, "email")}
-            label="Email"
+            placeholder="Email"
             type="email"
             inputMode="email"
             autoComplete="email"
-            helpText={
-              <span>
-                We’ll use this email address to inform you on future changes to
-                Polaris.
-              </span>
-            }
+            // helpText={
+            //   <span>
+            //     We’ll use this email address to inform you on future changes to
+            //     Polaris.
+            //   </span>
+            // }
           />
           <TextField
             value={updateOrder.phone}
             onChange={(e) => updateOrderOnChange(e, "phone")}
-            label="Phone"
+            placeholder="Phone"
             inputMode="tel"
             type="tel"
-            helpText={
-              <span>
-                We’ll use this email address to inform you on future changes to
-                Polaris.
-              </span>
-            }
           />
           <>Shipping Address</>
           <FormLayout>
             <FormLayout.Group>
               <TextField
-                label={"First Name"}
+                placeholder={"First Name"}
                 value={updateOrder.shipping_address.first_name}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "first_name")
                 }
               />
               <TextField
-                label={"Last Name"}
+                placeholder={"Last Name"}
                 value={updateOrder.shipping_address.last_name}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "last_name")
                 }
               />
               <TextField
-                label={"Country"}
+                placeholder={"Country"}
                 value={updateOrder.shipping_address.country}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "country")
                 }
               />
               <TextField
-                label={"Phone"}
+                placeholder={"Phone"}
                 value={updateOrder.shipping_address.phone}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "phone")
                 }
               />
               <TextField
-                label={"Company"}
+                placeholder={"Company"}
                 value={updateOrder.shipping_address.company}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "company")
                 }
               />
               <TextField
-                label={"City"}
+                placeholder={"City"}
                 value={updateOrder.shipping_address.city}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "city")
                 }
               />
               <TextField
-                label={"Province"}
+                placeholder={"Province"}
                 value={updateOrder.shipping_address.province}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "province")
                 }
               />
               <TextField
-                label={"ZIP"}
+                placeholder={"ZIP"}
                 value={updateOrder.shipping_address.zip}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "zip")
                 }
               />
               <TextField
-                label={"Address"}
+                placeholder={"Address"}
                 value={updateOrder.shipping_address.address1}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "address1")
@@ -408,31 +402,19 @@ const ViewOrdersPolarisNew = (props) => {
           <TextField
             value={updateOrder.tags}
             onChange={(e) => updateOrderOnChange(e, "tags")}
-            label="Tags"
-            helpText={
-              <span>
-                We’ll use this email address to inform you on future changes to
-                Polaris.
-              </span>
-            }
+            placeholder="Tags"
           />
           <TextField
             value={updateOrder.note}
             onChange={(e) => updateOrderOnChange(e, "note")}
-            label="Note"
-            helpText={
-              <span>
-                We’ll use this email address to inform you on future changes to
-                Polaris.
-              </span>
-            }
+            placeholder="Note"
           />
+          <center>
+            <Button submit primary>
+              Submit
+            </Button>
+          </center>
         </FormLayout>
-        <center>
-          <Button submit primary>
-            Submit
-          </Button>
-        </center>
       </Form>
     );
   };
