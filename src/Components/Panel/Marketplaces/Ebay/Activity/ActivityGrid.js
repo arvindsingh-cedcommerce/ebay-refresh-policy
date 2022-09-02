@@ -12,6 +12,7 @@ import {
   TextField,
 } from "@shopify/polaris";
 import {
+  AlertMinor,
   CircleCancelMinor,
   CircleChevronDownMinor,
   CircleTickOutlineMinor,
@@ -159,8 +160,10 @@ const ActivityGrid = (props) => {
     switch (severity) {
       case "success":
         return <Icon source={CircleTickOutlineMinor} color="success" />;
-      case "error":
+      case "failed":
         return <Icon source={CircleCancelMinor} color="critical" />;
+      case "error":
+        return <Icon source={AlertMinor} color="critical" />;
       default:
         break;
     }
