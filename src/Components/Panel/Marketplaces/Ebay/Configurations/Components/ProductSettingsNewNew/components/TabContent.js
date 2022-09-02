@@ -220,16 +220,17 @@ const TabContent = ({
       temp[account]["fields"]["currencyConversion"]["ebayCurrencyName"] =
         source["ebay"];
       temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"] = rate;
-    } else if (currencyData === "Both Currency Are Same") {
-      temp[account]["fields"]["currencyConversion"]["shopifyCurrencyName"] =
-        "same";
-      temp[account]["fields"]["currencyConversion"]["shopifyCurrencyValue"] =
-        "same";
-      temp[account]["fields"]["currencyConversion"]["ebayCurrencyName"] =
-        "same";
-      temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"] =
-        "same";
     }
+    // else if (currencyData === "Both Currency Are Same") {
+    //   temp[account]["fields"]["currencyConversion"]["shopifyCurrencyName"] =
+    //     "same";
+    //   temp[account]["fields"]["currencyConversion"]["shopifyCurrencyValue"] =
+    //     "same";
+    //   temp[account]["fields"]["currencyConversion"]["ebayCurrencyName"] =
+    //     "same";
+    //   temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"] =
+    //     "same";
+    // }
     if (
       errorsData?.[account]?.["fields"]?.["currencyConversion"]?.[
         "ebayCurrencyValue"
@@ -273,7 +274,77 @@ const TabContent = ({
       {Object.keys(fields).map((field, outerIndex) => {
         return (
           <Layout key={outerIndex}>
-            {fields[field]["ebayCurrencyValue"] !== "same" && (
+            {field === "currencyConversion" && currencyLoader && (
+              <Layout.AnnotatedSection
+                id={field}
+                title={fields[field]["label"]}
+                description={fields[field]["description"]}
+              >
+                <Card sectioned>
+                  <FormLayout>
+                    <SkeletonBodyText lines={2} />
+                  </FormLayout>
+                </Card>
+              </Layout.AnnotatedSection>
+            )}
+            {field === "currencyConversion" &&
+              !currencyLoader &&
+              fields[field]["shopifyCurrencyName"] !==
+                fields[field]["ebayCurrencyName"] && (
+                <Layout.AnnotatedSection
+                  id={field}
+                  title={fields[field]["label"]}
+                  description={fields[field]["description"]}
+                >
+                  <Card sectioned>
+                    <FormLayout>
+                      <Stack distribution="fill">
+                        <TextField
+                          placeholder={"Shopify Currency"}
+                          prefix={fields[field]["shopifyCurrencyName"]}
+                          value={String(fields[field]["shopifyCurrencyValue"])}
+                          disabled
+                          type="number"
+                        />
+                        <TextField
+                          placeholder={"eBay Currency"}
+                          prefix={fields[field]["ebayCurrencyName"]}
+                          value={String(fields[field]["ebayCurrencyValue"])}
+                          type="number"
+                          onChange={(e) => {
+                            let temp = { ...connectedAccountsObject };
+                            temp[account]["fields"][field][
+                              "ebayCurrencyValue"
+                            ] = e;
+                            if (
+                              e &&
+                              errorsData?.[account]?.["fields"]?.[
+                                "currencyConversion"
+                              ]?.["ebayCurrencyValue"]
+                            ) {
+                              let tempErrorData = { ...errorsData };
+                              tempErrorData[account]["fields"][
+                                "currencyConversion"
+                              ]["ebayCurrencyValue"] = false;
+                              setErrorsData(tempErrorData);
+                            }
+                            setconnectedAccountsObject(temp);
+                          }}
+                          error={
+                            errorsData?.[account]?.["fields"]?.[field]?.[
+                              "ebayCurrencyValue"
+                            ]
+                          }
+                        />
+                        <Button onClick={() => getCurrencyFunc()}>
+                          <Icon source={RefreshMinor} color="base" />
+                        </Button>
+                      </Stack>
+                    </FormLayout>
+                  </Card>
+                </Layout.AnnotatedSection>
+              )}
+            {field !== "currencyConversion" && (
               <Layout.AnnotatedSection
                 id={field}
                 title={fields[field]["label"]}
@@ -521,10 +592,11 @@ const TabContent = ({
                           />
                         </Stack>
                       )}
-                      {field === "currencyConversion" && currencyLoader && (
+                      {/* {field === "currencyConversion" && currencyLoader && (
                         <SkeletonBodyText lines={2} />
                       )}
-                      {field === "currencyConversion" && !currencyLoader && (
+                      {field === "currencyConversion" && !currencyLoader &&
+                        fields[field]["shopifyCurrencyName"] !== fields[field]["ebayCurrencyName"] && (
                         <Stack distribution="fill">
                           <TextField
                             placeholder={"Shopify Currency"}
@@ -569,7 +641,7 @@ const TabContent = ({
                             <Icon source={RefreshMinor} color="base" />
                           </Button>
                         </Stack>
-                      )}
+                      )} */}
                       {field === "match_from_ebay" &&
                         fields[field]["value"] &&
                         getMatchProductsStructure(field)}
