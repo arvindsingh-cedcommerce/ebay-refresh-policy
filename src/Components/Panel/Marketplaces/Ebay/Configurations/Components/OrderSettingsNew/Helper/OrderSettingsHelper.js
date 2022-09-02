@@ -134,7 +134,6 @@ export const getSavedData = (
   connectedAccountsObject,
   setconnectedAccountsObject
 ) => {
-  console.log(orderSettingsFromSavedAPIData);
   if (Object.keys(orderSettingsFromSavedAPIData).length) {
     let temp = { ...connectedAccountsObject };
     // console.log(temp);
@@ -190,7 +189,6 @@ export const getSavedData = (
         }
       }
     }
-    console.log(temp);
     setconnectedAccountsObject(temp);
   }
 };

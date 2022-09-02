@@ -33,7 +33,10 @@ import {
 } from "../../../../../URLs/OrdersURL";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import OrderSkeleton from "../../../SkeletonComponents/OrderSkeleton";
-import { parseDataForSave } from "./Helper/viewOrderHelper";
+import {
+  extractUpdateOrderData,
+  parseDataForSave,
+} from "./Helper/viewOrderHelper";
 
 const { Text } = Typography;
 
@@ -41,11 +44,12 @@ const ViewOrdersPolarisNew = (props) => {
   const [erroModal, setErroModal] = useState({
     show: "",
     msg: "",
+    name: "",
   });
   const [shopId, setShopId] = useState("");
   const [flag, setFlag] = useState(false);
   const [shopifyOrderName, setShopifyOrderName] = useState(null);
-  const [financialStatus, setFinancialStatus] = useState(null);
+  // const [financialStatus, setFinancialStatus] = useState(null);
   const [shopifyOrderID, setShopifyOrderID] = useState(null);
   const [ebayOrderID, setEbayOrderID] = useState(null);
   const [orderDate, setOrderDate] = useState(null);
@@ -98,12 +102,12 @@ const ViewOrdersPolarisNew = (props) => {
   });
   const [updateOrder, setUpdateOrder] = useState({
     email: "",
-    phone: "",
+    phone_number: "",
     shipping_address: {
-      first_name: "",
-      last_name: "",
+      full_name: "",
+      last_name: "ebay-cedcoss",
       address1: "",
-      phone: "",
+      phone_number: "",
       company: "",
       city: "",
       province: "",
@@ -148,11 +152,16 @@ const ViewOrdersPolarisNew = (props) => {
     let postData = { order_id: id };
     let { success, data, message } = await getOrder(getOrderURL, postData);
     if (success) {
-      data["target_error_message"] &&
-        setErroModal({ ...erroModal, msg: data["target_error_message"] });
+      extractUpdateOrderData(data, updateOrder, setUpdateOrder);
+      data["target_status"] &&
+        setErroModal({
+          ...erroModal,
+          msg: data["target_error_message"],
+          name: data["target_status"],
+        });
       setShopId(data["shop_id"]);
       setShopifyOrderName(data["shopify_order_name"]);
-      setFinancialStatus(data["financial_status"]);
+      // setFinancialStatus(data["financial_status"]);
       setShopifyOrderID(
         data["target_order_id"] ? data["target_order_id"] : "---"
       );
@@ -237,8 +246,8 @@ const ViewOrdersPolarisNew = (props) => {
       case "email":
         temp["email"] = value;
         break;
-      case "phone":
-        temp["phone"] = value;
+      case "phone_number":
+        temp["phone_number"] = value;
         break;
       case "tags":
         temp["tags"] = value;
@@ -248,17 +257,14 @@ const ViewOrdersPolarisNew = (props) => {
         break;
       case "shipping_address":
         switch (innerType) {
-          case "first_name":
-            temp["shipping_address"]["first_name"] = value;
-            break;
-          case "last_name":
-            temp["shipping_address"]["last_name"] = value;
+          case "full_name":
+            temp["shipping_address"]["full_name"] = value;
             break;
           case "address1":
             temp["shipping_address"]["address1"] = value;
             break;
-          case "phone":
-            temp["shipping_address"]["phone"] = value;
+          case "phone_number":
+            temp["shipping_address"]["phone_number"] = value;
             break;
           case "company":
             temp["shipping_address"]["company"] = value;
@@ -290,20 +296,22 @@ const ViewOrdersPolarisNew = (props) => {
           let parsedData = parseDataForSave(updateOrder);
           let { success, message } = await massAction(updateOrderURL, {
             id: shopifyOrderID,
-             ...parsedData ,
+            ...parsedData,
           });
           if (success) {
             notify.success(message);
           } else {
             notify.error(message);
           }
+          setActionModal(false);
         }}
       >
         <FormLayout>
           <TextField
             value={updateOrder.email}
             onChange={(e) => updateOrderOnChange(e, "email")}
-            placeholder="Email"
+            // placeholder="Email"
+            placeholder={"Enter Email"}
             type="email"
             inputMode="email"
             autoComplete="email"
@@ -315,29 +323,29 @@ const ViewOrdersPolarisNew = (props) => {
             // }
           />
           <TextField
-            value={updateOrder.phone}
-            onChange={(e) => updateOrderOnChange(e, "phone")}
-            placeholder="Phone"
-            inputMode="tel"
+            value={updateOrder.phone_number}
+            onChange={(e) => updateOrderOnChange(e, "phone_number")}
+            placeholder={"Enter Phone Number with County Code"}
+            // inputMode="tel"
             type="tel"
           />
           <>Shipping Address</>
           <FormLayout>
+            <TextField
+              placeholder={"Full Name"}
+              value={updateOrder.shipping_address.full_name}
+              onChange={(e) =>
+                updateOrderOnChange(e, "shipping_address", "full_name")
+              }
+            />
             <FormLayout.Group>
-              <TextField
-                placeholder={"First Name"}
-                value={updateOrder.shipping_address.first_name}
-                onChange={(e) =>
-                  updateOrderOnChange(e, "shipping_address", "first_name")
-                }
-              />
-              <TextField
+              {/* <TextField
                 placeholder={"Last Name"}
                 value={updateOrder.shipping_address.last_name}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "last_name")
                 }
-              />
+              /> */}
               <TextField
                 placeholder={"Country"}
                 value={updateOrder.shipping_address.country}
@@ -347,10 +355,12 @@ const ViewOrdersPolarisNew = (props) => {
               />
               <TextField
                 placeholder={"Phone"}
-                value={updateOrder.shipping_address.phone}
+                value={updateOrder.shipping_address.phone_number}
                 onChange={(e) =>
-                  updateOrderOnChange(e, "shipping_address", "phone")
+                  updateOrderOnChange(e, "shipping_address", "phone_number")
                 }
+                // type="number"
+                type="tel"
               />
               <TextField
                 placeholder={"Company"}
@@ -429,7 +439,7 @@ const ViewOrdersPolarisNew = (props) => {
         ebayOrderID ? (
           <Stack alignment="center" spacing="tight">
             <>{ebayOrderID}</>
-            <ShopifyBadge status="info">{financialStatus}</ShopifyBadge>
+            {/* <ShopifyBadge status="info">{financialStatus}</ShopifyBadge> */}
             {erroModal.msg && (
               <ShopifyBadge status="critical">
                 <div
