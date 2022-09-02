@@ -33,6 +33,7 @@ import {
 } from "../../../../../URLs/OrdersURL";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import OrderSkeleton from "../../../SkeletonComponents/OrderSkeleton";
+import { parseDataForSave } from "./Helper/viewOrderHelper";
 
 const { Text } = Typography;
 
@@ -109,7 +110,7 @@ const ViewOrdersPolarisNew = (props) => {
       zip: "",
       country: "",
     },
-    customer: "yes",
+    customer: true,
     tags: "",
     note: "",
   });
@@ -284,7 +285,20 @@ const ViewOrdersPolarisNew = (props) => {
   };
   const updateOrderActionStructure = () => {
     return (
-      <Form onSubmit={() => {}}>
+      <Form
+        onSubmit={async () => {
+          let parsedData = parseDataForSave(updateOrder);
+          let { success, message } = await massAction(updateOrderURL, {
+            id: shopifyOrderID,
+             ...parsedData ,
+          });
+          if (success) {
+            notify.success(message);
+          } else {
+            notify.error(message);
+          }
+        }}
+      >
         <FormLayout>
           <TextField
             value={updateOrder.email}
@@ -383,11 +397,11 @@ const ViewOrdersPolarisNew = (props) => {
           </FormLayout>
           <Checkbox
             label="Customer"
-            checked={updateOrder.customer === "yes" ? true : false}
-            onChange={() =>
+            checked={updateOrder.customer}
+            onChange={(e) =>
               setUpdateOrder({
                 ...updateOrder,
-                customer: updateOrder["customer"] === "yes" ? null : "yes",
+                customer: e,
               })
             }
           />
@@ -414,6 +428,11 @@ const ViewOrdersPolarisNew = (props) => {
             }
           />
         </FormLayout>
+        <center>
+          <Button submit primary>
+            Submit
+          </Button>
+        </center>
       </Form>
     );
   };
@@ -425,9 +444,9 @@ const ViewOrdersPolarisNew = (props) => {
       // onBack={() => props.history.push("/panel/ebay/orders")}
       // title={shopifyOrderName ? `Order ${shopifyOrderName}` : "Order"}
       title={
-        shopifyOrderName ? (
+        ebayOrderID ? (
           <Stack alignment="center" spacing="tight">
-            <>Order {shopifyOrderName}</>
+            <>{ebayOrderID}</>
             <ShopifyBadge status="info">{financialStatus}</ShopifyBadge>
             {erroModal.msg && (
               <ShopifyBadge status="critical">
