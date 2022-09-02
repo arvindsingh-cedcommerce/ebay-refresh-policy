@@ -346,21 +346,23 @@ const ActivityGrid = (props) => {
       className="site-page-header-responsive"
       title={"Activity"}
       ghost={true}
-      extra={[
-        <Button
-          key="1"
-          // type="primary"
-          primary
-          onClick={() => {
-            // hitGetActivitiesAPI();
-            hitRefresh();
-          }}
-          loading={refreshBtnLoader}
-        >
-          {" "}
-          Refresh
-        </Button>,
-      ]}
+      extra={
+        queuedTasks.length > 0 && [
+          <Button
+            key="1"
+            // type="primary"
+            primary
+            onClick={() => {
+              // hitGetActivitiesAPI();
+              hitRefresh();
+            }}
+            loading={refreshBtnLoader}
+          >
+            {" "}
+            Refresh
+          </Button>,
+        ]
+      }
     >
       {queuedTasks.length > 0 && (
         <Card sectioned title="Currently Running Processes">
