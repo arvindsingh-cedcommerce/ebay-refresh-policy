@@ -138,23 +138,31 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     if (Object.keys(importSettingsFromSavedAPIData).length) {
       let temp = { ...importProductFilters };
       Object.keys(importSettingsFromSavedAPIData).forEach((field) => {
-        if (field !== "match_from_ebay" && field !== "productID") {
-          temp[field]["enable"] =
-            importSettingsFromSavedAPIData[field]["enable"];
-          switch (field) {
-            case "import_collection":
-              temp[field]["selected_collection"] =
-                importSettingsFromSavedAPIData[field]["selected_collection"];
-              break;
-            case "importAndReplaceProduct":
-              break;
-            default:
-              temp[field]["value"] =
-                importSettingsFromSavedAPIData[field]["value"];
-              break;
-          }
-          setImportProductFilters(temp);
+        // if (field !== "match_from_ebay" && field !== "productID") {
+        // temp[field]["enable"] = importSettingsFromSavedAPIData[field]["enable"];
+        temp[field]["enable"] = "yes";
+        switch (field) {
+          case "import_collection":
+            temp[field]["selected_collection"] = importSettingsFromSavedAPIData[
+              field
+            ]
+              ? importSettingsFromSavedAPIData[field]
+              : [];
+            break;
+          case "importAndReplaceProduct":
+            temp[field]["value"] = importSettingsFromSavedAPIData[field]
+              ? "yes"
+              : "no";
+            temp[field]["enable"] = importSettingsFromSavedAPIData[field]
+              ? "yes"
+              : "no";
+            break;
+          default:
+            temp[field]["value"] = importSettingsFromSavedAPIData[field];
+            break;
         }
+        setImportProductFilters(temp);
+        // }
       });
     }
     setflag(false);
@@ -263,7 +271,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
       } else {
       }
     }
-    console.log("uniquesValuesArr", uniquesValuesArr, uniquesValuesArr.length);
+    // console.log("uniquesValuesArr", uniquesValuesArr, uniquesValuesArr.length);
     // return uniquesValuesArr.length > 0 ? true : false;
     return uniquesValuesArr;
     // options.forEach((option) => {
@@ -325,10 +333,13 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
         }
       }
     }
-    // console.log("tempObj", tempObj);
+    const parsedData = {
+      import_settings: getParsedData(tempObj),
+      setting_type: ["import_settings"],
+    };
     let { success, message } = await configurationAPI(
       saveAppSettingsShopifyToAppURL,
-      tempObj
+      parsedData
     );
     if (success) {
       !force && notify.success(message);
@@ -336,6 +347,25 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
       notify.error(message);
     }
     !force && setSaveBtnLoader(false);
+  };
+
+  const getParsedData = (data) => {
+    let tempParsedData = {};
+    for (const key in data["import_settings"]) {
+      if (key === "importAndReplaceProduct") {
+        tempParsedData[key] =
+          data["import_settings"][key]["enable"] === "yes" ? true : false;
+      } else if (key === "import_collection") {
+        tempParsedData[key] =
+          data["import_settings"][key]["selected_collection"].length > 0
+            ? data["import_settings"][key]["selected_collection"]
+            : false;
+      } else
+        tempParsedData[key] = data["import_settings"][key]["value"]
+          ? data["import_settings"][key]["value"]
+          : false;
+    }
+    return tempParsedData;
   };
 
   const getDropDownStructure = (importProductFilterSetting) => {
@@ -519,7 +549,11 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
       actions={[
         {
           content: (
-            <Button primary onClick={() => saveData(false)} loading={saveBtnLoader}>
+            <Button
+              primary
+              onClick={() => saveData(false)}
+              loading={saveBtnLoader}
+            >
               Save
             </Button>
           ),

@@ -463,7 +463,15 @@ export const FinalRegistrationItemLocation = (props) => {
     const temp = {};
     Object.keys(importProductFilters).forEach((obj) => {
       if (importProductFilters[obj]["enable"] === "yes") {
-        temp[obj] = importProductFilters[obj]["value"] ? importProductFilters[obj]["value"] : false
+        if (obj === "import_collection") {
+          temp[obj] = importProductFilters[obj]["value"]
+            ? [importProductFilters[obj]["value"]]
+            : [];
+        } else {
+          temp[obj] = importProductFilters[obj]["value"]
+            ? importProductFilters[obj]["value"]
+            : false;
+        }
         // temp[obj] = {
         //   value: importProductFilters[obj]["value"] ? importProductFilters[obj]["value"] : false,
         //   enable: importProductFilters[obj]["enable"],
@@ -558,9 +566,9 @@ export const FinalRegistrationItemLocation = (props) => {
     if (orderSettingsStatus) {
       postData.setting_type.push("order_settings");
       const { id } = ebayAccountConnected;
-      postData["order_settings"] = {}
-      postData["order_settings"][id] = {...order_settings};
-      postData["order_settings"]['default'] = {...order_settings};
+      postData["order_settings"] = {};
+      postData["order_settings"][id] = { ...order_settings };
+      postData["order_settings"]["default"] = { ...order_settings };
     }
     await configurationAPI(saveAppSettingsShopifyToAppURL, postData);
   };
