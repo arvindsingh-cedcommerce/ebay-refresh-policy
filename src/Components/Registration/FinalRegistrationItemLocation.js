@@ -557,8 +557,10 @@ export const FinalRegistrationItemLocation = (props) => {
     }
     if (orderSettingsStatus) {
       postData.setting_type.push("order_settings");
-      postData["order_settings"] = {};
-      postData["order_settings"] = order_settings;
+      const { id } = ebayAccountConnected;
+      postData["order_settings"] = {}
+      postData["order_settings"][id] = {...order_settings};
+      postData["order_settings"]['default'] = {...order_settings};
     }
     await configurationAPI(saveAppSettingsShopifyToAppURL, postData);
   };
