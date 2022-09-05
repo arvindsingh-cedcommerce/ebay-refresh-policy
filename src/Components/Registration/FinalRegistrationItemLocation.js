@@ -57,7 +57,8 @@ import {
 import { countryArray } from "../Panel/Marketplaces/Ebay/Configurations/Components/ProductSettingsNew/countryData";
 import { refreshPoliciesURL } from "../../URLs/PoliciesURL";
 import { getRefreshPolicies } from "../../APIrequests/PoliciesAPI";
-import WelcomeImage from '../../assets/Sell-on-ebay-marketplace-08.jpg'
+import WelcomeImage from "../../assets/Sell-on-ebay-marketplace-08.jpg";
+import { getCountryName } from "../Panel/Accounts/NewAccount";
 
 export const alreadySellingOnEbayOptions = [
   { label: "Yes", value: "yes" },
@@ -193,13 +194,10 @@ export const FinalRegistrationItemLocation = (props) => {
 
   // currency
   const [currencyData, setCurrencyData] = useState({
-    enable: "yes",
-    attribute: {
-      shopifyCurrencyName: "",
-      shopifyCurrencyValue: "",
-      ebayCurrencyName: "",
-      ebayCurrencyValue: "",
-    },
+    shopifyCurrencyName: "",
+    shopifyCurrencyValue: "",
+    ebayCurrencyName: "",
+    ebayCurrencyValue: "",
   });
 
   // welcome screen
@@ -227,32 +225,10 @@ export const FinalRegistrationItemLocation = (props) => {
       if (success) {
         const { source, rate } = currencyData;
         let tempObj = {};
-        tempObj["attribute"] = {
-          shopifyCurrency: {
-            label: "Shopify Currency",
-            enable: "yes",
-            type: "textfield",
-            shopifyCurrencyValue: "",
-            disabled: true,
-            shopifyCurrencyName: "",
-          },
-          ebayCurrency: {
-            label: "eBay Currency",
-            enable: "yes",
-            type: "textfield",
-            ebayCurrencyValue: "",
-            numberType: "number",
-            ebayCurrencyName: "",
-          },
-        };
-        tempObj["enable"] = "yes";
-        tempObj["attribute"]["shopifyCurrency"]["shopifyCurrencyName"] =
-          source["shopify"];
-        tempObj["attribute"]["shopifyCurrency"]["shopifyCurrencyValue"] =
-          source["amount"];
-        tempObj["attribute"]["ebayCurrency"]["ebayCurrencyName"] =
-          source["ebay"];
-        tempObj["attribute"]["ebayCurrency"]["ebayCurrencyValue"] = rate;
+        tempObj["shopifyCurrencyName"] = source["shopify"];
+        tempObj["shopifyCurrencyValue"] = source["amount"];
+        tempObj["ebayCurrencyName"] = source["ebay"];
+        tempObj["ebayCurrencyValue"] = rate;
         setCurrencyData(tempObj);
       }
       await callConnectedAccounts();
@@ -487,10 +463,11 @@ export const FinalRegistrationItemLocation = (props) => {
     const temp = {};
     Object.keys(importProductFilters).forEach((obj) => {
       if (importProductFilters[obj]["enable"] === "yes") {
-        temp[obj] = {
-          value: importProductFilters[obj]["value"],
-          enable: importProductFilters[obj]["enable"],
-        };
+        temp[obj] = importProductFilters[obj]["value"] ? importProductFilters[obj]["value"] : false
+        // temp[obj] = {
+        //   value: importProductFilters[obj]["value"] ? importProductFilters[obj]["value"] : false,
+        //   enable: importProductFilters[obj]["enable"],
+        // };
       } else {
         temp[obj] = {
           value: importProductFilters[obj]["value"],
@@ -575,7 +552,8 @@ export const FinalRegistrationItemLocation = (props) => {
     if (importSettingsStatus) {
       postData.setting_type.push("import_settings");
       postData["import_settings"] = {};
-      postData["import_settings"] = temp1;
+      // postData["import_settings"] = temp1;
+      postData["import_settings"] = temp;
     }
     if (orderSettingsStatus) {
       postData.setting_type.push("order_settings");
@@ -776,12 +754,21 @@ export const FinalRegistrationItemLocation = (props) => {
   const completeStepAfterConnect = async () => {
     let hasError = itemLocationValidator();
     if (!hasError) {
-      const { id } = ebayAccountConnected;
+      const { id, warehouses } = ebayAccountConnected;
+      const siteId = warehouses[0]["site_id"];
       product_settings["app_to_ebay"][id] = {};
+      if (!["United States", "Canada (Eng)"].includes(getCountryName(siteId))) {
+        delete productSettingsDataShop["salesTaxDetails"];
+      }
+      if (!["Motors"].includes(getCountryName(siteId))) {
+        delete productSettingsDataShop["vehicleDetails"];
+      }
       for (const key in productSettingsDataShop) {
         product_settings["app_to_ebay"][id][key] = productSettingsDataShop[key];
       }
-      product_settings["app_to_ebay"][id]["itemLocation"] = { ...itemLocation };
+      product_settings["app_to_ebay"][id]["itemLocation"] = {
+        ...itemLocation["attribute"],
+      };
       product_settings["app_to_ebay"][id]["currencyConversion"] = {
         ...currencyData,
       };
