@@ -46,6 +46,8 @@ import {
   SkeletonBodyText,
   TextContainer,
   SkeletonDisplayText,
+  List,
+  Banner,
 } from "@shopify/polaris";
 import { AlertMinor } from "@shopify/polaris-icons";
 import { getCountyrName } from "../Template/Components/TemplateGridComponent";
@@ -209,6 +211,13 @@ const ProductViewPolarisNew = (props) => {
   // showSkeleton
   const [showSkeleton, setShowSkeleton] = useState(true);
 
+  // errors popup
+  const [errorPopup, setErrorPopup] = useState({
+    active: false,
+    content: [],
+    title: "",
+  });
+
   const extractEditedDataForMainProduct = (formainproduct) => {
     let tempObj = {};
     for (const key in formainproduct) {
@@ -253,13 +262,29 @@ const ProductViewPolarisNew = (props) => {
     }
   };
   const getUploadedItemDetails = (errors, ebay_product_response) => {
+    // console.log(errors);
     let statusShopIDs = Object.keys(errors).map((shopId) => {
-      return {
-        shopId: shopId,
-        endStatus: errors[shopId]?.["ended"],
-        itemId: errors[shopId]?.["ItemId"],
-        hasError: errors[shopId]?.["Errors"] ? true : false,
-      };
+      let temp = {};
+      temp["shopId"] = shopId;
+      temp["endStatus"] = errors[shopId]?.["ended"] ? true : false;
+      if (errors[shopId]?.["ItemId"]) {
+        temp["itemId"] = errors[shopId]?.["ItemId"];
+      }
+      temp["hasError"] = errors[shopId]?.["Errors"] ? true : false;
+      if (
+        errors[shopId]?.["Errors"] &&
+        Array.isArray(errors[shopId]?.["Errors"]) &&
+        errors[shopId]?.["Errors"].length
+      ) {
+        temp["errorsList"] = [...errors[shopId]?.["Errors"]];
+      }
+      return temp;
+      // return {
+      //   shopId: shopId,
+      //   endStatus: errors[shopId]?.["ended"] ? true : false,
+      //   itemId: errors[shopId]?.["ItemId"],
+      //   hasError: errors[shopId]?.["Errors"] ? true : false,
+      // };
     });
     let itemUrls = [];
     if (ebay_product_response) {
@@ -272,7 +297,9 @@ const ProductViewPolarisNew = (props) => {
         };
       });
     }
+    // console.log('itemUrls', itemUrls);
     let matchedAccounts = [];
+    // console.log("statusShopIDs", statusShopIDs);
     statusShopIDs.forEach((shopIdData) => {
       connectedAccounts.forEach((connectedAccount) => {
         if (connectedAccount["shopId"] == shopIdData["shopId"]) {
@@ -280,40 +307,83 @@ const ProductViewPolarisNew = (props) => {
         }
       });
     });
+    // console.log(
+    //   "matchedAccounts",
+    //   matchedAccounts,
+    //   itemUrls
+    //   // ebay_product_response
+    // );
     let tempURLs = [];
+
     for (let i = 0; i < matchedAccounts.length; i++) {
-      let matchedAccount = matchedAccounts[i];
-      if (itemUrls.length) {
-        for (let j = 0; j < itemUrls.length; j++) {
-          let itemUrl = itemUrls[j];
-          if (matchedAccount["itemId"] === itemUrl["itemId"]) {
-            tempURLs.push({ ...itemUrl, ...matchedAccount });
-          } else if (matchedAccount["itemId"] === undefined) {
-            tempURLs.push({ ...itemUrl, ...matchedAccount });
-            break;
-          }
+      let flag = 1;
+      for (let j = 0; j < itemUrls.length; j++) {
+        if (matchedAccounts[i]["itemId"] === itemUrls[j]["itemId"]) {
+          // console.log(matchedAccounts[i], itemUrls[j]);
+          flag = 0;
+          tempURLs.push({ ...matchedAccounts[i], ...itemUrls[j] });
         }
-      } else {
-        tempURLs.push(matchedAccount);
+      }
+      if (flag) {
+        tempURLs.push(matchedAccounts[i]);
       }
     }
+    // console.log("tempURLs", tempURLs);
+
+    // tempURLs = matchedAccounts
+    //   .map((matchedAccount, index) => {
+    //     if (
+    //       matchedAccount.itemId === (itemUrls[index] && itemUrls[index].itemId)
+    //     ) {
+    //       return { ...matchedAccount, ...itemUrls[index] };
+    //     } else {
+    //       return matchedAccount;
+    //     }
+    //   })
+    //   .filter((matchedAccount) => matchedAccount.hasOwnProperty("itemId"));
+    // console.log("tempURLs", tempURLs);
     setItemUrls(tempURLs);
   };
 
   const extractProductUploadErrorData = (errors, ebay_product_response) => {
     let errorsObj = {};
     let itemIdObj = {};
+    // console.log(errors, ebay_product_response);
     Object.keys(errors).map((shopId) => {
       if (errors[shopId].hasOwnProperty("Errors")) {
         errorsObj[shopId] = { ...errors[shopId]?.Errors };
-      } else if (errors[shopId].hasOwnProperty("ItemId")) {
-        itemIdObj[shopId] = {
-          itemId: errors[shopId]?.itemId,
-          jsonResponse: ebay_product_response,
-        };
       }
+      // else if (errors[shopId].hasOwnProperty("ItemId")) {
+      //   itemIdObj[shopId] = {
+      //     itemId: errors[shopId]?.itemId,
+      //     jsonResponse: ebay_product_response,
+      //   };
+      // }
+    });
+    Object.keys(errors).forEach((shopId) => {
+      ebay_product_response.forEach((response) => {
+        if (
+          errors[shopId].hasOwnProperty("ItemId") &&
+          errors[shopId]["ItemId"] === response["ItemID"] &&
+          !errors[shopId]?.ended
+        ) {
+          // console.log(errors[shopId]["ItemId"], response['ItemID']);
+          itemIdObj[shopId] = {
+            itemId: errors[shopId]?.ItemId,
+            jsonResponse: ebay_product_response,
+            // ended: errors[shopId]?.ended
+          };
+        }
+      });
+      // if (errors[shopId].hasOwnProperty("ItemId") && errors[shopId]["ItemId"]) {
+      //   itemIdObj[shopId] = {
+      //     itemId: errors[shopId]?.itemId,
+      //     jsonResponse: ebay_product_response,
+      //   };
+      // }
     });
     getUploadedItemDetails(errors, ebay_product_response);
+    // console.log(itemIdObj, errorsObj);
     return { itemIdObj, errorsObj };
   };
 
@@ -469,7 +539,7 @@ const ProductViewPolarisNew = (props) => {
             tags = variant["tags"];
           }
         }
-        additional_images_arr = [...additional_images]
+        additional_images_arr = [...additional_images];
         // additional_images_arr = [
         //   ...additional_images_arr,
         //   ...Object.values(variant["additional_images"]),
@@ -660,6 +730,8 @@ const ProductViewPolarisNew = (props) => {
           ),
           username: account["warehouses"][0]["user_id"],
           image: getCountyrName(account["warehouses"][0]["site_id"]),
+          active:
+            account["warehouses"][0]["status"] === "active" ? true : false,
         };
         return accountName;
       });
@@ -957,8 +1029,42 @@ const ProductViewPolarisNew = (props) => {
   const getBadge = (test) => {
     if (test?.endStatus && test?.hasError) {
       return (
-        <Tag color="#fed3d1" style={{ color: "#000", borderRadius: "10px" }}>
-          Errors
+        <Tag
+          color="rgb(255 215 157)"
+          style={{ color: "#000", borderRadius: "10px" }}
+        >
+          {/* Errors */}
+          <div
+            onClick={() => {
+              let errorsList = (
+                <List type="bullet">
+                  {" "}
+                  {test.errorsList.map((error) => (
+                    <List.Item>{error}</List.Item>
+                  ))}
+                </List>
+              );
+              let errorPopupTitle = (
+                <Stack alignment="center" vertical={false}>
+                  {test.image}
+                  <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
+                </Stack>
+              );
+              setViewItemURLsPopoverActive(false);
+              setErrorPopup({
+                ...errorPopup,
+                active: true,
+                content: errorsList,
+                title: errorPopupTitle,
+              });
+            }}
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+          >
+            <Stack spacing="extraTight">
+              <Icon source={AlertMinor} color={"red"} />
+              <>Ended</>
+            </Stack>
+          </div>
         </Tag>
       );
     } else if (test?.endStatus) {
@@ -971,10 +1077,37 @@ const ProductViewPolarisNew = (props) => {
       return (
         <div style={{ display: "flex" }}>
           <Tag color="#aee9d1" style={{ color: "#000", borderRadius: "10px" }}>
-            <Stack spacing="extraTight">
-              <Icon source={AlertMinor} color={"red"} />
-              <>Uploaded</>
-            </Stack>
+            <div
+              onClick={() => {
+                let errorsList = (
+                  <List type="bullet">
+                    {" "}
+                    {test.errorsList.map((error) => (
+                      <List.Item>{error}</List.Item>
+                    ))}
+                  </List>
+                );
+                let errorPopupTitle = (
+                  <Stack alignment="center" vertical={false}>
+                    {test.image}
+                    <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
+                  </Stack>
+                );
+                setViewItemURLsPopoverActive(false);
+                setErrorPopup({
+                  ...errorPopup,
+                  active: true,
+                  content: errorsList,
+                  title: errorPopupTitle,
+                });
+              }}
+              style={{ cursor: "pointer", textDecoration: "underline" }}
+            >
+              <Stack spacing="extraTight">
+                <Icon source={AlertMinor} color={"red"} />
+                <>Uploaded</>
+              </Stack>
+            </div>
           </Tag>
           <Link url={test?.url} external removeUnderline>
             {test?.itemId}
@@ -995,7 +1128,35 @@ const ProductViewPolarisNew = (props) => {
     } else if (test?.hasError) {
       return (
         <Tag color="#fed3d1" style={{ color: "#000", borderRadius: "10px" }}>
-          Errors
+          {/* Errors */}
+          <div
+            onClick={() => {
+              let errorsList = (
+                <List type="bullet">
+                  {" "}
+                  {test.errorsList.map((error) => (
+                    <List.Item>{error}</List.Item>
+                  ))}
+                </List>
+              );
+              let errorPopupTitle = (
+                <Stack alignment="center" vertical={false}>
+                  {test.image}
+                  <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
+                </Stack>
+              );
+              setViewItemURLsPopoverActive(false);
+              setErrorPopup({
+                ...errorPopup,
+                active: true,
+                content: errorsList,
+                title: errorPopupTitle,
+              });
+            }}
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+          >
+            <>Errors</>
+          </div>
         </Tag>
       );
     }
@@ -1005,13 +1166,30 @@ const ProductViewPolarisNew = (props) => {
     let statusStructures = [];
     // console.log(itemUrls);
     itemUrls.forEach((itemUrl) => {
-      const structStatus = (itemUrl.itemId || itemUrl.hasError) && (
-        <Stack alignment="center" vertical={false}>
-          {itemUrl.image}
-          <Text style={{ fontSize: "1.5rem" }}>{itemUrl?.username}</Text>
-          {getBadge(itemUrl)}
-        </Stack>
-      );
+      const structStatus = itemUrl.active
+        ? (itemUrl.itemId || itemUrl.hasError || itemUrl.endStatus) && (
+            <Stack alignment="center" vertical={false}>
+              {/* {console.log('hi1')} */}
+              {itemUrl.image}
+              <Text style={{ fontSize: "1.5rem" }}>{itemUrl?.username}</Text>
+              {getBadge(itemUrl)}
+            </Stack>
+          )
+        : (itemUrl.itemId || itemUrl.hasError || itemUrl.endStatus) && (
+            <div
+              style={{
+                pointerEvents: "none",
+                opacity: 0.4,
+              }}
+            >
+              {/* {console.log('hi2')} */}
+              <Stack alignment="center" vertical={false}>
+                {itemUrl.image}
+                <Text style={{ fontSize: "1.5rem" }}>{itemUrl?.username}</Text>
+                {getBadge(itemUrl)}
+              </Stack>
+            </div>
+          );
       statusStructures.push(structStatus);
     });
     return statusStructures;
@@ -1216,6 +1394,15 @@ const ProductViewPolarisNew = (props) => {
               </Button>
             </Stack>
           </Stack>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={errorPopup.active}
+        onClose={() => setErrorPopup({ active: false, content: [], title: "" })}
+        title={errorPopup.title}
+      >
+        <Modal.Section>
+          <Banner status="critical">{errorPopup.content}</Banner>
         </Modal.Section>
       </Modal>
     </PageHeader>

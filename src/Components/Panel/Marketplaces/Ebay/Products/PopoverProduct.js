@@ -1,4 +1,4 @@
-import { Button, Card, Popover } from "@shopify/polaris";
+import { Button, Card, Popover, Stack } from "@shopify/polaris";
 import React, { useEffect, useState } from "react";
 
 const PopoverProduct = (props) => {
@@ -52,7 +52,13 @@ const PopoverProduct = (props) => {
           onClose={() => setPopoverActive(false)}
         >
           <Popover.Pane>
-            <Card sectioned>{props.children}</Card>
+            <Card sectioned>
+              <Stack vertical>
+                {props.children.map((status) => (
+                  <React.Fragment key={status.image}>{status}</React.Fragment>
+                ))}
+              </Stack>
+            </Card>
           </Popover.Pane>
         </Popover>
       )}

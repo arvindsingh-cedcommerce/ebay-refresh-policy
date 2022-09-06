@@ -29,6 +29,10 @@ import {
   Badge,
   Tooltip,
   TextStyle,
+  Modal,
+  TextContainer,
+  Banner,
+  List,
 } from "@shopify/polaris";
 import { notify } from "../../../../../services/notify";
 import ActionPopover from "./ActionPopover";
@@ -293,18 +297,55 @@ function NewProductsNewFilters(props) {
 
   const [gridLoader, setGridLoader] = useState(false);
 
+  // status popup
+  const [errorPopup, setErrorPopup] = useState({
+    active: false,
+    content: [],
+  });
+
   useEffect(() => {
     hitGetProductsAPI();
   }, [activePage, pageSize, filtersToPass]);
 
   const getBadge = (test) => {
-    if (test?.ended) {
+    if (test?.ended && test?.Errors) {
+      return (
+        <Badge status="warning">
+          <div
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={(e) => {
+              setErrorPopup({
+                active: true,
+                content: [...test.Errors],
+              });
+            }}
+          >
+            <Stack spacing="extraTight" alignment="center">
+              <Icon source={AlertMinor} color={"red"} />
+              <>Ended</>
+            </Stack>
+          </div>
+        </Badge>
+      );
+    } else if (test?.ended) {
       return <Badge status="warning">Ended</Badge>;
     } else if (test?.ItemId && test?.Errors) {
       return (
         <Badge status="success" progress="complete">
-          <Icon source={AlertMinor} color={"red"} />
-          Uploaded
+          <div
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={(e) => {
+              setErrorPopup({
+                active: true,
+                content: [...test.Errors],
+              });
+            }}
+          >
+            <Stack spacing="extraTight" alignment="center">
+              <Icon source={AlertMinor} color={"red"} />
+              <>Uploaded</>
+            </Stack>
+          </div>
         </Badge>
       );
     } else if (test?.ItemId) {
@@ -314,7 +355,22 @@ function NewProductsNewFilters(props) {
         </Badge>
       );
     } else if (test?.Errors) {
-      return <Badge status="critical">Errors</Badge>;
+      return (
+        <Badge status="critical">
+          <div
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={(e) => {
+              setErrorPopup({
+                ...errorPopup,
+                active: true,
+                content: [...test.Errors],
+              });
+            }}
+          >
+            Errors
+          </div>
+        </Badge>
+      );
     }
     // else {
     //   return <Badge status="attention">Not Uploaded</Badge>;
@@ -389,26 +445,36 @@ function NewProductsNewFilters(props) {
     if (response) {
       for (const shopId in response) {
         let matchedAccount = connectedAccountsArray.find(
-          (connectedAccount) =>
-            connectedAccount["shopId"] == shopId 
-            // && connectedAccount["active"]
+          (connectedAccount) => connectedAccount["shopId"] == shopId
         );
-        // if (matchedAccount) {
-          let test = {
-            ...matchedAccount,
-            ...response[shopId],
-          };
-          const structStatus = (test.ItemId || test.Errors) && (
-            <Stack>
-              {test?.image}
-              <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
-              {
-              // test?.image && 
-              getBadge(test)}
-            </Stack>
-          );
-          statusStructures.push(structStatus);
-        // }
+        let test = {
+          ...matchedAccount,
+          ...response[shopId],
+        };
+        // console.log(test);
+        const structStatus = test.active
+          ? (test.ItemId || test.Errors) && (
+              <Stack>
+                {test?.image}
+                <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
+                {test?.image && getBadge(test)}
+              </Stack>
+            )
+          : (test.ItemId || test.Errors) && (
+              <div
+                style={{
+                  pointerEvents: "none",
+                  opacity: 0.4,
+                }}
+              >
+                <Stack>
+                  {test?.image}
+                  <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
+                  {test?.image && getBadge(test)}
+                </Stack>
+              </div>
+            );
+        statusStructures.push(structStatus);
       }
       return <PopoverProduct>{statusStructures}</PopoverProduct>;
     } else {
@@ -848,7 +914,7 @@ function NewProductsNewFilters(props) {
           ),
           username: account["warehouses"][0]["user_id"],
           active:
-            account["warehouses"][0]["status"] === "inactive" ? true : false,
+            account["warehouses"][0]["status"] === "active" ? true : false,
         };
         return accountName;
       });
@@ -1055,6 +1121,21 @@ function NewProductsNewFilters(props) {
         setFilterTitleORsku={setFilterTitleORsku}
         setSelected={setSelected}
       />
+      <Modal
+        open={errorPopup.active}
+        onClose={() => setErrorPopup({ active: false, content: [] })}
+        title="Errors"
+      >
+        <Modal.Section>
+          <Banner status="critical">
+            <List>
+              {errorPopup.content.map((error) => (
+                <List.Item>{error}</List.Item>
+              ))}
+            </List>
+          </Banner>
+        </Modal.Section>
+      </Modal>
     </PageHeader>
   );
 }
