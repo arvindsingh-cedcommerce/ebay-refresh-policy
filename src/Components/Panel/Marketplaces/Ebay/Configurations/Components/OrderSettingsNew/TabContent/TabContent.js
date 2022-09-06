@@ -484,13 +484,13 @@ const TabContent = ({
                         {field === "shipmentSync" && fields[field]["value"] && (
                           <FormLayout>
                             <Checkbox
-                              label="Sync Tracking details"
-                              checked={fields[field]["withoutTrackingDetails"]}
+                              label="Sync Tracking Details"
+                              checked={fields[field]["syncTrackingDetails"]}
                               onChange={(e) =>
                                 handleBtnPres(
                                   e,
                                   field,
-                                  "withoutTrackingDetails"
+                                  "syncTrackingDetails"
                                 )
                               }
                             />

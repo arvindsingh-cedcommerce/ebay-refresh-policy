@@ -169,7 +169,7 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
             ) {
               errorData[account][attribute][field] = {};
               errorData[account][attribute][field][
-                "withoutTrackingDetails"
+                "syncTrackingDetails"
               ] = false;
               errorData[account][attribute][field][
                 "mappingOfShippingCarrier"
@@ -244,11 +244,12 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
       const shopId = data[account]["shopId"];
       parsedData[shopId] = {};
       const { fields } = data[account];
+      console.log(account, 'fields', fields);
       for (const field in fields) {
         if (field === "shipmentSync" && fields[field]["value"]) {
           let shipmentSyncContainerObj = {};
-          shipmentSyncContainerObj["withoutTrackingDetails"] =
-            fields[field]["withoutTrackingDetails"];
+          shipmentSyncContainerObj["syncTrackingDetails"] =
+            fields[field]["syncTrackingDetails"];
           if (fields[field]["mappingOfShippingCarrier"]) {
             shipmentSyncContainerObj["mappingOfShippingCarrier"] = [
               ...fields[field]["mappingOfShippingCarrier"],
@@ -287,6 +288,7 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
       notify.error("Please fill all required fields!");
     } else {
       const parsedData = getParsedData(checkedAccounts);
+      // console.log('parsedData', parsedData);
       let { success, message } = await configurationAPI(
         saveAppSettingsShopifyToAppURL,
         {

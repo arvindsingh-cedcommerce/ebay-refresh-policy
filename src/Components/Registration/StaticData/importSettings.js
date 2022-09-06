@@ -10,7 +10,7 @@ export const order_settings = {
   setOrderName: "default",
   useEbayCustomerDetails: true,
   shipmentSync: {
-    withoutTrackingDetails: true,
+    syncTrackingDetails: true,
     mappingOfShippingCarrier: false,
   },
   orderCancelation: [

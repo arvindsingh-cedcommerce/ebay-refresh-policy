@@ -84,7 +84,7 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
       shipmentSync: {
         label: "Shipment Sync",
         value: true,
-        withoutTrackingDetails: true,
+        syncTrackingDetails: true,
         // mappingOfShippingCarrier: [
         //   {
         //     shopifyAttribute: "",
@@ -147,9 +147,9 @@ export const getSavedData = (
               field === "shipmentSync" &&
               orderSettingsFromSavedAPIData[shopIdFromAPI][field]
             ) {
-              temp[account]["fields"][field]["withoutTrackingDetails"] =
+              temp[account]["fields"][field]["syncTrackingDetails"] =
                 orderSettingsFromSavedAPIData[shopIdFromAPI][field][
-                  "withoutTrackingDetails"
+                  "syncTrackingDetails"
                 ];
               temp[account]["fields"][field]["mappingOfShippingCarrier"] =
                 orderSettingsFromSavedAPIData[shopIdFromAPI][field][
