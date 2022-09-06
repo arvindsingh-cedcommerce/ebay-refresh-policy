@@ -360,28 +360,30 @@ const ProductViewPolarisNew = (props) => {
       //   };
       // }
     });
-    Object.keys(errors).forEach((shopId) => {
-      ebay_product_response.forEach((response) => {
-        if (
-          errors[shopId].hasOwnProperty("ItemId") &&
-          errors[shopId]["ItemId"] === response["ItemID"] &&
-          !errors[shopId]?.ended
-        ) {
-          // console.log(errors[shopId]["ItemId"], response['ItemID']);
-          itemIdObj[shopId] = {
-            itemId: errors[shopId]?.ItemId,
-            jsonResponse: ebay_product_response,
-            // ended: errors[shopId]?.ended
-          };
-        }
+    if (ebay_product_response) {
+      Object.keys(errors).forEach((shopId) => {
+        ebay_product_response.forEach((response) => {
+          if (
+            errors[shopId].hasOwnProperty("ItemId") &&
+            errors[shopId]["ItemId"] === response["ItemID"] &&
+            !errors[shopId]?.ended
+          ) {
+            // console.log(errors[shopId]["ItemId"], response['ItemID']);
+            itemIdObj[shopId] = {
+              itemId: errors[shopId]?.ItemId,
+              jsonResponse: ebay_product_response,
+              // ended: errors[shopId]?.ended
+            };
+          }
+        });
+        // if (errors[shopId].hasOwnProperty("ItemId") && errors[shopId]["ItemId"]) {
+        //   itemIdObj[shopId] = {
+        //     itemId: errors[shopId]?.itemId,
+        //     jsonResponse: ebay_product_response,
+        //   };
+        // }
       });
-      // if (errors[shopId].hasOwnProperty("ItemId") && errors[shopId]["ItemId"]) {
-      //   itemIdObj[shopId] = {
-      //     itemId: errors[shopId]?.itemId,
-      //     jsonResponse: ebay_product_response,
-      //   };
-      // }
-    });
+    }
     getUploadedItemDetails(errors, ebay_product_response);
     // console.log(itemIdObj, errorsObj);
     return { itemIdObj, errorsObj };
