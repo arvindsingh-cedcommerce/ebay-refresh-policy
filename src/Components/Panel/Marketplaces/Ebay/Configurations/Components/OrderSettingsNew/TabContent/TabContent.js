@@ -144,8 +144,8 @@ const TabContent = ({
                 : shopifyOrderTagsCustomAttributeValue
             }
             onChange={(e) => {
+              let tempAccounts = { ...connectedAccountsObject };
               if (e) {
-                let tempAccounts = { ...connectedAccountsObject };
                 tempAccounts[account]["fields"][field][
                   "customValue"
                 ] += `{{${e}}}`;
@@ -156,7 +156,13 @@ const TabContent = ({
               else if (field === "setOrderNote")
                 setShopifyOrderNoteCustomAttributeValue(e);
               else setShopifyOrderTagsCustomAttributeValue(e);
+              // if (tempAccounts[account]["fields"][field]["customValue"]) {
+              //   let tempErrorData = { ...errorsData };
+              //   tempErrorData[account]["fields"][field]["customValue"] = false;
+              //   setErrorsData(tempErrorData);
+              // }
             }}
+            // error={errorsData?.[account]?.["fields"]?.[field]?.["customValue"]}
           />
         </Stack.Item>
         <Stack.Item fill>
@@ -166,8 +172,22 @@ const TabContent = ({
             onChange={(e) => {
               let tempAccounts = { ...connectedAccountsObject };
               tempAccounts[account]["fields"][field]["customValue"] = e;
+              if (
+                tempAccounts?.[account]?.["fields"]?.[field]?.["customValue"]
+              ) {
+                let tempErrorData = { ...errorsData };
+                if (
+                  tempErrorData?.[account]?.["fields"]?.[field]?.["customValue"]
+                ) {
+                  tempErrorData[account]["fields"][field][
+                    "customValue"
+                  ] = false;
+                  setErrorsData(tempErrorData);
+                }
+              }
               setconnectedAccountsObject(tempAccounts);
             }}
+            error={errorsData?.[account]?.["fields"]?.[field]?.["customValue"]}
           />
         </Stack.Item>
       </Stack>
@@ -487,11 +507,7 @@ const TabContent = ({
                               label="Sync Tracking Details"
                               checked={fields[field]["syncTrackingDetails"]}
                               onChange={(e) =>
-                                handleBtnPres(
-                                  e,
-                                  field,
-                                  "syncTrackingDetails"
-                                )
+                                handleBtnPres(e, field, "syncTrackingDetails")
                               }
                             />
                             <Stack distribution="equalSpacing">

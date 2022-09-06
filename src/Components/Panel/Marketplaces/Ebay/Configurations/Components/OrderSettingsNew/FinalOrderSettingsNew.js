@@ -129,7 +129,7 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
         if (attribute === "fields") {
           errorData[account][attribute] = {};
           for (const field in data[account][attribute]) {
-            // console.log(data[account][attribute][field]["mappingOfShippingCarrier"]);
+            
             if (
               field === "orderCancelation" &&
               data[account][attribute][field]["value"] &&
@@ -225,6 +225,10 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
                 errorData[account][attribute][field]["name"] = true;
                 errorCount++;
               } else errorData[account][attribute][field]["name"] = false;
+            } else if(field === 'setOrderName' && data?.[account]?.[attribute]?.[field]?.['value'] === 'custom' && !data?.[account]?.[attribute]?.[field]?.['customValue'].includes("{{ebay_order_id}}")) {
+              errorData[account][attribute][field] = {}
+              errorData[account][attribute][field]['customValue'] = "must contain ebay order id";
+              errorCount++;
             } else {
               errorData[account][attribute][field] = false;
             }
