@@ -132,7 +132,7 @@ const ActivityGrid = (props) => {
       //     title={activity["message"]}
       //     status={activity["severity"]} />
       tempObject["message"] = (
-        <Stack alignment="center" spacing="tight">
+        <Stack alignment="center" spacing="tight" wrap={false}>
           <>{getSeverityIcon(activity["severity"])}</>
           <>{activity["message"]}</>
           {activity["url"] && (
