@@ -289,8 +289,9 @@ const NewOrdersGrid = (props) => {
       let shippedDateArray = [];
       let targetStatus = "";
       let progressBarStatus = "";
-      switch (order?.target_status) {
+      switch (order?.target_status.toLowerCase()) {
         case "fulfilled":
+          targetStatus = "success";
           progressBarStatus = "complete";
           break;
         case "unfulfilled":
@@ -298,6 +299,10 @@ const NewOrdersGrid = (props) => {
           progressBarStatus = "incomplete";
           break;
         case "refunded":
+          targetStatus = "attention";
+          progressBarStatus = "partiallyComplete";
+          break;
+        case "cancelled":
           targetStatus = "attention";
           progressBarStatus = "partiallyComplete";
           break;
@@ -344,12 +349,34 @@ const NewOrdersGrid = (props) => {
       tempObject["shopId"] = order["shop_id"];
       tempObject["shopifyOrderName"] = (
         <center>
-          {order["shopify_order_name"] ? order["shopify_order_name"] : "-"}
+          {order["shopify_order_name"] ? (
+            <>
+              {order["shopify_order_name"]}
+              <Text
+                copyable={{
+                  text: order["shopify_order_name"],
+                }}
+              />
+            </>
+          ) : (
+            "-"
+          )}{" "}
         </center>
       );
       tempObject["shopifyOrderId"] = (
         <center>
-          {order["target_order_id"] ? order["target_order_id"] : "-"}
+          {order["target_order_id"] ? (
+            <>
+              {order["target_order_id"]}
+              <Text
+                copyable={{
+                  text: order["shopify_order_name"],
+                }}
+              />
+            </>
+          ) : (
+            "-"
+          )}
         </center>
       );
       tempObject["ebayOrderId1"] = order["source_order_id"];
@@ -382,8 +409,8 @@ const NewOrdersGrid = (props) => {
         >
           <PolarisBadge status={targetStatus} progress={progressBarStatus}>
             {["error", "failed"].includes(order?.target_status)
-              ? "Failed"
-              : order?.target_status}
+              ? <div style={{ cursor: "pointer", borderBottom: "2px solid black" }}>Failed</div>
+              : order?.target_status.slice(0, 1).toUpperCase()+order?.target_status.slice(1)}
           </PolarisBadge>
         </center>
       );
@@ -834,7 +861,7 @@ const NewOrdersGrid = (props) => {
       title="Orders"
       ghost={true}
       extra={[
-        <OrderMassMenu selectedRows={selectedRows} />,
+        <OrderMassMenu selectedRows={selectedRows} setSelectedRows={setSelectedRows} setSelectedRowKeys={setSelectedRowKeys} />,
         <ShopifyButton primary onClick={() => setImportEbayOrdersModal(true)}>
           Import eBay Order(s)
         </ShopifyButton>,
@@ -1006,7 +1033,7 @@ const NewOrdersGrid = (props) => {
                   onClick={async () => {
                     setSyncBtnLoader(true);
                     let postData = {
-                      shop_id: shopId,
+                      shop_id: String(shopId),
                       site_id: Number(siteID),
                     };
                     if (filtersChecked) {
@@ -1043,7 +1070,7 @@ const NewOrdersGrid = (props) => {
                   disabled={getDisabledSync()}
                   loading={syncBtnLoader}
                 >
-                  Sync
+                  Import
                 </ShopifyButton>
               </Stack>
             </Stack>

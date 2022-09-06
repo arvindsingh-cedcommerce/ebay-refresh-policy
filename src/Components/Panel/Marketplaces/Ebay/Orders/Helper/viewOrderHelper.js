@@ -6,7 +6,11 @@ export const parseDataForSave = (data) => {
       for (const innerKey in data[key]) {
         if (innerKey === "last_name") {
           tempObj[innerKey] = data[key][innerKey];
-        } else if (data[key][innerKey]) {
+        } 
+        // else if(innerKey === 'phone_number') {
+        //   tempObj['phone'] = data[key][innerKey]
+        // } 
+        else if (data[key][innerKey]) {
           tempObj[innerKey] = data[key][innerKey];
         }
       }
@@ -29,13 +33,17 @@ export const extractUpdateOrderData = (data, updateOrder, setUpdateOrder) => {
       case "email":
         extractedData[key] = data[key];
         break;
-      case "phone_number":
+      // case "phone_number":
+      //   extractedData[key] = data[key];
+      //   break;
+      case "phone":
         extractedData[key] = data[key];
         break;
       case "shipping_address":
         extractedData[key]["full_name"] = data[key]["full_name"];
         extractedData[key]["country"] = data[key]["country"];
-        extractedData[key]["phone_number"] = data[key]["phone_number"];
+        // extractedData[key]["phone_number"] = data[key]["phone_number"];
+        extractedData[key]["phone"] = data[key]["phone"];
         extractedData[key]["company"] = data[key]["company"];
         extractedData[key]["city"] = data[key]["city"];
         extractedData[key]["province"] = data[key]["province"];

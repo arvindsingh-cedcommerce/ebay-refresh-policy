@@ -41,6 +41,9 @@ import {
 const { Text } = Typography;
 
 const ViewOrdersPolarisNew = (props) => {
+  const [updateOrderSubmitBtnLoader, setUpdateOrderSubmitBtnLoader] =
+    useState(false);
+  const [targetStatus, setTargetStatus] = useState(null);
   const [erroModal, setErroModal] = useState({
     show: "",
     msg: "",
@@ -102,12 +105,14 @@ const ViewOrdersPolarisNew = (props) => {
   });
   const [updateOrder, setUpdateOrder] = useState({
     email: "",
-    phone_number: "",
+    // phone_number: "",
+    phone: "",
     shipping_address: {
       full_name: "",
       last_name: "ebay-cedcoss",
       address1: "",
-      phone_number: "",
+      // phone_number: "",
+      phone: "",
       company: "",
       city: "",
       province: "",
@@ -159,11 +164,13 @@ const ViewOrdersPolarisNew = (props) => {
           msg: data["target_error_message"],
           name: data["target_status"],
         });
+      data["target_status"] && setTargetStatus(data["target_status"]);
       setShopId(data["shop_id"]);
       setShopifyOrderName(data["shopify_order_name"]);
       // setFinancialStatus(data["financial_status"]);
       setShopifyOrderID(
-        data["target_order_id"] ? data["target_order_id"] : "---"
+        data["target_order_id"]
+        //  ? data["target_order_id"] : "---"
       );
       setEbayOrderID(data["source_order_id"]);
       setOrderDate(data["created_at"]);
@@ -184,7 +191,8 @@ const ViewOrdersPolarisNew = (props) => {
       );
       let tempAddress = buyerAddress;
       tempAddress["address"] = data["shipping_address"]["address1"];
-      tempAddress["phone"] = data["shipping_address"]["phone_number"];
+      // tempAddress["phone"] = data["shipping_address"]["phone_number"];
+      tempAddress["phone"] = data["shipping_address"]["phone"];
       tempAddress["city"] = data["shipping_address"]["city"];
       tempAddress["country"] = data["shipping_address"]["country"];
       tempAddress["zip"] = data["shipping_address"]["zip"];
@@ -246,8 +254,11 @@ const ViewOrdersPolarisNew = (props) => {
       case "email":
         temp["email"] = value;
         break;
-      case "phone_number":
-        temp["phone_number"] = value;
+      // case "phone_number":
+      //   temp["phone_number"] = value;
+      //   break;
+      case "phone":
+        temp["phone"] = value;
         break;
       case "tags":
         temp["tags"] = value;
@@ -263,8 +274,11 @@ const ViewOrdersPolarisNew = (props) => {
           case "address1":
             temp["shipping_address"]["address1"] = value;
             break;
-          case "phone_number":
-            temp["shipping_address"]["phone_number"] = value;
+          // case "phone_number":
+          //   temp["shipping_address"]["phone_number"] = value;
+          //   break;
+          case "phone":
+            temp["shipping_address"]["phone"] = value;
             break;
           case "company":
             temp["shipping_address"]["company"] = value;
@@ -293,7 +307,9 @@ const ViewOrdersPolarisNew = (props) => {
     return (
       <Form
         onSubmit={async () => {
+          setUpdateOrderSubmitBtnLoader(true);
           let parsedData = parseDataForSave(updateOrder);
+          // console.log('parsedData', parsedData);
           let { success, message } = await massAction(updateOrderURL, {
             id: shopifyOrderID,
             ...parsedData,
@@ -304,6 +320,7 @@ const ViewOrdersPolarisNew = (props) => {
             notify.error(message);
           }
           setActionModal(false);
+          setUpdateOrderSubmitBtnLoader(false);
         }}
       >
         <FormLayout>
@@ -323,8 +340,10 @@ const ViewOrdersPolarisNew = (props) => {
             // }
           />
           <TextField
-            value={updateOrder.phone_number}
-            onChange={(e) => updateOrderOnChange(e, "phone_number")}
+            // value={updateOrder.phone_number}
+            // onChange={(e) => updateOrderOnChange(e, "phone_number")}
+            value={updateOrder.phone}
+            onChange={(e) => updateOrderOnChange(e, "phone")}
             placeholder={"Enter Phone Number with County Code"}
             // inputMode="tel"
             type="tel"
@@ -355,9 +374,13 @@ const ViewOrdersPolarisNew = (props) => {
               />
               <TextField
                 placeholder={"Phone"}
-                value={updateOrder.shipping_address.phone_number}
+                // value={updateOrder.shipping_address.phone_number}
+                // onChange={(e) =>
+                //   updateOrderOnChange(e, "shipping_address", "phone_number")
+                // }
+                value={updateOrder.shipping_address.phone}
                 onChange={(e) =>
-                  updateOrderOnChange(e, "shipping_address", "phone_number")
+                  updateOrderOnChange(e, "shipping_address", "phone")
                 }
                 // type="number"
                 type="tel"
@@ -412,7 +435,8 @@ const ViewOrdersPolarisNew = (props) => {
           <TextField
             value={updateOrder.tags}
             onChange={(e) => updateOrderOnChange(e, "tags")}
-            placeholder="Tags"
+            // placeholder="Tags"
+            placeholder="multiple tags allow in ,(comma) separated form"
           />
           <TextField
             value={updateOrder.note}
@@ -420,7 +444,7 @@ const ViewOrdersPolarisNew = (props) => {
             placeholder="Note"
           />
           <center>
-            <Button submit primary>
+            <Button submit primary loading={updateOrderSubmitBtnLoader}>
               Submit
             </Button>
           </center>
@@ -428,18 +452,34 @@ const ViewOrdersPolarisNew = (props) => {
       </Form>
     );
   };
+  const getStatusType = (status) => {
+    let statusType = "";
+    switch (status.toLowerCase()) {
+      case "fulfilled":
+        statusType = "success";
+        break;
+      case "cancelled":
+        statusType = "attention";
+        break;
+      case "unfulfilled":
+        statusType = "warning";
+        break;
+    }
+    return statusType;
+  };
   return flag ? (
     <OrderSkeleton />
   ) : (
     <Page
-      // <PageHeader
-      // onBack={() => props.history.push("/panel/ebay/orders")}
-      // title={shopifyOrderName ? `Order ${shopifyOrderName}` : "Order"}
       title={
         ebayOrderID ? (
           <Stack alignment="center" spacing="tight">
             <>{ebayOrderID}</>
-            {/* <ShopifyBadge status="info">{financialStatus}</ShopifyBadge> */}
+            {!erroModal.msg && targetStatus && (
+              <ShopifyBadge status={getStatusType(targetStatus)}>
+                {targetStatus.slice(0, 1).toUpperCase()+targetStatus.slice(1)}
+              </ShopifyBadge>
+            )}
             {erroModal.msg && (
               <ShopifyBadge status="critical">
                 <div
@@ -454,6 +494,9 @@ const ViewOrdersPolarisNew = (props) => {
         ) : (
           <Stack alignment="center">
             <>Order</>
+            {!erroModal.msg && (
+              <ShopifyBadge status="attention">{targetStatus}</ShopifyBadge>
+            )}
             {erroModal.msg && (
               <ShopifyBadge status="critical">
                 <div
@@ -467,9 +510,6 @@ const ViewOrdersPolarisNew = (props) => {
           </Stack>
         )
       }
-      // fullWidth
-      // tags={<Tag color="blue">{financialStatus}</Tag>}
-      // style={{ minHeight: "90vh" }}
       actionGroups={[
         {
           title: "Actions",
@@ -477,8 +517,16 @@ const ViewOrdersPolarisNew = (props) => {
             alert("Copy action");
             openActions();
           },
-          actions: shopifyOrderID
-            ? [
+          actions: !shopifyOrderID
+            ? //  === "---"
+              [
+                {
+                  content: "Remove from app",
+                  onAction: () =>
+                    getModalStructure("Remove from app", true, "removeFromApp"),
+                },
+              ]
+            : [
                 {
                   content: "Update Order",
                   onAction: () =>
@@ -503,23 +551,6 @@ const ViewOrdersPolarisNew = (props) => {
                       "deleteOrder"
                     ),
                 },
-              ]
-            : [
-                {
-                  content: "Remove from app",
-                  onAction: () =>
-                    getModalStructure("Remove from app", true, "removeFromApp"),
-                },
-                // {
-                //   content: "Sync Shipment",
-                //   onAction: () =>
-                //     getModalStructure("Sync Shipment", true, "syncShipment"),
-                // },
-                // {
-                //   content: "Cancel eBay Order",
-                //   onAction: () =>
-                //     getModalStructure("Cancel eBay Order", true, "cancelOrder"),
-                // },
               ],
         },
       ]}
@@ -529,23 +560,6 @@ const ViewOrdersPolarisNew = (props) => {
           onAction: () => props.history.push("/panel/ebay/orders"),
         },
       ]}
-      // extra={[
-      //   <Popover
-      //     active={actionPopoverActive}
-      //     activator={
-      //       <Button
-      //         onClick={() => setActionPopoverActive(!actionPopoverActive)}
-      //         disclosure
-      //       >
-      //         Actions
-      //       </Button>
-      //     }
-      //     //   autofocusTarget="first-node"
-      //     onClose={() => setActionPopoverActive(!actionPopoverActive)}
-      //   >
-      //     <ActionList actionRole="menuitem" items={actionOptions} />
-      //   </Popover>,
-      // ]}
     >
       <OrderDetailsComponent
         shopifyOrderID={shopifyOrderID}
@@ -720,6 +734,7 @@ const ViewOrdersPolarisNew = (props) => {
                 <Button
                   primary
                   onClick={() => {
+                    setUpdateOrderSubmitBtnLoader(true);
                     switch (actionModal["value"]) {
                       case "updateOrder":
                         (async () => {
@@ -738,6 +753,7 @@ const ViewOrdersPolarisNew = (props) => {
                         })();
                         break;
                       case "removeFromApp":
+                        // console.log('shopifyOrderID',shopifyOrderID, ebayOrderID);
                         if (!shopifyOrderID) {
                           (async () => {
                             let { success, message, data } = await massAction(
@@ -757,7 +773,9 @@ const ViewOrdersPolarisNew = (props) => {
                             }
                           })();
                         } else {
-                          notify.error("Can't be removed");
+                          notify.error(
+                            "Can't be removed as it is not listed on Shopify"
+                          );
                         }
                         break;
                       case "syncShipment":
@@ -779,22 +797,22 @@ const ViewOrdersPolarisNew = (props) => {
                         })();
                         break;
                       case "cancelOrder":
-                        (async () => {
-                          let { success, message, data } = await massAction(
-                            cancelOrdersURl,
-                            [
-                              {
-                                order_id: ebayOrderID,
-                                shop_id: shopId,
-                              },
-                            ]
-                          );
-                          if (success) {
-                            notify.success(message ? message : data);
-                          } else {
-                            notify.error(message ? message : data);
-                          }
-                        })();
+                        // (async () => {
+                        //   let { success, message, data } = await massAction(
+                        //     cancelOrdersURl,
+                        //     [
+                        //       {
+                        //         order_id: ebayOrderID,
+                        //         shop_id: shopId,
+                        //       },
+                        //     ]
+                        //   );
+                        //   if (success) {
+                        //     notify.success(message ? message : data);
+                        //   } else {
+                        //     notify.error(message ? message : data);
+                        //   }
+                        // })();
                         break;
                       case "deleteOrder":
                         console.log(shopifyOrderID, ebayOrderID);
@@ -825,7 +843,9 @@ const ViewOrdersPolarisNew = (props) => {
                         break;
                     }
                     setActionModal(false);
+                    setUpdateOrderSubmitBtnLoader(false);
                   }}
+                  loading={updateOrderSubmitBtnLoader}
                 >
                   OK
                 </Button>
@@ -917,9 +937,9 @@ export const OrderDetailsComponent = ({
               {orderData.map((order) => {
                 return (
                   <Stack wrap={false}>
-                    <Badge count={order?.["quantity"]}>
+                    {/* <Badge count={order?.["quantity"]}>
                       <Avatar shape="square" size={70} />
-                    </Badge>
+                    </Badge> */}
                     <Stack vertical spacing="extraTight">
                       <Text strong>{order?.["title"]}</Text>
                       <Text type="secondary">SKU: {order?.["sku"]}</Text>
@@ -941,7 +961,7 @@ export const OrderDetailsComponent = ({
           <Card sectioned>
             <Stack vertical={false} distribution="equalSpacing">
               <Heading>Shopify Order Id</Heading>
-              <p>{shopifyOrderID}</p>
+              <p>{shopifyOrderID ? shopifyOrderID : "---"}</p>
             </Stack>
             <Stack vertical={false} distribution="equalSpacing">
               <Heading>eBay Order Id</Heading>
