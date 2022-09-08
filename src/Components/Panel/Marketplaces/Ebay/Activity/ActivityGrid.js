@@ -69,6 +69,7 @@ const ActivityGrid = (props) => {
       title: "",
       dataIndex: "message",
       key: "message",
+      width: '80%'
     },
     {
       title: "",
