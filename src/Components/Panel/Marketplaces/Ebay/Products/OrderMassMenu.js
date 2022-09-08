@@ -259,7 +259,7 @@ const OrderMassMenu = ({
                   );
                   if (success) {
                     notify.success(message ? message : data);
-                    props.history.push("/panel/ebay/activity");
+                    // props.history.push("/panel/ebay/activity");
                   } else {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });
