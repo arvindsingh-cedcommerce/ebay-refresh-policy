@@ -282,6 +282,7 @@ function NewProductsNewFilters(props) {
     { label: "Error", value: "error" },
   ]);
   const [profileList, setProfileList] = useState([]);
+  const [profileListForFilters, setProfileListForFilters] = useState([]);
   const [productTypeList, setProductTypeList] = useState([]);
   const [vendorList, setVendorList] = useState([]);
   const [selected, setSelected] = useState({
@@ -800,7 +801,7 @@ function NewProductsNewFilters(props) {
           >
             <div style={{ margin: "10px" }}>
               <ChoiceList
-                choices={profileList}
+                choices={profileListForFilters}
                 selected={selected["profile_name"]}
                 onChange={(value) => handleChange(value, "profile_name")}
               />
@@ -829,6 +830,9 @@ function NewProductsNewFilters(props) {
     });
     profileList.unshift({ label: "All profiles", value: "all" });
     setProfileList(profileList);
+    let temp = [...profileList]
+    temp.shift()
+    setProfileListForFilters(temp)
   };
 
   const prepareProductTypeVendor = (data) => {
