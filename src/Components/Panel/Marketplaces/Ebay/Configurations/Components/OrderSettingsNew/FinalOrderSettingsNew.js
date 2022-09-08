@@ -428,6 +428,12 @@ const CheckboxComponent = ({
                 }}
               ></Checkbox>
               {connectedAccountsObject[account]["siteId"] ? (
+                <div
+                style={connectedAccountsObject[account]["status"] === "inactive" ? {
+                  pointerEvents: "none",
+                  opacity: 0.4,
+                }: {}}
+                >
                 <Stack alignment="fill" spacing="tight">
                   <Image
                     preview={false}
@@ -440,6 +446,7 @@ const CheckboxComponent = ({
                   />
                   <>{account.split("-")[1]}</>
                 </Stack>
+                </div>
               ) : (
                 <p>{account}</p>
               )}
