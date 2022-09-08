@@ -88,7 +88,7 @@ const OrderMassMenu = ({
                 key="Sync Shipment"
                 onClick={() => {
                   let shopifyOrdersIdsToPost = selectedRows
-                    .filter((selectedRow) => !selectedRow?.["shopifyOrderId1"])
+                    .filter((selectedRow) => selectedRow?.["shopifyOrderId1"])
                     .map((selectedRow) => {
                       return {
                         order_id: selectedRow["shopifyOrderId1"],
@@ -121,7 +121,7 @@ const OrderMassMenu = ({
                 key="Cancel eBay Order"
                 onClick={() => {
                   let shopifyOrdersIdsToPost = selectedRows
-                    .filter((selectedRow) => !selectedRow?.["shopifyOrderId1"])
+                    .filter((selectedRow) => selectedRow?.["shopifyOrderId1"])
                     .map((selectedRow) => {
                       return {
                         order_id: selectedRow["shopifyOrderId1"],
