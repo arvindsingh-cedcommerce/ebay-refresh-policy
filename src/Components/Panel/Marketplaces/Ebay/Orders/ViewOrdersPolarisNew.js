@@ -44,6 +44,7 @@ const ViewOrdersPolarisNew = (props) => {
   const [updateOrderSubmitBtnLoader, setUpdateOrderSubmitBtnLoader] =
     useState(false);
   const [targetStatus, setTargetStatus] = useState(null);
+  const [sourceStatus, setSourceStatus] = useState(null);
   const [erroModal, setErroModal] = useState({
     show: "",
     msg: "",
@@ -165,6 +166,7 @@ const ViewOrdersPolarisNew = (props) => {
           name: data["target_status"],
         });
       data["target_status"] && setTargetStatus(data["target_status"]);
+      data["source_status"] && setSourceStatus(data["source_status"]);
       setShopId(data["shop_id"]);
       setShopifyOrderName(data["shopify_order_name"]);
       // setFinancialStatus(data["financial_status"]);
@@ -452,7 +454,19 @@ const ViewOrdersPolarisNew = (props) => {
       </Form>
     );
   };
-  const getStatusType = (status) => {
+  const getSourceStatusType = status => {
+    let statusType = "";
+    switch (status.toLowerCase()) {
+      case "paid":
+        statusType = "success";
+        break;
+      case "refunded":
+        statusType = "";
+        break;
+    }
+    return statusType;
+  }
+  const getTargetStatusType = (status) => {
     let statusType = "";
     switch (status.toLowerCase()) {
       case "fulfilled":
@@ -475,9 +489,14 @@ const ViewOrdersPolarisNew = (props) => {
         ebayOrderID ? (
           <Stack alignment="center" spacing="tight">
             <>{ebayOrderID}</>
+            {sourceStatus && (
+              <ShopifyBadge status={getSourceStatusType(sourceStatus)}>
+                {sourceStatus.slice(0, 1).toUpperCase() + sourceStatus.slice(1)}
+              </ShopifyBadge>
+            )}
             {!erroModal.msg && targetStatus && (
-              <ShopifyBadge status={getStatusType(targetStatus)}>
-                {targetStatus.slice(0, 1).toUpperCase()+targetStatus.slice(1)}
+              <ShopifyBadge status={getTargetStatusType(targetStatus)}>
+                {targetStatus.slice(0, 1).toUpperCase() + targetStatus.slice(1)}
               </ShopifyBadge>
             )}
             {erroModal.msg && (
@@ -797,22 +816,22 @@ const ViewOrdersPolarisNew = (props) => {
                         })();
                         break;
                       case "cancelOrder":
-                        // (async () => {
-                        //   let { success, message, data } = await massAction(
-                        //     cancelOrdersURl,
-                        //     [
-                        //       {
-                        //         order_id: ebayOrderID,
-                        //         shop_id: shopId,
-                        //       },
-                        //     ]
-                        //   );
-                        //   if (success) {
-                        //     notify.success(message ? message : data);
-                        //   } else {
-                        //     notify.error(message ? message : data);
-                        //   }
-                        // })();
+                        (async () => {
+                          let { success, message, data } = await massAction(
+                            cancelOrdersURl,
+                            [
+                              {
+                                order_id: shopifyOrderID,
+                                shop_id: shopId,
+                              },
+                            ]
+                          );
+                          if (success) {
+                            notify.success(message ? message : data);
+                          } else {
+                            notify.error(message ? message : data);
+                          }
+                        })();
                         break;
                       case "deleteOrder":
                         console.log(shopifyOrderID, ebayOrderID);

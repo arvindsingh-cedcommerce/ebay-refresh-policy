@@ -88,7 +88,7 @@ const OrderMassMenu = ({
                 key="Sync Shipment"
                 onClick={() => {
                   let shopifyOrdersIdsToPost = selectedRows
-                    .filter((selectedRow) => selectedRow?.["shopifyOrderId1"])
+                    .filter((selectedRow) => !selectedRow?.["shopifyOrderId1"])
                     .map((selectedRow) => {
                       return {
                         order_id: selectedRow["shopifyOrderId1"],
@@ -119,22 +119,25 @@ const OrderMassMenu = ({
               </Menu.Item>
               <Menu.Item
                 key="Cancel eBay Order"
-                // onClick={() => {
-                //   let ebayOrdersIdsToPost = selectedRows.map((selectedRow) => {
-                //     return {
-                //       order_id: selectedRow["ebayOrderId1"],
-                //       shop_id: selectedRow["shopId"],
-                //     };
-                //   });
-                //   setModal({
-                //     ...modal,
-                //     active: true,
-                //     content: "Cancel eBay Order",
-                //     actionName: massAction,
-                //     actionPayload: ebayOrdersIdsToPost,
-                //     api: cancelOrdersURl,
-                //   });
-                // }}
+                onClick={() => {
+                  let shopifyOrdersIdsToPost = selectedRows
+                    .filter((selectedRow) => !selectedRow?.["shopifyOrderId1"])
+                    .map((selectedRow) => {
+                      return {
+                        order_id: selectedRow["shopifyOrderId1"],
+                        shop_id: selectedRow["shopId"],
+                      };
+                    });
+                  setModal({
+                    ...modal,
+                    active: true,
+                    content: "Cancel eBay Order",
+                    actionName: massAction,
+                    actionPayload: shopifyOrdersIdsToPost,
+                    api: cancelOrdersURl,
+                    selectedRowsCount: selectedRows.length,
+                  });
+                }}
               >
                 <UploadOutlined /> Cancel eBay Order
               </Menu.Item>
@@ -205,8 +208,8 @@ const OrderMassMenu = ({
               modal.selectedRowsCount > modal.actionPayload.length && (
                 // <Banner status="info">
                 <TextContainer>
-                  Note: Only {modal.actionPayload.length} order(s) are eligible for
-                  this action because there are not listed on shopify out of{" "}
+                  Note: Only {modal.actionPayload.length} order(s) are eligible
+                  for this action because there are not listed on shopify out of{" "}
                   {modal.selectedRowsCount} order(s).
                 </TextContainer>
                 // </Banner>
@@ -215,8 +218,18 @@ const OrderMassMenu = ({
               modal.selectedRowsCount > modal.actionPayload.length && (
                 // <Banner status="info">
                 <TextContainer>
-                  Note: Only {modal.actionPayload.length} order(s) are eligible for
-                  this action because there are listed on shopify out of{" "}
+                  Note: Only {modal.actionPayload.length} order(s) are eligible
+                  for this action because there are listed on shopify out of{" "}
+                  {modal.selectedRowsCount} order(s).
+                </TextContainer>
+                // </Banner>
+              )}
+            {modal.content === "Cancel eBay Order" &&
+              modal.selectedRowsCount > modal.actionPayload.length && (
+                // <Banner status="info">
+                <TextContainer>
+                  Note: Only {modal.actionPayload.length} order(s) are eligible
+                  for this action because there are listed on shopify out of{" "}
                   {modal.selectedRowsCount} order(s).
                 </TextContainer>
                 // </Banner>
@@ -225,8 +238,8 @@ const OrderMassMenu = ({
               modal.selectedRowsCount > modal.actionPayload.length && (
                 // <Banner status="info">
                 <TextContainer>
-                  Note: Only {modal.actionPayload.length} order(s) are eligible for
-                  this action because there are listed on shopify out of{" "}
+                  Note: Only {modal.actionPayload.length} order(s) are eligible
+                  for this action because there are listed on shopify out of{" "}
                   {modal.selectedRowsCount} order(s).
                 </TextContainer>
                 // {/* </Banner> */}
