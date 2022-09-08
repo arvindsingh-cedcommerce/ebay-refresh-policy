@@ -370,7 +370,7 @@ const NewOrdersGrid = (props) => {
               {order["target_order_id"]}
               <Text
                 copyable={{
-                  text: order["shopify_order_name"],
+                  text: order["target_order_id"],
                 }}
               />
             </>
@@ -408,9 +408,16 @@ const NewOrdersGrid = (props) => {
           style={{ cursor: "pointer" }}
         >
           <PolarisBadge status={targetStatus} progress={progressBarStatus}>
-            {["error", "failed"].includes(order?.target_status)
-              ? <div style={{ cursor: "pointer", borderBottom: "2px solid black" }}>Failed</div>
-              : order?.target_status.slice(0, 1).toUpperCase()+order?.target_status.slice(1)}
+            {["error", "failed"].includes(order?.target_status) ? (
+              <div
+                style={{ cursor: "pointer", borderBottom: "2px solid black" }}
+              >
+                Failed
+              </div>
+            ) : (
+              order?.target_status.slice(0, 1).toUpperCase() +
+              order?.target_status.slice(1)
+            )}
           </PolarisBadge>
         </center>
       );
@@ -861,7 +868,11 @@ const NewOrdersGrid = (props) => {
       title="Orders"
       ghost={true}
       extra={[
-        <OrderMassMenu selectedRows={selectedRows} setSelectedRows={setSelectedRows} setSelectedRowKeys={setSelectedRowKeys} />,
+        <OrderMassMenu
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
+          setSelectedRowKeys={setSelectedRowKeys}
+        />,
         <ShopifyButton primary onClick={() => setImportEbayOrdersModal(true)}>
           Import eBay Order(s)
         </ShopifyButton>,
@@ -960,7 +971,10 @@ const NewOrdersGrid = (props) => {
       <ModalComponent
         title="Import Orders"
         isModalVisible={importEbayOrdersModal}
-        handleCancel={() => setImportEbayOrdersModal(false)}
+        handleCancel={() => {
+          setImportEbayOrdersModal(false);
+          setSelectedAccount(null);
+        }}
         handleOk={() => {}}
         modalContent={
           <>

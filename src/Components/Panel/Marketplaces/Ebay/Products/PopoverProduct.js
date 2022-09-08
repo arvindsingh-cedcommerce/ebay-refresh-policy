@@ -53,11 +53,11 @@ const PopoverProduct = (props) => {
         >
           <Popover.Pane>
             <Card sectioned>
-              <Stack vertical>
+              {/* <Stack vertical> */}
                 {props.children.map((status) => (
                   <React.Fragment key={status.image}>{status}</React.Fragment>
                 ))}
-              </Stack>
+              {/* </Stack> */}
             </Card>
           </Popover.Pane>
         </Popover>

@@ -74,8 +74,8 @@ const OrderMassMenu = ({
                       selectedRowsCount: selectedRows.length,
                     });
                   } else {
-                    setSelectedRows([]);
-                    setSelectedRowKeys([]);
+                    // setSelectedRows([]);
+                    // setSelectedRowKeys([]);
                     notify.error(
                       "Please select orders which are not listed on Shopify!"
                     );
@@ -107,8 +107,8 @@ const OrderMassMenu = ({
                       selectedRowsCount: selectedRows.length,
                     });
                   } else {
-                    setSelectedRows([]);
-                    setSelectedRowKeys([]);
+                    // setSelectedRows([]);
+                    // setSelectedRowKeys([]);
                     notify.error(
                       "Please select orders which are listed on Shopify!"
                     );
@@ -164,8 +164,8 @@ const OrderMassMenu = ({
                       selectedRowsCount: selectedRows.length,
                     });
                   } else {
-                    setSelectedRows([]);
-                    setSelectedRowKeys([]);
+                    // setSelectedRows([]);
+                    // setSelectedRowKeys([]);
                     notify.error(
                       "Please select orders which are listed on Shopify!"
                     );
