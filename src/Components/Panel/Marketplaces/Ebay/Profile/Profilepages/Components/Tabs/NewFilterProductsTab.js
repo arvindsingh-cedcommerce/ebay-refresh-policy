@@ -2,9 +2,11 @@ import {
   Banner,
   Button,
   Card,
+  Checkbox,
   FormLayout,
   Icon,
   Layout,
+  Modal,
   Select,
   SkeletonBodyText,
   SkeletonDisplayText,
@@ -64,6 +66,9 @@ const NewFilterProductsTab = ({
   setPrepareQuery,
   savedQuery,
   profileDataSkeleton,
+  profileId,
+  overriceCheckboxStatus,
+  setOverriceCheckboxStatus,
 }) => {
   const [filtersArrayGroup, setFiltersArrayGroup] = useState([
     [{ attribute: "", condition: "", value: "" }],
@@ -148,6 +153,11 @@ const NewFilterProductsTab = ({
       editable: true,
     },
   ]);
+  const [alreadyProfiledProductsCount, setAlreadyProfiledProductsCount] =
+    useState(0);
+  const [overrideProductsModalActive, setOverrideProductsModalActive] =
+    useState(false);
+  const [testBtnClickedCount, setTestBtnClickedCount] = useState(0);
 
   const hitFilterAttributes = async () => {
     let { success, data } = await getFilterAttributes({
@@ -396,12 +406,17 @@ const NewFilterProductsTab = ({
 
   const runQuery = async () => {
     setTestQueryLoader(true);
-    let { success, data, rows } = await getProductsbyquery({
+    let { success, data, rows, alreadyProfiled } = await getProductsbyquery({
       query: query,
       marketplace: "shopify",
       count: pageSize,
       activePage: activePage,
+      profile_id: profileId,
     });
+    if (success && alreadyProfiled && testBtnClickedCount) {
+      setAlreadyProfiledProductsCount(alreadyProfiled);
+      setOverrideProductsModalActive(true);
+    }
     if (success && rows && Array.isArray(rows)) {
       let tempProductData = [];
       tempProductData = rows.map((row, index) => {
@@ -664,6 +679,7 @@ const NewFilterProductsTab = ({
                 const validatorFlag = validorFilterProducts();
                 if (!validatorFlag) {
                   prepareQuery();
+                  setTestBtnClickedCount(testBtnClickedCount + 1);
                 } else {
                   notify.error(
                     "Kindly fill all the required fields with proper values"
@@ -736,6 +752,28 @@ const NewFilterProductsTab = ({
           </Card>
         </Layout.AnnotatedSection>
       </Layout>
+      <Modal
+        open={overrideProductsModalActive}
+        onClose={() => setOverrideProductsModalActive(false)}
+        title="Override Template"
+        primaryAction={{
+          content: "OK",
+          onAction: () => setOverrideProductsModalActive(false),
+        }}
+      >
+        <Modal.Section>
+          <TextContainer>
+            <Checkbox
+              label={`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other template. Do
+              you want to override their previous template ?`}
+              checked={overriceCheckboxStatus}
+              onChange={() =>
+                setOverriceCheckboxStatus(!overriceCheckboxStatus)
+              }
+            />
+          </TextContainer>
+        </Modal.Section>
+      </Modal>
     </Card>
   );
 };

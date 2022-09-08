@@ -27,6 +27,7 @@ const CreateProfilePolaris = (props) => {
     queryArray: [],
   });
   const [panes, setPanes] = useState([]);
+  const [overriceCheckboxStatus, setOverriceCheckboxStatus] = useState(false);
 
   // flag variable
   const [updatedConnectedAccountObject, setUpdatedConnectedAccountObject] =
@@ -156,6 +157,7 @@ const CreateProfilePolaris = (props) => {
         name: profileName,
         prepareQuery,
         data: test,
+        override: overriceCheckboxStatus
       };
       if (id !== "") postData["profile_id"] = id;
       setProfileSaveBtnLoader(true);
@@ -432,6 +434,9 @@ const CreateProfilePolaris = (props) => {
           setPrepareQuery={setPrepareQuery}
           savedQuery={prepareQuery}
           profileDataSkeleton={profileDataSkeleton}
+          profileId={id}
+          overriceCheckboxStatus={overriceCheckboxStatus}
+          setOverriceCheckboxStatus={setOverriceCheckboxStatus}
         />
       )}
     </PageHeader>
