@@ -203,6 +203,9 @@ export const FinalRegistrationItemLocation = (props) => {
   // welcome screen
   const [showWelcomImage, setShowWelcomImage] = useState(true);
 
+  // warehouses
+  const [shopifyWareHouses, setShopifyWareHouses] = useState([]);
+
   const plansComponentCallback = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -485,6 +488,29 @@ export const FinalRegistrationItemLocation = (props) => {
     });
     return temp;
   };
+  const extractShopifyWarehouses = (accounts) => {
+    let temp = [];
+    if (accounts) {
+      if (accounts?.warehouses?.length > 1) {
+        accounts.warehouses.forEach((warehouse) => {
+          temp.push({
+            value: warehouse.name,
+            label: warehouse.name,
+            disabled: false,
+          });
+        });
+      } else {
+        accounts.warehouses.forEach((warehouse) => {
+          temp.push({
+            value: warehouse.name,
+            label: warehouse.name,
+            disabled: true,
+          });
+        });
+      }
+    }
+    return temp;
+  };
   const callConnectedAccounts = async () => {
     let { success: connectConnectionSuccess, data: connectedAccounts } =
       await getConnectedAccounts();
@@ -505,6 +531,8 @@ export const FinalRegistrationItemLocation = (props) => {
         ...accountConnection,
         countryConnected: firstebayAccountConnected?.warehouses[0]?.site_id,
       });
+      let shopifyWarehouses = extractShopifyWarehouses(shopifyAccount);
+      setShopifyWareHouses(shopifyWarehouses);
       setEbayAccountConnected(firstebayAccountConnected);
     }
   };
@@ -774,7 +802,11 @@ export const FinalRegistrationItemLocation = (props) => {
         delete productSettingsDataShop["vehicleDetails"];
       }
       for (const key in productSettingsDataShop) {
-        product_settings["app_to_ebay"][id][key] = productSettingsDataShop[key];
+        if (key === "shopifyWarehouses") {
+          product_settings["app_to_ebay"][id][key] = shopifyWareHouses.map(warehouse => warehouse.value);
+        } else
+          product_settings["app_to_ebay"][id][key] =
+            productSettingsDataShop[key];
       }
       product_settings["app_to_ebay"][id]["itemLocation"] = {
         ...itemLocation["attribute"],

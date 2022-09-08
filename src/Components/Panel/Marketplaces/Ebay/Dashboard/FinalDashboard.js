@@ -845,7 +845,7 @@ const FinalDashboard = (props) => {
                                 not profiled on app. please{" "}
                                 <Link
                                   onClick={() =>
-                                    props.history.push("createprofileUS")
+                                    props.history.push("profiles")
                                   }
                                 >
                                   create profile
@@ -884,12 +884,12 @@ const FinalDashboard = (props) => {
                                   Create Business Policy
                                 </Link>
                               ) : (
-                                "Create Business Policy"
+                                "Create Business Policy1"
                               )
                             }
                             onClick={() =>
                               reqiuredCurrentStep === -1
-                                ? props.history.push("policiesUS")
+                                ? props.history.push("policy")
                                 : ""
                             }
                           />
@@ -905,7 +905,7 @@ const FinalDashboard = (props) => {
                             }
                             onClick={() =>
                               reqiuredCurrentStep === 0
-                                ? props.history.push("templatesUS/grid")
+                                ? props.history.push("templates")
                                 : ""
                             }
                           />
@@ -919,7 +919,7 @@ const FinalDashboard = (props) => {
                             }
                             onClick={() =>
                               reqiuredCurrentStep === 1
-                                ? props.history.push("createprofileUS")
+                                ? props.history.push("profiles")
                                 : ""
                             }
                           />
