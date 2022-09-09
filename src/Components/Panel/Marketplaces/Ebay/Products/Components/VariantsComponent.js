@@ -2,7 +2,7 @@ import { Image, Switch } from "antd";
 import React, { useEffect, useState } from "react";
 import NestedTableComponent from "../../../../../AntDesignComponents/NestedTableComponent";
 import NoProductImage from "../../../../../../assets/notfound.png";
-import { Icon, Select, Stack, TextField, Tooltip } from "@shopify/polaris";
+import { Badge, Icon, Select, Stack, TextField, Tooltip } from "@shopify/polaris";
 import { EditMinor } from "@shopify/polaris-icons";
 
 const VariantsComponent = ({
@@ -181,6 +181,11 @@ const VariantsComponent = ({
       //   value={key["barcode"]}
       //   onChange={(e) => variantValueChange(key, "barcode", e)}
       // />
+    );
+    tempObject["variantExcluded"] = (
+      <Badge status={key["isExclude"] ? "success" : "critical"}>
+        {key["isExclude"] ? "Excluded" : 'Included'}
+      </Badge>
     );
     tempObject["variantWeight"] =
       key["weight"] !== undefined ? (

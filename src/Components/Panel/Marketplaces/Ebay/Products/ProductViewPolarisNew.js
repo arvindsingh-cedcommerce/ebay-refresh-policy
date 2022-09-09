@@ -88,6 +88,12 @@ const columns = [
     editable: true,
   },
   {
+    title: "Excluded",
+    dataIndex: "variantExcluded",
+    key: "variantExcluded",
+    editable: true,
+  },
+  {
     title: "Weight",
     dataIndex: "variantWeight",
     key: "variantWeight",

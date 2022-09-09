@@ -4,6 +4,7 @@ export const getProductsCountURL = "ebay/product/getProductsCount";
 
 // variant grid
 export const getVariantsURL = "ebay/product/getProductVariant";
+export const changeVariantStatusURL = "ebay/product/changeVariantStatus";
 
 // edit product
 export const getProductDataURL = "connector/product/getProducts";
