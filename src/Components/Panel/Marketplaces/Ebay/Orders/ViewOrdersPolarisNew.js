@@ -38,13 +38,14 @@ import {
   parseDataForSave,
 } from "./Helper/viewOrderHelper";
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const ViewOrdersPolarisNew = (props) => {
   const [updateOrderSubmitBtnLoader, setUpdateOrderSubmitBtnLoader] =
     useState(false);
   const [targetStatus, setTargetStatus] = useState(null);
   const [sourceStatus, setSourceStatus] = useState(null);
+  const [currency, setCurrency] = useState(null);
   const [erroModal, setErroModal] = useState({
     show: "",
     msg: "",
@@ -56,7 +57,8 @@ const ViewOrdersPolarisNew = (props) => {
   // const [financialStatus, setFinancialStatus] = useState(null);
   const [shopifyOrderID, setShopifyOrderID] = useState(null);
   const [ebayOrderID, setEbayOrderID] = useState(null);
-  const [orderDate, setOrderDate] = useState(null);
+  const [orderDate, setOrderDate] = useState("");
+  const [orderImportedDate, setOrderImportedDate] = useState("");
   const [totalItems, setTotalItems] = useState(null);
   const [eBayRefrenceID, setEbayRefrenceID] = useState(null);
   const [lineItems, setLineItems] = useState([]);
@@ -167,6 +169,7 @@ const ViewOrdersPolarisNew = (props) => {
         });
       data["target_status"] && setTargetStatus(data["target_status"]);
       data["source_status"] && setSourceStatus(data["source_status"]);
+      data["currency"] && setCurrency(data["currency"]);
       setShopId(data["shop_id"]);
       setShopifyOrderName(data["shopify_order_name"]);
       // setFinancialStatus(data["financial_status"]);
@@ -175,7 +178,14 @@ const ViewOrdersPolarisNew = (props) => {
         //  ? data["target_order_id"] : "---"
       );
       setEbayOrderID(data["source_order_id"]);
-      setOrderDate(data["created_at"]);
+      if (data["created_at"]) {
+        let parsedCreatedDate = new Date(data["created_at"]).toGMTString();
+        setOrderDate(parsedCreatedDate);
+      }
+      if (data["imported_at"]) {
+        let parsedCreatedDate = new Date(data["imported_at"]).toGMTString();
+        setOrderImportedDate(parsedCreatedDate);
+      }
       setTotalItems(data["qty"]);
       setLineItems(data["line_items"]);
       setEbayRefrenceID(data["source_order_data"]["ExtendedOrderID"]);
@@ -230,8 +240,12 @@ const ViewOrdersPolarisNew = (props) => {
           fulfillments["0"].tracking_company;
         fulfillmentsDetails["trackingNumber"] =
           fulfillments["0"].tracking_number;
-        fulfillmentsDetails["createdAt"] = fulfillments["0"].created_at;
-        fulfillmentsDetails["updatedAt"] = fulfillments["0"].updated_at;
+        fulfillmentsDetails["createdAt"] = new Date(
+          fulfillments["0"].created_at
+        ).toGMTString();
+        fulfillmentsDetails["updatedAt"] = new Date(
+          fulfillments["0"].updated_at
+        ).toGMTString();
       } else {
         fulfillmentsDetails = false;
       }
@@ -321,8 +335,8 @@ const ViewOrdersPolarisNew = (props) => {
           } else {
             notify.error(message);
           }
-          setActionModal(false);
           setUpdateOrderSubmitBtnLoader(false);
+          setActionModal(false);
         }}
       >
         <FormLayout>
@@ -454,7 +468,7 @@ const ViewOrdersPolarisNew = (props) => {
       </Form>
     );
   };
-  const getSourceStatusType = status => {
+  const getSourceStatusType = (status) => {
     let statusType = "";
     switch (status.toLowerCase()) {
       case "paid":
@@ -465,7 +479,7 @@ const ViewOrdersPolarisNew = (props) => {
         break;
     }
     return statusType;
-  }
+  };
   const getTargetStatusType = (status) => {
     let statusType = "";
     switch (status.toLowerCase()) {
@@ -487,28 +501,57 @@ const ViewOrdersPolarisNew = (props) => {
     <Page
       title={
         ebayOrderID ? (
-          <Stack alignment="center" spacing="tight">
-            <>{ebayOrderID}</>
-            {sourceStatus && (
-              <ShopifyBadge status={getSourceStatusType(sourceStatus)}>
-                {sourceStatus.slice(0, 1).toUpperCase() + sourceStatus.slice(1)}
-              </ShopifyBadge>
-            )}
-            {!erroModal.msg && targetStatus && (
-              <ShopifyBadge status={getTargetStatusType(targetStatus)}>
-                {targetStatus.slice(0, 1).toUpperCase() + targetStatus.slice(1)}
-              </ShopifyBadge>
-            )}
-            {erroModal.msg && (
-              <ShopifyBadge status="critical">
-                <div
-                  style={{ cursor: "pointer", borderBottom: "2px solid black" }}
-                  onClick={() => setErroModal({ ...erroModal, show: true })}
-                >
-                  Failed
-                </div>
-              </ShopifyBadge>
-            )}
+          <Stack vertical spacing="extraTight">
+            <Stack alignment="baseline" spacing="tight">
+              <Title level={5} style={{ margin: "0px" }}>
+                {/* eBay Id:  */}
+                {ebayOrderID}
+              </Title>
+              {/* <Text
+                type="secondary"
+                style={{ fontSize: "1.5rem", fontWeight: "100" }}
+              >
+                Imported at {orderImportedDate}
+              </Text> */}
+              {sourceStatus && (
+                <ShopifyBadge status={getSourceStatusType(sourceStatus)}>
+                  {sourceStatus.slice(0, 1).toUpperCase() +
+                    sourceStatus.slice(1)}
+                </ShopifyBadge>
+              )}
+              {!erroModal.msg && targetStatus && (
+                <ShopifyBadge status={getTargetStatusType(targetStatus)}>
+                  {targetStatus.slice(0, 1).toUpperCase() +
+                    targetStatus.slice(1)}
+                </ShopifyBadge>
+              )}
+              {erroModal.msg && (
+                <ShopifyBadge status="critical">
+                  <div
+                    style={{
+                      cursor: "pointer",
+                      borderBottom: "2px solid black",
+                    }}
+                    onClick={() => setErroModal({ ...erroModal, show: true })}
+                  >
+                    Failed
+                  </div>
+                </ShopifyBadge>
+              )}
+            </Stack>
+            {/* {shopifyOrderID && ( */}
+            {/* <Stack alignment="baseline" spacing="tight">
+              <Title level={5} style={{ margin: "0px" }}>
+                Shopify Id: {shopifyOrderID}
+              </Title>
+              <Text
+                type="secondary"
+                style={{ fontSize: "1.5rem", fontWeight: "100" }}
+              >
+                Created at {orderDate}
+              </Text>
+            </Stack> */}
+            {/* // )} */}
           </Stack>
         ) : (
           <Stack alignment="center">
@@ -573,6 +616,13 @@ const ViewOrdersPolarisNew = (props) => {
               ],
         },
       ]}
+      subtitle={
+        `Imported at ${orderImportedDate}`
+        // <Stack spacing="loose">
+        //   {/* <>Created at {orderDate}</> */}
+        //   <>Imported at {orderImportedDate}</>
+        // </Stack>
+      }
       breadcrumbs={[
         {
           content: "Orders",
@@ -593,6 +643,7 @@ const ViewOrdersPolarisNew = (props) => {
         paymentDetails={paymentDetails}
         fulfillmentsDetails={fulfillmentsDetails}
         ebayOrderData={ebayOrderData}
+        currency={currency}
       />
       {/* <TabsComponent
         totalTabs={2}
@@ -799,6 +850,7 @@ const ViewOrdersPolarisNew = (props) => {
                         break;
                       case "syncShipment":
                         (async () => {
+                          setUpdateOrderSubmitBtnLoader(true);
                           let { success, message, data } = await massAction(
                             syncShipmentURL,
                             [
@@ -810,13 +862,17 @@ const ViewOrdersPolarisNew = (props) => {
                           );
                           if (success) {
                             notify.success(message ? message : data);
+                            hitOrderAPI();
                           } else {
                             notify.error(message ? message : data);
                           }
+                          setUpdateOrderSubmitBtnLoader(false);
+                          setActionModal(false);
                         })();
                         break;
                       case "cancelOrder":
                         (async () => {
+                          setUpdateOrderSubmitBtnLoader(true);
                           let { success, message, data } = await massAction(
                             cancelOrdersURl,
                             [
@@ -831,12 +887,14 @@ const ViewOrdersPolarisNew = (props) => {
                           } else {
                             notify.error(message ? message : data);
                           }
+                          setUpdateOrderSubmitBtnLoader(false);
+                          setActionModal(false);
                         })();
                         break;
                       case "deleteOrder":
-                        console.log(shopifyOrderID, ebayOrderID);
                         if (shopifyOrderID) {
                           (async () => {
+                            setUpdateOrderSubmitBtnLoader(true);
                             let { success, message, data } = await massAction(
                               deleteOrdersURL,
                               [
@@ -848,6 +906,7 @@ const ViewOrdersPolarisNew = (props) => {
                             );
                             if (success) {
                               notify.success(message ? message : data);
+                              props.history.push("/panel/ebay/orders");
                             } else {
                               notify.error(message ? message : data);
                             }
@@ -861,8 +920,8 @@ const ViewOrdersPolarisNew = (props) => {
                       default:
                         break;
                     }
-                    setActionModal(false);
-                    setUpdateOrderSubmitBtnLoader(false);
+                    // setUpdateOrderSubmitBtnLoader(false);
+                    // setActionModal(false);
                   }}
                   loading={updateOrderSubmitBtnLoader}
                 >
@@ -902,6 +961,7 @@ export const OrderDetailsComponent = ({
   paymentDetails,
   fulfillmentsDetails,
   ebayOrderData,
+  currency,
 }) => {
   // line items
   let [orderColumns, setOrderColumns] = useState([
@@ -955,48 +1015,63 @@ export const OrderDetailsComponent = ({
             <Stack vertical spacing="extraTight">
               {orderData.map((order) => {
                 return (
-                  <Stack wrap={false}>
+                  // <Stack wrap={false}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
                     {/* <Badge count={order?.["quantity"]}>
                       <Avatar shape="square" size={70} />
                     </Badge> */}
-                    <Stack vertical spacing="extraTight">
-                      <Text strong>{order?.["title"]}</Text>
-                      <Text type="secondary">SKU: {order?.["sku"]}</Text>
-                      <Text strong>Price: {order?.["price"]}</Text>
-                    </Stack>
-                  </Stack>
+                    <div style={{ width: "70%" }}>
+                      {/* <Stack vertical spacing="extraTight"> */}
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <Text strong>{order?.["title"]}</Text>
+                        <Text type="secondary">SKU: {order?.["sku"]}</Text>
+                        {/* <Text strong>Price: {order?.["price"]}</Text> */}
+                      </div>
+                      {/* </Stack> */}
+                    </div>
+                    <Text>
+                      {order?.["price"]} * {order?.["quantity"]}
+                    </Text>
+                    <Text>
+                      {order?.["price"] * order?.["quantity"]} {currency}
+                    </Text>
+                  </div>
+                  // {/* </Stack> */}
                 );
               })}
               <Stack distribution="equalSpacing">
                 <Text strong>Total</Text>
                 <Text strong>
                   {orderData.reduce((prev, curr) => {
-                    return Number(prev) + Number(curr?.["price"]);
-                  }, 0)}
+                    return (
+                      Number(prev) +
+                      Number(curr?.["price"]) * curr?.["quantity"]
+                    );
+                  }, 0)}{" "}
+                  {currency}
                 </Text>
               </Stack>
             </Stack>
           </Card>
+          {shopifyOrderID && (
+            <Card sectioned>
+              <Stack vertical={false} distribution="equalSpacing">
+                <Heading>Shopify Order Id</Heading>
+                <>{shopifyOrderID ? shopifyOrderID : "---"}</>
+              </Stack>
+              <Stack vertical={false} distribution="equalSpacing">
+                <Heading>Created Date</Heading>
+                <>{orderDate}</>
+              </Stack>
+            </Card>
+          )}
           <Card sectioned>
-            <Stack vertical={false} distribution="equalSpacing">
-              <Heading>Shopify Order Id</Heading>
-              <p>{shopifyOrderID ? shopifyOrderID : "---"}</p>
-            </Stack>
-            <Stack vertical={false} distribution="equalSpacing">
-              <Heading>eBay Order Id</Heading>
-              <p>{ebayOrderID}</p>
-            </Stack>
-            <Stack vertical={false} distribution="equalSpacing">
-              <Heading>Order Date</Heading>
-              <p>{orderDate}</p>
-            </Stack>
-            <Stack vertical={false} distribution="equalSpacing">
-              <Heading>Total Items</Heading>
-              <p>{totalItems}</p>
-            </Stack>
-          </Card>
-          <Card sectioned>
-            <PaymentDetails paymentDetails={paymentDetails} />
+            <PaymentDetails
+              paymentDetails={paymentDetails}
+              currency={currency}
+            />
           </Card>
           <Card sectioned title="eBay Order Data">
             <ReactJson
@@ -1098,42 +1173,44 @@ export const BuyerDetailsComponent = ({
   );
 };
 
-export const PaymentDetails = ({ paymentDetails }) => {
+export const PaymentDetails = ({ paymentDetails, currency }) => {
   return (
     <>
       <Layout>
         <Layout.Section>
           <Stack vertical={false} distribution="equalSpacing">
             <Heading>Payment Method</Heading>
-            <p>
+            <>
               {paymentDetails &&
                 paymentDetails["paymentMethod"] &&
                 paymentDetails["paymentMethod"]}
-            </p>
+            </>
           </Stack>
           <Stack vertical={false} distribution="equalSpacing">
             <Heading>Price</Heading>
-            <p>
-              {paymentDetails &&
-                paymentDetails["price"] &&
-                paymentDetails["price"]}
-            </p>
+            <>
+              {paymentDetails && paymentDetails["price"] && (
+                <>
+                  {paymentDetails["price"]} {currency}
+                </>
+              )}
+            </>
           </Stack>
           <Stack vertical={false} distribution="equalSpacing">
             <Heading>Taxes Applied</Heading>
-            <p>
+            <>
               {paymentDetails &&
                 paymentDetails["taxesApplied"] &&
                 paymentDetails["taxesApplied"]}
-            </p>
+            </>
           </Stack>
           <Stack vertical={false} distribution="equalSpacing">
             <Heading>Inclusive Tax</Heading>
-            <p>
+            <>
               {paymentDetails &&
                 paymentDetails["inclusiveTax"] &&
                 paymentDetails["inclusiveTax"]}
-            </p>
+            </>
           </Stack>
         </Layout.Section>
       </Layout>
@@ -1164,19 +1241,35 @@ export const FulfillmentsDetails = ({ fulfillmentsDetails }) => {
   return fulfillmentsDetails ? (
     <Layout>
       <Layout.Section>
-        <Stack vertical={false} distribution="equalSpacing">
+        <Stack
+          vertical={false}
+          distribution="equalSpacing"
+          spacing="extraTight"
+        >
           <Heading>Tracking Company</Heading>
           <p>{fulfillmentsDetails["trackingCompany"]}</p>
         </Stack>
-        <Stack vertical={false} distribution="equalSpacing">
+        <Stack
+          vertical={false}
+          distribution="equalSpacing"
+          spacing="extraTight"
+        >
           <Heading>Tracking Number</Heading>
           <p>{fulfillmentsDetails["trackingNumber"]}</p>
         </Stack>
-        <Stack vertical={false} distribution="equalSpacing">
+        <Stack
+          vertical={false}
+          distribution="equalSpacing"
+          spacing="extraTight"
+        >
           <Heading>Created At</Heading>
           <p>{fulfillmentsDetails["createdAt"]}</p>
         </Stack>
-        <Stack vertical={false} distribution="equalSpacing">
+        <Stack
+          vertical={false}
+          distribution="equalSpacing"
+          spacing="extraTight"
+        >
           <Heading>Updated At</Heading>
           <p>{fulfillmentsDetails["updatedAt"]}</p>
         </Stack>

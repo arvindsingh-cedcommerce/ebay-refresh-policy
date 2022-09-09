@@ -32,6 +32,8 @@ const OrderMassMenu = ({
   selectedRows,
   setSelectedRows,
   setSelectedRowKeys,
+  hitGetOrdersAPI,
+  rowSelectionPassed,
   ...props
 }) => {
   const [modal, setModal] = useState({
@@ -62,7 +64,7 @@ const OrderMassMenu = ({
                         shop_id: selectedRow["shopId"],
                       };
                     });
-                  console.log(ebayOrdersIdsToPost);
+                  // console.log(ebayOrdersIdsToPost);
                   if (ebayOrdersIdsToPost.length) {
                     setModal({
                       ...modal,
@@ -259,7 +261,19 @@ const OrderMassMenu = ({
                   );
                   if (success) {
                     notify.success(message ? message : data);
-                    // props.history.push("/panel/ebay/activity");
+                    props.history.push("/panel/ebay/activity");
+                    // setModal({
+                    //   active: false,
+                    //   content: "",
+                    //   actionName: "",
+                    //   actionPayload: {},
+                    //   api: "",
+                    //   selectedRowsCount: 0,
+                    // });
+                    // setSelectedRows([]);
+                    // setSelectedRowKeys([]);
+                    // hitGetOrdersAPI();
+                    // rowSelectionPassed();
                   } else {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });

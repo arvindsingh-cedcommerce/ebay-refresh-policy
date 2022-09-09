@@ -482,10 +482,14 @@ const NewOrdersGrid = (props) => {
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
+      // console.log(selectedRows)
       setSelectedRowKeys(selectedRowKeys);
       setSelectedRows(selectedRows);
     },
   };
+  // useEffect(() => {
+  //   console.log(selectedRows);
+  // }, [selectedRows])
 
   useEffect(() => {
     let test = [];
@@ -862,6 +866,12 @@ const NewOrdersGrid = (props) => {
       </Stack>
     );
   };
+  const rowSelectionFunc = () => {
+    return {
+      type: selectionType,
+      ...rowSelection,
+    }
+  }
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -872,6 +882,8 @@ const NewOrdersGrid = (props) => {
           selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}
           setSelectedRowKeys={setSelectedRowKeys}
+          hitGetOrdersAPI={hitGetOrdersAPI}
+          rowSelectionPassed={rowSelectionFunc}
         />,
         <ShopifyButton primary onClick={() => setImportEbayOrdersModal(true)}>
           Import eBay Order(s)
@@ -917,10 +929,11 @@ const NewOrdersGrid = (props) => {
           pagination={false}
           columns={orderColumns}
           dataSource={orderData}
-          rowSelection={{
-            type: selectionType,
-            ...rowSelection,
-          }}
+          // rowSelection={{
+          //   type: selectionType,
+          //   ...rowSelection,
+          // }}
+          rowSelection={rowSelectionFunc()}
           scroll={{
             x: 1500,
             y: 500,
