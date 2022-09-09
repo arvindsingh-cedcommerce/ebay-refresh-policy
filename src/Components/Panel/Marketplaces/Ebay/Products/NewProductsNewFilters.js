@@ -830,9 +830,9 @@ function NewProductsNewFilters(props) {
     });
     profileList.unshift({ label: "All profiles", value: "all" });
     setProfileList(profileList);
-    let temp = [...profileList]
-    temp.shift()
-    setProfileListForFilters(temp)
+    let temp = [...profileList];
+    temp.shift();
+    setProfileListForFilters(temp);
   };
 
   const prepareProductTypeVendor = (data) => {
@@ -1082,23 +1082,31 @@ function NewProductsNewFilters(props) {
           scroll={{ x: 1500, y: 500 }}
           expandable={{
             expandedRowRender: (record) => {
-              return (
-                <TabsComponent
-                  totalTabs={1}
-                  tabContents={{
-                    "Variant Listings":
-                      record["variantsData"] &&
-                      record["variantsData"].length > 0 ? (
-                        <VariantComponentData
-                          dataSource={record["variantsData"]}
-                          size="small"
-                        />
-                      ) : (
-                        <Alert message="No Variants Found" type="info" />
-                      ),
-                  }}
+              return record["variantsData"] &&
+                record["variantsData"].length > 0 ? (
+                <VariantComponentData
+                  dataSource={record["variantsData"]}
+                  size="small"
                 />
+              ) : (
+                <Alert message="No Variants Found" type="info" />
               );
+              // <TabsComponent
+              //   totalTabs={1}
+              //   tabContents={{
+              //     "Variant Listings":
+              //       record["variantsData"] &&
+              //       record["variantsData"].length > 0 ? (
+              //         <VariantComponentData
+              //           dataSource={record["variantsData"]}
+              //           size="small"
+              //         />
+              //       ) : (
+              //         <Alert message="No Variants Found" type="info" />
+              //       ),
+              //   }}
+              // />
+              // );
             },
             expandIcon: ({ expanded, onExpand, record }) =>
               expanded ? (

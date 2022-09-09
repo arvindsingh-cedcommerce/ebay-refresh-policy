@@ -241,26 +241,26 @@ const VariantComponentData = ({ dataSource, size }) => {
 
   return (
     // <Form form={form} component={false}>
-    <Card
-      sectioned
-      actions={[
-        {
-          content: (
-            <Popover
-              active={popoverActive}
-              activator={activator}
-              autofocusTarget="first-node"
-              onClose={togglePopoverActive}
-            >
-              <ActionList
-                actionRole="menuitem"
-                items={[{ content: "Import" }, { content: "Export" }]}
-              />
-            </Popover>
-          ),
-        },
-      ]}
-    >
+    // <Card
+    //   sectioned
+    //   // actions={[
+    //   //   {
+    //   //     content: (
+    //   //       <Popover
+    //   //         active={popoverActive}
+    //   //         activator={activator}
+    //   //         autofocusTarget="first-node"
+    //   //         onClose={togglePopoverActive}
+    //   //       >
+    //   //         <ActionList
+    //   //           actionRole="menuitem"
+    //   //           items={[{ content: "Import" }, { content: "Export" }]}
+    //   //         />
+    //   //       </Popover>
+    //   //     ),
+    //   //   },
+    //   // ]}
+    // >
       <NestedTableComponent
         size={size}
         columns={mergedColumns}
@@ -281,7 +281,7 @@ const VariantComponentData = ({ dataSource, size }) => {
           },
         }}
       />
-    </Card>
+    // </Card>
     // </Form>
   );
 };
