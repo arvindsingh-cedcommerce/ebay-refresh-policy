@@ -747,6 +747,7 @@ const CategoryTemplatePolarisNew = (props) => {
     setCategoryTypeMapping,
     categoryType
   ) => {
+    setLoaderOverlayActive(true);
     let {
       success: successMappingCategorywise,
       data: mappingCategorywise,
@@ -780,17 +781,20 @@ const CategoryTemplatePolarisNew = (props) => {
         const temp = [...categoryTypeMapping];
         const lastLevel = { ...temp.at(temp.length - 1) };
         const lastLevelValue = lastLevel?.["value"];
+        setLoaderOverlayActive(true);
         let dataCategoryFeatures = await getcategoryFeatures({
           category_id: lastLevelValue,
           site_id: siteID,
           shop_id: shopID,
         });
-        console.log('yhn',dataCategoryFeatures);
+        // console.log("yhn", dataCategoryFeatures);
         if (Object.keys(dataCategoryFeatures).length) {
           if (dataCategoryFeatures["0"]) {
             extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
           }
         }
+        // console.log("here");
+        setLoaderOverlayActive(true);
         let {
           success: successattribCategorywise,
           data: attributeCategorywise,
@@ -845,6 +849,7 @@ const CategoryTemplatePolarisNew = (props) => {
       notify.error(message);
       redirect("/auth/login");
     }
+    setLoaderOverlayActive(false);
   };
 
   const getShopifyAttributes = async (categoryType, data) => {
@@ -1223,7 +1228,7 @@ const CategoryTemplatePolarisNew = (props) => {
     postData["selectedConfigurableAttributes"] = selectedConfigurableAttributes;
     postData["site_id"] = siteID;
     postData["shop_id"] = shopID;
-    postData["name"] = name.label;
+    postData["name"] = name?.label;
     postData["primaryCategoryMappingName"] = primaryCategoryMappingName;
     postData["primaryCategoryMapping"] = primaryCategoryMapping.map(
       (mapping) => {
@@ -1260,9 +1265,14 @@ const CategoryTemplatePolarisNew = (props) => {
     props.history.push(url);
   };
 
+  // const validateData = (data) => {
+  //   console.log(data);
+  // };
+
   const saveFormdata = async () => {
     setSaveBtnLoader(true);
     const postData = prepareDataForSave();
+    // validateData(postData);
     const data = {
       marketplace: "ebay",
       type: "category",
@@ -1413,6 +1423,7 @@ const CategoryTemplatePolarisNew = (props) => {
   }, [enableSecondaryCategory]);
   const hitAttributeMappingAfterPrediction = async (lastLevelValue) => {
     setAttributesLoader(true);
+    setLoaderOverlayActive(true);
     let dataCategoryFeatures = await getcategoryFeatures({
       category_id: lastLevelValue,
       site_id: siteID,
@@ -1423,6 +1434,8 @@ const CategoryTemplatePolarisNew = (props) => {
         extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
       }
     }
+    // console.log("this");
+    setLoaderOverlayActive(true);
     let {
       success: successattribCategorywise,
       data: attributeCategorywise,
@@ -1461,6 +1474,7 @@ const CategoryTemplatePolarisNew = (props) => {
     } else {
     }
     setAttributesLoader(false);
+    setLoaderOverlayActive(false);
   };
   const hitGetParentCategoriesFromPrediction = async (
     selectedPrediction,
@@ -1683,6 +1697,80 @@ const CategoryTemplatePolarisNew = (props) => {
                 "These attributes are required for product listing on eBay."
               }
             >
+              <Stack distribution="trailing">
+                <Button
+                  primary
+                  onClick={async () => {
+                    setLoaderOverlayActive(true);
+                    setRequiredAttributesMapping({
+                      mapping: [],
+                      counter: 0,
+                      options: [],
+                    });
+                    setOptionalAttributesMapping({
+                      mapping: [],
+                      counter: 0,
+                      options: [],
+                    });
+                    const temp = [...primaryCategoryMapping];
+                    const lastLevel = { ...temp.at(temp.length - 1) };
+                    const lastLevelValue = lastLevel?.["value"];
+                    let {
+                      success: successattribCategorywise,
+                      data: attributeCategorywise,
+                      message: attributeMsg,
+                    } = await getattributesCategorywise({
+                      category_id: lastLevelValue,
+                      site_id: siteID,
+                      shop_id: shopID,
+                    });
+                    if (
+                      successattribCategorywise &&
+                      Array.isArray(attributeCategorywise) &&
+                      attributeCategorywise.length > 0
+                    ) {
+                      let extractData = getExtractedDataForAttribute(
+                        attributeCategorywise
+                      );
+
+                      let createdArr = [];
+                      extractData.requiredAttributes.forEach((attribute) => {
+                        let tempObject = {
+                          eBayAttribute: attribute.value,
+                          shopifyAttribute: "",
+                          selectedShopifyAttributeValueType: "",
+                        };
+                        createdArr.push(tempObject);
+                      });
+                      setRequiredAttributesMapping({
+                        ...requiredAttributesMapping,
+                        mapping: createdArr,
+                        options: extractData?.requiredAttributes,
+                      });
+                      setOptionalAttributesMapping({
+                        ...optionalAttributesMapping,
+                        options: extractData?.optionalAttributes,
+                      });
+                      setShowAttributeMapping(true);
+                    } else {
+                      setRequiredAttributesMapping({
+                        mapping: [],
+                        counter: 0,
+                        options: [],
+                      });
+                      setOptionalAttributesMapping({
+                        mapping: [],
+                        counter: 0,
+                        options: [],
+                      });
+                    }
+                    setLoaderOverlayActive(false);
+                  }}
+                >
+                  Refresh eBay Attributes
+                </Button>
+              </Stack>
+              <br />
               <Card sectioned>{renderRequiredAttributeMappingStructure()}</Card>
             </Layout.AnnotatedSection>
           )}
