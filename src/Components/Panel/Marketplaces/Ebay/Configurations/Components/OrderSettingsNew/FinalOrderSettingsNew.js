@@ -340,13 +340,13 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
       ]}
     >
       <Stack vertical>
-        <Banner>
+        {/* <Banner>
           <p>
             Select from the available eBay accounts you wish to use for
             publishing your products on eBay. Use the default option to apply
             settings to all accounts.
           </p>
-        </Banner>
+        </Banner> */}
         <CheckboxComponent
           connectedAccountsObject={connectedAccountsObject}
           setconnectedAccountsObject={setconnectedAccountsObject}
