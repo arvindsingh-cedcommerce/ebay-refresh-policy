@@ -53,6 +53,8 @@ import { AlertMinor } from "@shopify/polaris-icons";
 import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import NoProductImage from "../../../../../assets/notfound.png";
 import AdditionalDetailsComponent from "./Components/AdditionalDetailsComponent";
+import { getParsedMetaFieldsData, parseMetaFieldsData } from "./helperFunctions/viewProductHelper";
+import MetafieldsComponent from "./Components/MetafieldsComponent";
 
 const columns = [
   {
@@ -222,6 +224,12 @@ const ProductViewPolarisNew = (props) => {
     active: false,
     content: [],
     title: "",
+  });
+
+  // metafields data
+  const [metafields, setMetafields] = useState({
+    present: false,
+    content: {},
   });
 
   const extractEditedDataForMainProduct = (formainproduct) => {
@@ -677,6 +685,15 @@ const ProductViewPolarisNew = (props) => {
       postData
     );
     if (success) {
+      if (data?.product_metafields?.metafields) {
+        let tempMetafields = { ...metafields };
+        tempMetafields["present"] = true;
+        const parsedMetaFields = getParsedMetaFieldsData(
+          data.product_metafields.metafields
+        );
+        tempMetafields["content"] = { ...parsedMetaFields };
+        setMetafields(tempMetafields)
+      }
       extractDataFromAPI(
         data?.product_data,
         data?.product_data,
@@ -1348,6 +1365,7 @@ const ProductViewPolarisNew = (props) => {
             />
           ),
           Images: <ImagesComponent mainProduct={mainProduct} />,
+          Metafields: <MetafieldsComponent metafields={metafields} />,
           "Additional Details": (
             <AdditionalDetailsComponent
               mainProduct={mainProduct}
