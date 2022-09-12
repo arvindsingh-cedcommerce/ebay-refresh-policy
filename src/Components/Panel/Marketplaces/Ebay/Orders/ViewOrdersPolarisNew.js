@@ -63,6 +63,7 @@ const ViewOrdersPolarisNew = (props) => {
   const [eBayRefrenceID, setEbayRefrenceID] = useState(null);
   const [lineItems, setLineItems] = useState([]);
   const [ebayOrderData, setEbayOrderData] = useState(null);
+  const [shopifyOrderData, setShopifyOrderData] = useState(null);
 
   //   buyer details
   const [buyerName, setBuyerName] = useState(null);
@@ -190,6 +191,7 @@ const ViewOrdersPolarisNew = (props) => {
       setLineItems(data["line_items"]);
       setEbayRefrenceID(data["source_order_data"]["ExtendedOrderID"]);
       setEbayOrderData(data["source_order_data"]);
+      setShopifyOrderData(data["target_order_data"]);
 
       setBuyerEmail(
         data["customer"]
@@ -617,7 +619,7 @@ const ViewOrdersPolarisNew = (props) => {
         },
       ]}
       subtitle={
-        `Imported at ${orderImportedDate}`
+        `Imported on app at ${orderImportedDate}`
         // <Stack spacing="loose">
         //   {/* <>Created at {orderDate}</> */}
         //   <>Imported at {orderImportedDate}</>
@@ -644,6 +646,7 @@ const ViewOrdersPolarisNew = (props) => {
         fulfillmentsDetails={fulfillmentsDetails}
         ebayOrderData={ebayOrderData}
         currency={currency}
+        shopifyOrderData={shopifyOrderData}
       />
       {/* <TabsComponent
         totalTabs={2}
@@ -962,6 +965,7 @@ export const OrderDetailsComponent = ({
   fulfillmentsDetails,
   ebayOrderData,
   currency,
+  shopifyOrderData,
 }) => {
   // line items
   let [orderColumns, setOrderColumns] = useState([
@@ -1025,14 +1029,17 @@ export const OrderDetailsComponent = ({
                     <div style={{ width: "70%" }}>
                       {/* <Stack vertical spacing="extraTight"> */}
                       <div style={{ display: "flex", flexDirection: "column" }}>
-                        <Text strong>{order?.["title"]}</Text>
+                        <Text strong>
+                          {order?.["title"]}
+                          {` (${ebayOrderID})`}
+                        </Text>
                         <Text type="secondary">SKU: {order?.["sku"]}</Text>
                         {/* <Text strong>Price: {order?.["price"]}</Text> */}
                       </div>
                       {/* </Stack> */}
                     </div>
                     <Text>
-                      {order?.["price"]} * {order?.["quantity"]}
+                      {order?.["price"]} x {order?.["quantity"]}
                     </Text>
                     <Text>
                       {order?.["price"] * order?.["quantity"]} {currency}
@@ -1058,12 +1065,12 @@ export const OrderDetailsComponent = ({
           {shopifyOrderID && (
             <Card sectioned>
               <Stack vertical={false} distribution="equalSpacing">
-                <Heading>Shopify Order Id</Heading>
-                <>{shopifyOrderID ? shopifyOrderID : "---"}</>
+                <>Shopify Order Id</>
+                <Heading>{shopifyOrderID ? shopifyOrderID : "---"}</Heading>
               </Stack>
               <Stack vertical={false} distribution="equalSpacing">
-                <Heading>Created Date</Heading>
-                <>{orderDate}</>
+                <>Created Date</>
+                <Heading>{orderDate}</Heading>
               </Stack>
             </Card>
           )}
@@ -1080,14 +1087,23 @@ export const OrderDetailsComponent = ({
               collapsed={true}
             />
           </Card>
+          {shopifyOrderID && (
+            <Card sectioned title="Shopify Order Data">
+              <ReactJson
+                style={{ maxHeight: 400, overflowY: "scroll" }}
+                src={shopifyOrderData}
+                collapsed={true}
+              />
+            </Card>
+          )}
         </Layout.Section>
         <Layout.Section secondary>
           <Card title="Customer Information">
             <Card.Section title="Customer">
-              <Stack vertical spacing="extraTight">
-                <>{buyerName}</>
-                <>{buyerEmail}</>
-                <>{buyerAddress["phone"]}</>
+              <Stack vertical spacing="extraTight" wrap>
+                <div style={{wordBreak: 'break-word'}}>{buyerName}</div>
+                <div style={{wordBreak: 'break-word'}}>{buyerEmail}</div>
+                <div style={{wordBreak: 'break-word'}}>{buyerAddress["phone"]}</div>
               </Stack>
             </Card.Section>
             <Card.Section title="Shipping Address">
@@ -1106,9 +1122,9 @@ export const OrderDetailsComponent = ({
                 Same as shipping address
               </TextStyle>
             </Card.Section>
-            <Card.Section title="Fulfillments">
-              <FulfillmentsDetails fulfillmentsDetails={fulfillmentsDetails} />
-            </Card.Section>
+          </Card>
+          <Card sectioned title="Fulfillments">
+            <FulfillmentsDetails fulfillmentsDetails={fulfillmentsDetails} />
           </Card>
         </Layout.Section>
       </Layout>
@@ -1179,38 +1195,38 @@ export const PaymentDetails = ({ paymentDetails, currency }) => {
       <Layout>
         <Layout.Section>
           <Stack vertical={false} distribution="equalSpacing">
-            <Heading>Payment Method</Heading>
-            <>
+            <>Payment Method</>
+            <Heading>
               {paymentDetails &&
                 paymentDetails["paymentMethod"] &&
                 paymentDetails["paymentMethod"]}
-            </>
+            </Heading>
           </Stack>
           <Stack vertical={false} distribution="equalSpacing">
-            <Heading>Price</Heading>
-            <>
+            <>Price</>
+            <Heading>
               {paymentDetails && paymentDetails["price"] && (
                 <>
                   {paymentDetails["price"]} {currency}
                 </>
               )}
-            </>
+            </Heading>
           </Stack>
           <Stack vertical={false} distribution="equalSpacing">
-            <Heading>Taxes Applied</Heading>
-            <>
+            <>Taxes Applied</>
+            <Heading>
               {paymentDetails &&
                 paymentDetails["taxesApplied"] &&
                 paymentDetails["taxesApplied"]}
-            </>
+            </Heading>
           </Stack>
           <Stack vertical={false} distribution="equalSpacing">
-            <Heading>Inclusive Tax</Heading>
-            <>
+            <>Inclusive Tax</>
+            <Heading>
               {paymentDetails &&
                 paymentDetails["inclusiveTax"] &&
                 paymentDetails["inclusiveTax"]}
-            </>
+            </Heading>
           </Stack>
         </Layout.Section>
       </Layout>
