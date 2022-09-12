@@ -503,7 +503,7 @@ const ProductBulkMenu = (props) => {
               </Button>
               <Button
                 primary
-                loading={btnLoader}
+                loading={importProductById.btnLoader}
                 disabled={!importProductById.idArray.length}
                 onClick={async () => {
                   setImportProductById({
