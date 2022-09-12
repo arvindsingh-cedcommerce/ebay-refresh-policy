@@ -91,14 +91,14 @@ const VariantComponentData = ({ dataSource, size }) => {
       // );
       tempObject["excluded"] = (
         <Stack>
-          <>Included</>
+          {/* <>Excluded</> */}
           <Switch
-            defaultChecked={key["isExclude"] ? true : false}
+            defaultChecked={key["isExclude"] ? false : true}
             onChange={async (e) => {
               const { source_product_id } = key;
               const postData = {};
               postData["variant_id"] = [source_product_id];
-              postData["status"] = e ? "Exclude" : "Include";
+              postData["status"] = !e ? "Exclude" : "Include";
               let { success, message, data } = await postActionOnProductById(
                 changeVariantStatusURL,
                 postData
@@ -110,13 +110,13 @@ const VariantComponentData = ({ dataSource, size }) => {
               }
               // setReactSwitchPlan(e);
             }}
-            style={
-              key["isExclude"]
-                ? { background: "#1890ff" }
-                : { background: "#1890ff" }
-            }
+            // style={
+            //   key["isExclude"]
+            //     ? { background: "#a19f9f" }
+            //     : { background: "#1890ff" }
+            // }
           />
-          <>Excluded</>
+          {/* <>Included</> */}
         </Stack>
       );
       tempObject["variantImage"] = key["main_image"] ? (
@@ -142,7 +142,7 @@ const VariantComponentData = ({ dataSource, size }) => {
 
   const columns = [
     {
-      title: "Excluded",
+      title: "Included",
       dataIndex: "excluded",
       key: "excluded",
       editable: false,

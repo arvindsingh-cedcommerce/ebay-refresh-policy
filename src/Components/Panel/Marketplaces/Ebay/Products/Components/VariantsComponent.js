@@ -2,8 +2,18 @@ import { Image, Switch } from "antd";
 import React, { useEffect, useState } from "react";
 import NestedTableComponent from "../../../../../AntDesignComponents/NestedTableComponent";
 import NoProductImage from "../../../../../../assets/notfound.png";
-import { Badge, Icon, Select, Stack, TextField, Tooltip } from "@shopify/polaris";
+import {
+  Badge,
+  Icon,
+  Select,
+  Stack,
+  TextField,
+  Tooltip,
+} from "@shopify/polaris";
 import { EditMinor } from "@shopify/polaris-icons";
+import { postActionOnProductById } from "../../../../../../APIrequests/ProductsAPI";
+import { changeVariantStatusURL } from "../../../../../../URLs/ProductsURL";
+import { notify } from "../../../../../../services/notify";
 
 const VariantsComponent = ({
   dataSource,
@@ -183,9 +193,28 @@ const VariantsComponent = ({
       // />
     );
     tempObject["variantExcluded"] = (
-      <Badge status={key["isExclude"] ? "success" : "critical"}>
-        {key["isExclude"] ? "Excluded" : 'Included'}
-      </Badge>
+      <Switch
+        defaultChecked={key["isExclude"] ? false : true}
+        onChange={async (e) => {
+          const { source_product_id } = key;
+          const postData = {};
+          postData["variant_id"] = [source_product_id];
+          postData["status"] = !e ? "Exclude" : "Include";
+          let { success, message, data } = await postActionOnProductById(
+            changeVariantStatusURL,
+            postData
+          );
+          if (success) {
+            notify.success(message ? message : data);
+          } else {
+            notify.error(message ? message : data);
+          }
+          // setReactSwitchPlan(e);
+        }}
+      />
+      // <Badge status={key["isExclude"] ? "success" : "critical"}>
+      //   {key["isExclude"] ? "Excluded" : 'Included'}
+      // </Badge>
     );
     tempObject["variantWeight"] =
       key["weight"] !== undefined ? (
