@@ -53,6 +53,7 @@ import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
 import NewFilterComponentSimilarPolaris from "../Products/NewFilterComponentSimilarPolaris";
 import { stringOperatorOptions } from "../Products/NewProductsNewFilters";
 import OrderMassMenu from "../Products/OrderMassMenu";
+import NewFilterComponentSimilarPolarisOrders from "./NewFilterComponentSimilarPolarisOrders";
 
 const { Text } = Typography;
 let demo = {
@@ -107,7 +108,8 @@ const filtersFields = [
   },
   {
     label: "Customer Name",
-    value: "client_details.name",
+    // value: "client_details.name",
+    value: "customer.first_name",
     searchType: "textField",
     inputValue: "",
     operator: "3",
@@ -450,6 +452,9 @@ const NewOrdersGrid = (props) => {
             connectedAccount["value"] === filtersToPass["filter[country][1]"]
         );
         filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
+      } else if (key === "filter[status][1]") {
+        filterPostData["filter[target_status][1]"] =
+          filtersToPass["filter[status][1]"];
       } else {
         filterPostData[key] = filtersToPass[key];
       }
@@ -567,8 +572,18 @@ const NewOrdersGrid = (props) => {
           filters[filter]["value"];
       }
     });
+    let filtersToPassTemp = { ...filtersToPass };
+    if (Object.keys(filtersToPassTemp).length) {
+      for (const key in filtersToPassTemp) {
+        for (const key1 in temp) {
+          if (key.split("[")[1] === key1.split("[")[1]) {
+            delete filtersToPassTemp[key];
+          }
+        }
+      }
+    }
     if (Object.keys(temp).length > 0) {
-      setFiltersToPass({ ...filtersToPass, ...temp });
+      setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
       notify.warn("No filters applied");
     }
@@ -870,8 +885,8 @@ const NewOrdersGrid = (props) => {
     return {
       type: selectionType,
       ...rowSelection,
-    }
-  }
+    };
+  };
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -941,7 +956,7 @@ const NewOrdersGrid = (props) => {
           loading={gridLoader}
         />
       </Card>
-      <NewFilterComponentSimilarPolaris
+      <NewFilterComponentSimilarPolarisOrders
         setFiltersDrawerVisible={setFiltersDrawerVisible}
         filtersDrawerVisible={filtersDrawerVisible}
         filters={filters}
