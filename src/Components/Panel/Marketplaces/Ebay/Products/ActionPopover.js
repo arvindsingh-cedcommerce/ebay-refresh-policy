@@ -63,7 +63,7 @@ const ActionPopover = (props) => {
           onClick={(e) => {
             const { container_id, source_product_id } = record;
             return props.history.push(
-              `/panel/ebay/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
+              `/panel/ebay/products/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
             );
           }}
         >

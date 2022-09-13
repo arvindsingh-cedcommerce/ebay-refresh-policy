@@ -17,54 +17,56 @@ const ProductDataComponentNew = ({
     return filteredAccounts[0]["label"];
   };
 
-  return (
+  return Object.keys(errorsData).length ? (
     <Collapse onChange={() => {}}>
-      {Object.keys(errorsData).length && Object.keys(errorsData?.errorsObj).length && (
-        <Collapse.Panel header={"Errors"} key="1">
-          <FormLayout>
-            {Object.keys(errorsData?.errorsObj).map((shopId, index) => {
-              return (
-                <Layout>
-                  <Layout.AnnotatedSection
-                    id={getAccountLabel(shopId)}
-                    title={getAccountLabel(shopId)}
-                  >
-                    <Card sectioned>
-                      <ReactJson
-                        style={{ maxHeight: 200, overflowY: "scroll" }}
-                        src={errorsData?.errorsObj[shopId]}
-                      />
-                    </Card>
-                  </Layout.AnnotatedSection>
-                </Layout>
-              );
-            })}
-          </FormLayout>
-        </Collapse.Panel>
-      )}
-      {Object.keys(errorsData).length && Object.keys(errorsData?.itemIdObj).length && (
-        <Collapse.Panel header={"eBay Product Data"} key="2">
-          <FormLayout>
-            {Object.keys(errorsData?.itemIdObj).map((shopId, index) => {
-              return (
-                <Layout>
-                  <Layout.AnnotatedSection
-                    id={getAccountLabel(shopId)}
-                    title={getAccountLabel(shopId)}
-                  >
-                    <Card sectioned>
-                      <ReactJson
-                        style={{ maxHeight: 200, overflowY: "scroll" }}
-                        src={errorsData?.itemIdObj[shopId].jsonResponse}
-                      />
-                    </Card>
-                  </Layout.AnnotatedSection>
-                </Layout>
-              );
-            })}
-          </FormLayout>
-        </Collapse.Panel>
-      )}
+      {Object.keys(errorsData).length &&
+        Object.keys(errorsData?.errorsObj).length && (
+          <Collapse.Panel header={"Errors"} key="1">
+            <FormLayout>
+              {Object.keys(errorsData?.errorsObj).map((shopId, index) => {
+                return (
+                  <Layout>
+                    <Layout.AnnotatedSection
+                      id={getAccountLabel(shopId)}
+                      title={getAccountLabel(shopId)}
+                    >
+                      <Card sectioned>
+                        <ReactJson
+                          style={{ maxHeight: 200, overflowY: "scroll" }}
+                          src={errorsData?.errorsObj[shopId]}
+                        />
+                      </Card>
+                    </Layout.AnnotatedSection>
+                  </Layout>
+                );
+              })}
+            </FormLayout>
+          </Collapse.Panel>
+        )}
+      {Object.keys(errorsData).length &&
+        Object.keys(errorsData?.itemIdObj).length && (
+          <Collapse.Panel header={"eBay Product Data"} key="2">
+            <FormLayout>
+              {Object.keys(errorsData?.itemIdObj).map((shopId, index) => {
+                return (
+                  <Layout>
+                    <Layout.AnnotatedSection
+                      id={getAccountLabel(shopId)}
+                      title={getAccountLabel(shopId)}
+                    >
+                      <Card sectioned>
+                        <ReactJson
+                          style={{ maxHeight: 200, overflowY: "scroll" }}
+                          src={errorsData?.itemIdObj[shopId].jsonResponse}
+                        />
+                      </Card>
+                    </Layout.AnnotatedSection>
+                  </Layout>
+                );
+              })}
+            </FormLayout>
+          </Collapse.Panel>
+        )}
       {/* {!isUndefined(data.ebay_product_data) && (
             <Collapse.Panel header="eBay Product Data" key="1">
               <ReactJson
@@ -92,6 +94,12 @@ const ProductDataComponentNew = ({
             </Collapse.Panel>
           )} */}
     </Collapse>
+  ) : (
+    <Layout>
+      <Layout.Section>
+        <Card title="Product is not uploaded yet" sectioned></Card>
+      </Layout.Section>
+    </Layout>
   );
 };
 
