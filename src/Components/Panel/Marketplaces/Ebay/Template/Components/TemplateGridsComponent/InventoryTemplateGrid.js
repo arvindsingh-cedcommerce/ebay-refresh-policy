@@ -74,7 +74,7 @@ const getFitersInitially = () => {
 };
 
 const InventoryTemplateGrid = (props) => {
-  const {cbFuncInventory} = props
+  const { cbFuncInventory } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
     siteID: "",
@@ -152,16 +152,15 @@ const InventoryTemplateGrid = (props) => {
       count: pageSize,
       activePage: activePage,
       ...filtersToPass,
-    }
-    if(Object.keys(filtersToPass).length) {
-      postData['activePage'] = 1
+    };
+    if (Object.keys(filtersToPass).length) {
+      postData["activePage"] = 1;
     }
     const {
       success,
       data: fetchedTemplatesArray,
       message,
-    } = await getTemplates(getTemplatesURL, postData
-    );
+    } = await getTemplates(getTemplatesURL, postData);
     if (success) {
       const overAllFilteredTemplateData = fetchedTemplatesArray.map(
         (template, index) => {
@@ -199,8 +198,20 @@ const InventoryTemplateGrid = (props) => {
                 </Text>
               </center>
             ),
-            templateCustomisedInventory: <center>{template['data']?.['customiseInventoryType']}</center>,
-            templateThresholdInventory: <center>{template['data']?.['thresholdInventory']}</center>,
+            templateCustomisedInventory: (
+              <center>
+                {template["data"]?.["customiseInventoryType"]
+                  ? template["data"]?.["customiseInventoryType"]
+                  : "-"}
+              </center>
+            ),
+            templateThresholdInventory: (
+              <center>
+                {template["data"]?.["thresholdInventory"]
+                  ? template["data"]?.["thresholdInventory"]
+                  : "-"}
+              </center>
+            ),
             siteID: template["data"]?.site_id,
             shopID: template["data"]?.shop_id,
             primaryCategoryMappingName: (
@@ -323,7 +334,7 @@ const InventoryTemplateGrid = (props) => {
   );
 
   useEffect(() => {
-      verify(filterCategoryTemplateName);
+    verify(filterCategoryTemplateName);
   }, [filterCategoryTemplateName]);
 
   const renderCategorySearch = () => {
