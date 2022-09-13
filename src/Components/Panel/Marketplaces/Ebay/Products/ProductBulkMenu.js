@@ -76,6 +76,21 @@ const ProductBulkMenu = (props) => {
   });
   const [selectedProfle, setSelectedProfle] = useState("all");
 
+  // import by id validation
+  const [importByIdError, setImportByIdError] = useState(false);
+
+  const checkImportProductById = (id) => {
+    let validID = true;
+    if (id.length != 13) {
+      console.log(id.length);
+      validID = false;
+      setImportByIdError("Please enter valid product id having 13 digits");
+    } else {
+      setImportByIdError(false);
+    }
+    return validID;
+  };
+
   return (
     <>
       <Dropdown
@@ -186,7 +201,7 @@ const ProductBulkMenu = (props) => {
               <Menu.Item
                 key="Import"
                 onClick={() => {
-                  props.history.push('/panel/ebay/products/bulkupdate')
+                  props.history.push("/panel/ebay/products/bulkupdate");
                 }}
               >
                 <ImportOutlined /> Bulk Update
@@ -436,7 +451,7 @@ const ProductBulkMenu = (props) => {
         <Modal.Section>
           {/* <FormLayout> */}
           <Stack vertical spacing="tight">
-            <Stack alignment="center">
+            <Stack wrap={true}>
               <Stack.Item fill>
                 <TextField
                   placeholder="Enter shopify product id"
@@ -446,24 +461,33 @@ const ProductBulkMenu = (props) => {
                   }}
                   type="number"
                   min={0}
+                  error={importByIdError}
+                  // maxLength={13}
+                  // autoComplete="off"
+                  showCharacterCount
                 />
               </Stack.Item>
               <Stack.Item>
                 <Button
                   primary
                   onClick={() => {
-                    let temp = { ...importProductById };
-                    if (
-                      !importProductById["idArray"].includes(
-                        importProductById["id"]
-                      )
-                    ) {
-                      temp["idArray"].push(importProductById["id"]);
-                      temp["id"] = "";
-                      temp["modal"]["actionPayload"]["product_id"].push(
-                        importProductById["id"]
-                      );
-                      setImportProductById(temp);
+                    const validID = checkImportProductById(
+                      importProductById["id"]
+                    );
+                    if (validID) {
+                      let temp = { ...importProductById };
+                      if (
+                        !importProductById["idArray"].includes(
+                          importProductById["id"]
+                        )
+                      ) {
+                        temp["idArray"].push(importProductById["id"]);
+                        temp["id"] = "";
+                        temp["modal"]["actionPayload"]["product_id"].push(
+                          importProductById["id"]
+                        );
+                        setImportProductById(temp);
+                      }
                     }
                   }}
                   disabled={importProductById["id"] === ""}
