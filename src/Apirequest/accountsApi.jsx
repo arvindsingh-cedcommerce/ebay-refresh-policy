@@ -11,3 +11,7 @@ export async function updateactiveInactiveAccounts(data){
 export async function viewUserDetailsEbay(data){
     return await requests.postRequest('ebay/request/userDetails', data);
 }
+
+export async function uploadPic(data) {
+    return await requests.postRequest('ebay/SaveProfile/UserProfilePhoto', data);
+}

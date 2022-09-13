@@ -1,7 +1,8 @@
-import { Page } from "@shopify/polaris";
+import { Card, Layout, Page } from "@shopify/polaris";
 import React, { useEffect, useState } from "react";
 import { getConnectedAccounts } from "../../../Apirequest/accountsApi";
 import AppAccountDetailsComponent from "./AccountTabsComponent/AppAccountDetailsComponent";
+import ImageUpload from "./ImageUpload";
 
 const ShopifyAccount = (props) => {
   const { shopifyAccountData } = props;
@@ -56,7 +57,15 @@ const ShopifyAccount = (props) => {
 
   return (
     <Page fullWidth={false} title="User Profile">
-      <AppAccountDetailsComponent shopifyData={shopifyData} />
+      <Layout>
+        <Layout.Section secondary>
+          <ImageUpload />
+        </Layout.Section>
+        <Layout.Section>
+          <AppAccountDetailsComponent shopifyData={shopifyData} />
+          <Card></Card>
+        </Layout.Section>
+      </Layout>
     </Page>
   );
 };
