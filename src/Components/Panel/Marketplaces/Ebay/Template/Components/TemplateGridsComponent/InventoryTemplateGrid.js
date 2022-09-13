@@ -199,6 +199,8 @@ const InventoryTemplateGrid = (props) => {
                 </Text>
               </center>
             ),
+            templateCustomisedInventory: <center>{template['data']?.['customiseInventoryType']}</center>,
+            templateThresholdInventory: <center>{template['data']?.['thresholdInventory']}</center>,
             siteID: template["data"]?.site_id,
             shopID: template["data"]?.shop_id,
             primaryCategoryMappingName: (
