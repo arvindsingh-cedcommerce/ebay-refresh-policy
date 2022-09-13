@@ -59,7 +59,7 @@ const Configuration = (props) => {
   const redirect = (url) => props.history.push(url);
 
   useEffect(() => {
-    document.title = "Configuration";
+    document.title = "Configuration | Integration for eBay";
     document.description = "Configuration";
     getSavedData();
   }, []);

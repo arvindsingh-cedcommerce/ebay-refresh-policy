@@ -107,7 +107,7 @@ const ContactUs = () => {
   };
 
   useEffect(() => {
-    document.title = "Contact Us";
+    document.title = "Contact Us | Integration for eBay";
     document.description = "Contact Us";
     getAllConnectedAccounts();
   }, []);

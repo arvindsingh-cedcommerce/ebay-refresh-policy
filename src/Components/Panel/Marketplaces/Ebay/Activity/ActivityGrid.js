@@ -342,7 +342,7 @@ const ActivityGrid = (props) => {
     });
   };
   useEffect(() => {
-    document.title = "Activity";
+    document.title = "Activity | Integration for eBay";
     document.description = "Activity";
   }, []);
   return (

@@ -1,4 +1,11 @@
-import { Card, Layout, Page } from "@shopify/polaris";
+import {
+  Card,
+  ChoiceList,
+  FormLayout,
+  Layout,
+  Page,
+  TextField,
+} from "@shopify/polaris";
 import React, { useEffect, useState } from "react";
 import { getConnectedAccounts } from "../../../Apirequest/accountsApi";
 import AppAccountDetailsComponent from "./AccountTabsComponent/AppAccountDetailsComponent";
@@ -7,6 +14,19 @@ import ImageUpload from "./ImageUpload";
 const ShopifyAccount = (props) => {
   const { shopifyAccountData } = props;
   const [shopifyData, setShopifyData] = useState({});
+
+  // custom details
+  const [customDetails, setCustomDetails] = useState({
+    contactNumber: "",
+    email: "",
+    skypeLink: "",
+    whatsAppLink: "",
+    selectedEmailNotifications: [],
+  });
+
+  useEffect(() => {
+    document.title = "User Profile | Integration for eBay";
+  }, []);
 
   // useEffect(() => {
   //   if (shopifyAccountData && Object.keys(shopifyAccountData).length) {
@@ -35,7 +55,6 @@ const ShopifyAccount = (props) => {
       let shopifyAccountData = connectedAccountData.find(
         (account) => account["marketplace"] === "shopify"
       );
-      console.log(shopifyAccountData);
       //   for shopify
       let testObj = {};
       testObj["name"] = shopifyAccountData["name"];
@@ -55,6 +74,22 @@ const ShopifyAccount = (props) => {
     getAllConnectedAccounts();
   }, []);
 
+  const saveCustomDetails = () => {
+    console.log(customDetails);
+    const postData = {};
+    for (const key in customDetails) {
+      if (
+        key === "selectedEmailNotifications" &&
+        customDetails[key].length > 0
+      ) {
+        postData[key] = customDetails[key];
+      } else if (key !== "selectedEmailNotifications" && customDetails[key]) {
+        postData[key] = customDetails[key];
+      }
+    }
+    console.log(postData);
+  };
+
   return (
     <Page fullWidth={false} title="User Profile">
       <Layout>
@@ -63,7 +98,72 @@ const ShopifyAccount = (props) => {
         </Layout.Section>
         <Layout.Section>
           <AppAccountDetailsComponent shopifyData={shopifyData} />
-          <Card></Card>
+          <Card
+            sectioned
+            primaryFooterAction={{
+              content: "Submit",
+              onAction: saveCustomDetails,
+            }}
+          >
+            <FormLayout>
+              <FormLayout.Group>
+                <TextField
+                  label="Contact Number"
+                  onChange={(value) =>
+                    setCustomDetails({ ...customDetails, contactNumber: value })
+                  }
+                  autoComplete="off"
+                  value={customDetails.contactNumber}
+                  type="number"
+                  min={0}
+                />
+                <TextField
+                  type="email"
+                  label="Account Email"
+                  onChange={(value) =>
+                    setCustomDetails({ ...customDetails, email: value })
+                  }
+                  autoComplete="email"
+                  value={customDetails.email}
+                />
+                <TextField
+                  label="Skype"
+                  onChange={(value) =>
+                    setCustomDetails({ ...customDetails, skypeLink: value })
+                  }
+                  autoComplete="off"
+                  value={customDetails.skypeLink}
+                />
+                <TextField
+                  label="WhatsApp"
+                  onChange={(value) =>
+                    setCustomDetails({ ...customDetails, whatsAppLink: value })
+                  }
+                  autoComplete="off"
+                  value={customDetails.whatsAppLink}
+                />
+                <ChoiceList
+                  allowMultiple
+                  title="Email Notification"
+                  choices={[
+                    {
+                      label: "Failed Order",
+                      value: "failedOrder",
+                      // helpText:
+                      //   "Reduces the number of fields required to check out. The billing address can still be edited.",
+                    },
+                  ]}
+                  selected={customDetails.selectedEmailNotifications}
+                  onChange={(value) =>
+                    setCustomDetails({
+                      ...customDetails,
+                      selectedEmailNotifications: value,
+                    })
+                  }
+                />
+              </FormLayout.Group>
+            </FormLayout>
+          </Card>
         </Layout.Section>
       </Layout>
     </Page>

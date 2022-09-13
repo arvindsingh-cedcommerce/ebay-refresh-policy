@@ -4,10 +4,10 @@ import ProfileGridComponent from "./ProfileGridComponent";
 import CreateProfilePolaris from "./Profilepages/CreateProfilePolaris";
 
 const ProfileComponent = () => {
-  
   useEffect(() => {
-    document.title =
-      "Create/Edit profile and easily list them on eBay - CedCommerce";
+    // document.title =
+    //   "Create/Edit profile and easily list them on eBay - CedCommerce";
+    document.title = "Profile | Integration for eBay";
     document.description =
       "Place & segment your Shopify products based on product properties such as type, vendor, etc. in particular profile to assign various business policies (Return, Payment, Shipping ), templates.";
   }, []);

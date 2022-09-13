@@ -5,8 +5,9 @@ import PolicyHandler from "./PolicyHandler";
 
 const PolicyComponent = () => {
   useEffect(() => {
-    document.title =
-      "Edit an existing business policy or create new - CedCommerce";
+    // document.title =
+    //   "Edit an existing business policy or create new - CedCommerce";
+    document.title = "Policy | Integration for eBay";
     document.description =
       "Business Policy section helps you to edit an existing business policy or you can create a new business policy (Shipping/Return/Payment) as per your choice.";
   }, []);

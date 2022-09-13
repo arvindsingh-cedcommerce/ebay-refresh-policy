@@ -312,7 +312,7 @@ const NewAccount = (props) => {
   };
 
   useEffect(() => {
-    document.title = "Accounts";
+    document.title = "Accounts | Integration for eBay";
     document.description = "Accounts";
     getAllConnectedAccounts();
   }, []);

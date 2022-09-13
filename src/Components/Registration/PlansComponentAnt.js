@@ -88,7 +88,7 @@ const PlansComponentAnt = ({
     }
   };
   useEffect(() => {
-    document.title = "Plans";
+    document.title = "Plans | Integration for eBay";
     document.description = "Plans";
     hitRequiredFuncs();
     fromOnBoarding && checkActivePlan();

@@ -5,7 +5,7 @@ import DisabledProductsView from "./DisabledProductsView";
 
 const DisbaledProductsWrapper = () => {
   useEffect(() => {
-    document.title = "Disabled Products";
+    document.title = "Disabled Products | Integration for eBay";
     document.description = "Disabled Products";
   }, []);
   return (

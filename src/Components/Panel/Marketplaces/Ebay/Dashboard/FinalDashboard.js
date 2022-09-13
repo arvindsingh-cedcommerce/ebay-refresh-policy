@@ -166,8 +166,9 @@ const FinalDashboard = (props) => {
   const [dashboardSkeleton, setDashboardSkeleton] = useState(true);
 
   useEffect(() => {
-    document.title =
-      "Sell on eBay with eBay Marketplace Integration App | CedCommerce";
+    // document.title =
+    //   "Sell on eBay with eBay Marketplace Integration App | CedCommerce";
+    document.title = "Sell on eBay with eBay Marketplace Integration App | Integration for eBay"
     document.description =
       "CedCommerce introduces the eBay Marketplace Integration App enabling the Shopify merchants to sell on eBay by helping them to manage their products & orders.";
     getAllConnectedAccounts();

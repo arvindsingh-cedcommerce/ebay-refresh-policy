@@ -507,7 +507,7 @@ const NewOrdersGrid = (props) => {
   }, [massActionSelected]);
 
   useEffect(() => {
-    document.title = "Fetch the orders received on eBay - CedCommerce";
+    document.title = "Orders | Integration for eBay";
     document.description =
       "Order section helps you to keep a track of your orders (Fulfilled/Unfulfilled/Failed/Cancelled). It updates you about each new order received on eBay.";
     getAllConnectedAccounts();

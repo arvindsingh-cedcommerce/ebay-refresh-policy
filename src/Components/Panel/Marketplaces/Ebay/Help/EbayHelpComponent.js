@@ -17,7 +17,7 @@ const site = {
 
 const EbayHelpComponent = () => {
   useEffect(() => {
-    document.title = "Help";
+    document.title = "Help | Integration for eBay";
     document.description = "Help";
   }, []);
 
