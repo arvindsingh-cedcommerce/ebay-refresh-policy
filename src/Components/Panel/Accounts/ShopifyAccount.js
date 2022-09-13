@@ -7,7 +7,12 @@ import {
   TextField,
 } from "@shopify/polaris";
 import React, { useEffect, useState } from "react";
-import { getConnectedAccounts } from "../../../Apirequest/accountsApi";
+import {
+  getConnectedAccounts,
+  uploadCustomData,
+  uploadPic,
+} from "../../../Apirequest/accountsApi";
+import { notify } from "../../../services/notify";
 import AppAccountDetailsComponent from "./AccountTabsComponent/AppAccountDetailsComponent";
 import ImageUpload from "./ImageUpload";
 
@@ -23,6 +28,7 @@ const ShopifyAccount = (props) => {
     whatsAppLink: "",
     selectedEmailNotifications: [],
   });
+  const [customPhoto, setCustomPhoto] = useState("");
 
   useEffect(() => {
     document.title = "User Profile | Integration for eBay";
@@ -66,6 +72,9 @@ const ShopifyAccount = (props) => {
         shopifyAccountData["shop_details"]["plan_display_name"];
       testObj["address1"] = shopifyAccountData["shop_details"]["address1"];
 
+      shopifyAccountData["userPhoto"] &&
+        setCustomPhoto(shopifyAccountData["userPhoto"]);
+
       setShopifyData(testObj);
     }
   };
@@ -74,8 +83,7 @@ const ShopifyAccount = (props) => {
     getAllConnectedAccounts();
   }, []);
 
-  const saveCustomDetails = () => {
-    console.log(customDetails);
+  const getParsedSaveData = () => {
     const postData = {};
     for (const key in customDetails) {
       if (
@@ -83,18 +91,30 @@ const ShopifyAccount = (props) => {
         customDetails[key].length > 0
       ) {
         postData[key] = customDetails[key];
-      } else if (key !== "selectedEmailNotifications" && customDetails[key]) {
-        postData[key] = customDetails[key];
+      } else if (key !== "selectedEmailNotifications") {
+        let trimmedValue = customDetails[key].trim()
+        if (trimmedValue) {
+          postData[key] = trimmedValue;
+        }
       }
     }
-    console.log(postData);
+    return postData;
+  };
+  const saveCustomDetails = async () => {
+    const parsedData = getParsedSaveData(customDetails);
+    let { success, message } = await uploadCustomData(parsedData);
+    if (success) {
+      notify.success(message);
+    } else {
+      notify.error(message);
+    }
   };
 
   return (
     <Page fullWidth={false} title="User Profile">
       <Layout>
         <Layout.Section secondary>
-          <ImageUpload />
+          <ImageUpload customPhoto={customPhoto} />
         </Layout.Section>
         <Layout.Section>
           <AppAccountDetailsComponent shopifyData={shopifyData} />
@@ -127,7 +147,7 @@ const ShopifyAccount = (props) => {
                   value={customDetails.email}
                 />
                 <TextField
-                  label="Skype"
+                  label={"Skype"}
                   onChange={(value) =>
                     setCustomDetails({ ...customDetails, skypeLink: value })
                   }
