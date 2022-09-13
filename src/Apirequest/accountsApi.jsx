@@ -13,5 +13,5 @@ export async function viewUserDetailsEbay(data){
 }
 
 export async function uploadPic(data) {
-    return await requests.postRequest('ebay/SaveProfile/UserProfilePhoto', data);
+    return await requests.postRequest('ebay/saveprofile/userProfilePhoto', data);
 }
