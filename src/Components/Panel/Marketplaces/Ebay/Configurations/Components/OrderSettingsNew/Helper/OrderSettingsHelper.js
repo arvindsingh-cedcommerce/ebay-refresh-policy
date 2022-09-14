@@ -77,7 +77,7 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
         label: "Use eBay Customer Details",
         value: true,
         email: "",
-        name: "",
+        // name: "",
         description:
           "Enable this to use ebay customer details for order creation. You can set custom customer details if you don't want eBay customer details for Order creation.",
       },
@@ -165,8 +165,8 @@ export const getSavedData = (
               temp[account]["fields"][field]["value"] = false;
               temp[account]["fields"][field]["email"] =
                 orderSettingsFromSavedAPIData[shopIdFromAPI][field]["email"];
-              temp[account]["fields"][field]["name"] =
-                orderSettingsFromSavedAPIData[shopIdFromAPI][field]["name"];
+              // temp[account]["fields"][field]["name"] =
+              //   orderSettingsFromSavedAPIData[shopIdFromAPI][field]["name"];
             } else if (
               ["setOrderNote", "setOrderTags", "setOrderName"].includes(field)
             ) {

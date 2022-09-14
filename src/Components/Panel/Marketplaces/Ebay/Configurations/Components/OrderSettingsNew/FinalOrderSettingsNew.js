@@ -269,7 +269,7 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
         ) {
           parsedData[shopId][field] = {};
           parsedData[shopId][field]["email"] = fields[field]["email"];
-          parsedData[shopId][field]["name"] = fields[field]["name"];
+          // parsedData[shopId][field]["name"] = fields[field]["name"];
         } else if (
           ["setOrderNote", "setOrderTags", "setOrderName"].includes(field)
         ) {

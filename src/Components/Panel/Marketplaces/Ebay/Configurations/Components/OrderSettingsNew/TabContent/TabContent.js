@@ -486,7 +486,7 @@ const TabContent = ({
                                   ]
                                 }
                               />
-                              <TextField
+                              {/* <TextField
                                 label="Name"
                                 value={fields[field]["name"]}
                                 onChange={(value) =>
@@ -498,7 +498,7 @@ const TabContent = ({
                                     "name"
                                   ]
                                 }
-                              />
+                              /> */}
                             </FormLayout>
                           )}
                         {field === "shipmentSync" && fields[field]["value"] && (

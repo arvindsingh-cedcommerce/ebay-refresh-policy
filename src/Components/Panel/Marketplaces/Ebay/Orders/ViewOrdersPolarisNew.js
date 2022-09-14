@@ -16,8 +16,9 @@ import {
   Page,
   Badge as ShopifyBadge,
   Banner,
+  Tag,
 } from "@shopify/polaris";
-import { Avatar, Badge, PageHeader, Tag, Typography } from "antd";
+import { Avatar, Badge, PageHeader, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import ReactJson from "react-json-view";
 import { getOrder, massAction } from "../../../../../APIrequests/OrdersAPI";
@@ -34,6 +35,7 @@ import {
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import OrderSkeleton from "../../../SkeletonComponents/OrderSkeleton";
 import {
+  autofillValidation,
   extractUpdateOrderData,
   parseDataForSave,
 } from "./Helper/viewOrderHelper";
@@ -69,12 +71,13 @@ const ViewOrdersPolarisNew = (props) => {
   const [buyerName, setBuyerName] = useState(null);
   const [buyerEmail, setBuyerEmail] = useState(null);
   const [buyerAddress, setBuyerAddress] = useState({
-    address: "",
+    address1: "",
+    address2: "",
     phone: "",
     city: "",
     country: "",
     zip: "",
-    countryCode: "",
+    country_code: "",
     province: "",
   });
 
@@ -112,9 +115,10 @@ const ViewOrdersPolarisNew = (props) => {
     // phone_number: "",
     phone: "",
     shipping_address: {
-      full_name: "",
-      last_name: "ebay-cedcoss",
+      name: "",
+      // last_name: "ebay-cedcoss",
       address1: "",
+      address2: "",
       // phone_number: "",
       phone: "",
       company: "",
@@ -122,10 +126,20 @@ const ViewOrdersPolarisNew = (props) => {
       province: "",
       zip: "",
       country: "",
+      country_code: "",
     },
     customer: true,
     tags: "",
     note: "",
+  });
+
+  // recieved data from api
+  const [recievedData, setRecievedData] = useState({});
+
+  // update errors
+  const [updateErrors, setUpdateErrors] = useState({
+    email: false,
+    phone: false,
   });
 
   const getModalStructure = (title, active, value) => {
@@ -161,6 +175,7 @@ const ViewOrdersPolarisNew = (props) => {
     let postData = { order_id: id };
     let { success, data, message } = await getOrder(getOrderURL, postData);
     if (success) {
+      setRecievedData(data);
       extractUpdateOrderData(data, updateOrder, setUpdateOrder);
       data["target_status"] &&
         setErroModal({
@@ -172,7 +187,8 @@ const ViewOrdersPolarisNew = (props) => {
       data["source_status"] && setSourceStatus(data["source_status"]);
       data["currency"] && setCurrency(data["currency"]);
       setShopId(data["shop_id"]);
-      setShopifyOrderName(data["shopify_order_name"]);
+      data["shopify_order_name"] &&
+        setShopifyOrderName(data["shopify_order_name"]);
       // setFinancialStatus(data["financial_status"]);
       setShopifyOrderID(
         data["target_order_id"]
@@ -204,13 +220,14 @@ const ViewOrdersPolarisNew = (props) => {
           : data["client_details"]["first_name"]
       );
       let tempAddress = buyerAddress;
-      tempAddress["address"] = data["shipping_address"]["address1"];
+      tempAddress["address1"] = data["shipping_address"]["address1"];
+      tempAddress["address2"] = data["shipping_address"]["address2"];
       // tempAddress["phone"] = data["shipping_address"]["phone_number"];
       tempAddress["phone"] = data["shipping_address"]["phone"];
       tempAddress["city"] = data["shipping_address"]["city"];
       tempAddress["country"] = data["shipping_address"]["country"];
       tempAddress["zip"] = data["shipping_address"]["zip"];
-      tempAddress["countryCode"] = data["shipping_address"]["country_code"];
+      tempAddress["country_code"] = data["shipping_address"]["country_code"];
       tempAddress["province"] = data["shipping_address"]["province"];
       setBuyerAddress(tempAddress);
 
@@ -271,12 +288,14 @@ const ViewOrdersPolarisNew = (props) => {
     switch (type) {
       case "email":
         temp["email"] = value;
+        if (value) setUpdateErrors({ ...updateErrors, email: false });
         break;
       // case "phone_number":
       //   temp["phone_number"] = value;
       //   break;
       case "phone":
         temp["phone"] = value;
+        if (value) setUpdateErrors({ ...updateErrors, phone: false });
         break;
       case "tags":
         temp["tags"] = value;
@@ -286,11 +305,14 @@ const ViewOrdersPolarisNew = (props) => {
         break;
       case "shipping_address":
         switch (innerType) {
-          case "full_name":
-            temp["shipping_address"]["full_name"] = value;
+          case "name":
+            temp["shipping_address"]["name"] = value;
             break;
           case "address1":
             temp["shipping_address"]["address1"] = value;
+            break;
+          case "address2":
+            temp["shipping_address"]["address2"] = value;
             break;
           // case "phone_number":
           //   temp["shipping_address"]["phone_number"] = value;
@@ -313,6 +335,9 @@ const ViewOrdersPolarisNew = (props) => {
           case "country":
             temp["shipping_address"]["country"] = value;
             break;
+          case "country_code":
+            temp["shipping_address"]["country_code"] = value;
+            break;
           default:
             break;
         }
@@ -326,41 +351,63 @@ const ViewOrdersPolarisNew = (props) => {
       <Form
         onSubmit={async () => {
           setUpdateOrderSubmitBtnLoader(true);
-          let parsedData = parseDataForSave(updateOrder);
-          // console.log('parsedData', parsedData);
-          let { success, message } = await massAction(updateOrderURL, {
-            id: shopifyOrderID,
-            ...parsedData,
-          });
-          if (success) {
-            notify.success(message);
+          const { errorCount, errors } = autofillValidation(
+            updateOrder,
+            recievedData
+          );
+          console.log(errorCount, errors);
+          if (errorCount == 0) {
+            let parsedData = parseDataForSave(updateOrder);
+            let { success, message } = await massAction(updateOrderURL, {
+              id: shopifyOrderID,
+              ...parsedData,
+            });
+            if (success) {
+              notify.success(message);
+              hitOrderAPI();
+            } else {
+              notify.error(message);
+            }
+            setUpdateOrderSubmitBtnLoader(false);
+            setActionModal(false);
           } else {
-            notify.error(message);
+            notify.error("Please fill required fields!");
+            let tempErrors = { ...updateErrors };
+            for (const key in errors) {
+              tempErrors[key] = errors[key];
+            }
+            setUpdateErrors(tempErrors);
+            // setUpdateOrderSubmitBtnLoader(false);
           }
           setUpdateOrderSubmitBtnLoader(false);
-          setActionModal(false);
+          // setActionModal(false);
         }}
       >
         <FormLayout>
-          <TextField
-            value={updateOrder.email}
-            onChange={(e) => updateOrderOnChange(e, "email")}
-            // placeholder="Email"
-            placeholder={"Enter Email"}
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            // helpText={
-            //   <span>
-            //     We’ll use this email address to inform you on future changes to
-            //     Polaris.
-            //   </span>
-            // }
-          />
+          <div style={{ marginBottom: "20px" }}>Contact Information</div>
+          <FormLayout>
+            <TextField
+              value={updateOrder.email}
+              error={updateErrors.email}
+              onChange={(e) => updateOrderOnChange(e, "email")}
+              // placeholder="Email"
+              placeholder={"Enter Email"}
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              // helpText={
+              //   <span>
+              //     We’ll use this email address to inform you on future changes to
+              //     Polaris.
+              //   </span>
+              // }
+            />
+          </FormLayout>
           <TextField
             // value={updateOrder.phone_number}
             // onChange={(e) => updateOrderOnChange(e, "phone_number")}
             value={updateOrder.phone}
+            error={updateErrors.phone}
             onChange={(e) => updateOrderOnChange(e, "phone")}
             placeholder={"Enter Phone Number with County Code"}
             // inputMode="tel"
@@ -370,9 +417,9 @@ const ViewOrdersPolarisNew = (props) => {
           <FormLayout>
             <TextField
               placeholder={"Full Name"}
-              value={updateOrder.shipping_address.full_name}
+              value={updateOrder.shipping_address.name}
               onChange={(e) =>
-                updateOrderOnChange(e, "shipping_address", "full_name")
+                updateOrderOnChange(e, "shipping_address", "name")
               }
             />
             <FormLayout.Group>
@@ -391,6 +438,13 @@ const ViewOrdersPolarisNew = (props) => {
                 }
               />
               <TextField
+                placeholder={"Country Code"}
+                value={updateOrder.shipping_address.country_code}
+                onChange={(e) =>
+                  updateOrderOnChange(e, "shipping_address", "country_code")
+                }
+              />
+              <TextField
                 placeholder={"Phone"}
                 // value={updateOrder.shipping_address.phone_number}
                 // onChange={(e) =>
@@ -403,13 +457,13 @@ const ViewOrdersPolarisNew = (props) => {
                 // type="number"
                 type="tel"
               />
-              <TextField
+              {/* <TextField
                 placeholder={"Company"}
                 value={updateOrder.shipping_address.company}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "company")
                 }
-              />
+              /> */}
               <TextField
                 placeholder={"City"}
                 value={updateOrder.shipping_address.city}
@@ -432,10 +486,17 @@ const ViewOrdersPolarisNew = (props) => {
                 }
               />
               <TextField
-                placeholder={"Address"}
+                placeholder={"Address Line1"}
                 value={updateOrder.shipping_address.address1}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "address1")
+                }
+              />
+              <TextField
+                placeholder={"Address Line2"}
+                value={updateOrder.shipping_address.address2}
+                onChange={(e) =>
+                  updateOrderOnChange(e, "shipping_address", "address2")
                 }
               />
             </FormLayout.Group>
@@ -647,6 +708,8 @@ const ViewOrdersPolarisNew = (props) => {
         ebayOrderData={ebayOrderData}
         currency={currency}
         shopifyOrderData={shopifyOrderData}
+        shopifyOrderName={shopifyOrderName}
+        updateOrder={updateOrder}
       />
       {/* <TabsComponent
         totalTabs={2}
@@ -938,7 +1001,7 @@ const ViewOrdersPolarisNew = (props) => {
       <Modal
         open={erroModal.show}
         onClose={() => setErroModal({ ...erroModal, show: false })}
-        title={<>Order ID: {shopifyOrderName}</>}
+        title={<>Order ID: {ebayOrderID}</>}
       >
         <Modal.Section>
           <Banner status="critical">{erroModal.msg}</Banner>
@@ -966,6 +1029,8 @@ export const OrderDetailsComponent = ({
   ebayOrderData,
   currency,
   shopifyOrderData,
+  shopifyOrderName,
+  updateOrder,
 }) => {
   // line items
   let [orderColumns, setOrderColumns] = useState([
@@ -995,13 +1060,14 @@ export const OrderDetailsComponent = ({
   const extractLineItems = () => {
     let tempProductData = [];
     tempProductData = lineItems.map((row, index) => {
-      let { title, quantity, sku, price } = row;
+      let { title, quantity, sku, price, source_product_id } = row;
       let tempObject = {};
       tempObject["key"] = index;
       tempObject["title"] = title;
       tempObject["quantity"] = quantity;
       tempObject["sku"] = sku;
       tempObject["price"] = price;
+      tempObject["lineItemId"] = source_product_id;
       return tempObject;
     });
     setOrderData(tempProductData);
@@ -1029,10 +1095,11 @@ export const OrderDetailsComponent = ({
                     <div style={{ width: "70%" }}>
                       {/* <Stack vertical spacing="extraTight"> */}
                       <div style={{ display: "flex", flexDirection: "column" }}>
-                        <Text strong>
-                          {order?.["title"]}
-                          {` (${ebayOrderID})`}
-                        </Text>
+                        {/* <Text strong> */}
+                        {order?.["title"]}
+                        {/* {` (${ebayOrderID})`} */}
+                        {` (${order?.["lineItemId"]})`}
+                        {/* </Text> */}
                         <Text type="secondary">SKU: {order?.["sku"]}</Text>
                         {/* <Text strong>Price: {order?.["price"]}</Text> */}
                       </div>
@@ -1069,7 +1136,11 @@ export const OrderDetailsComponent = ({
                 <Heading>{shopifyOrderID ? shopifyOrderID : "---"}</Heading>
               </Stack>
               <Stack vertical={false} distribution="equalSpacing">
-                <>Created Date</>
+                <>Shopify Order Name</>
+                <Heading>{shopifyOrderName ? shopifyOrderName : "---"}</Heading>
+              </Stack>
+              <Stack vertical={false} distribution="equalSpacing">
+                <>Created At</>
                 <Heading>{orderDate}</Heading>
               </Stack>
             </Card>
@@ -1098,12 +1169,56 @@ export const OrderDetailsComponent = ({
           )}
         </Layout.Section>
         <Layout.Section secondary>
-          <Card title="Customer Information">
+          <Card>
+            <Card.Section title="Notes">{updateOrder.note}</Card.Section>
+            <Card.Section title="Tags">
+              <Stack>
+                {updateOrder.tags.split(",").map((tag) => (
+                  <Tag>{tag}</Tag>
+                ))}
+              </Stack>
+            </Card.Section>
+          </Card>
+          <Card>
+            <Card.Section title="Customer">
+              <div style={{ wordBreak: "break-word" }}>{buyerEmail}</div>
+            </Card.Section>
+            {/* {updateOrder.email ||
+              (updateOrder.phone && ( */}
+            <Card.Section title="Additional Contact Information">
+              <div style={{ wordBreak: "break-word" }}>{updateOrder.email}</div>
+              <div style={{ wordBreak: "break-word" }}>{updateOrder.phone}</div>
+            </Card.Section>
+            {/* ))} */}
+            <Card.Section title="Shipping Address">
+              <Stack vertical spacing="extraTight">
+                <>{buyerAddress["address1"]}</>
+                <>{buyerAddress["address2"]}</>
+                <>{buyerAddress["city"]}</>
+                <>
+                  {buyerAddress["province"]}, {buyerAddress["country"]}{" "}
+                  {buyerAddress["country_code"] &&
+                    `(
+                  ${buyerAddress["country_code"]})`}
+                </>
+                <>{buyerAddress["zip"]}</>
+                <>{buyerAddress["phone"]}</>
+              </Stack>
+            </Card.Section>
+            {/* <Card.Section title="Billing Address">
+              <TextStyle variation="subdued">
+                Same as shipping address
+              </TextStyle>
+            </Card.Section> */}
+          </Card>
+          {/* <Card title="Customer Information">
             <Card.Section title="Customer">
               <Stack vertical spacing="extraTight" wrap>
-                <div style={{wordBreak: 'break-word'}}>{buyerName}</div>
-                <div style={{wordBreak: 'break-word'}}>{buyerEmail}</div>
-                <div style={{wordBreak: 'break-word'}}>{buyerAddress["phone"]}</div>
+                <div style={{ wordBreak: "break-word" }}>{buyerName}</div>
+                <div style={{ wordBreak: "break-word" }}>{buyerEmail}</div>
+                <div style={{ wordBreak: "break-word" }}>
+                  {buyerAddress["phone"]}
+                </div>
               </Stack>
             </Card.Section>
             <Card.Section title="Shipping Address">
@@ -1122,7 +1237,7 @@ export const OrderDetailsComponent = ({
                 Same as shipping address
               </TextStyle>
             </Card.Section>
-          </Card>
+          </Card> */}
           <Card sectioned title="Fulfillments">
             <FulfillmentsDetails fulfillmentsDetails={fulfillmentsDetails} />
           </Card>

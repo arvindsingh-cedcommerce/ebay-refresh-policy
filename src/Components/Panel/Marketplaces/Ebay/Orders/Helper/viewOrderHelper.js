@@ -1,16 +1,33 @@
+export const autofillValidation = (data, recievedData) => {
+  let errorCount = 0;
+  let errors = {};
+  if (recievedData) {
+    if (recievedData.email && !data.email.trim()) {
+      errors["email"] = "*required";
+      errorCount++;
+    }
+    if (recievedData.phone && !data.phone.trim()) {
+      errors["phone"] = "*required";
+      errorCount++;
+    }
+  }
+  return { errorCount, errors };
+};
+
 export const parseDataForSave = (data) => {
   let parsedData = {};
   for (const key in data) {
     if (typeof data[key] === "object" && Object.keys(data[key]).length > 0) {
       let tempObj = {};
       for (const innerKey in data[key]) {
-        if (innerKey === "last_name") {
-          tempObj[innerKey] = data[key][innerKey];
-        } 
+        // if (innerKey === "last_name") {
+        //   tempObj[innerKey] = data[key][innerKey];
+        // }
         // else if(innerKey === 'phone_number') {
         //   tempObj['phone'] = data[key][innerKey]
-        // } 
-        else if (data[key][innerKey]) {
+        // }
+        // else
+        if (data[key][innerKey]) {
           tempObj[innerKey] = data[key][innerKey];
         }
       }
@@ -40,8 +57,9 @@ export const extractUpdateOrderData = (data, updateOrder, setUpdateOrder) => {
         extractedData[key] = data[key];
         break;
       case "shipping_address":
-        extractedData[key]["full_name"] = data[key]["full_name"];
+        extractedData[key]["name"] = data[key]["name"];
         extractedData[key]["country"] = data[key]["country"];
+        extractedData[key]["country_code"] = data[key]["country_code"];
         // extractedData[key]["phone_number"] = data[key]["phone_number"];
         extractedData[key]["phone"] = data[key]["phone"];
         extractedData[key]["company"] = data[key]["company"];
@@ -49,8 +67,9 @@ export const extractUpdateOrderData = (data, updateOrder, setUpdateOrder) => {
         extractedData[key]["province"] = data[key]["province"];
         extractedData[key]["zip"] = data[key]["zip"];
         extractedData[key]["company"] = data[key]["company"];
-        extractedData[key]["address1"] =
-          data[key]["address1"] + " " + data[key]["address1"];
+        extractedData[key]["address1"] = data[key]["address1"];
+        //  + " " + data[key]["address1"];
+        extractedData[key]["address2"] = data[key]["address2"];
         break;
       case "customer":
         extractedData[key] = Object.keys(data[key]).length > 0;
