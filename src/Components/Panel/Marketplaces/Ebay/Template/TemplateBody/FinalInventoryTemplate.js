@@ -28,7 +28,7 @@ const customiseInventoryOptions = [
   },
   {
     label: "Reserve Inventory for Shopify Products",
-    value: "reserveInventory",
+    value: "reservedInventory",
   },
 ];
 
@@ -67,7 +67,7 @@ const FinalInventoryTemplate = (props) => {
     if (formFields[0] === "customiseInventoryType") {
       if (value === "fixedInventory") {
         temp["reservedInventory"] = "";
-      } else if (value === "reserveInventory") {
+      } else if (value === "reservedInventory") {
         temp["fixedInventory"] = "";
         temp["useShopifyInventory"] = false;
       } else if (value === "") {
@@ -201,7 +201,7 @@ const FinalInventoryTemplate = (props) => {
             />
           </Stack>
         );
-      case "reserveInventory":
+      case "reservedInventory":
         return (
           <TextField
             type="number"
