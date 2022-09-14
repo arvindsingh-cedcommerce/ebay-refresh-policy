@@ -13,6 +13,7 @@ import { postActionOnProductById } from "../../../../../APIrequests/ProductsAPI"
 import { notify } from "../../../../../services/notify";
 import {
   disableItemURL,
+  endProductByIdURL,
   uploadProductByIdURL,
 } from "../../../../../URLs/ProductsURL";
 
@@ -95,7 +96,25 @@ const ActionPopover = (props) => {
             <>Upload & Revise</>
           </Stack>
         </Button>
-        <Button type="text" danger onClick={() => {}}>
+        <Button
+          type="text"
+          danger
+          onClick={() => {
+            const { source_product_id } = record;
+            let postData = {
+              product_id: [source_product_id],
+            };
+            setModal({
+              ...modal,
+              active: true,
+              content: "End",
+              actionName: postActionOnProductById,
+              actionPayload: postData,
+              api: endProductByIdURL,
+            });
+            setActionPopoverVisible(false);
+          }}
+        >
           <Stack>
             <DeleteOutlined />
             <>End</>
@@ -145,7 +164,7 @@ const ActionPopover = (props) => {
                     notify.success(message ? message : data);
                     if (modal.content === "Disable Product") {
                       props.history.push("disabledproducts");
-                    } else props.history.push("activity");
+                    } else props.history.push("/panel/ebay/activity");
                   } else {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });
