@@ -752,7 +752,11 @@ function NewProductsNewFilters(props) {
       setInnerFilterCount(Object.keys(temp).length);
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      // notify.warn("No filters applied");
+      setFiltersDrawerVisible(false);
+      setInnerFilterCount(0);
+      setFiltersToPass("");
+      setFilterTitleORsku("");
     }
   };
 

@@ -57,7 +57,6 @@ const NewFilterComponentSimilarPolaris = ({
                 status: [],
               });
             }}
-            disabled={false}
           >
             Clear All Filters
           </Button>
