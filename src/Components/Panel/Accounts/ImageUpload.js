@@ -1,14 +1,10 @@
 import { Button, Card } from "@shopify/polaris";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { uploadPic } from "../../../Apirequest/accountsApi";
+import { notify } from "../../../services/notify";
 import "./imageUpload.css";
 
-const ImageUpload = () => {
-  const [person, setPerson] = useState({
-    file: "",
-    imagePreviewUrl: "",
-    active: "edit",
-  });
+const ImageUpload = ({ person, setPerson }) => {
   const photoUpload = (e) => {
     e.preventDefault();
     const reader = new FileReader();
@@ -125,6 +121,8 @@ const Profile = ({ onSubmit, src }) => {
 };
 
 const Edit = ({ onSubmit, person, children }) => {
+  const [saveImgLoader, setSaveImgLoader] = useState(false);
+
   return (
     <Card sectioned>
       <form
@@ -140,12 +138,19 @@ const Edit = ({ onSubmit, person, children }) => {
         <Button
           primary
           onClick={async () => {
-            console.log(person);
+            setSaveImgLoader(true);
             let postData = { fileToUpload: { name: "" } };
             postData["fileToUpload"] = person.imagePreviewUrl;
-            let {} = await uploadPic(postData);
+            let { success, message } = await uploadPic(postData);
+            if (success) {
+              notify.success(message);
+            } else {
+              notify.error(message);
+            }
+            setSaveImgLoader(false);
           }}
           disabled={!person.imagePreviewUrl}
+          loading={saveImgLoader}
         >
           Save
         </Button>

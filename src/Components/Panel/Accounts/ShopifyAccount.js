@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import {
   getConnectedAccounts,
+  getProfileImage,
   uploadCustomData,
   uploadPic,
 } from "../../../Apirequest/accountsApi";
@@ -18,6 +19,12 @@ import ImageUpload from "./ImageUpload";
 
 const ShopifyAccount = (props) => {
   const { shopifyAccountData } = props;
+  // custom photo
+  const [person, setPerson] = useState({
+    file: "",
+    imagePreviewUrl: "",
+    active: "edit",
+  });
   const [shopifyData, setShopifyData] = useState({});
 
   // custom details
@@ -72,15 +79,33 @@ const ShopifyAccount = (props) => {
         shopifyAccountData["shop_details"]["plan_display_name"];
       testObj["address1"] = shopifyAccountData["shop_details"]["address1"];
 
-      shopifyAccountData["userPhoto"] &&
-        setCustomPhoto(shopifyAccountData["userPhoto"]);
+      // if (shopifyAccountData?.["userCustomData"]?.["photo"]) {
+      //   const imageName = shopifyAccountData["userCustomData"]["photo"].split('/').pop()
+      //   setPerson({...person, imagePreviewUrl: imageName})
+      // }
+
+      if (shopifyAccountData?.["userCustomData"]?.["userData"]) {
+        setCustomDetails({
+          ...customDetails,
+          ...shopifyAccountData?.["userCustomData"]?.["userData"],
+        });
+      }
 
       setShopifyData(testObj);
     }
   };
 
+  const getImage = async() => {
+    let {success, message} = await getProfileImage()
+    if(success) {
+      setPerson({...person, imagePreviewUrl: message})
+    } else {
+      // setPerson({...person, imagePreviewUrl: message})
+    }
+  }
   useEffect(() => {
     getAllConnectedAccounts();
+    getImage()
   }, []);
 
   const getParsedSaveData = () => {
@@ -92,7 +117,7 @@ const ShopifyAccount = (props) => {
       ) {
         postData[key] = customDetails[key];
       } else if (key !== "selectedEmailNotifications") {
-        let trimmedValue = customDetails[key].trim()
+        let trimmedValue = customDetails[key].trim();
         if (trimmedValue) {
           postData[key] = trimmedValue;
         }
@@ -114,7 +139,10 @@ const ShopifyAccount = (props) => {
     <Page fullWidth={false} title="User Profile">
       <Layout>
         <Layout.Section secondary>
-          <ImageUpload customPhoto={customPhoto} />
+          <ImageUpload
+            person={person}
+            setPerson={setPerson}
+          />
         </Layout.Section>
         <Layout.Section>
           <AppAccountDetailsComponent shopifyData={shopifyData} />

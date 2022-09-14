@@ -19,3 +19,7 @@ export async function uploadPic(data) {
 export async function uploadCustomData(data) {
     return await requests.postRequest('ebay/saveprofile/userProfileData', data);
 }
+
+export async function getProfileImage(){
+    return await requests.getRequest('ebay/saveprofile/getUserPhoto');
+}
