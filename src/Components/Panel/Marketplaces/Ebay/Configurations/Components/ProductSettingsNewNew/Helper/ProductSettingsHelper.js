@@ -130,14 +130,14 @@ export const getAppToEbaySavedData = (
   setconnectedAccountsObject
 ) => {
   let temp = { ...connectedAccountsObject };
-  console.log(temp, data);
   for (const account in connectedAccountsObject) {
     for (const shopid in data) {
       if (connectedAccountsObject[account]["shopId"] == shopid) {
-        temp[account]["checked"] = true;
-        for (const field in data[shopid]["data"]["product_settings"][
+        // temp[account]["checked"] = true;
+        for (const field in data?.[shopid]?.["data"]?.["product_settings"]?.[
           "app_to_ebay"
         ]) {
+          temp[account]["checked"] = true;
           if (
             field === "autoProductSync" &&
             Object.keys(
