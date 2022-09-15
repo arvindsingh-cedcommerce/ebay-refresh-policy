@@ -221,10 +221,10 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
                 errorData[account][attribute][field]["email"] = true;
                 errorCount++;
               } else errorData[account][attribute][field]["email"] = false;
-              if (!data[account][attribute][field]["name"]) {
-                errorData[account][attribute][field]["name"] = true;
-                errorCount++;
-              } else errorData[account][attribute][field]["name"] = false;
+              // if (!data[account][attribute][field]["name"]) {
+              //   errorData[account][attribute][field]["name"] = true;
+              //   errorCount++;
+              // } else errorData[account][attribute][field]["name"] = false;
             } else if(field === 'setOrderName' && data?.[account]?.[attribute]?.[field]?.['value'] === 'custom' && !data?.[account]?.[attribute]?.[field]?.['customValue'].includes("{{ebay_order_id}}")) {
               errorData[account][attribute][field] = {}
               errorData[account][attribute][field]['customValue'] = "must contain ebay order id";
