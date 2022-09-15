@@ -10,6 +10,7 @@ import {
   TextStyle,
   Tooltip,
   Banner,
+  ButtonGroup,
 } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, PageHeader, Row, Typography } from "antd";
@@ -462,7 +463,11 @@ const ProfileGridComponent = (props) => {
     setPopOverStatus(temp);
   };
   const countryActivator = (
-    <ShopifyButton disclosure onClick={() => popOverHandler("country")}>
+    <ShopifyButton
+      fullWidth
+      disclosure
+      onClick={() => popOverHandler("country")}
+    >
       Account
     </ShopifyButton>
   );
@@ -576,7 +581,12 @@ const ProfileGridComponent = (props) => {
           >
             <Stack wrap>
               <Stack.Item fill>{renderTitleOrSKU()}</Stack.Item>
-              <Stack.Item>{renderOtherFilters()}</Stack.Item>
+              {/* <Stack.Item>{renderOtherFilters()}</Stack.Item> */}
+              <Stack.Item>
+                <div style={{ width: 200 }}>
+                  {renderChoiceListForProfilenameCountry()}
+                </div>
+              </Stack.Item>
             </Stack>
             <Stack spacing="tight">
               {Object.keys(filtersToPass).length > 0 && tagMarkup()}
