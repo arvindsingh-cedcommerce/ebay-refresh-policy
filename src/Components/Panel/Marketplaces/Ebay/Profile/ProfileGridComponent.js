@@ -11,6 +11,7 @@ import {
   Tooltip,
   Banner,
   ButtonGroup,
+  Button,
 } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, PageHeader, Row, Typography } from "antd";
@@ -133,10 +134,12 @@ const ProfileGridComponent = (props) => {
   const [filtersDrawerVisible, setFiltersDrawerVisible] = useState(false);
   const [filters, setFilters] = useState(getFitersInitially());
 
-  const [filtersToPass, setFiltersToPass] = useState("");
   const [searchWithProfileName, setSearchWithProfileName] = useState(true);
-  const [filterProfileNameORCountry, setFilterProfileNameORCountry] =
-    useState("");
+  const [filterNameORQuery, setFilterNameORQuery] = useState("");
+
+  const [filtersToPass, setFiltersToPass] = useState("");
+  // const [searchWithProfileName, setSearchWithProfileName] = useState(true);
+  const [filterProfileNameORQuery, setFilterProfileNameORQuery] = useState("");
   const [popOverStatus, setPopOverStatus] = useState({
     country: false,
   });
@@ -297,18 +300,30 @@ const ProfileGridComponent = (props) => {
     let { filters } = filtersProps;
     let { pageSize: count, activePage } = paginationProps;
     let filterPostData = {};
-    if (filtersToPass.hasOwnProperty("filter[country][1]")) {
-      let matchedAccoount = connectedAccountsArray.find(
-        (connectedAccount) =>
-          connectedAccount["value"] === filtersToPass["filter[country][1]"]
-      );
-      filterPostData["filter[profile_shop_id][1]"] =
-        matchedAccoount?.["shopId"];
-      filterPostData["site_id"] = Number(matchedAccoount?.["siteID"]);
+    for (const key in filtersToPass) {
+      if (key === "filter[country][1]") {
+        let matchedAccoount = connectedAccountsArray.find(
+          (connectedAccount) =>
+            connectedAccount["value"] === filtersToPass["filter[country][1]"]
+        );
+        filterPostData["filter[profile_shop_id][1]"] =
+          matchedAccoount?.["shopId"];
+      } else {
+        filterPostData[key] = filtersToPass[key];
+      }
     }
-    if (filtersToPass.hasOwnProperty("filter[name][3]")) {
-      filterPostData["filter[name][3]"] = filtersToPass["filter[name][3]"];
-    }
+    // if (filtersToPass.hasOwnProperty("filter[country][1]")) {
+    //   let matchedAccoount = connectedAccountsArray.find(
+    //     (connectedAccount) =>
+    //       connectedAccount["value"] === filtersToPass["filter[country][1]"]
+    //   );
+    //   filterPostData["filter[profile_shop_id][1]"] =
+    //     matchedAccoount?.["shopId"];
+    //   filterPostData["site_id"] = Number(matchedAccoount?.["siteID"]);
+    // }
+    // if (filtersToPass.hasOwnProperty("filter[name][3]")) {
+    //   filterPostData["filter[name][3]"] = filtersToPass["filter[name][3]"];
+    // }
 
     let dataToPost = {
       count: count,
@@ -348,6 +363,8 @@ const ProfileGridComponent = (props) => {
     switch (field) {
       case "name":
         return "Name";
+      case "querySentence":
+        return "Query";
       case "country":
         return "Country";
     }
@@ -405,7 +422,7 @@ const ProfileGridComponent = (props) => {
                 tempObj[object]["value"] = "";
               }
             });
-            setFilterProfileNameORCountry("");
+            setFilterProfileNameORQuery("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
@@ -424,7 +441,7 @@ const ProfileGridComponent = (props) => {
       if (searchWithProfileName) {
         type = "filter[name][3]";
       } else {
-        type = "filter[account][3]";
+        type = "filter[querySentence][3]";
       }
       let titleFilterObj = {};
       titleFilterObj[type] = value;
@@ -434,9 +451,9 @@ const ProfileGridComponent = (props) => {
         let temp = { ...filtersToPass };
         delete temp["filter[name][3]"];
         setFiltersToPass(temp);
-      } else if (filtersToPass.hasOwnProperty("filter[account][3]")) {
+      } else if (filtersToPass.hasOwnProperty("filter[querySentence][3]")) {
         let temp = { ...filtersToPass };
-        delete temp["filter[account][3]"];
+        delete temp["filter[querySentence][3]"];
         setFiltersToPass(temp);
       }
       // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
@@ -446,12 +463,12 @@ const ProfileGridComponent = (props) => {
   const renderTitleOrSKU = () => {
     return (
       <TextField
-        value={filterProfileNameORCountry}
+        value={filterProfileNameORQuery}
         onChange={(e) => {
-          setFilterProfileNameORCountry(e);
+          setFilterProfileNameORQuery(e);
         }}
         placeholder={
-          searchWithProfileName ? "Search with name" : "Search with Country"
+          searchWithProfileName ? "Search with name" : "Search with query"
         }
       />
     );
@@ -496,8 +513,43 @@ const ProfileGridComponent = (props) => {
   );
 
   useEffect(() => {
-    verify(filterProfileNameORCountry);
-  }, [filterProfileNameORCountry, searchWithProfileName]);
+    verify(filterProfileNameORQuery);
+  }, [filterProfileNameORQuery, searchWithProfileName]);
+
+  const renderChoiceListForNameQuery = () => (
+    <ButtonGroup segmented>
+      <Button
+        primary={searchWithProfileName}
+        pressed={searchWithProfileName}
+        onClick={(e) => {
+          let temp = { ...filtersToPass };
+          if (temp.hasOwnProperty("filter[querySentence][3]")) {
+            delete temp["filter[querySentence][3]"];
+          }
+          setFiltersToPass(temp);
+          setFilterProfileNameORQuery("");
+          setSearchWithProfileName(true);
+        }}
+      >
+        Name
+      </Button>
+      <Button
+        primary={!searchWithProfileName}
+        pressed={!searchWithProfileName}
+        onClick={(e) => {
+          let temp = { ...filtersToPass };
+          if (temp.hasOwnProperty("filter[name][3]")) {
+            delete temp["filter[name][3]"];
+          }
+          setFiltersToPass(temp);
+          setFilterProfileNameORQuery("");
+          setSearchWithProfileName(false);
+        }}
+      >
+        Query
+      </Button>
+    </ButtonGroup>
+  );
 
   const renderOtherFilters = () => {
     return (
@@ -581,6 +633,7 @@ const ProfileGridComponent = (props) => {
           >
             <Stack wrap>
               <Stack.Item fill>{renderTitleOrSKU()}</Stack.Item>
+              <Stack.Item>{renderChoiceListForNameQuery()}</Stack.Item>
               {/* <Stack.Item>{renderOtherFilters()}</Stack.Item> */}
               <Stack.Item>
                 <div style={{ width: 200 }}>
@@ -627,7 +680,7 @@ const ProfileGridComponent = (props) => {
         setFilters={setFilters}
         gatherAllFilters={gatherAllFilters}
         setFiltersToPass={setFiltersToPass}
-        setFilterTitleORsku={setFilterProfileNameORCountry}
+        setFilterTitleORsku={setFilterProfileNameORQuery}
         setSelected={setSelected}
       />
     </PageHeader>
