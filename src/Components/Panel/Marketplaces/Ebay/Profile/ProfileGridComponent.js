@@ -422,7 +422,8 @@ const ProfileGridComponent = (props) => {
                 tempObj[object]["value"] = "";
               }
             });
-            setFilterProfileNameORQuery("");
+            // setFilterProfileNameORQuery("");
+            ['querySentence', 'name'].includes(fieldValue) && setFilterProfileNameORQuery("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
