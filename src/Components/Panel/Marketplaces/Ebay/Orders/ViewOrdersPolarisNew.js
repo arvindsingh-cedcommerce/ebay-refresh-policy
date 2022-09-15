@@ -17,10 +17,12 @@ import {
   Badge as ShopifyBadge,
   Banner,
   Tag,
+  Thumbnail,
 } from "@shopify/polaris";
 import { Avatar, Badge, PageHeader, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import ReactJson from "react-json-view";
+import { withRouter } from "react-router-dom";
 import { getOrder, massAction } from "../../../../../APIrequests/OrdersAPI";
 import { parseQueryString } from "../../../../../services/helperFunction";
 import { notify } from "../../../../../services/notify";
@@ -39,6 +41,7 @@ import {
   extractUpdateOrderData,
   parseDataForSave,
 } from "./Helper/viewOrderHelper";
+import NoProductImage from "../../../../../assets/notfound.png";
 
 const { Text, Title } = Typography;
 
@@ -79,6 +82,7 @@ const ViewOrdersPolarisNew = (props) => {
     zip: "",
     country_code: "",
     province: "",
+    company: "",
   });
 
   //   payment details
@@ -220,6 +224,7 @@ const ViewOrdersPolarisNew = (props) => {
           : data["client_details"]["first_name"]
       );
       let tempAddress = buyerAddress;
+      tempAddress["name"] = data["shipping_address"]["name"];
       tempAddress["address1"] = data["shipping_address"]["address1"];
       tempAddress["address2"] = data["shipping_address"]["address2"];
       // tempAddress["phone"] = data["shipping_address"]["phone_number"];
@@ -229,6 +234,7 @@ const ViewOrdersPolarisNew = (props) => {
       tempAddress["zip"] = data["shipping_address"]["zip"];
       tempAddress["country_code"] = data["shipping_address"]["country_code"];
       tempAddress["province"] = data["shipping_address"]["province"];
+      tempAddress["company"] = data["shipping_address"]["company"];
       setBuyerAddress(tempAddress);
 
       let { tax_lines } = data;
@@ -457,13 +463,13 @@ const ViewOrdersPolarisNew = (props) => {
                 // type="number"
                 type="tel"
               />
-              {/* <TextField
+              <TextField
                 placeholder={"Company"}
                 value={updateOrder.shipping_address.company}
                 onChange={(e) =>
                   updateOrderOnChange(e, "shipping_address", "company")
                 }
-              /> */}
+              />
               <TextField
                 placeholder={"City"}
                 value={updateOrder.shipping_address.city}
@@ -710,6 +716,7 @@ const ViewOrdersPolarisNew = (props) => {
         shopifyOrderData={shopifyOrderData}
         shopifyOrderName={shopifyOrderName}
         updateOrder={updateOrder}
+        historyProps={props}
       />
       {/* <TabsComponent
         totalTabs={2}
@@ -1012,7 +1019,7 @@ const ViewOrdersPolarisNew = (props) => {
   );
 };
 
-export default ViewOrdersPolarisNew;
+export default withRouter(ViewOrdersPolarisNew);
 
 export const OrderDetailsComponent = ({
   shopifyOrderID,
@@ -1031,6 +1038,7 @@ export const OrderDetailsComponent = ({
   shopifyOrderData,
   shopifyOrderName,
   updateOrder,
+  historyProps,
 }) => {
   // line items
   let [orderColumns, setOrderColumns] = useState([
@@ -1060,7 +1068,15 @@ export const OrderDetailsComponent = ({
   const extractLineItems = () => {
     let tempProductData = [];
     tempProductData = lineItems.map((row, index) => {
-      let { title, quantity, sku, price, source_product_id } = row;
+      let {
+        title,
+        quantity,
+        sku,
+        price,
+        source_product_id,
+        target_product_id,
+        image,
+      } = row;
       let tempObject = {};
       tempObject["key"] = index;
       tempObject["title"] = title;
@@ -1068,6 +1084,8 @@ export const OrderDetailsComponent = ({
       tempObject["sku"] = sku;
       tempObject["price"] = price;
       tempObject["lineItemId"] = source_product_id;
+      tempObject["containerIdProduct"] = target_product_id;
+      tempObject["image"] = image;
       return tempObject;
     });
     setOrderData(tempProductData);
@@ -1089,14 +1107,40 @@ export const OrderDetailsComponent = ({
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    {/* <Badge count={order?.["quantity"]}>
-                      <Avatar shape="square" size={70} />
-                    </Badge> */}
-                    <div style={{ width: "70%" }}>
+                    <Badge count={1} color={"grey"}>
+                      <Avatar
+                        shape="square"
+                        src={
+                          <Thumbnail
+                            source={
+                              order?.["image"]
+                                ? order?.["image"]
+                                : NoProductImage
+                            }
+                            alt=""
+                            size="large"
+                          />
+                        }
+                      />
+                    </Badge>
+                    <div style={{ width: "60%" }}>
                       {/* <Stack vertical spacing="extraTight"> */}
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         {/* <Text strong> */}
-                        {order?.["title"]}
+                        <div
+                          onClick={() =>
+                            historyProps.history.push(
+                              `/panel/ebay/products/viewproducts?id=${order?.["containerIdProduct"]}&source_product_id=${order?.["containerIdProduct"]}`
+                            )
+                          }
+                          style={{
+                            cursor: "pointer",
+                            textDecoration: "underline",
+                            color: "blue",
+                          }}
+                        >
+                          {order?.["title"]}
+                        </div>
                         {/* {` (${ebayOrderID})`} */}
                         {` (${order?.["lineItemId"]})`}
                         {/* </Text> */}
@@ -1192,6 +1236,8 @@ export const OrderDetailsComponent = ({
             {/* ))} */}
             <Card.Section title="Shipping Address">
               <Stack vertical spacing="extraTight">
+                <>{buyerAddress["name"]}</>
+                <>{buyerAddress["company"]}</>
                 <>{buyerAddress["address1"]}</>
                 <>{buyerAddress["address2"]}</>
                 <>{buyerAddress["city"]}</>
