@@ -42,6 +42,8 @@ import {
   parseDataForSave,
 } from "./Helper/viewOrderHelper";
 import NoProductImage from "../../../../../assets/notfound.png";
+import { fetchProductById } from "../../../../../APIrequests/ProductsAPI";
+import { viewProductDataURL } from "../../../../../URLs/ProductsURL";
 
 const { Text, Title } = Typography;
 
@@ -272,7 +274,13 @@ const ViewOrdersPolarisNew = (props) => {
           fulfillments["0"].updated_at
         ).toGMTString();
       } else {
-        fulfillmentsDetails = false;
+        // fulfillmentsDetails = false;
+        fulfillmentsDetails = {
+          trackingCompany: "",
+          trackingNumber: "",
+          createdAt: "",
+          updatedAt: "",
+        };
       }
       setFulfillmentsDetails(fulfillmentsDetails);
     } else {
@@ -655,6 +663,50 @@ const ViewOrdersPolarisNew = (props) => {
                   content: "Remove from app",
                   onAction: () =>
                     getModalStructure("Remove from app", true, "removeFromApp"),
+                },
+              ]
+            : targetStatus === "fulfilled"
+            ? [
+                {
+                  content: "Update Order",
+                  onAction: () =>
+                    getModalStructure("Update Order", true, "updateOrder"),
+                },
+                {
+                  content: "Sync Shipment",
+                  onAction: () =>
+                    getModalStructure("Sync Shipment", true, "syncShipment"),
+                },
+                {
+                  content: "Delete Shopify Order",
+                  onAction: () =>
+                    getModalStructure(
+                      "Delete Shopify Order",
+                      true,
+                      "deleteOrder"
+                    ),
+                },
+              ]
+            : targetStatus === "cancelled"
+            ? [
+                {
+                  content: "Update Order",
+                  onAction: () =>
+                    getModalStructure("Update Order", true, "updateOrder"),
+                },
+                {
+                  content: "Cancel eBay Order",
+                  onAction: () =>
+                    getModalStructure("Cancel eBay Order", true, "cancelOrder"),
+                },
+                {
+                  content: "Delete Shopify Order",
+                  onAction: () =>
+                    getModalStructure(
+                      "Delete Shopify Order",
+                      true,
+                      "deleteOrder"
+                    ),
                 },
               ]
             : [
@@ -1128,16 +1180,21 @@ export const OrderDetailsComponent = ({
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         {/* <Text strong> */}
                         <div
-                          onClick={() =>
-                            historyProps.history.push(
-                              `/panel/ebay/products/viewproducts?id=${order?.["containerIdProduct"]}&source_product_id=${order?.["containerIdProduct"]}`
-                            )
-                          }
-                          style={{
-                            cursor: "pointer",
-                            textDecoration: "underline",
-                            color: "blue",
+                          onClick={() => {
+                            if (order?.["containerIdProduct"])
+                              historyProps.history.push(
+                                `/panel/ebay/products/viewproducts?id=${order?.["containerIdProduct"]}&source_product_id=${order?.["containerIdProduct"]}`
+                              );
                           }}
+                          style={
+                            order?.["containerIdProduct"]
+                              ? {
+                                  cursor: "pointer",
+                                  textDecoration: "underline",
+                                  color: "blue",
+                                }
+                              : {}
+                          }
                         >
                           {order?.["title"]}
                         </div>
@@ -1415,41 +1472,57 @@ export const ShippingDetails = ({ shippingDetails }) => {
 };
 
 export const FulfillmentsDetails = ({ fulfillmentsDetails }) => {
-  return fulfillmentsDetails ? (
+  // console.log(fulfillmentsDetails);
+  let status = true;
+  for (const key in fulfillmentsDetails) {
+    if (!fulfillmentsDetails[key]) {
+      status = false;
+    }
+  }
+  // console.log(status);
+  return status ? (
     <Layout>
       <Layout.Section>
-        <Stack
-          vertical={false}
-          distribution="equalSpacing"
-          spacing="extraTight"
-        >
-          <Heading>Tracking Company</Heading>
-          <p>{fulfillmentsDetails["trackingCompany"]}</p>
-        </Stack>
-        <Stack
-          vertical={false}
-          distribution="equalSpacing"
-          spacing="extraTight"
-        >
-          <Heading>Tracking Number</Heading>
-          <p>{fulfillmentsDetails["trackingNumber"]}</p>
-        </Stack>
-        <Stack
-          vertical={false}
-          distribution="equalSpacing"
-          spacing="extraTight"
-        >
-          <Heading>Created At</Heading>
-          <p>{fulfillmentsDetails["createdAt"]}</p>
-        </Stack>
-        <Stack
-          vertical={false}
-          distribution="equalSpacing"
-          spacing="extraTight"
-        >
-          <Heading>Updated At</Heading>
-          <p>{fulfillmentsDetails["updatedAt"]}</p>
-        </Stack>
+        {fulfillmentsDetails["trackingCompany"] && (
+          <Stack
+            vertical={false}
+            distribution="equalSpacing"
+            spacing="extraTight"
+          >
+            <Heading>Tracking Company</Heading>
+            <p>{fulfillmentsDetails["trackingCompany"]}</p>
+          </Stack>
+        )}
+        {fulfillmentsDetails["trackingNumber"] && (
+          <Stack
+            vertical={false}
+            distribution="equalSpacing"
+            spacing="extraTight"
+          >
+            <Heading>Tracking Number</Heading>
+            <p>{fulfillmentsDetails["trackingNumber"]}</p>
+          </Stack>
+        )}
+        {fulfillmentsDetails["createdAt"] && (
+          <Stack
+            vertical={false}
+            distribution="equalSpacing"
+            spacing="extraTight"
+          >
+            <Heading>Created At</Heading>
+            <p>{fulfillmentsDetails["createdAt"]}</p>
+          </Stack>
+        )}
+        {fulfillmentsDetails["updatedAt"] && (
+          <Stack
+            vertical={false}
+            distribution="equalSpacing"
+            spacing="extraTight"
+          >
+            <Heading>Updated At</Heading>
+            <p>{fulfillmentsDetails["updatedAt"]}</p>
+          </Stack>
+        )}
       </Layout.Section>
     </Layout>
   ) : (
