@@ -21,7 +21,7 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
         label: "Inventory Behaviour",
         value: "decrement_obeying_policy",
         description: (
-          <Stack spacing="extraTight" wrap={false} alignment='center'>
+          <Stack spacing="extraTight" wrap={false} alignment="center">
             <TextStyle>
               Select behaviour to use updating inventory while creating order on
               Shopify.
@@ -94,10 +94,14 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
         mappingOfShippingCarrier: false,
         description: (
           <>
-            Enable for syncing the Shipment from Shopify to eBay. You can choose
+            {/* Enable for syncing the Shipment from Shopify to eBay. You can choose
             to setting for syncing of tracking details and map Shopify Shipping
             carrier to eBay Shipping carrier if default value not matched with
-            allowed{" "}
+            allowed{" "} */}
+            Enable for syncing the Shipment from Shopify to eBay. You can choose
+            setting for syncing of tracking details shopify to eBay and map
+            Shopify Shipping carrier to eBay Shipping carrier if default value
+            not matched with allowed
             <Link
               external
               monochrome

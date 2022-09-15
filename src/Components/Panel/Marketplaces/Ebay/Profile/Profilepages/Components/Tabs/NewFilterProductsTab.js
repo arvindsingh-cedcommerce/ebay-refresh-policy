@@ -417,9 +417,11 @@ const NewFilterProductsTab = ({
       setAlreadyProfiledProductsCount(alreadyProfiled);
       setOverrideProductsModalActive(true);
     }
-    if (success && rows && Array.isArray(rows)) {
+    // if (success && rows && Array.isArray(rows)) {
+    if (success && rows) {
       let tempProductData = [];
-      tempProductData = rows.map((row, index) => {
+      // tempProductData = rows.map((row, index) => {
+      tempProductData = Object.keys(rows).map((row, index) => {
         let {
           main_image,
           title,
@@ -432,7 +434,8 @@ const NewFilterProductsTab = ({
           source_product_id,
           edited,
           quantity,
-        } = row;
+          // } = row;
+        } = rows[row];
         let tempObject = {};
         tempObject["source_product_id"] = source_product_id;
         tempObject["key"] = index;
