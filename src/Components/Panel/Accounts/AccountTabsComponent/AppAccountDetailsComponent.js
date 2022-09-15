@@ -8,7 +8,7 @@ const { Text } = Typography;
 const AppAccountDetailsComponent = ({ shopifyData }) => {
   return (
     <Card 
-    // title="User Details" 
+    title="Shopify Store Details" 
     sectioned>
       {Object.keys(shopifyData).map((field) => {
         return (

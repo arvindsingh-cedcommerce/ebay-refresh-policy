@@ -77,7 +77,7 @@ const ShopifyAccount = (props) => {
       testObj["email"] = shopifyAccountData["shop_details"]["email"];
       testObj["plan display name"] =
         shopifyAccountData["shop_details"]["plan_display_name"];
-      testObj["address1"] = shopifyAccountData["shop_details"]["address1"];
+      testObj["address"] = shopifyAccountData["shop_details"]["address1"];
 
       // if (shopifyAccountData?.["userCustomData"]?.["photo"]) {
       //   const imageName = shopifyAccountData["userCustomData"]["photo"].split('/').pop()
@@ -95,17 +95,17 @@ const ShopifyAccount = (props) => {
     }
   };
 
-  const getImage = async() => {
-    let {success, message} = await getProfileImage()
-    if(success) {
-      setPerson({...person, imagePreviewUrl: message})
+  const getImage = async () => {
+    let { success, message } = await getProfileImage();
+    if (success) {
+      setPerson({ ...person, imagePreviewUrl: message });
     } else {
       // setPerson({...person, imagePreviewUrl: message})
     }
-  }
+  };
   useEffect(() => {
     getAllConnectedAccounts();
-    getImage()
+    getImage();
   }, []);
 
   const getParsedSaveData = () => {
@@ -139,10 +139,7 @@ const ShopifyAccount = (props) => {
     <Page fullWidth={false} title="User Profile">
       <Layout>
         <Layout.Section secondary>
-          <ImageUpload
-            person={person}
-            setPerson={setPerson}
-          />
+          <ImageUpload person={person} setPerson={setPerson} />
         </Layout.Section>
         <Layout.Section>
           <AppAccountDetailsComponent shopifyData={shopifyData} />
@@ -152,6 +149,7 @@ const ShopifyAccount = (props) => {
               content: "Submit",
               onAction: saveCustomDetails,
             }}
+            title="Additional User Details"
           >
             <FormLayout>
               <FormLayout.Group>
