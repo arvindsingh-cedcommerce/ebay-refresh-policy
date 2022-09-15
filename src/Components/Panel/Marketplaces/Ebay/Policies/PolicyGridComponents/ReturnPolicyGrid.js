@@ -1,4 +1,13 @@
-import { Button, Card, Icon, Stack, Tag, TextField } from "@shopify/polaris";
+import {
+  Button,
+  Card,
+  ChoiceList,
+  Icon,
+  Popover,
+  Stack,
+  Tag,
+  TextField,
+} from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, Row } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -103,6 +112,11 @@ const ReturnPolicyGrid = (props) => {
   const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
   const [pageSize, setPageSize] = useState(25);
   const [totalShippingPolicyCount, setTotalShippingPolicyCount] = useState(0);
+
+  // country filters
+  const [popOverStatus, setPopOverStatus] = useState({
+    country: false,
+  });
 
   const hitRequiredFuncs = () => {
     getAllPolicies();
@@ -296,18 +310,49 @@ const ReturnPolicyGrid = (props) => {
     );
   };
 
+  const popOverHandler = (type) => {
+    let temp = { ...popOverStatus };
+    temp[type] = !popOverStatus[type];
+    setPopOverStatus(temp);
+  };
+  const handleChange = (value, selectedType) => {
+    let type = `filter[${selectedType}][1]`;
+    let filterObj = {};
+    filterObj[type] = value[0];
+    setFiltersToPass({ ...filtersToPass, ...filterObj });
+    setSelected({ ...selected, [selectedType]: value });
+  };
+  const countryActivator = (
+    <Button fullWidth disclosure onClick={() => popOverHandler("country")}>
+      Account
+    </Button>
+  );
+
   const renderOtherFilters = () => {
     return (
-      <Stack wrap>
-        <Button
-          icon={<Icon source={FilterMajorMonotone} color="base" />}
-          onClick={() => {
-            setFiltersDrawerVisible(true);
-          }}
-        >
-          More Filters
-        </Button>
-      </Stack>
+      <Popover
+        active={popOverStatus["country"]}
+        activator={countryActivator}
+        onClose={() => popOverHandler("country")}
+      >
+        <div style={{ margin: "10px" }}>
+          <ChoiceList
+            choices={connectedAccountsArray}
+            selected={selected["country"]}
+            onChange={(value) => handleChange(value, "country")}
+          />
+        </div>
+      </Popover>
+      // <Stack wrap>
+      //   <Button
+      //     icon={<Icon source={FilterMajorMonotone} color="base" />}
+      //     onClick={() => {
+      //       setFiltersDrawerVisible(true);
+      //     }}
+      //   >
+      //     More Filters
+      //   </Button>
+      // </Stack>
     );
   };
 
@@ -418,7 +463,8 @@ const ReturnPolicyGrid = (props) => {
                 tempObj[object]["value"] = "";
               }
             });
-            setFilterShippingPolicyName("");
+            // setFilterShippingPolicyName("");
+            fieldValue === 'title' && setFilterShippingPolicyName("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
@@ -437,7 +483,9 @@ const ReturnPolicyGrid = (props) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Stack wrap>
             <Stack.Item fill>{renderShippingPolicySearch()}</Stack.Item>
-            <Stack.Item>{renderOtherFilters()}</Stack.Item>
+            <Stack.Item>
+              <div style={{ width: 200 }}>{renderOtherFilters()}</div>
+            </Stack.Item>
           </Stack>
           <Stack spacing="tight">
             {Object.keys(filtersToPass).length > 0 && tagMarkup()}
