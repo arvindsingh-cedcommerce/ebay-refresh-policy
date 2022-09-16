@@ -694,11 +694,11 @@ const ViewOrdersPolarisNew = (props) => {
                   onAction: () =>
                     getModalStructure("Update Order", true, "updateOrder"),
                 },
-                {
-                  content: "Cancel eBay Order",
-                  onAction: () =>
-                    getModalStructure("Cancel eBay Order", true, "cancelOrder"),
-                },
+                // {
+                //   content: "Cancel eBay Order",
+                //   onAction: () =>
+                //     getModalStructure("Cancel eBay Order", true, "cancelOrder"),
+                // },
                 {
                   content: "Delete Shopify Order",
                   onAction: () =>
