@@ -185,11 +185,11 @@ const OrderMassMenu = ({
         trigger={["click"]}
         disabled={selectedRows.length > 0 ? false : true}
       >
-        <Button>
+        <Button primary={selectedRows.length}>
           <div>
             {selectedRows.length
               ? `${selectedRows.length} order(s) selected`
-              : "Mass Actions"}{" "}
+              : "No order(s) selected"}{" "}
             <DownOutlined />
           </div>
         </Button>

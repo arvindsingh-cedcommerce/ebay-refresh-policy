@@ -893,13 +893,13 @@ const NewOrdersGrid = (props) => {
       title="Orders"
       ghost={true}
       extra={[
-        <OrderMassMenu
-          selectedRows={selectedRows}
-          setSelectedRows={setSelectedRows}
-          setSelectedRowKeys={setSelectedRowKeys}
-          hitGetOrdersAPI={hitGetOrdersAPI}
-          rowSelectionPassed={rowSelectionFunc}
-        />,
+        // <OrderMassMenu
+        //   selectedRows={selectedRows}
+        //   setSelectedRows={setSelectedRows}
+        //   setSelectedRowKeys={setSelectedRowKeys}
+        //   hitGetOrdersAPI={hitGetOrdersAPI}
+        //   rowSelectionPassed={rowSelectionFunc}
+        // />,
         <ShopifyButton primary onClick={() => setImportEbayOrdersModal(true)}>
           Import eBay Order(s)
         </ShopifyButton>,
@@ -925,18 +925,35 @@ const NewOrdersGrid = (props) => {
           <Row
             gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
             justify="space-between"
+            style={{ marginBottom: 10 }}
           >
-            <Col className="gutter-row" span={18}>
-              <PaginationComponent
-                totalCount={totalOrdersCount}
-                pageSizeOptions={pageSizeOptions}
-                activePage={activePage}
-                setActivePage={setActivePage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                size={"default"}
-                simple={false}
+            <Col className="gutter-row" span={6}>
+              {/* <ProductMassMenu selectedRows={selectedRows} /> */}
+              <OrderMassMenu
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                setSelectedRowKeys={setSelectedRowKeys}
+                hitGetOrdersAPI={hitGetOrdersAPI}
+                rowSelectionPassed={rowSelectionFunc}
               />
+            </Col>
+            <Col className="gutter-row" span={18}>
+              <Row
+                gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+                justify="end"
+                style={{ marginBottom: 10 }}
+              >
+                <PaginationComponent
+                  totalCount={totalOrdersCount}
+                  pageSizeOptions={pageSizeOptions}
+                  activePage={activePage}
+                  setActivePage={setActivePage}
+                  pageSize={pageSize}
+                  setPageSize={setPageSize}
+                  size={"default"}
+                  simple={false}
+                />
+              </Row>
             </Col>
           </Row>
         </div>
