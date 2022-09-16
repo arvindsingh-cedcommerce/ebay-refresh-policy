@@ -89,28 +89,49 @@ const OrderMassMenu = ({
               <Menu.Item
                 key="Sync Shipment"
                 onClick={() => {
-                  let shopifyOrdersIdsToPost = selectedRows
-                    .filter((selectedRow) => selectedRow?.["shopifyOrderId1"])
+                  // console.log(selectedRows);
+                  let parsedShopifyOrdersIds = selectedRows.filter(
+                    (selectedRow) => selectedRow?.["shopifyOrderId1"]
+                  );
+                  // console.log(parsedShopifyOrdersIds);
+                  let shopifyOrdersIdsToPost = parsedShopifyOrdersIds
+                    .filter((selectedRow) =>
+                      ["unfulfilled", "fulfilled"].includes(
+                        selectedRow["orderStatus"]
+                      )
+                    )
                     .map((selectedRow) => {
                       return {
                         order_id: selectedRow["shopifyOrderId1"],
                         shop_id: selectedRow["shopId"],
                       };
                     });
-                  // console.log("shopifyOrdersIdsToPost", shopifyOrdersIdsToPost);
-                  if (shopifyOrdersIdsToPost.length) {
-                    setModal({
-                      ...modal,
-                      active: true,
-                      content: "Sync Shipment",
-                      actionName: massAction,
-                      actionPayload: shopifyOrdersIdsToPost,
-                      api: syncShipmentURL,
-                      selectedRowsCount: selectedRows.length,
-                    });
+                  // console.log(shopifyOrdersIdsToPost);
+                  // let shopifyOrdersIdsToPost = selectedRows
+                  //   .filter((selectedRow) => selectedRow?.["shopifyOrderId1"])
+                  //   .map((selectedRow) => {
+                  //     return {
+                  //       order_id: selectedRow["shopifyOrderId1"],
+                  //       shop_id: selectedRow["shopId"],
+                  //     };
+                  //   });
+                  if (parsedShopifyOrdersIds.length) {
+                    if (shopifyOrdersIdsToPost.length) {
+                      setModal({
+                        ...modal,
+                        active: true,
+                        content: "Sync Shipment",
+                        actionName: massAction,
+                        actionPayload: shopifyOrdersIdsToPost,
+                        api: syncShipmentURL,
+                        selectedRowsCount: selectedRows.length,
+                      });
+                    } else {
+                      notify.error(
+                        "You are not allowed to sync cancelled order(s)."
+                      );
+                    }
                   } else {
-                    // setSelectedRows([]);
-                    // setSelectedRowKeys([]);
                     notify.error(
                       "Please select orders which are listed on Shopify!"
                     );
@@ -122,23 +143,44 @@ const OrderMassMenu = ({
               <Menu.Item
                 key="Cancel eBay Order"
                 onClick={() => {
-                  let shopifyOrdersIdsToPost = selectedRows
-                    .filter((selectedRow) => selectedRow?.["shopifyOrderId1"])
-                    .map((selectedRow) => {
-                      return {
-                        order_id: selectedRow["shopifyOrderId1"],
-                        shop_id: selectedRow["shopId"],
-                      };
-                    });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Cancel eBay Order",
-                    actionName: massAction,
-                    actionPayload: shopifyOrdersIdsToPost,
-                    api: cancelOrdersURl,
-                    selectedRowsCount: selectedRows.length,
-                  });
+                  let parsedShopifyOrdersIds = selectedRows.filter(
+                    (selectedRow) => selectedRow?.["shopifyOrderId1"]
+                  );
+                  let shopifyOrdersIdsToPost =
+                    // selectedRows
+                    //   .filter((selectedRow) => selectedRow?.["shopifyOrderId1"])
+                    parsedShopifyOrdersIds
+                      .filter((selectedRow) =>
+                        ["unfulfilled"].includes(selectedRow["orderStatus"])
+                      )
+                      .map((selectedRow) => {
+                        return {
+                          order_id: selectedRow["shopifyOrderId1"],
+                          shop_id: selectedRow["shopId"],
+                        };
+                      });
+
+                  if (parsedShopifyOrdersIds.length) {
+                    if (shopifyOrdersIdsToPost.length) {
+                      setModal({
+                        ...modal,
+                        active: true,
+                        content: "Cancel eBay Order",
+                        actionName: massAction,
+                        actionPayload: shopifyOrdersIdsToPost,
+                        api: cancelOrdersURl,
+                        selectedRowsCount: selectedRows.length,
+                      });
+                    } else {
+                      notify.error(
+                        "You are not allowed to cancel fulfilled/cancelled order(s)."
+                      );
+                    }
+                  } else {
+                    notify.error(
+                      "Please select orders which are listed on Shopify!"
+                    );
+                  }
                 }}
               >
                 <UploadOutlined /> Cancel eBay Order
@@ -221,8 +263,9 @@ const OrderMassMenu = ({
                 // <Banner status="info">
                 <TextContainer>
                   Note: Only {modal.actionPayload.length} order(s) are eligible
-                  for this action because there are listed on shopify out of{" "}
+                  for this action because there are fulfilled/unfulfilled out of{" "}
                   {modal.selectedRowsCount} order(s).
+                  {/* and listed on shopify  */}
                 </TextContainer>
                 // </Banner>
               )}
@@ -231,8 +274,9 @@ const OrderMassMenu = ({
                 // <Banner status="info">
                 <TextContainer>
                   Note: Only {modal.actionPayload.length} order(s) are eligible
-                  for this action because there are listed on shopify out of{" "}
+                  for this action because there are unfulfilled out of{" "}
                   {modal.selectedRowsCount} order(s).
+                  {/* listed on shopify */}
                 </TextContainer>
                 // </Banner>
               )}

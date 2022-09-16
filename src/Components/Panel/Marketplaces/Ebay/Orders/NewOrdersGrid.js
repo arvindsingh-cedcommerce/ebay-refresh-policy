@@ -397,6 +397,11 @@ const NewOrdersGrid = (props) => {
         </center>
       );
       tempObject["targetErrorMessage"] = order["target_error_message"];
+      tempObject["orderStatus"] = ["error", "failed"].includes(
+        order?.target_status
+      )
+        ? order?.target_status
+        : order?.target_status;
       tempObject["fulfillment"] = (
         <center
           onClick={() =>
