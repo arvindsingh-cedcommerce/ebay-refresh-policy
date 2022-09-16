@@ -178,15 +178,15 @@ const NewOrdersGrid = (props) => {
       dataIndex: "fulfillment",
       key: "fulfillment",
     },
-    {
-      title: (
-        <center>
-          <Text>Customer Name</Text>
-        </center>
-      ),
-      dataIndex: "customerName",
-      key: "customerName",
-    },
+    // {
+    //   title: (
+    //     <center>
+    //       <Text>Customer Name</Text>
+    //     </center>
+    //   ),
+    //   dataIndex: "customerName",
+    //   key: "customerName",
+    // },
     {
       title: (
         <center>
