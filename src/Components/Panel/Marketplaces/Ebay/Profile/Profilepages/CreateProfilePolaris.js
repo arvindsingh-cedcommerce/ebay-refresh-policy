@@ -125,6 +125,12 @@ const CreateProfilePolaris = (props) => {
         );
       }
     });
+    const checkAccountStatusChecked = Object.keys(
+      connectedAccountsObject
+    ).every((account) => !connectedAccountsObject[account].checked);
+    if(checkAccountStatusChecked) {
+      flag = true
+    }
     if (profileName === "") {
       flag = true;
     }
@@ -157,7 +163,7 @@ const CreateProfilePolaris = (props) => {
         name: profileName,
         prepareQuery,
         data: test,
-        override: overriceCheckboxStatus
+        override: overriceCheckboxStatus,
       };
       if (id !== "") postData["profile_id"] = id;
       setProfileSaveBtnLoader(true);
