@@ -292,8 +292,10 @@ const VariantsComponent = ({
             value: "",
             disabled: key["customweight_unit"] == "",
           },
-          { label: "kg", value: "kg" },
           { label: "lb", value: "lb" },
+          { label: "oz", value: "oz" },
+          { label: "kg", value: "kg" },
+          { label: "g", value: "g" },
         ]}
         value={key["customweight_unit"]}
         onChange={(e) =>
