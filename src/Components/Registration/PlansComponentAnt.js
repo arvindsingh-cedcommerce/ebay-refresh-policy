@@ -272,9 +272,13 @@ const PlansComponentAnt = ({
                       <Banner status="warning" icon={false}>
                         <Text strong>
                           If you want a custom plan feel free to&nbsp;
-                          <Link href="https://ant.design" target="_blank">
-                            contact Us
-                          </Link>
+                          <span
+                            onClick={() => {
+                              props.history.push("/panel/ebay/contactUs");
+                            }}
+                          >
+                            <Link>contact Us</Link>
+                          </span>
                         </Text>
                       </Banner>
                       {/* <Alert
