@@ -34,7 +34,16 @@ const DetailsComponentNew = ({
     let temp = { ...mainProduct };
     if (Object.keys(editedProductDataFromAPI).length > 0) {
       Object.keys(editedProductDataFromAPI?.mainProduct).forEach((field) => {
-        if (["length", "width", "height", "unit", "packageType", "privateListing"].includes(field)) {
+        if (
+          [
+            "length",
+            "width",
+            "height",
+            "unit",
+            "packageType",
+            "privateListing",
+          ].includes(field)
+        ) {
           temp[field] = editedProductDataFromAPI?.mainProduct?.[field];
         } else {
           let checkField = `check${
@@ -82,6 +91,7 @@ const DetailsComponentNew = ({
                     onChange={(e) => onChangeHandler(e, "checkTitle", "value")}
                     autoComplete="off"
                     value={mainProduct?.["checkTitle"]?.["value"]}
+                    showCharacterCount
                   />
                 )}
               </Stack>
@@ -110,6 +120,7 @@ const DetailsComponentNew = ({
                     onChange={(e) => onChangeHandler(e, "checkBrand", "value")}
                     autoComplete="off"
                     value={mainProduct?.["checkBrand"]?.["value"]}
+                    showCharacterCount
                   />
                 )}
               </Stack>
@@ -142,6 +153,7 @@ const DetailsComponentNew = ({
                     }
                     autoComplete="off"
                     value={mainProduct?.["checkProducttype"]?.["value"]}
+                    showCharacterCount
                   />
                 )}
               </Stack>
@@ -196,25 +208,28 @@ const DetailsComponentNew = ({
                       </Button>
                     </Stack>
                     <Stack>
-                      {Array.isArray(mainProduct?.["checkTags"]?.["valueArray"]) && mainProduct?.["checkTags"]?.["valueArray"].map(
-                        (tag, index) => {
-                          return (
-                            <Tag
-                              onRemove={(e) => {
-                                let temp = { ...mainProduct };
-                                temp["checkTags"]["valueArray"] = mainProduct[
-                                  "checkTags"
-                                ]["valueArray"].filter((e) => e !== tag);
-                                temp["checkTags"]["value"] =
-                                  temp["checkTags"]["valueArray"].join();
-                                setMainProduct(temp);
-                              }}
-                            >
-                              {tag}
-                            </Tag>
-                          );
-                        }
-                      )}
+                      {Array.isArray(
+                        mainProduct?.["checkTags"]?.["valueArray"]
+                      ) &&
+                        mainProduct?.["checkTags"]?.["valueArray"].map(
+                          (tag, index) => {
+                            return (
+                              <Tag
+                                onRemove={(e) => {
+                                  let temp = { ...mainProduct };
+                                  temp["checkTags"]["valueArray"] = mainProduct[
+                                    "checkTags"
+                                  ]["valueArray"].filter((e) => e !== tag);
+                                  temp["checkTags"]["value"] =
+                                    temp["checkTags"]["valueArray"].join();
+                                  setMainProduct(temp);
+                                }}
+                              >
+                                {tag}
+                              </Tag>
+                            );
+                          }
+                        )}
                     </Stack>
                   </Stack>
                 )}
