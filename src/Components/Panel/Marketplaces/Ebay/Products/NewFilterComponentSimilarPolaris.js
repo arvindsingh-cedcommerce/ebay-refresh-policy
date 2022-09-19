@@ -142,6 +142,11 @@ const NewFilterComponentSimilarPolaris = ({
                       cloneObj[filter]["value"] = e.target.value;
                       setFilters(cloneObj);
                     }}
+                    type={
+                      filters[filter]["dataType"] === "number"
+                        ? "number"
+                        : "text"
+                    }
                   />
                 )}
               </Stack>
