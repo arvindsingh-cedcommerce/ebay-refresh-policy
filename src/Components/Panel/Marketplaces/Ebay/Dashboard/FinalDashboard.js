@@ -663,18 +663,20 @@ const FinalDashboard = (props) => {
   const get21uniqueColors = () => {
     let arr = [];
     const colors = [
-      "#40e0d0",
-      "#4169e1",
-      "#6a5acd",
-      "#0047ab",
-      "#add8e6",
-      "#89CFF0",
-      "#0abab5",
-      "#003366",
-      "#0073cf",
-      "#6495ed",
+      "#92b6f0",
+      "#d47da2",
+      "#f5b7b5",
+      "#f2caa2",
+      "#eddd93",
+      "#a5ed93",
+      "#93edec",
+      "#93a7ed",
+      "#cfaae6",
+      "#e6aaab",
+      "#bcccd6",
+      "#ced4cb"
     ];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 12; i++) {
       const color = colors[i];
       if (arr.indexOf(color) === -1) arr.push(color);
     }
