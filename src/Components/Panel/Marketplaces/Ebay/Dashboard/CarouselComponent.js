@@ -14,7 +14,7 @@ const CarouselComponent = ({
     <Carousel autoplay autoplaySpeed={10000} effect="fade">
       <div>
         <Link
-          url="https://apps.cedcommerce.com/digital-marketing-services/"
+          url="https://experts.shopify.com/cedcommerce"
           external
         >
           <img
