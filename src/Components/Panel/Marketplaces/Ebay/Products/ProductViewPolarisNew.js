@@ -385,7 +385,7 @@ const ProductViewPolarisNew = (props) => {
             // console.log(errors[shopId]["ItemId"], response['ItemID']);
             itemIdObj[shopId] = {
               itemId: errors[shopId]?.ItemId,
-              jsonResponse: ebay_product_response,
+              jsonResponse: ebay_product_response && ebay_product_response.find(product => product.ItemID === errors[shopId]?.ItemId),
               // ended: errors[shopId]?.ended
             };
           }
