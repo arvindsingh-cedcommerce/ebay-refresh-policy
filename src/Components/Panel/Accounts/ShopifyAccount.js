@@ -173,7 +173,7 @@ const ShopifyAccount = (props) => {
                   value={customDetails.email}
                 />
                 <TextField
-                  label={"Skype"}
+                  label={"Skype Group Link"}
                   onChange={(value) =>
                     setCustomDetails({ ...customDetails, skypeLink: value })
                   }
@@ -181,7 +181,7 @@ const ShopifyAccount = (props) => {
                   value={customDetails.skypeLink}
                 />
                 <TextField
-                  label="WhatsApp"
+                  label="WhatsApp Group Link"
                   onChange={(value) =>
                     setCustomDetails({ ...customDetails, whatsAppLink: value })
                   }
