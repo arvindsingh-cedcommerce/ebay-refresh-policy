@@ -108,6 +108,13 @@ const FinalDashboard = (props) => {
   // faqs
   const [faqsData, setFaqsData] = useState([]);
 
+  // skype, whatsapp, email
+  const [socialMediaLinks, setSocialMediaLinks] = useState({
+    skype: "https://join.skype.com/GbdPBTuVsNgN",
+    whatsApp: "https://chat.whatsapp.com/HPbJm00yENw6QhWfskNWLa",
+    email: "mailto:ebay_support@cedcommerce.com",
+  });
+
   const handleTabChange = useCallback(
     (selectedTabIndex) => setSelected(selectedTabIndex),
     []
@@ -168,7 +175,8 @@ const FinalDashboard = (props) => {
   useEffect(() => {
     // document.title =
     //   "Sell on eBay with eBay Marketplace Integration App | CedCommerce";
-    document.title = "Sell on eBay with eBay Marketplace Integration App | Integration for eBay"
+    document.title =
+      "Sell on eBay with eBay Marketplace Integration App | Integration for eBay";
     document.description =
       "CedCommerce introduces the eBay Marketplace Integration App enabling the Shopify merchants to sell on eBay by helping them to manage their products & orders.";
     getAllConnectedAccounts();
@@ -231,6 +239,15 @@ const FinalDashboard = (props) => {
         let shopifyAccount = connectedAccountData.find(
           (account) => account.marketplace === "shopify"
         );
+        if (shopifyAccount?.userCustomData?.userData) {
+          const { skypeLink, whatsAppLink, email } =
+            shopifyAccount?.userCustomData?.userData;
+          setSocialMediaLinks({
+            skype: skypeLink,
+            whatsApp: whatsAppLink,
+            email: email,
+          });
+        }
         if (shopifyAccount?.shop_details?.currency) {
           setShopifyCurrencyName(shopifyAccount.shop_details.currency);
         }
@@ -674,7 +691,7 @@ const FinalDashboard = (props) => {
       "#cfaae6",
       "#e6aaab",
       "#bcccd6",
-      "#ced4cb"
+      "#ced4cb",
     ];
     for (let i = 0; i < 12; i++) {
       const color = colors[i];
@@ -847,9 +864,7 @@ const FinalDashboard = (props) => {
                                 {" "}
                                 not profiled on app. please{" "}
                                 <Link
-                                  onClick={() =>
-                                    props.history.push("profiles")
-                                  }
+                                  onClick={() => props.history.push("profiles")}
                                 >
                                   create profile
                                 </Link>{" "}
@@ -867,13 +882,30 @@ const FinalDashboard = (props) => {
                                 any queries please contact us now.
                               </Text>
                               <Stack>
-                                <Image
-                                  src={WhatsApp}
-                                  width={50}
-                                  preview={false}
-                                />
-                                <Image src={Skype} width={50} preview={false} />
-                                <Image src={Mail} width={50} preview={false} />
+                                <Link url={socialMediaLinks.whatsApp} external>
+                                  <Image
+                                    src={WhatsApp}
+                                    width={50}
+                                    preview={false}
+                                  />
+                                </Link>
+                                <Link url={socialMediaLinks.skype} external>
+                                  <Image
+                                    src={Skype}
+                                    width={50}
+                                    preview={false}
+                                  />
+                                </Link>
+                                <a
+                                  style={{ color: "black" }}
+                                  href={"mailto:ebay_support@cedcommerce.com"}
+                                >
+                                  <Image
+                                    src={Mail}
+                                    width={50}
+                                    preview={false}
+                                  />
+                                </a>
                               </Stack>
                             </Stack>
                           )}
