@@ -68,3 +68,10 @@ export async function getSiteid( ){
 export async function getConfigurablesAttributes( ){
     return await requests.getRequest('ebay/template/configurableAttributes');
 }
+
+export async function duplicateTemplate(data) {
+    return await requests.postRequest('ebay/Template/copyTemplate', data);
+}
+export async function saveTemplateToProfile(data) {
+    return await requests.postRequest('ebay/Template/assigntemplateToProfile', data);
+}
