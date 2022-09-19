@@ -919,7 +919,7 @@ const FinalDashboard = (props) => {
                                   Create Business Policy
                                 </Link>
                               ) : (
-                                "Create Business Policy1"
+                                "Create Business Policy"
                               )
                             }
                             onClick={() =>
