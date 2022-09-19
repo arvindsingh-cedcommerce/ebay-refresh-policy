@@ -9,7 +9,8 @@ export const getVariantsCountDetails = (variants, variant_attributes) => {
     Array.isArray(variant_attributes) &&
     variant_attributes.length
   ) {
-    text = `${inventoryCount} in stock for ${variants.length} variant`;
+    let variantSingleOrMultiple = variants.length > 1 ? "variants" : "variant";
+    text = `${inventoryCount} in stock for ${variants.length} ${variantSingleOrMultiple}`;
   } else {
     text = `${inventoryCount} in stock`;
   }
