@@ -406,13 +406,19 @@ const NewFilterProductsTab = ({
 
   const runQuery = async () => {
     setTestQueryLoader(true);
-    let { success, data, rows, alreadyProfiled } = await getProductsbyquery({
+    const postData = {
       query: query,
       marketplace: "shopify",
       count: pageSize,
       activePage: activePage,
       profile_id: profileId,
-    });
+    };
+    if (testBtnClickedCount === 0) {
+      postData["edit"] = true;
+    }
+    let { success, data, rows, alreadyProfiled } = await getProductsbyquery(
+      postData
+    );
     if (success && alreadyProfiled && testBtnClickedCount) {
       setAlreadyProfiledProductsCount(alreadyProfiled);
       setOverrideProductsModalActive(true);
