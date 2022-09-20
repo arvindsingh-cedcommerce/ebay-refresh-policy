@@ -452,7 +452,7 @@ const FinalPolicyGrid = (props) => {
               onClick={() => {
                 window.open(
                   `https://www.bizpolicy.ebay${accountSelectionModal.domainName}/businesspolicy/${accountSelectionModal.selectedPolicyValue}`
-                );`
+                );
               }}
             >
               Add
