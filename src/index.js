@@ -9,12 +9,13 @@ import {AppProvider} from "@shopify/polaris";
 import {NotificationContainer} from "react-notifications";
 // import {theme} from "./PolarisComponents/theme-skins";
 import { Provider } from 'react-redux';
-import configureStore from "./store/configureStore";
+// import configureStore from "./store/configureStore";
 import '@shopify/polaris/build/esm/styles.css';
 import 'antd/dist/antd.css';
+import store from './redux/store';
 // import '../src/styles/styles.css'
 
-const store = configureStore();
+// const store = configureStore();
 
 const theme = {
     colors: {

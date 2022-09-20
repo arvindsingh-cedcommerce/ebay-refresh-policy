@@ -54,6 +54,7 @@ import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import PopoverProduct from "./PopoverProduct";
 import ProductBulkMenu from "./ProductBulkMenu";
 import ProductMassMenu from "./ProductMassMenu";
+import { useDispatch, useSelector } from "react-redux";
 
 const { Text } = Typography;
 
@@ -141,6 +142,11 @@ export const getFitersInitially = () => {
 };
 
 function NewProductsNewFilters(props) {
+  const reduxState = useSelector(
+    (state) => state.productFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
+
   const [productData, setProductData] = useState([]);
 
   const [productColumns, setProductColumns] = useState([
@@ -1026,6 +1032,14 @@ function NewProductsNewFilters(props) {
     });
   };
 
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "productFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -1047,7 +1061,9 @@ function NewProductsNewFilters(props) {
               <Stack.Item>{renderOtherFilters()}</Stack.Item>
             </Stack>
             <Stack spacing="tight">
-              {Object.keys(filtersToPass).length > 0 && tagMarkup()}
+              {filtersToPass &&
+                Object.keys(filtersToPass).length > 0 &&
+                tagMarkup()}
             </Stack>
           </div>
           <Row
