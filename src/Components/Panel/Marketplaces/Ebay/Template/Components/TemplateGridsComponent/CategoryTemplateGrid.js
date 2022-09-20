@@ -155,6 +155,11 @@ const CategoryTemplateGrid = (props) => {
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
 
+  // searchToggleTitleMapping
+  const [searchWithTitle, setSearchWithTitle] = useState(true);
+  const [filterTitleORCategoryMapping, setFilterTitleORCategoryMapping] =
+    useState("");
+
   const getTemplatesList = async (ebayAccountsObj) => {
     setGridLoader(true);
     let filterPostData = {};
@@ -336,7 +341,12 @@ const CategoryTemplateGrid = (props) => {
   const verify = useCallback(
     debounce((value) => {
       let type = "";
-      type = "filter[title][3]";
+      if (searchWithTitle) {
+        type = "filter[title][3]";
+      } else {
+        type = "filter[primaryCategoryMappingName][3]";
+      }
+      // type = "filter[title][3]";
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
@@ -345,23 +355,33 @@ const CategoryTemplateGrid = (props) => {
         let temp = { ...filtersToPass };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
+      } else if (
+        filtersToPass.hasOwnProperty("filter[primaryCategoryMappingName][3]")
+      ) {
+        let temp = { ...filtersToPass };
+        delete temp["filter[primaryCategoryMappingName][3]"];
+        setFiltersToPass(temp);
       }
     }, 200),
-    [filtersToPass]
+    [searchWithTitle, filtersToPass]
   );
 
   useEffect(() => {
-    verify(filterCategoryTemplateName);
-  }, [filterCategoryTemplateName]);
+    verify(filterTitleORCategoryMapping);
+  }, [filterTitleORCategoryMapping, searchWithTitle]);
 
   const renderCategorySearch = () => {
     return (
       <TextField
-        value={filterCategoryTemplateName}
+        value={filterTitleORCategoryMapping}
         onChange={(e) => {
-          setFilterCategoryTemplateName(e);
+          setFilterTitleORCategoryMapping(e);
         }}
-        placeholder={"Search with category name"}
+        placeholder={
+          searchWithTitle
+            ? "Search with category name"
+            : "Search with category mapping"
+        }
       />
     );
   };
@@ -372,6 +392,8 @@ const CategoryTemplateGrid = (props) => {
         return "Name";
       case "country":
         return "Country";
+      case "primaryCategoryMappingName":
+        return "Category Mapping";
     }
   };
 
@@ -428,7 +450,8 @@ const CategoryTemplateGrid = (props) => {
               }
             });
             // setFilterCategoryTemplateName("");
-            fieldValue === 'title' && setFilterCategoryTemplateName("");
+            ["title", "primaryCategoryMappingName"].includes(fieldValue) &&
+              setFilterTitleORCategoryMapping("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
@@ -458,6 +481,42 @@ const CategoryTemplateGrid = (props) => {
       Account
     </Button>
   );
+  const renderChoiceListForNameCategoryMapping = () => {
+    return (
+      <ButtonGroup segmented>
+        <Button
+          primary={searchWithTitle}
+          pressed={searchWithTitle}
+          onClick={(e) => {
+            let temp = { ...filtersToPass };
+            if (temp.hasOwnProperty("filter[primaryCategoryMappingName][3]")) {
+              delete temp["filter[primaryCategoryMappingName][3]"];
+            }
+            setFiltersToPass(temp);
+            setFilterTitleORCategoryMapping("");
+            setSearchWithTitle(true);
+          }}
+        >
+          Title
+        </Button>
+        <Button
+          primary={!searchWithTitle}
+          pressed={!searchWithTitle}
+          onClick={(e) => {
+            let temp = { ...filtersToPass };
+            if (temp.hasOwnProperty("filter[title][3]")) {
+              delete temp["filter[title][3]"];
+            }
+            setFiltersToPass(temp);
+            setFilterTitleORCategoryMapping("");
+            setSearchWithTitle(false);
+          }}
+        >
+          Category Mapping
+        </Button>
+      </ButtonGroup>
+    );
+  };
   const renderOtherFilters = () => {
     return (
       <Popover
@@ -517,6 +576,7 @@ const CategoryTemplateGrid = (props) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Stack wrap>
             <Stack.Item fill>{renderCategorySearch()}</Stack.Item>
+            <Stack.Item>{renderChoiceListForNameCategoryMapping()}</Stack.Item>
             <Stack.Item>
               <div style={{ width: 200 }}>{renderOtherFilters()}</div>
             </Stack.Item>
