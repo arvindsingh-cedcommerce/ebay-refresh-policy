@@ -565,6 +565,14 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
           <Layout.AnnotatedSection
             title="Import by Filters"
             id="importByFilters"
+            description={
+              <span>
+                The <b>import by filter</b> settings lets you set the condition
+                for you to import the products from the Shopify store to app. It
+                can be done on the following basis : Published status, Product
+                status, Vendor & Product Type.
+              </span>
+            }
           >
             {getImportByFiltersStructure()}
           </Layout.AnnotatedSection>
@@ -573,6 +581,16 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
           <Layout.AnnotatedSection
             title="Import by Collection"
             id="importByCollection"
+            description={
+              <span>
+                Products can be imported in the app based on the selected
+                Shopify collections, you can select the checkbox shown before to
+                the imported Shopify collections. And when you make any changes
+                to your collections or when collections seem to be missing in
+                the app, you can use <b>refresh collection</b> button so keep
+                the collections updated in the app.
+              </span>
+            }
           >
             {getImportByCollectionStructure()}
           </Layout.AnnotatedSection>
@@ -589,6 +607,15 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
           <Layout.AnnotatedSection
             title="Import and replace product"
             id="importAndReplaceProduct"
+            description={
+              <span>
+                This option imports the products from Shopify based on the
+                applied filters and replaces /removes the existing products from
+                the app. By default, the setting is <b>No</b>, but before
+                initiating the import you can set the setting to <b>Yes</b> if
+                you want to remove all the existing products from the app.
+              </span>
+            }
           >
             <Card sectioned>
               <ButtonGroup segmented>
