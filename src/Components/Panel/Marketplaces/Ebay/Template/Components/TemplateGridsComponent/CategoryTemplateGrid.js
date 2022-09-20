@@ -427,7 +427,8 @@ const CategoryTemplateGrid = (props) => {
                 tempObj[object]["value"] = "";
               }
             });
-            setFilterCategoryTemplateName("");
+            // setFilterCategoryTemplateName("");
+            fieldValue === 'title' && setFilterCategoryTemplateName("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
@@ -440,18 +441,48 @@ const CategoryTemplateGrid = (props) => {
     });
   };
 
+  const handleChange = (value, selectedType) => {
+    let type = `filter[${selectedType}][1]`;
+    let filterObj = {};
+    filterObj[type] = value[0];
+    setFiltersToPass({ ...filtersToPass, ...filterObj });
+    setSelected({ ...selected, [selectedType]: value });
+  };
+  const popOverHandler = (type) => {
+    let temp = { ...popOverStatus };
+    temp[type] = !popOverStatus[type];
+    setPopOverStatus(temp);
+  };
+  const countryActivator = (
+    <Button fullWidth disclosure onClick={() => popOverHandler("country")}>
+      Account
+    </Button>
+  );
   const renderOtherFilters = () => {
     return (
-      <Stack wrap>
-        <Button
-          icon={<Icon source={FilterMajorMonotone} color="base" />}
-          onClick={() => {
-            setFiltersDrawerVisible(true);
-          }}
-        >
-          More Filters
-        </Button>
-      </Stack>
+      <Popover
+        active={popOverStatus["country"]}
+        activator={countryActivator}
+        onClose={() => popOverHandler("country")}
+      >
+        <div style={{ margin: "10px" }}>
+          <ChoiceList
+            choices={filters.country.options}
+            selected={selected["country"]}
+            onChange={(value) => handleChange(value, "country")}
+          />
+        </div>
+      </Popover>
+      // <Stack wrap>
+      //   <Button
+      //     icon={<Icon source={FilterMajorMonotone} color="base" />}
+      //     onClick={() => {
+      //       setFiltersDrawerVisible(true);
+      //     }}
+      //   >
+      //     More Filters
+      //   </Button>
+      // </Stack>
     );
   };
 
@@ -486,7 +517,9 @@ const CategoryTemplateGrid = (props) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Stack wrap>
             <Stack.Item fill>{renderCategorySearch()}</Stack.Item>
-            <Stack.Item>{renderOtherFilters()}</Stack.Item>
+            <Stack.Item>
+              <div style={{ width: 200 }}>{renderOtherFilters()}</div>
+            </Stack.Item>
           </Stack>
           <Stack spacing="tight">
             {Object.keys(filtersToPass).length > 0 && tagMarkup()}
