@@ -170,8 +170,12 @@ const CategoryTemplateGrid = (props) => {
             connectedAccount["value"] === filtersToPass["filter[country][1]"]
         );
         filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopID"];
-      } else {
+      } else if (key !== "filter[primaryCategoryMappingName][3]") {
         filterPostData[key] = filtersToPass[key];
+      }
+      if (key === "filter[primaryCategoryMappingName][3]") {
+        filterPostData["filter[data.primaryCategoryMappingName][3]"] =
+          filtersToPass[key];
       }
     }
     const postData = {
