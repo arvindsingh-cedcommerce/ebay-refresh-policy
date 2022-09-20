@@ -54,6 +54,7 @@ import NewFilterComponentSimilarPolaris from "../Products/NewFilterComponentSimi
 import { stringOperatorOptions } from "../Products/NewProductsNewFilters";
 import OrderMassMenu from "../Products/OrderMassMenu";
 import NewFilterComponentSimilarPolarisOrders from "./NewFilterComponentSimilarPolarisOrders";
+import { useDispatch, useSelector } from "react-redux";
 
 const { Text } = Typography;
 let demo = {
@@ -130,6 +131,11 @@ export const getFitersInitially = () => {
   return tempObj;
 };
 const NewOrdersGrid = (props) => {
+  const reduxState = useSelector(
+    (state) => state.orderFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
+
   const [tab, setTab] = useState("0");
   const [orderColumns, setOrderColumns] = useState([
     {
@@ -472,7 +478,7 @@ const NewOrdersGrid = (props) => {
       // ...filtersToPass,
       ...filterPostData,
     };
-    if (Object.keys(filtersToPass).length) {
+    if (filtersToPass && Object.keys(filtersToPass).length) {
       postData["activePage"] = 1;
     }
     let { success: ordersDataSuccess, data: ordersData } = await getOrders(
@@ -893,6 +899,14 @@ const NewOrdersGrid = (props) => {
       ...rowSelection,
     };
   };
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "orderFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -925,7 +939,9 @@ const NewOrdersGrid = (props) => {
               <Stack.Item>{renderOtherFilters()}</Stack.Item>
             </Stack>
             <Stack spacing="tight">
-              {Object.keys(filtersToPass).length > 0 && tagMarkup()}
+              {filtersToPass &&
+                Object.keys(filtersToPass).length > 0 &&
+                tagMarkup()}
             </Stack>
           </div>
           <Row
