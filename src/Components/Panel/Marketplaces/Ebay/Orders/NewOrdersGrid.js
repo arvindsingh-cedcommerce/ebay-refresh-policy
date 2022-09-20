@@ -943,11 +943,7 @@ const NewOrdersGrid = (props) => {
               />
             </Col>
             <Col className="gutter-row" span={18}>
-              <Row
-                gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-                justify="end"
-                style={{ marginBottom: 10 }}
-              >
+              <Stack distribution="trailing">
                 <PaginationComponent
                   totalCount={totalOrdersCount}
                   pageSizeOptions={pageSizeOptions}
@@ -958,7 +954,7 @@ const NewOrdersGrid = (props) => {
                   size={"default"}
                   simple={false}
                 />
-              </Row>
+              </Stack>
             </Col>
           </Row>
         </div>
