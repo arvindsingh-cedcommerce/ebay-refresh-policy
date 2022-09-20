@@ -1,5 +1,15 @@
 import { LineOutlined } from "@ant-design/icons";
-import { Button, Card, Icon, Stack, Tag, TextField } from "@shopify/polaris";
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  ChoiceList,
+  Icon,
+  Popover,
+  Stack,
+  Tag,
+  TextField,
+} from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, Row } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -39,6 +49,17 @@ const getCountyrName = (siteId) => {
   return "-";
 };
 
+const customiseInventoryOptions = [
+  {
+    label: "Fixed Inventory",
+    value: "fixedInventory",
+  },
+  {
+    label: "Reserve Inventory",
+    value: "reservedInventory",
+  },
+];
+
 const getUsername = (siteid, username) => {
   if (siteid && username.length) {
     let test = username.find((user) => user.siteID === siteid);
@@ -48,8 +69,8 @@ const getUsername = (siteid, username) => {
 
 const filtersFields = [
   {
-    label: "Account",
-    value: "country",
+    label: "Customised Inventory",
+    value: "customiseInventoryType",
     searchType: "dropdown",
     inputValue: "",
     operator: "1",
@@ -127,10 +148,10 @@ const InventoryTemplateGrid = (props) => {
   const [filterCategoryTemplateName, setFilterCategoryTemplateName] =
     useState("");
   const [popOverStatus, setPopOverStatus] = useState({
-    country: false,
+    customiseInventoryType: false,
   });
   const [selected, setSelected] = useState({
-    country: [],
+    customiseInventoryType: [],
   });
 
   // pagination
@@ -202,7 +223,8 @@ const InventoryTemplateGrid = (props) => {
               <center>
                 {template["data"]?.["customiseInventoryType"]
                   ? template["data"]?.["customiseInventoryType"]
-                  : "-"}
+                  : // ? customiseInventoryOptions.find(inv => inv.value === template["data"]?.["customiseInventoryType"])?.['label']
+                    "-"}
               </center>
             ),
             templateThresholdInventory: (
@@ -285,9 +307,9 @@ const InventoryTemplateGrid = (props) => {
         temp["shopID"] = account["id"];
         ebayAccountsObjFilter.push(temp);
       });
-      let temp = { ...filters };
-      temp["country"]["options"] = ebayAccountsObjFilter;
-      setFilters(temp);
+      // let temp = { ...filters };
+      // temp["country"]["options"] = ebayAccountsObjFilter;
+      // setFilters(temp);
       setaccountSelectionModal({
         ...accountSelectionModal,
         options: ebayAccountsObj,
@@ -349,12 +371,70 @@ const InventoryTemplateGrid = (props) => {
     );
   };
 
+  const countryActivator = (
+    <Button
+      fullWidth
+      disclosure
+      onClick={() => popOverHandler("customiseInventoryType")}
+    >
+      Customise Inventory
+    </Button>
+  );
+  useEffect(() => {
+    console.log("popOverStatus", popOverStatus);
+  }, [popOverStatus]);
+  const popOverHandler = (type) => {
+    let temp = { ...popOverStatus };
+    temp[type] = !popOverStatus[type];
+    setPopOverStatus(temp);
+  };
+  const handleChange = (value, selectedType) => {
+    let type = `filter[${selectedType}][1]`;
+    let filterObj = {};
+    filterObj[type] = value[0];
+    setFiltersToPass({ ...filtersToPass, ...filterObj });
+    setSelected({ ...selected, [selectedType]: value });
+  };
+  const renderOtherFilters = () => {
+    return (
+      <ButtonGroup segmented>
+        <Popover
+          active={popOverStatus["customiseInventoryType"]}
+          activator={countryActivator}
+          onClose={() => popOverHandler("customiseInventoryType")}
+        >
+          <div style={{ margin: "10px" }}>
+            {/* {console.log(customiseInventoryOptions)} */}
+            <ChoiceList
+              choices={customiseInventoryOptions}
+              selected={selected["customiseInventoryType"]}
+              onChange={(value) =>
+                handleChange(value, "customiseInventoryType")
+              }
+            />
+          </div>
+        </Popover>
+      </ButtonGroup>
+
+      // <Stack wrap>
+      //   <Button
+      //     icon={<Icon source={FilterMajorMonotone} color="base" />}
+      //     onClick={() => {
+      //       setFiltersDrawerVisible(true);
+      //     }}
+      //   >
+      //     More Filters
+      //   </Button>
+      // </Stack>
+    );
+  };
+
   const getFieldValue = (field) => {
     switch (field) {
       case "title":
         return "Name";
-      case "country":
-        return "Country";
+      case "customiseInventoryType":
+        return "Customise Inventory";
     }
   };
 
@@ -410,7 +490,8 @@ const InventoryTemplateGrid = (props) => {
                 tempObj[object]["value"] = "";
               }
             });
-            setFilterCategoryTemplateName("");
+            // setFilterCategoryTemplateName("");
+            ["title"].includes(fieldValue) && setFilterCategoryTemplateName("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
@@ -454,6 +535,7 @@ const InventoryTemplateGrid = (props) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Stack wrap>
             <Stack.Item fill>{renderCategorySearch()}</Stack.Item>
+            <Stack.Item>{renderOtherFilters()}</Stack.Item>
           </Stack>
           <Stack spacing="tight">
             {Object.keys(filtersToPass).length > 0 && tagMarkup()}
