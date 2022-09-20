@@ -772,7 +772,8 @@ const NewOrdersGrid = (props) => {
               }
             });
             // setFilterTitleORsku("");
-            setEbayOrderId("");
+            // setEbayOrderId("");
+            ["source_order_id"].includes(fieldValue) && setEbayOrderId("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
