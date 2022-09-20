@@ -1012,7 +1012,8 @@ function NewProductsNewFilters(props) {
                 tempObj[object]["value"] = "";
               }
             });
-            setFilterTitleORsku("");
+            // setFilterTitleORsku("");
+            ["title", "sku"].includes(fieldValue) && setFilterTitleORsku("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
