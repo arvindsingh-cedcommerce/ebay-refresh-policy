@@ -80,7 +80,7 @@ export const filtersFields = [
     searchType: "textField",
     inputValue: "",
     operator: "3",
-    dataType: "string",
+    dataType: "number",
   },
   {
     label: "Product Type",
