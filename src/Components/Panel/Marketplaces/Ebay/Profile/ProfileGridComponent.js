@@ -16,6 +16,7 @@ import {
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, PageHeader, Row, Typography } from "antd";
 import React, { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
 import { getProfiles } from "../../../../../APIrequests/ProfilesAPI";
 import { getpaginationInfo } from "../../../../../services/helperFunction";
@@ -71,6 +72,11 @@ const getFitersInitially = () => {
 };
 
 const ProfileGridComponent = (props) => {
+  const reduxState = useSelector(
+    (state) => state.profileFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
+
   const profileGridColumns = [
     {
       title: <center>Name</center>,
@@ -597,6 +603,14 @@ const ProfileGridComponent = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "profileFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -648,7 +662,7 @@ const ProfileGridComponent = (props) => {
               </Stack.Item>
             </Stack>
             <Stack spacing="tight">
-              {Object.keys(filtersToPass).length > 0 && tagMarkup()}
+              {filtersToPass && Object.keys(filtersToPass).length > 0 && tagMarkup()}
             </Stack>
           </div>
           <Row justify="space-between">
