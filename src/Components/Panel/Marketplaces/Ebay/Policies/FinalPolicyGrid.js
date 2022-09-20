@@ -363,7 +363,7 @@ const FinalPolicyGrid = (props) => {
           content: "Refresh",
           onAction: () => getAllPoliciesRefresh(),
           loading: refreshPolicyLoader,
-          disabled: !refreshPoliciesAccountSelectionModal.accountName
+          disabled: !refreshPoliciesAccountSelectionModal.accountName,
         }}
       >
         <Modal.Section>
@@ -398,13 +398,13 @@ const FinalPolicyGrid = (props) => {
           setaccountSelectionModal({ ...accountSelectionModal, active: false })
         }
         title="Create policy on eBay"
-        primaryAction={{
-          content: "Add",
-          disabled:
-            !accountSelectionModal.siteID && !accountSelectionModal.shopID,
-          url: `https://www.bizpolicy.ebay${accountSelectionModal.domainName}/businesspolicy/${accountSelectionModal.selectedPolicyValue}`,
-          external: true,
-        }}
+        // primaryAction={{
+        //   content: "Add",
+        //   disabled:
+        //     !accountSelectionModal.siteID && !accountSelectionModal.shopID,
+        //   url: `https://www.bizpolicy.ebay${accountSelectionModal.domainName}/businesspolicy/${accountSelectionModal.selectedPolicyValue}`,
+        //   external: true,
+        // }}
       >
         <Modal.Section>
           <Banner status="info">
@@ -442,6 +442,22 @@ const FinalPolicyGrid = (props) => {
               />
             </div>
           </div>
+          <br />
+          <Stack distribution="center">
+            <Button
+              primary
+              disabled={
+                !accountSelectionModal.siteID && !accountSelectionModal.shopID
+              }
+              onClick={() => {
+                window.open(
+                  `https://www.bizpolicy.ebay${accountSelectionModal.domainName}/businesspolicy/${accountSelectionModal.selectedPolicyValue}`
+                );`
+              }}
+            >
+              Add
+            </Button>
+          </Stack>
         </Modal.Section>
       </Modal>
     </PageHeader>
