@@ -1,5 +1,15 @@
 import { LineOutlined } from "@ant-design/icons";
-import { Button, Card, Icon, Stack, Tag, TextField } from "@shopify/polaris";
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  ChoiceList,
+  Icon,
+  Popover,
+  Stack,
+  Tag,
+  TextField,
+} from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, Row } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -39,9 +49,9 @@ const getCountyrName = (siteId) => {
   return "-";
 };
 
-const getUsername = (siteid, username) => {
-  if (siteid && username.length) {
-    let test = username.find((user) => user.siteID === siteid);
+const getUsername = (shopid, username) => {
+  if (shopid && username.length) {
+    let test = username.find((user) => user.shopID == shopid);
     return test.label;
   }
 };
@@ -229,7 +239,7 @@ const CategoryTemplateGrid = (props) => {
                   <>{getCountyrName(template["data"]["site_id"])}</>
                   <>
                     {getUsername(
-                      template["data"]["site_id"],
+                      template["data"]["shop_id"],
                       connectedAccountsArray
                     )}
                   </>
