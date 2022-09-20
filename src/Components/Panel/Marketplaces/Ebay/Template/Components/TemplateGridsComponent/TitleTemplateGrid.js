@@ -1,4 +1,14 @@
-import { Button, Card, Icon, Stack, Tag, TextField } from "@shopify/polaris";
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  ChoiceList,
+  Icon,
+  Popover,
+  Stack,
+  Tag,
+  TextField,
+} from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -108,10 +118,12 @@ const TitleTemplateGrid = (props) => {
   const [filterCategoryTemplateName, setFilterCategoryTemplateName] =
     useState("");
   const [popOverStatus, setPopOverStatus] = useState({
-    country: false,
+    titleMapping: false,
+    descriptionMapping: false
   });
   const [selected, setSelected] = useState({
-    country: [],
+    titleMapping: [],
+    descriptionMapping: []
   });
 
   // pagination
@@ -315,7 +327,8 @@ const TitleTemplateGrid = (props) => {
                 tempObj[object]["value"] = "";
               }
             });
-            setFilterCategoryTemplateName("");
+            // setFilterCategoryTemplateName("");
+            ["title"].includes(fieldValue) && setFilterCategoryTemplateName("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
@@ -328,18 +341,69 @@ const TitleTemplateGrid = (props) => {
     });
   };
 
+  const titleMappingActivator = (
+    <Button fullWidth disclosure onClick={() => popOverHandler("titleMapping")}>
+      Title Mapping
+    </Button>
+  );
+  const descriptionMappingActivator = (
+    <Button fullWidth disclosure onClick={() => popOverHandler("descriptionMapping")}>
+      Description Mapping
+    </Button>
+  );
+
+  const popOverHandler = (type) => {
+    let temp = { ...popOverStatus };
+    temp[type] = !popOverStatus[type];
+    setPopOverStatus(temp);
+  };
+  const handleChange = (value, selectedType) => {
+    let type = `filter[${selectedType}][1]`;
+    let filterObj = {};
+    filterObj[type] = value[0];
+    setFiltersToPass({ ...filtersToPass, ...filterObj });
+    setSelected({ ...selected, [selectedType]: value });
+  };
   const renderOtherFilters = () => {
     return (
-      <Stack wrap>
-        <Button
-          icon={<Icon source={FilterMajorMonotone} color="base" />}
-          onClick={() => {
-            setFiltersDrawerVisible(true);
-          }}
+      <ButtonGroup segmented>
+        <Popover
+          active={popOverStatus["titleMapping"]}
+          activator={titleMappingActivator}
+          onClose={() => popOverHandler("titleMapping")}
         >
-          More Filters
-        </Button>
-      </Stack>
+          <div style={{ margin: "10px" }}>
+            <ChoiceList
+              choices={AttributeMapoptions}
+              selected={selected["titleMapping"]}
+              onChange={(value) => handleChange(value, "titleMapping")}
+            />
+          </div>
+        </Popover>
+        <Popover
+          active={popOverStatus["descriptionMapping"]}
+          activator={descriptionMappingActivator}
+          onClose={() => popOverHandler("descriptionMapping")}
+        >
+          <div style={{ margin: "10px" }}>
+            <ChoiceList
+              choices={AttributeMapoptions}
+              selected={selected["descriptionMapping"]}
+              onChange={(value) => handleChange(value, "descriptionMapping")}
+            />
+          </div>
+        </Popover>
+      </ButtonGroup>
+      // <Stack wrap>
+      //   <Button
+      //     icon={<Icon source={FilterMajorMonotone} color="base" />}
+      //     onClick={() => {
+      //       setFiltersDrawerVisible(true);
+      //     }}
+      //   >
+      //     More Filters
+      //   </Button>
+      // </Stack>
     );
   };
 
