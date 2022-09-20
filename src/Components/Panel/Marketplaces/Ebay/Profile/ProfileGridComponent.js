@@ -300,30 +300,34 @@ const ProfileGridComponent = (props) => {
     let { filters } = filtersProps;
     let { pageSize: count, activePage } = paginationProps;
     let filterPostData = {};
-    for (const key in filtersToPass) {
-      if (key === "filter[country][1]") {
-        let matchedAccoount = connectedAccountsArray.find(
-          (connectedAccount) =>
-            connectedAccount["value"] === filtersToPass["filter[country][1]"]
-        );
-        filterPostData["filter[profile_shop_id][1]"] =
-          matchedAccoount?.["shopId"];
-      } else {
-        filterPostData[key] = filtersToPass[key];
-      }
+    // for (const key in filtersToPass) {
+    //   if (key === "filter[country][1]") {
+    //     let matchedAccoount = connectedAccountsArray.find(
+    //       (connectedAccount) =>
+    //         connectedAccount["value"] === filtersToPass["filter[country][1]"]
+    //     );
+    //     filterPostData["filter[profile_shop_id][1]"] =
+    //       matchedAccoount?.["shopId"];
+    //   } else {
+    //     filterPostData[key] = filtersToPass[key];
+    //   }
+    // }
+    if (filtersToPass.hasOwnProperty("filter[country][1]")) {
+      let matchedAccoount = connectedAccountsArray.find(
+        (connectedAccount) =>
+          connectedAccount["value"] === filtersToPass["filter[country][1]"]
+      );
+      filterPostData["filter[profile_shop_id][1]"] =
+        matchedAccoount?.["shopId"];
+      filterPostData["site_id"] = Number(matchedAccoount?.["siteID"]);
     }
-    // if (filtersToPass.hasOwnProperty("filter[country][1]")) {
-    //   let matchedAccoount = connectedAccountsArray.find(
-    //     (connectedAccount) =>
-    //       connectedAccount["value"] === filtersToPass["filter[country][1]"]
-    //   );
-    //   filterPostData["filter[profile_shop_id][1]"] =
-    //     matchedAccoount?.["shopId"];
-    //   filterPostData["site_id"] = Number(matchedAccoount?.["siteID"]);
-    // }
-    // if (filtersToPass.hasOwnProperty("filter[name][3]")) {
-    //   filterPostData["filter[name][3]"] = filtersToPass["filter[name][3]"];
-    // }
+    if (filtersToPass.hasOwnProperty("filter[name][3]")) {
+      filterPostData["filter[name][3]"] = filtersToPass["filter[name][3]"];
+    }
+    if (filtersToPass.hasOwnProperty("filter[querySentence][3]")) {
+      filterPostData["filter[prepareQuery.querySentence][3]"] =
+        filtersToPass["filter[querySentence][3]"];
+    }
 
     let dataToPost = {
       count: count,
@@ -423,7 +427,8 @@ const ProfileGridComponent = (props) => {
               }
             });
             // setFilterProfileNameORQuery("");
-            ['querySentence', 'name'].includes(fieldValue) && setFilterProfileNameORQuery("");
+            ["querySentence", "name"].includes(fieldValue) &&
+              setFilterProfileNameORQuery("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
