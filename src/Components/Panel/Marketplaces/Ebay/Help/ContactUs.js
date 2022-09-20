@@ -15,7 +15,14 @@ import Mail from "../../../../../assets/mail.png";
 import { preferredTime, timezone } from "../Products/SampleProductData";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
 import { json } from "../../../../../globalConstant/static-json";
-import { Stack, Button, Select, TextField, Checkbox } from "@shopify/polaris";
+import {
+  Stack,
+  Button,
+  Select,
+  TextField,
+  Checkbox,
+  Link,
+} from "@shopify/polaris";
 import { submitIssue } from "../../../../../APIrequests/ContactUSAPI";
 import {
   demoScheduleURL,
@@ -53,10 +60,29 @@ const ContactUs = () => {
     demo: false,
   });
 
+  // skype, whatsapp, email
+  const [socialMediaLinks, setSocialMediaLinks] = useState({
+    skype: "https://join.skype.com/GbdPBTuVsNgN",
+    whatsApp: "https://chat.whatsapp.com/HPbJm00yENw6QhWfskNWLa",
+    email: "mailto:ebay_support@cedcommerce.com",
+  });
+
   const getAllConnectedAccounts = async () => {
     let { success: accountConnectedSuccess, data: connectedAccountData } =
       await getConnectedAccounts();
     if (accountConnectedSuccess) {
+      let shopifyAccount = connectedAccountData.find(
+        (account) => account.marketplace === "shopify"
+      );
+      if (shopifyAccount?.userCustomData?.userData) {
+        const { skypeLink, whatsAppLink, email } =
+          shopifyAccount?.userCustomData?.userData;
+        setSocialMediaLinks({
+          skype: skypeLink,
+          whatsApp: whatsAppLink,
+          email: email,
+        });
+      }
       let ebayAccounts = connectedAccountData.filter(
         (account) => account["marketplace"] === "ebay"
       );
@@ -120,9 +146,18 @@ const ContactUs = () => {
             <Stack distribution="equalSpacing" alignment="center">
               <Text strong>Feel free to reach out to us</Text>
               <Stack>
-                <Image src={WhatsApp} width={50} preview={false} />
-                <Image src={Skype} width={50} preview={false} />
-                <Image src={Mail} width={50} preview={false} />
+                <Link url={socialMediaLinks.whatsApp} external>
+                  <Image src={WhatsApp} width={50} preview={false} />
+                </Link>
+                <Link url={socialMediaLinks.whatsApp} external>
+                  <Image src={Skype} width={50} preview={false} />
+                </Link>
+                <a
+                  style={{ color: "black" }}
+                  href={"mailto:ebay_support@cedcommerce.com"}
+                >
+                  <Image src={Mail} width={50} preview={false} />
+                </a>
               </Stack>
             </Stack>
           </Card>
