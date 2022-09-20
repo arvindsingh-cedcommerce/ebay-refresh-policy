@@ -23,7 +23,7 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
         description: (
           <Stack spacing="extraTight" wrap={false} alignment="center">
             <TextStyle>
-              Select behaviour to use updating inventory while creating order on
+              Select behaviour to use update inventory while creating order on
               Shopify.
             </TextStyle>
             <Tooltip
