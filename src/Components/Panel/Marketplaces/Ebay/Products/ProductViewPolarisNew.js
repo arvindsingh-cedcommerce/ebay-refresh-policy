@@ -53,7 +53,10 @@ import { AlertMinor } from "@shopify/polaris-icons";
 import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import NoProductImage from "../../../../../assets/notfound.png";
 import AdditionalDetailsComponent from "./Components/AdditionalDetailsComponent";
-import { getParsedMetaFieldsData, parseMetaFieldsData } from "./helperFunctions/viewProductHelper";
+import {
+  getParsedMetaFieldsData,
+  parseMetaFieldsData,
+} from "./helperFunctions/viewProductHelper";
 import MetafieldsComponent from "./Components/MetafieldsComponent";
 
 const columns = [
@@ -385,7 +388,11 @@ const ProductViewPolarisNew = (props) => {
             // console.log(errors[shopId]["ItemId"], response['ItemID']);
             itemIdObj[shopId] = {
               itemId: errors[shopId]?.ItemId,
-              jsonResponse: ebay_product_response && ebay_product_response.find(product => product.ItemID === errors[shopId]?.ItemId),
+              jsonResponse:
+                ebay_product_response &&
+                ebay_product_response.find(
+                  (product) => product.ItemID === errors[shopId]?.ItemId
+                ),
               // ended: errors[shopId]?.ended
             };
           }
@@ -609,6 +616,7 @@ const ProductViewPolarisNew = (props) => {
       tempObj["unit"] = unit ? unit : "in";
       tempObj["packageType"] = packageType ? packageType : "";
       tempObj["privateListing"] = privateListing ? privateListing : "no";
+      // tempObj["privateListing"] = privateListing ? privateListing : false;
       tempObj["variant_attributes"] =
         variant_attributes.length > 0 ? variant_attributes : [];
       setMainProduct(tempObj);
@@ -660,7 +668,7 @@ const ProductViewPolarisNew = (props) => {
           editable: true,
         };
       });
-      if (temp.length == 7) {
+      if (temp.length == 8) {
         temp = [...temp, ...variantAttributeAddedArray];
       }
       if (customTemp.length == 6) {
@@ -692,7 +700,7 @@ const ProductViewPolarisNew = (props) => {
           data.product_metafields.metafields
         );
         tempMetafields["content"] = { ...parsedMetaFields };
-        setMetafields(tempMetafields)
+        setMetafields(tempMetafields);
       }
       extractDataFromAPI(
         data?.product_data,
