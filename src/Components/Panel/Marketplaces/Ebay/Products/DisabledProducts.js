@@ -329,14 +329,18 @@ const DisabledProducts = (props) => {
               </Stack>
             );
             tempObject["productType"] = (
-              <Stack vertical spacing="extraTight" distribution="center">
+              // <Stack vertical spacing="extraTight" distribution="center">
+              <center>
                 <Text copyable={product_type && true}>{product_type}</Text>
-              </Stack>
+                {/* </Stack> */}
+              </center>
             );
             tempObject["vendor"] = (
-              <Stack vertical spacing="extraTight" distribution="center">
+              <center>
+                {/* <Stack vertical spacing="extraTight" distribution="center"> */}
                 <Text copyable={brand && true}>{brand}</Text>
-              </Stack>
+                {/* </Stack> */}
+              </center>
             );
             tempObject["profile"] = (
               <center>
@@ -355,7 +359,9 @@ const DisabledProducts = (props) => {
             tempObject["variantsCount"] = (
               <center>
                 {/* <Paragraph>{quantity}</Paragraph> */}
-                <Paragraph>{getVariantsCountDetails(variants, variant_attributes)}</Paragraph>
+                <Paragraph>
+                  {getVariantsCountDetails(variants, variant_attributes)}
+                </Paragraph>
               </center>
             );
             tempObject["variantsData"] = variants;
