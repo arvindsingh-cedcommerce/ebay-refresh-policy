@@ -398,7 +398,10 @@ const ProductBulkMenu = (props) => {
                       props.history.push("/panel/ebay/activity");
                     } else {
                       notify.error(message ? message : data);
-                      setModal({ ...modal, active: false });
+                      // setModal({ ...modal, active: false });
+                      let temp = { ...uploadAndReviseOnEbay };
+                      temp["modal"]["active"] = false;
+                      setUploadAndReviseOnEbay(temp);
                     }
                   } else if (selectedProfle !== "") {
                     let selectedProfleDetails = profileList.find(
@@ -414,7 +417,10 @@ const ProductBulkMenu = (props) => {
                       props.history.push("/panel/ebay/activity");
                     } else {
                       notify.error(message ? message : data);
-                      setModal({ ...modal, active: false });
+                      // setModal({ ...modal, active: false });
+                      let temp = { ...uploadAndReviseOnEbay };
+                      temp["modal"]["active"] = false;
+                      setUploadAndReviseOnEbay(temp);
                     }
                   }
                   setBtnLoader(false);
