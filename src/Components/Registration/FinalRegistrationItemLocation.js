@@ -132,7 +132,7 @@ export const FinalRegistrationItemLocation = (props) => {
       label: "Published Status",
       // options: [],
       options: [{ label: "Please Select...", value: "" }],
-      value: publishedStatusOptions[0]["value"],
+      value: publishedStatusOptions[1]["value"],
       enable: "yes",
     },
     productType: {
