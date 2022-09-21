@@ -151,24 +151,6 @@ const NewOrdersGrid = (props) => {
     {
       title: (
         <center>
-          <Text>Shopify Order Name</Text>
-        </center>
-      ),
-      dataIndex: "shopifyOrderName",
-      key: "shopifyOrderName",
-    },
-    {
-      title: (
-        <center>
-          <Text>Shopify Order ID</Text>
-        </center>
-      ),
-      dataIndex: "shopifyOrderId",
-      key: "shopifyOrderId",
-    },
-    {
-      title: (
-        <center>
           <Text>Account Connected</Text>
         </center>
       ),
@@ -183,6 +165,24 @@ const NewOrdersGrid = (props) => {
       ),
       dataIndex: "fulfillment",
       key: "fulfillment",
+    },
+    {
+      title: (
+        <center>
+          <Text>Shopify Order Name</Text>
+        </center>
+      ),
+      dataIndex: "shopifyOrderName",
+      key: "shopifyOrderName",
+    },
+    {
+      title: (
+        <center>
+          <Text>Shopify Order ID</Text>
+        </center>
+      ),
+      dataIndex: "shopifyOrderId",
+      key: "shopifyOrderId",
     },
     // {
     //   title: (
