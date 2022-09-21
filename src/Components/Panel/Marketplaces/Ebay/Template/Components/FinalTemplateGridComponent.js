@@ -7,9 +7,11 @@ import { addTemplatesOptions } from "../Helper/TemplateHelper";
 import { notify } from "../../../../../../services/notify";
 import {
   Banner,
+  Button,
   Card,
   Modal,
   Select as PolarisSelect,
+  Stack,
   Tabs,
 } from "@shopify/polaris";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
@@ -312,16 +314,16 @@ const FinalTemplateGridComponent = (props) => {
           setaccountSelectionModal({ ...accountSelectionModal, active: false })
         }
         title="Select account for category template"
-        primaryAction={{
-          content: "Add",
-          disabled:
-            !accountSelectionModal.siteID && !accountSelectionModal.shopID,
-          onAction: () => {
-            props.history.push(
-              `/panel/ebay/templates/handler?type=category&siteID=${accountSelectionModal.siteID}&shopID=${accountSelectionModal.shopID}`
-            );
-          },
-        }}
+        // primaryAction={{
+        //   content: "Add",
+        //   disabled:
+        //     !accountSelectionModal.siteID && !accountSelectionModal.shopID,
+        //   onAction: () => {
+        //     props.history.push(
+        //       `/panel/ebay/templates/handler?type=category&siteID=${accountSelectionModal.siteID}&shopID=${accountSelectionModal.shopID}`
+        //     );
+        //   },
+        // }}
       >
         <Modal.Section>
           <div
@@ -354,6 +356,22 @@ const FinalTemplateGridComponent = (props) => {
               />
             </div>
           </div>
+          <br />
+          <Stack distribution="center">
+            <Button
+              primary
+              disabled={
+                !accountSelectionModal.siteID && !accountSelectionModal.shopID
+              }
+              onClick={() => {
+                props.history.push(
+                  `/panel/ebay/templates/handler?type=category&siteID=${accountSelectionModal.siteID}&shopID=${accountSelectionModal.shopID}`
+                );
+              }}
+            >
+              Add
+            </Button>
+          </Stack>
         </Modal.Section>
       </Modal>
     </PageHeader>
