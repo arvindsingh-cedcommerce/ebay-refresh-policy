@@ -1009,6 +1009,7 @@ const ViewOrdersPolarisNew = (props) => {
                           );
                           if (success) {
                             notify.success(message ? message : data);
+                            hitOrderAPI();
                           } else {
                             notify.error(message ? message : data);
                           }
