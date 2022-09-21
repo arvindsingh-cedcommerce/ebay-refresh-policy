@@ -168,11 +168,19 @@ const InventoryTemplateGrid = (props) => {
 
   const getTemplatesList = async (ebayAccountsObj) => {
     setGridLoader(true);
+    const filterParsedData = {};
+    for (const key in filtersToPass) {
+      if (key === "filter[customiseInventoryType][1]") {
+        filterParsedData["filter[data.customiseInventoryType][1]"] =
+          filtersToPass[key];
+      } else filterParsedData[key] = filtersToPass[key];
+    }
     const postData = {
       "filter[type][1]": "inventory",
       count: pageSize,
       activePage: activePage,
-      ...filtersToPass,
+      // ...filtersToPass,
+      ...filterParsedData
     };
     if (Object.keys(filtersToPass).length) {
       postData["activePage"] = 1;
@@ -380,9 +388,6 @@ const InventoryTemplateGrid = (props) => {
       Customise Inventory
     </Button>
   );
-  useEffect(() => {
-    console.log("popOverStatus", popOverStatus);
-  }, [popOverStatus]);
   const popOverHandler = (type) => {
     let temp = { ...popOverStatus };
     temp[type] = !popOverStatus[type];
@@ -404,7 +409,6 @@ const InventoryTemplateGrid = (props) => {
           onClose={() => popOverHandler("customiseInventoryType")}
         >
           <div style={{ margin: "10px" }}>
-            {/* {console.log(customiseInventoryOptions)} */}
             <ChoiceList
               choices={customiseInventoryOptions}
               selected={selected["customiseInventoryType"]}
