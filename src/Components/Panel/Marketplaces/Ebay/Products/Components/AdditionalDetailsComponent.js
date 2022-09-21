@@ -68,9 +68,21 @@ const AdditionalDetailsComponent = ({
     if (field) {
       temp[type][field] = e;
     } else {
-      temp[type] = e;
+      if (type === "privateListing") {
+        temp[type] = e === "yes" ? true : false;
+      } else temp[type] = e;
     }
     setMainProduct(temp);
+  };
+
+  const getPrivateListingValue = (value) => {
+    let resultValue;
+    if (value === true || value === "yes") {
+      resultValue = true;
+    } else {
+      resultValue = false;
+    }
+    return resultValue;
   };
 
   return (
@@ -160,10 +172,14 @@ const AdditionalDetailsComponent = ({
                 <ButtonGroup segmented>
                   <Button
                     primary={
-                      mainProduct["privateListing"] === "yes" ? true : false
+                      getPrivateListingValue(mainProduct["privateListing"])
+                      // mainProduct["privateListing"] === "yes" ? true : false
+                      // mainProduct["privateListing"]
                     }
                     pressed={
-                      mainProduct["privateListing"] === "yes" ? true : false
+                      getPrivateListingValue(mainProduct["privateListing"])
+                      // mainProduct["privateListing"] === "yes" ? true : false
+                      // mainProduct["privateListing"]
                     }
                     onClick={(e) => onChangeHandler("yes", "privateListing")}
                   >
@@ -171,10 +187,14 @@ const AdditionalDetailsComponent = ({
                   </Button>
                   <Button
                     primary={
-                      mainProduct["privateListing"] === "no" ? true : false
+                      !getPrivateListingValue(mainProduct["privateListing"])
+                      // mainProduct["privateListing"] === "no" ? true : false
+                      // mainProduct["privateListing"]
                     }
                     pressed={
-                      mainProduct["privateListing"] === "no" ? true : false
+                      !getPrivateListingValue(mainProduct["privateListing"])
+                      // mainProduct["privateListing"] === "no" ? true : false
+                      // mainProduct["privateListing"]
                     }
                     onClick={(e) => onChangeHandler("no", "privateListing")}
                   >
