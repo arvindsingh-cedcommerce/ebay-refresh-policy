@@ -127,7 +127,7 @@ const CategoryTemplateGrid = (props) => {
           <center>
             <ActionPopoverTemplate
               record={record}
-              hitRequiredFuncs={getTemplatesList}
+              hitRequiredFuncs={getAllConnectedAccounts}
               cbFunc={cbFuncCategory}
             />
           </center>
