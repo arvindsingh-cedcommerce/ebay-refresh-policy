@@ -787,12 +787,19 @@ const CategoryTemplatePolarisNew = (props) => {
           site_id: siteID,
           shop_id: shopID,
         });
-        // console.log("yhn", dataCategoryFeatures);
-        if (Object.keys(dataCategoryFeatures).length) {
-          if (dataCategoryFeatures["0"]) {
-            extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+        if (
+          dataCategoryFeatures.success &&
+          dataCategoryFeatures?.data?.length
+        ) {
+          if (dataCategoryFeatures["data"][0]) {
+            extractBarcodeCategoryOptions(dataCategoryFeatures['data'][0]);
           }
         }
+        // if (Object.keys(dataCategoryFeatures).length) {
+        //   if (dataCategoryFeatures["0"]) {
+        //     extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+        //   }
+        // }
         // console.log("here");
         setLoaderOverlayActive(true);
         let {
@@ -1009,11 +1016,20 @@ const CategoryTemplatePolarisNew = (props) => {
       site_id: siteID,
       shop_id: shopID,
     });
-    if (Object.keys(dataCategoryFeatures).length) {
-      if (dataCategoryFeatures["0"]) {
-        extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+    // console.log(dataCategoryFeatures);
+    if (
+      dataCategoryFeatures.success &&
+      dataCategoryFeatures?.data?.length
+    ) {
+      if (dataCategoryFeatures["data"][0]) {
+        extractBarcodeCategoryOptions(dataCategoryFeatures['data'][0]);
       }
     }
+    // if (Object.keys(dataCategoryFeatures).length) {
+    //   if (dataCategoryFeatures["0"]) {
+    //     extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+    //   }
+    // }
     let {
       success: successattribCategorywise,
       data: attributeCategorywise,
@@ -1429,11 +1445,20 @@ const CategoryTemplatePolarisNew = (props) => {
       site_id: siteID,
       shop_id: shopID,
     });
-    if (Object.keys(dataCategoryFeatures).length) {
-      if (dataCategoryFeatures["0"]) {
-        extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+    if (
+      dataCategoryFeatures.success &&
+      dataCategoryFeatures?.data?.length
+    ) {
+      if (dataCategoryFeatures["data"][0]) {
+        console.log(dataCategoryFeatures["data"][0]);
+        extractBarcodeCategoryOptions(dataCategoryFeatures["data"][0]);
       }
     }
+    // if (Object.keys(dataCategoryFeatures).length) {
+    //   if (dataCategoryFeatures["0"]) {
+    //     extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+    //   }
+    // }
     // console.log("this");
     setLoaderOverlayActive(true);
     let {
