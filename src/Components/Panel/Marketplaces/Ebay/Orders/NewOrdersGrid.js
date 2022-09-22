@@ -107,15 +107,15 @@ const filtersFields = [
     operator: "3",
     dataType: "string",
   },
-  {
-    label: "Customer Name",
-    // value: "client_details.name",
-    value: "customer.first_name",
-    searchType: "textField",
-    inputValue: "",
-    operator: "3",
-    dataType: "string",
-  },
+  // {
+  //   label: "Customer Name",
+  //   // value: "client_details.name",
+  //   value: "customer.first_name",
+  //   searchType: "textField",
+  //   inputValue: "",
+  //   operator: "3",
+  //   dataType: "string",
+  // },
 ];
 
 export const getFitersInitially = () => {
@@ -131,9 +131,10 @@ export const getFitersInitially = () => {
   return tempObj;
 };
 const NewOrdersGrid = (props) => {
-  const reduxState = useSelector(
-    (state) => state.orderFilterReducer.reduxFilters
-  );
+  const reduxState = useSelector((state) => {
+    console.log('useSelector', state);
+    return state.orderFilterReducer.reduxFilters;
+  });
   const dispatch = useDispatch();
 
   const [tab, setTab] = useState("0");
@@ -905,7 +906,10 @@ const NewOrdersGrid = (props) => {
     }
   }, [filtersToPass]);
   useEffect(() => {
-    if (reduxState) setFiltersToPass(reduxState);
+    if (reduxState) {
+      console.log('reduxState', reduxState);
+      setFiltersToPass(reduxState);
+    }
   }, []);
   return (
     <PageHeader
