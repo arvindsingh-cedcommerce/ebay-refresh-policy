@@ -6,6 +6,10 @@ import profileFilterReducer from "./reducers/profileFilterReducer";
 import shippingPolicyGridFilterReducer from "./reducers/shippingPolicyGridFilterReducer";
 import paymentPolicyGridFilterReducer from "./reducers/paymentPolicyGridFilterReducer";
 import returnPolicyGridFilterReducer from "./reducers/returnPolicyGridFilterReducer";
+import categoryGridFilterReducer from "./reducers/categoryGridFilterReducer";
+import inventoryGridFilterReducer from "./reducers/inventoryGridFilterReducer";
+import priceGridFilterReducer from "./reducers/priceGridFilterReducer";
+import titleGridFilterReducer from "./reducers/titleGridFilterReducer";
 
 // const store = createStore(productFilterReducer);
 const rootReducer = combineReducers({
@@ -15,6 +19,10 @@ const rootReducer = combineReducers({
   paymentPolicyGridFilterReducer,
   shippingPolicyGridFilterReducer,
   returnPolicyGridFilterReducer,
+  categoryGridFilterReducer,
+  inventoryGridFilterReducer,
+  priceGridFilterReducer,
+  titleGridFilterReducer,
 });
 const store = createStore(rootReducer);
 // console.log(store.getState());

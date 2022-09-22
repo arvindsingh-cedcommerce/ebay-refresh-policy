@@ -13,6 +13,7 @@ import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getTemplates } from "../../../../../../../APIrequests/TemplatesAPI";
 import { notify } from "../../../../../../../services/notify";
@@ -65,6 +66,11 @@ const getFitersInitially = () => {
 };
 
 const TitleTemplateGrid = (props) => {
+  const reduxState = useSelector(
+    (state) => state.titleGridFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
+
   const { cbFuncTitle } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
@@ -119,11 +125,11 @@ const TitleTemplateGrid = (props) => {
     useState("");
   const [popOverStatus, setPopOverStatus] = useState({
     titleMapping: false,
-    descriptionMapping: false
+    descriptionMapping: false,
   });
   const [selected, setSelected] = useState({
     titleMapping: [],
-    descriptionMapping: []
+    descriptionMapping: [],
   });
 
   // pagination
@@ -347,7 +353,11 @@ const TitleTemplateGrid = (props) => {
     </Button>
   );
   const descriptionMappingActivator = (
-    <Button fullWidth disclosure onClick={() => popOverHandler("descriptionMapping")}>
+    <Button
+      fullWidth
+      disclosure
+      onClick={() => popOverHandler("descriptionMapping")}
+    >
       Description Mapping
     </Button>
   );
@@ -432,6 +442,14 @@ const TitleTemplateGrid = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "titleFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <Card.Section>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
