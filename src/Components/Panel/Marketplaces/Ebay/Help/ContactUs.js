@@ -46,6 +46,8 @@ const ContactUs = () => {
   const [selectedShopId, setSelectedShopId] = useState("");
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [issueSelected, setIssueSelected] = useState("");
+  const [issueFormValidationErrors,setIssueFormValidationErrors]=useState({section:false,message:false});
+  const [scheduleFormValidationErrors,setScheduleFormValidationErrors] =useState({email:false,preferredMeeting:false,timeZone:false,preferredTime:false,date:false});
   const [issueDescription, setIssueDescription] = useState("");
   const [demoDetails, setDemoDetails] = useState({
     preferredMeeting: "",
@@ -168,7 +170,18 @@ const ContactUs = () => {
               content: "Submit",
               loading: btnLoaders["issue"],
               onAction: async () => {
+                const validationObj={...issueFormValidationErrors};
                 setBtnLoaders({ ...btnLoaders, issue: true });
+                if(!issueSelected)
+                  validationObj.section=true;
+                if(!issueDescription)
+                  validationObj.message=true;
+                  if(issueSelected && issueDescription)
+                  {
+                    validationObj.section=false;
+                    validationObj.message=false;
+                  
+                
                 let postData = {
                   body: issueDescription,
                   subject: `We have Received Your Query Related to ${issueSelected}`,
@@ -187,6 +200,8 @@ const ContactUs = () => {
                 } else {
                   notify.error(message);
                 }
+              }
+              setIssueFormValidationErrors({...validationObj});
                 setBtnLoaders({ ...btnLoaders, issue: false });
               },
             }}
@@ -223,7 +238,13 @@ const ContactUs = () => {
             /> */}
             <Select
               value={issueSelected}
-              onChange={(e) => setIssueSelected(e)}
+              onChange={(e) => {  
+                if(e)
+                {
+                  const validationObj={...issueFormValidationErrors};
+                  validationObj.section=false;
+                  setIssueFormValidationErrors({...validationObj});
+                  setIssueSelected(e)}}}
               placeholder="Select the section in which you are facing issue"
               options={[
                 { label: "Products", value: "products" },
@@ -235,13 +256,21 @@ const ContactUs = () => {
                 { label: "Others", value: "others" },
               ]}
               label="Section"
+              error={issueFormValidationErrors.section?"Required Field":false}
             />
             <TextField
               placeholder="Describe the issue you are facing..."
               label="Issue"
               value={issueDescription}
-              onChange={(e) => setIssueDescription(e)}
+              onChange={(e) => {
+                if(e)
+                {
+                  const validationObj={...issueFormValidationErrors};
+                  validationObj.message=false;
+                  setIssueFormValidationErrors({...validationObj});
+                setIssueDescription(e);}}}
               multiline={3}
+              error={issueFormValidationErrors.message?"Required Field":false}
             />
           </Card>
         </Col>
@@ -250,9 +279,27 @@ const ContactUs = () => {
             title="Schedule Demo"
             sectioned
             primaryFooterAction={{
+
               content: "Submit",
               loading: btnLoaders["demo"],
               onAction: async () => {
+                const scheduleValidationObj={...scheduleFormValidationErrors};
+                let finalValidator=false;
+                for(const scheduleProperty in scheduleValidationObj)
+                {
+                  if(!demoDetails[`${scheduleProperty}`])
+                  {
+                    scheduleValidationObj[`${scheduleProperty}`]=true;
+                    finalValidator=true;
+                  }
+                  else
+                  {
+                    scheduleValidationObj[`${scheduleProperty}`]=false;
+                  }
+                }
+                setScheduleFormValidationErrors({...scheduleValidationObj});
+                if(!finalValidator)
+                       {
                 let { success, message } = await submitIssue(
                   demoScheduleURL,
                   demoDetails
@@ -261,7 +308,7 @@ const ContactUs = () => {
                   notify.success(message);
                 } else {
                   notify.error(message);
-                }
+                }}
               },
             }}
           >
@@ -273,21 +320,33 @@ const ContactUs = () => {
                   requiredIndicator
                   label="Email Address"
                   value={demoDetails.email}
-                  onChange={(e) => setDemoDetails({ ...demoDetails, email: e })}
+                  onChange={(e) => { if(e) {
+                    const scheduleValidationObj={...scheduleFormValidationErrors};
+                    scheduleValidationObj.email=false;
+                    setScheduleFormValidationErrors({...scheduleValidationObj});
+                    setDemoDetails({ ...demoDetails, email: e })}}}
+                  error={scheduleFormValidationErrors.email?"Required":false}
                 />
                 <Select
                   placeholder="Select Medium"
                   label="Medium"
                   requiredIndicator
                   value={demoDetails.preferredMeeting}
-                  onChange={(e) =>
-                    setDemoDetails({ ...demoDetails, preferredMeeting: e })
+                  onChange={(e) =>{
+                    if(e) {
+                      const scheduleValidationObj={...scheduleFormValidationErrors};
+                      scheduleValidationObj.preferredMeeting=false;
+                      setScheduleFormValidationErrors({...scheduleValidationObj});
+                    setDemoDetails({ ...demoDetails, preferredMeeting: e });
+                    }
+                  }
                   }
                   options={[
                     { label: "Skype", value: "skype" },
                     { label: "Google Meet", value: "googleMeet" },
                     { label: " Zoom Meet", value: "zoomMeet" },
                   ]}
+                  error={scheduleFormValidationErrors.preferredMeeting?"Required":false}
                 />
               </Stack>
               <Stack distribution="fillEvenly">
@@ -296,20 +355,34 @@ const ContactUs = () => {
                   placeholder="Select Time Zone"
                   requiredIndicator
                   value={demoDetails.timeZone}
-                  onChange={(e) =>
+                  onChange={(e) =>{
+                    if(e) {
+                      const scheduleValidationObj={...scheduleFormValidationErrors};
+                      scheduleValidationObj.timeZone=false;
+                      setScheduleFormValidationErrors({...scheduleValidationObj});
+                   
                     setDemoDetails({ ...demoDetails, timeZone: e })
+                    }
+                  }
                   }
                   options={timezone}
+                  error={scheduleFormValidationErrors.timeZone?"Required":false}
                 />
                 <Select
                   label="Time"
                   placeholder="Select Time"
                   requiredIndicator
                   value={demoDetails.preferredTime}
-                  onChange={(e) =>
+                  onChange={(e) =>{
+                    if(e) {
+                      const scheduleValidationObj={...scheduleFormValidationErrors};
+                      scheduleValidationObj.preferredTime=false;
+                      setScheduleFormValidationErrors({...scheduleValidationObj});
+                   
                     setDemoDetails({ ...demoDetails, preferredTime: e })
-                  }
+                    }}}
                   options={preferredTime}
+                  error={scheduleFormValidationErrors.preferredTime?"Required":false}
                 />
               </Stack>
               <TextField
@@ -318,8 +391,16 @@ const ContactUs = () => {
                 requiredIndicator
                 type={"date"}
                 value={demoDetails.date}
-                onChange={(e) => setDemoDetails({ ...demoDetails, date: e })}
+                onChange={(e) => {
+                  if(e) {
+                    const scheduleValidationObj={...scheduleFormValidationErrors};
+                    scheduleValidationObj.date=false;
+                    setScheduleFormValidationErrors({...scheduleValidationObj});
+                 
+                  setDemoDetails({ ...demoDetails, date: e });}}}
+                error={scheduleFormValidationErrors.date?"Required":false}
               />
+              {/*  not a mandatory field */}
               <TextField
                 placeholder="Any additional note..."
                 label="Additional Note"
