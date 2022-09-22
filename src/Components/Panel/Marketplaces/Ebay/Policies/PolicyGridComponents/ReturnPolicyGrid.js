@@ -12,6 +12,7 @@ import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import { deletePolicy } from "../../../../../../Apirequest/ebayApirequest/policiesApi";
@@ -59,6 +60,10 @@ const getFitersInitially = () => {
 };
 
 const ReturnPolicyGrid = (props) => {
+  const reduxState = useSelector(
+    (state) => state.returnPolicyGridFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
   const { cbFuncCategory, refreshSuccessStatus, setRefreshSuccessStatus } =
     props;
 
@@ -464,7 +469,7 @@ const ReturnPolicyGrid = (props) => {
               }
             });
             // setFilterShippingPolicyName("");
-            fieldValue === 'title' && setFilterShippingPolicyName("");
+            fieldValue === "title" && setFilterShippingPolicyName("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
@@ -477,6 +482,14 @@ const ReturnPolicyGrid = (props) => {
     });
   };
 
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "returnPolicyGridFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <Card.Section>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>

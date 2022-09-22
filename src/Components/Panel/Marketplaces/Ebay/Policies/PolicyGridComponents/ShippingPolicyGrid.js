@@ -12,6 +12,7 @@ import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import { deletePolicy } from "../../../../../../Apirequest/ebayApirequest/policiesApi";
@@ -59,6 +60,11 @@ const getFitersInitially = () => {
 };
 
 const ShippingPolicyGrid = (props) => {
+  const reduxState = useSelector(
+    (state) => state.shippingPolicyGridFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
+
   const {
     refreshPolicyBtnClicked,
     cbFuncCategory,
@@ -347,11 +353,7 @@ const ShippingPolicyGrid = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const countryActivator = (
-    <Button
-      fullWidth
-      disclosure
-      onClick={() => popOverHandler("country")}
-    >
+    <Button fullWidth disclosure onClick={() => popOverHandler("country")}>
       Account
     </Button>
   );
@@ -359,27 +361,27 @@ const ShippingPolicyGrid = (props) => {
   const renderOtherFilters = () => {
     return (
       // <Stack wrap>
-        <Popover
-          active={popOverStatus["country"]}
-          activator={countryActivator}
-          onClose={() => popOverHandler("country")}
-        >
-          <div style={{ margin: "10px" }}>
-            <ChoiceList
-              choices={connectedAccountsArray}
-              selected={selected["country"]}
-              onChange={(value) => handleChange(value, "country")}
-            />
-          </div>
-        </Popover>
-        // {/* <Button
-        //   icon={<Icon source={FilterMajorMonotone} color="base" />}
-        //   onClick={() => {
-        //     setFiltersDrawerVisible(true);
-        //   }}
-        // >
-        //   More Filters
-        // </Button> */}
+      <Popover
+        active={popOverStatus["country"]}
+        activator={countryActivator}
+        onClose={() => popOverHandler("country")}
+      >
+        <div style={{ margin: "10px" }}>
+          <ChoiceList
+            choices={connectedAccountsArray}
+            selected={selected["country"]}
+            onChange={(value) => handleChange(value, "country")}
+          />
+        </div>
+      </Popover>
+      // {/* <Button
+      //   icon={<Icon source={FilterMajorMonotone} color="base" />}
+      //   onClick={() => {
+      //     setFiltersDrawerVisible(true);
+      //   }}
+      // >
+      //   More Filters
+      // </Button> */}
       // </Stack>
     );
   };
@@ -491,7 +493,7 @@ const ShippingPolicyGrid = (props) => {
                 tempObj[object]["value"] = "";
               }
             });
-            fieldValue === 'title' && setFilterShippingPolicyName("");
+            fieldValue === "title" && setFilterShippingPolicyName("");
             setFilters(tempObj);
             setFiltersToPass(temp);
             setSelected({ ...selected, [fieldValue]: [] });
@@ -504,6 +506,14 @@ const ShippingPolicyGrid = (props) => {
     });
   };
 
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "shippingPolicyGridFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <Card.Section>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
