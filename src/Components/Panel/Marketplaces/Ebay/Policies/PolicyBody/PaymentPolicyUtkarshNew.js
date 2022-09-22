@@ -337,7 +337,7 @@ const PaymentPolicyUtkarshNew = (props) => {
         title={<Title level={4}>Payment Policy</Title>}
         actions={[
           {
-            content: <Button primary>Edit</Button>,
+            content: <Button primary>Edit on eBay</Button>,
             url: `https://www.bizpolicy.ebay${domainName}/businesspolicy/${type}?profileId=${id}`,
             external: true,
           },
