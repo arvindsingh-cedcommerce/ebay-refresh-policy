@@ -206,6 +206,27 @@ const AdditionalDetailsComponent = ({
           </Card>
         </Layout.AnnotatedSection>
       </Layout>
+      <Layout>
+        <Layout.AnnotatedSection
+          id="subtitle"
+          title="Subtitle"
+          description={
+            "Subtitle appears in eBay search results in list view, and can increase buyer interest by providing more descriptive info."
+          }
+        >
+          <Card sectioned>
+            <FormLayout>
+              <TextField
+                onChange={(e) => onChangeHandler(e, "subtitle")}
+                autoComplete="off"
+                value={mainProduct["subtitle"]}
+                type="text"
+                showCharacterCount
+              />
+            </FormLayout>
+          </Card>
+        </Layout.AnnotatedSection>
+      </Layout>
     </FormLayout>
   );
 };

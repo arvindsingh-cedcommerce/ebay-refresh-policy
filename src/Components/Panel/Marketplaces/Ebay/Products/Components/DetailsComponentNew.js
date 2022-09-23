@@ -42,6 +42,7 @@ const DetailsComponentNew = ({
             "unit",
             "packageType",
             "privateListing",
+            "subtitle"
           ].includes(field)
         ) {
           temp[field] = editedProductDataFromAPI?.mainProduct?.[field];

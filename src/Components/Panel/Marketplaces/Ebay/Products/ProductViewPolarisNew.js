@@ -170,6 +170,7 @@ const commonFields = [
   "unit",
   "packageType",
   "privateListing",
+  "subtitle"
 ];
 const { Text } = Typography;
 
@@ -553,6 +554,7 @@ const ProductViewPolarisNew = (props) => {
         unit,
         packageType,
         privateListing,
+        subtitle
       } = mainProductData;
       variant_attributes = Object.values(variant_attributes);
 
@@ -616,6 +618,7 @@ const ProductViewPolarisNew = (props) => {
       tempObj["unit"] = unit ? unit : "in";
       tempObj["packageType"] = packageType ? packageType : "";
       tempObj["privateListing"] = privateListing ? privateListing : "no";
+      tempObj["subtitle"] = subtitle ? subtitle : "";
       // tempObj["privateListing"] = privateListing ? privateListing : false;
       tempObj["variant_attributes"] =
         variant_attributes.length > 0 ? variant_attributes : [];
@@ -630,6 +633,38 @@ const ProductViewPolarisNew = (props) => {
       });
       setVariants(variantProductsData);
       setCustomVariants(tempVariantProductsData);
+    }
+  };
+
+  // custom variant edited data - POPULATE
+  const fillDataForEditedContent = (editedData) => {
+    let temp = [...customvariants];
+    console.log("editedData", editedData);
+    if (Object.keys(editedData).length > 0 && editedData?.variationProduct) {
+      let arr1 = editedData.variationProduct;
+      console.log(arr1);
+      let arr2 = [...temp];
+      console.log(arr2);
+      let arr3 = arr2.map((item, i) => {
+        // console.log('arr1[i]', arr1[i], item);
+        let tempObj = { ...item };
+        for (const key in arr1[i]) {
+          // if(item.includes(key)) {
+            console.log(key);
+          if (`custom${key}` in item) {
+            tempObj[`custom${key}`] = arr1[i][key];
+          }
+        }
+        return tempObj;
+        // return Object.assign({}, item, arr1[`custom${i}`]);
+        // return {...item, }
+      });
+      // console.log("arr3", arr3);
+      // setTempState(arr3);
+      // setVariantData(arr3);
+      console.log("arr3", arr3);
+      // setCustomVariants(arr3);
+      // setCu
     }
   };
   useEffect(() => {
@@ -926,7 +961,8 @@ const ProductViewPolarisNew = (props) => {
         key="upload"
         onClick={() => {
           let postData = {
-            product_id: [apiCallMainProduct["source_product_id"]],
+            // product_id: [apiCallMainProduct["source_product_id"]],
+            product_id: [apiCallMainProduct["container_id"]],
             action: "upload_and_revise",
           };
           setModal({
@@ -1036,6 +1072,7 @@ const ProductViewPolarisNew = (props) => {
           "unit",
           "packageType",
           "privateListing",
+          "subtitle"
         ].includes(key)
       ) {
         tempObj["containerData"][key] = mainProduct[key];
@@ -1370,6 +1407,7 @@ const ProductViewPolarisNew = (props) => {
               customVariantData={customVariantData}
               setCustomVariantData={setCustomVariantData}
               editedProductDataFromAPI={editedProductDataFromAPI}
+              // setCustomVariants={setCustomVariants}
             />
           ),
           Images: <ImagesComponent mainProduct={mainProduct} />,
