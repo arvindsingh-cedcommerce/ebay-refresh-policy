@@ -57,7 +57,7 @@ const CategoryTemplatePolarisNew = (props) => {
   const [accountSelection, setaccountSelection] = useState("");
   const [siteIDSelection, setsiteIDSelection] = useState("");
   const [shopIDSelection, setshopIDSelection] = useState("");
-  const [validationErrors,setValidationErrors]= useState({"optionalValidation":[],"requiredValidation":[],"customValidation":[]});
+  const [validationErrors,setValidationErrors]= useState({"optionalValidation":[],"requiredValidation":[],"customValidation":[],"primaryCategoryValidation":new Array(4).fill(false),"secondaryCategoryValidation":new Array(4).fill(false)});
   // form data
   const deselectedOptions = [];
   const [loaderOverlayActive, setLoaderOverlayActive] = useState(true);
@@ -128,7 +128,18 @@ const CategoryTemplatePolarisNew = (props) => {
 
   // account status
   const [accountStatus, setAccountStatus] = useState("active");
-
+const validatePrimaryAndSecondaryCategories=(type,index)=>{
+  let finalValidationObj={...validationErrors};
+  if(type==="primaryCategory")
+  {
+  finalValidationObj["primaryCategoryValidation"][index]=false;
+  }
+  else
+  {
+    finalValidationObj["secondaryCategoryValidation"][index]=false;
+  }
+  setValidationErrors({...finalValidationObj})
+}
   const renderCategoryMapping = (
     categoryTypeMapping,
     setCategoryTypeMapping,
@@ -139,12 +150,15 @@ const CategoryTemplatePolarisNew = (props) => {
       structurePrepared = categoryTypeMapping.map((level, index) => {
         return (
           <Select
-            key={index}
+            key={`${categoryType}-${index}-${level}`}
             placeholder="Please Select..."
             label={level?.["label"]}
             options={level?.["options"]}
             value={level?.["value"]}
             onChange={(e) => {
+              if(e)
+              {
+                validatePrimaryAndSecondaryCategories(categoryType,index);
               let tempMapping = [...categoryTypeMapping];
               setBarcodeOptions([]);
               setCategoryFeatureOptions([]);
@@ -160,7 +174,9 @@ const CategoryTemplatePolarisNew = (props) => {
                   categoryType
                 );
               setCategoryTypeMapping(tempMapping);
+                }
             }}
+            error={categoryType==="secondaryCategory"?(validationErrors["secondaryCategoryValidation"][index]?"No category is selected,Categories from root till leaf are required":false):(validationErrors["primaryCategoryValidation"][index]?"No category is selected,Categories from root till leaf are required":false)}
           />
         );
       });
@@ -1487,7 +1503,7 @@ const checkFinalValidation=(errorObj)=>{
     }
       return {...errorObjOptional};
     });  
-    const finalCustomAttributeErrorObj=postData.attributeMapping.optionalAttributesMapping.map((attribute,index)=>{
+    const finalCustomAttributeErrorObj=postData.attributeMapping.customAttributesMapping.map((attribute,index)=>{
       const errorObjCustom={
         customAttributeError:false,
         shopifyAttributeError: false,
@@ -1513,27 +1529,52 @@ const checkFinalValidation=(errorObj)=>{
     }
       return {...errorObjCustom};
     });
+   
+    if(postData.enableSecondaryCategory && !secondaryInputValue)
+    {
+
+    for(let index=0;index<postData.secondaryCategoryMapping.length;index++)
+    {
+    if(!postData.secondaryCategoryMapping[index].value)
+    {
+      validationObject["secondaryCategoryValidation"][index]=true;
+finalValidator=true;
+break;
+    }
+    }
+    }
+   
+    if(!inputValue)
+    {
+      for(let index=0;index<postData.primaryCategoryMapping.length;index++)
+    {
+    if(!postData.primaryCategoryMapping[index].value)
+    {
+      validationObject["primaryCategoryValidation"][index]=true;
+finalValidator=true;
+break;
+    }
+    }
+    }
+  
      if(checkFinalValidation(finalRequiredAttributeErrorObj))
     {
-      validationObject["requiredValidation"]=[...finalRequiredAttributeErrorObj];
-      setValidationErrors({...validationObject});
+      validationObject["requiredValidation"]=[...finalRequiredAttributeErrorObj]; 
       finalValidator=true;
     }
     if(checkFinalValidation(finalOptionalAttributeErrorObj))
     {
       validationObject["optionalValidation"]=[...finalOptionalAttributeErrorObj];
-      setValidationErrors({...validationObject});
       finalValidator=true;
     
     }
     if(checkFinalValidation(finalCustomAttributeErrorObj))
     {
       validationObject["customValidation"]=[...finalCustomAttributeErrorObj];
-      setValidationErrors({...validationObject});
       finalValidator=true;
     }
     if(!finalValidator)
-    {
+    { 
     const data = {
       marketplace: "ebay",
       type: "category",
@@ -1557,6 +1598,7 @@ const checkFinalValidation=(errorObj)=>{
   }
   else
   {
+    setValidationErrors({...validationObject});
     notify.error("Kindly fill all the required fields with proper values");
   }
   setSaveBtnLoader(false);
@@ -1848,13 +1890,13 @@ const checkFinalValidation=(errorObj)=>{
             setSecondaryCategoryMapping,
             "secondary"
           );
-          setSecondarySelectedOptions(selected);
+         setSecondarySelectedOptions(selected);
           setSecondaryInputValue(selectedValue.label);
         }}
         onSearch={(e) => {
           setSecondaryInputValue(e);
         }}
-        placeholder="Search"
+        placeholder="Search" 
       />
     );
   };
