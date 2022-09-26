@@ -333,7 +333,7 @@ const ContactUs = () => {
                   label="Email Address"
                   value={demoDetails.email}
                   onChange={(e) => { if(e) {
-                    var emailRegex = /\S+@\S+\.\S+/;
+                    let emailRegex = /\S+@\S+\.\S+/;
                    if(emailRegex.test(e))
                    {
                     const scheduleValidationObj={...scheduleFormValidationErrors};
