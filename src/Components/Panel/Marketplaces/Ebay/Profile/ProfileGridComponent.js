@@ -609,8 +609,8 @@ const ProfileGridComponent = (props) => {
     }
   }, [filtersToPass]);
   useEffect(() => {
-    if (reduxState) setFiltersToPass(reduxState);
-  }, []);
+    if (reduxState && connectedAccountsArray.length) setFiltersToPass(reduxState);
+  }, [connectedAccountsArray]);
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -662,7 +662,9 @@ const ProfileGridComponent = (props) => {
               </Stack.Item>
             </Stack>
             <Stack spacing="tight">
-              {filtersToPass && Object.keys(filtersToPass).length > 0 && tagMarkup()}
+              {filtersToPass &&
+                Object.keys(filtersToPass).length > 0 &&
+                tagMarkup()}
             </Stack>
           </div>
           <Row justify="space-between">

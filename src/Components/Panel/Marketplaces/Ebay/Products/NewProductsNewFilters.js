@@ -1039,8 +1039,11 @@ function NewProductsNewFilters(props) {
     }
   }, [filtersToPass]);
   useEffect(() => {
-    if (reduxState) setFiltersToPass(reduxState);
-  }, []);
+    // if (reduxState) setFiltersToPass(reduxState);
+    if (reduxState && connectedAccountsArray.length) {
+      setFiltersToPass(reduxState);
+    }
+  }, [connectedAccountsArray]);
   return (
     <PageHeader
       className="site-page-header-responsive"

@@ -132,7 +132,6 @@ export const getFitersInitially = () => {
 };
 const NewOrdersGrid = (props) => {
   const reduxState = useSelector((state) => {
-    console.log('useSelector', state);
     return state.orderFilterReducer.reduxFilters;
   });
   const dispatch = useDispatch();
@@ -906,11 +905,10 @@ const NewOrdersGrid = (props) => {
     }
   }, [filtersToPass]);
   useEffect(() => {
-    if (reduxState) {
-      console.log('reduxState', reduxState);
+    if (reduxState && connectedAccountsArray.length) {
       setFiltersToPass(reduxState);
     }
-  }, []);
+  }, [connectedAccountsArray]);
   return (
     <PageHeader
       className="site-page-header-responsive"
