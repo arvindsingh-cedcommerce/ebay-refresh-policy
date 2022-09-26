@@ -76,6 +76,7 @@ const NewFilterProductsTab = ({
   const [filterAttributes, setFilterAttributes] = useState([]);
   const [productTypeList, setProductTypeList] = useState([]);
   const [vendorList, setVendorList] = useState([]);
+  const [collectionList, setCollectionList] = useState([]);
 
   const [query, setQuery] = useState("");
   const [sentenceQuery, setSentenceQuery] = useState("");
@@ -152,6 +153,16 @@ const NewFilterProductsTab = ({
       checked: true,
       editable: true,
     },
+    {
+      title: <center>Collection</center>,
+      dataIndex: "collection",
+      key: "collection",
+      className: "show",
+      label: "collection",
+      value: "collection",
+      checked: true,
+      editable: true,
+    },
   ]);
   const [alreadyProfiledProductsCount, setAlreadyProfiledProductsCount] =
     useState(0);
@@ -170,6 +181,7 @@ const NewFilterProductsTab = ({
         returnedObj = { label: title, value: code };
         return returnedObj;
       });
+      // modifiedAttributeData.push({ label: "Collection", value: 'collection.collection_id' })
       setFilterAttributes(modifiedAttributeData);
     }
   };
@@ -177,7 +189,7 @@ const NewFilterProductsTab = ({
   const hitProductTypeVendors = async () => {
     let { success, data } = await getImportAttribute();
     if (success && data) {
-      const { product_type, vendor } = data;
+      const { product_type, vendor, collection } = data;
       product_type
         .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
         .reverse();
@@ -190,8 +202,12 @@ const NewFilterProductsTab = ({
       const vendorList = vendor.map((type) => {
         return { label: type, value: type };
       });
+      const collectionList = Object.entries(collection).map((val) => {
+        return { label: val[1], value: val[0] };
+      });
       setProductTypeList(productTypeList);
       setVendorList(vendorList);
+      setCollectionList(collectionList);
     }
   };
 
@@ -245,7 +261,7 @@ const NewFilterProductsTab = ({
       }
       if (
         fieldType === "attribute" &&
-        ["brand", "product_type"].includes(value)
+        ["brand", "product_type", "collection.collection_id"].includes(value)
       ) {
         tempFiltersArrayGroup[index][innerIndex]["condition"] = "==";
       }
@@ -275,7 +291,7 @@ const NewFilterProductsTab = ({
               label="Condition Selection"
               value={arrayGroup["condition"]}
               options={
-                ["brand", "product_type"].includes(arrayGroup["attribute"])
+                ["brand", "product_type", "collection.collection_id"].includes(arrayGroup["attribute"])
                   ? filterConditionsforDropdown
                   : ["title", "tags", "description"].includes(
                       arrayGroup["attribute"]
@@ -290,17 +306,21 @@ const NewFilterProductsTab = ({
               }
               disabled={
                 arrayGroup["attribute"] === "" ||
-                ["brand", "product_type"].includes(arrayGroup["attribute"])
+                ["brand", "product_type", "collection.collection_id"].includes(arrayGroup["attribute"])
               }
               error={errorsArray?.[index]?.[innerIndex]?.["condition"]}
             />
-            {["brand", "product_type"].includes(arrayGroup["attribute"]) ? (
+            {["brand", "product_type", "collection.collection_id"].includes(
+              arrayGroup["attribute"]
+            ) ? (
               <Select
                 label="Value"
                 value={arrayGroup["value"]}
                 options={
                   arrayGroup["attribute"] === "product_type"
                     ? productTypeList
+                    : arrayGroup["attribute"] === "collection.collection_id"
+                    ? collectionList
                     : arrayGroup["attribute"] === "brand" && vendorList
                 }
                 placeholder="Please Select..."
@@ -432,6 +452,7 @@ const NewFilterProductsTab = ({
           main_image,
           title,
           product_type,
+          collection,
           variant_attributes,
           variants,
           container_id,
@@ -474,6 +495,11 @@ const NewFilterProductsTab = ({
         tempObject["productType"] = (
           <center>
             <Text>{product_type}</Text>
+          </center>
+        );
+        tempObject["collection"] = (
+          <center>
+            <Text>{collection}</Text>
           </center>
         );
         tempObject["vendor"] = (
