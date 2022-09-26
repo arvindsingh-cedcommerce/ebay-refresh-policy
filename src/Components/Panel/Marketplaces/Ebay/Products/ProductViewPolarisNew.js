@@ -617,7 +617,7 @@ const ProductViewPolarisNew = (props) => {
       tempObj["height"] = height ? height : "";
       tempObj["unit"] = unit ? unit : "in";
       tempObj["packageType"] = packageType ? packageType : "";
-      tempObj["privateListing"] = privateListing ? privateListing : "no";
+      tempObj["privateListing"] = privateListing ? privateListing : false;
       tempObj["subtitle"] = subtitle ? subtitle : "";
       // tempObj["privateListing"] = privateListing ? privateListing : false;
       tempObj["variant_attributes"] =
