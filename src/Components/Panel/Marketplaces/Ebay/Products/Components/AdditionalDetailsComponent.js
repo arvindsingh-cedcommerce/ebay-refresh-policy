@@ -12,7 +12,7 @@ import React from "react";
 const packageTypeArray = [
   { label: "Please Select...", value: "" },
   { label: "LETTER", value: "LETTER" },
-  { label: "BULKY_GOODS", value: "BULKY_GOODS" },
+  { label: "BULKY_GOODS", value: "C_BULKY_GOODS" },
   { label: "CARAVAN", value: "CARAVAN" },
   { label: "CARS", value: "CARS" },
   { label: "EUROPALLET", value: "EUROPALLET" },
