@@ -287,7 +287,19 @@ const ContactUs = () => {
                 let finalValidator=false;
                 for(const scheduleProperty in scheduleValidationObj)
                 {
-                  if(!demoDetails[`${scheduleProperty}`])
+                  if(scheduleProperty==="email")
+                  {
+                    let emailRegex = /\S+@\S+\.\S+/;
+                    if(!demoDetails.email || !emailRegex.test(demoDetails.email))
+                  { scheduleValidationObj[`${scheduleProperty}`]=true;
+                  finalValidator=true;
+                  }
+                  else
+                  {
+                    scheduleValidationObj[`${scheduleProperty}`]=false;
+                  }
+                  }
+                  else if(!demoDetails[`${scheduleProperty}`])
                   {
                     scheduleValidationObj[`${scheduleProperty}`]=true;
                     finalValidator=true;
@@ -321,9 +333,13 @@ const ContactUs = () => {
                   label="Email Address"
                   value={demoDetails.email}
                   onChange={(e) => { if(e) {
+                    var emailRegex = /\S+@\S+\.\S+/;
+                   if(emailRegex.test(e))
+                   {
                     const scheduleValidationObj={...scheduleFormValidationErrors};
                     scheduleValidationObj.email=false;
                     setScheduleFormValidationErrors({...scheduleValidationObj});
+                   }
                     setDemoDetails({ ...demoDetails, email: e })}}}
                   error={scheduleFormValidationErrors.email?"Required":false}
                 />
