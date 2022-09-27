@@ -592,12 +592,12 @@ function NewProductsNewFilters(props) {
           );
           tempObject["productType"] = (
             <center>
-              <Text>{product_type}</Text>
+              <Text>{product_type ? product_type : '-'}</Text>
             </center>
           );
           tempObject["vendor"] = (
             <center>
-              <Text>{brand}</Text>
+              <Text>{brand ? brand : '-'}</Text>
             </center>
           );
           tempObject["profile"] = (

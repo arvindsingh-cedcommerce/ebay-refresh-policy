@@ -28,6 +28,8 @@ const CreateProfilePolaris = (props) => {
   });
   const [panes, setPanes] = useState([]);
   const [overriceCheckboxStatus, setOverriceCheckboxStatus] = useState(false);
+  const [alreadyProfiledProductsCount, setAlreadyProfiledProductsCount] =
+    useState(0);
 
   // flag variable
   const [updatedConnectedAccountObject, setUpdatedConnectedAccountObject] =
@@ -128,15 +130,34 @@ const CreateProfilePolaris = (props) => {
     const checkAccountStatusChecked = Object.keys(
       connectedAccountsObject
     ).every((account) => !connectedAccountsObject[account].checked);
-    if(checkAccountStatusChecked) {
-      flag = true
+    if (checkAccountStatusChecked) {
+      flag = true;
     }
     if (profileName === "") {
       flag = true;
     }
     return flag;
   };
-
+  const saveFunc = async (test) => {
+    let postData = {
+      saveInTable: true,
+      name: profileName,
+      prepareQuery,
+      data: test,
+      override: overriceCheckboxStatus,
+    };
+    if (id !== "") postData["profile_id"] = id;
+    setProfileSaveBtnLoader(true);
+    let { success, message, code, matching_profiles } = await saveProfile(
+      postData
+    );
+    if (success) {
+      notify.success(message);
+      props.history.push("/panel/ebay/profiles/grid");
+    } else {
+      notify.error(message);
+    }
+  };
   const saveProfileAction = async () => {
     let test = {};
     validationCheck();
@@ -158,24 +179,38 @@ const CreateProfilePolaris = (props) => {
           };
         }
       });
-      let postData = {
-        saveInTable: true,
-        name: profileName,
-        prepareQuery,
-        data: test,
-        override: overriceCheckboxStatus,
-      };
-      if (id !== "") postData["profile_id"] = id;
-      setProfileSaveBtnLoader(true);
-      let { success, message, code, matching_profiles } = await saveProfile(
-        postData
-      );
-      if (success) {
-        notify.success(message);
-        props.history.push("/panel/ebay/profiles/grid");
-      } else {
-        notify.error(message);
-      }
+      // console.log(
+      //   "overriceCheckboxStatus",
+      //   overriceCheckboxStatus,
+      //   "alreadyProfiledProductsCount",
+      //   alreadyProfiledProductsCount
+      // );
+      if (alreadyProfiledProductsCount == 0 && !overriceCheckboxStatus)
+        await saveFunc(test);
+      if (alreadyProfiledProductsCount > 0 && overriceCheckboxStatus)
+        await saveFunc(test);
+      else
+        notify.error(
+          "All products are aligned in other profile allow override to save the profile or filter different products"
+        );
+      // let postData = {
+      //   saveInTable: true,
+      //   name: profileName,
+      //   prepareQuery,
+      //   data: test,
+      //   override: overriceCheckboxStatus,
+      // };
+      // if (id !== "") postData["profile_id"] = id;
+      // setProfileSaveBtnLoader(true);
+      // let { success, message, code, matching_profiles } = await saveProfile(
+      //   postData
+      // );
+      // if (success) {
+      //   notify.success(message);
+      //   props.history.push("/panel/ebay/profiles/grid");
+      // } else {
+      //   notify.error(message);
+      // }
       setProfileSaveBtnLoader(false);
     }
   };
@@ -443,6 +478,8 @@ const CreateProfilePolaris = (props) => {
           profileId={id}
           overriceCheckboxStatus={overriceCheckboxStatus}
           setOverriceCheckboxStatus={setOverriceCheckboxStatus}
+          alreadyProfiledProductsCount={alreadyProfiledProductsCount}
+          setAlreadyProfiledProductsCount={setAlreadyProfiledProductsCount}
         />
       )}
     </PageHeader>

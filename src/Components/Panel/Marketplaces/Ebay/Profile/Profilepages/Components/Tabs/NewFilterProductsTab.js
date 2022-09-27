@@ -69,6 +69,8 @@ const NewFilterProductsTab = ({
   profileId,
   overriceCheckboxStatus,
   setOverriceCheckboxStatus,
+  alreadyProfiledProductsCount,
+  setAlreadyProfiledProductsCount,
 }) => {
   const [filtersArrayGroup, setFiltersArrayGroup] = useState([
     [{ attribute: "", condition: "", value: "" }],
@@ -164,8 +166,8 @@ const NewFilterProductsTab = ({
       editable: true,
     },
   ]);
-  const [alreadyProfiledProductsCount, setAlreadyProfiledProductsCount] =
-    useState(0);
+  // const [alreadyProfiledProductsCount, setAlreadyProfiledProductsCount] =
+  //   useState(0);
   const [overrideProductsModalActive, setOverrideProductsModalActive] =
     useState(false);
   const [testBtnClickedCount, setTestBtnClickedCount] = useState(0);
@@ -291,7 +293,9 @@ const NewFilterProductsTab = ({
               label="Condition Selection"
               value={arrayGroup["condition"]}
               options={
-                ["brand", "product_type", "collection.collection_id"].includes(arrayGroup["attribute"])
+                ["brand", "product_type", "collection.collection_id"].includes(
+                  arrayGroup["attribute"]
+                )
                   ? filterConditionsforDropdown
                   : ["title", "tags", "description"].includes(
                       arrayGroup["attribute"]
@@ -306,7 +310,9 @@ const NewFilterProductsTab = ({
               }
               disabled={
                 arrayGroup["attribute"] === "" ||
-                ["brand", "product_type", "collection.collection_id"].includes(arrayGroup["attribute"])
+                ["brand", "product_type", "collection.collection_id"].includes(
+                  arrayGroup["attribute"]
+                )
               }
               error={errorsArray?.[index]?.[innerIndex]?.["condition"]}
             />
@@ -791,21 +797,36 @@ const NewFilterProductsTab = ({
         open={overrideProductsModalActive}
         onClose={() => setOverrideProductsModalActive(false)}
         title="Override Template"
-        primaryAction={{
-          content: "OK",
-          onAction: () => setOverrideProductsModalActive(false),
-        }}
       >
         <Modal.Section>
           <TextContainer>
-            <Checkbox
-              label={`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other template. Do
+            <Stack distribution="center">
+              {/* <Checkbox
+                label={`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other template. Do
               you want to override their previous template ?`}
-              checked={overriceCheckboxStatus}
-              onChange={() =>
-                setOverriceCheckboxStatus(!overriceCheckboxStatus)
-              }
-            />
+                checked={overriceCheckboxStatus}
+                onChange={() =>
+                  setOverriceCheckboxStatus(!overriceCheckboxStatus)
+                }
+              /> */}
+              <div>{`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other template. Do
+              you want to override their previous template ?`}</div>
+              <Stack>
+                <Button onClick={() => setOverrideProductsModalActive(false)}>
+                  Skip
+                </Button>
+                <Button
+                  // disabled={!overriceCheckboxStatus}
+                  primary
+                  onClick={() => {
+                    setOverriceCheckboxStatus(!overriceCheckboxStatus)
+                    setOverrideProductsModalActive(false);
+                  }}
+                >
+                  Override
+                </Button>
+              </Stack>
+            </Stack>
           </TextContainer>
         </Modal.Section>
       </Modal>
