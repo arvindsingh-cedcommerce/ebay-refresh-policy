@@ -288,7 +288,8 @@ const PricingTemplatePolaris = (props) => {
           <Layout.AnnotatedSection
             id="templateName"
             title="Template name"
-            description="Enter a uniqe name"
+            // description="Enter a uniqe name"
+            description="Defined Name as per your understanding. It will use to identify template in other sections of the app like product's profile."
           >
             <Card sectioned>
               <TextField
@@ -758,7 +759,8 @@ const PricingTemplatePolaris = (props) => {
         <Layout.AnnotatedSection
           id="templateName"
           title="Template name"
-          description="Enter a unique name"
+          // description="Enter a unique name"
+          description="Defined Name as per your understanding. It will use to identify template in other sections of the app like product's profile."
         >
           <Layout.Section>
             <Card sectioned>
