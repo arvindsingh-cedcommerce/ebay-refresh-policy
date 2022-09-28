@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Input, InputNumber, Form, Image, Switch } from "antd";
+import { Input, InputNumber, Form, Image, Switch, Typography } from "antd";
 import NoProductImage from "../../../../../assets/notfound.png";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
 import {
@@ -17,6 +17,7 @@ import {
 } from "../../../../../APIrequests/ProductsAPI";
 import { changeVariantStatusURL } from "../../../../../URLs/ProductsURL";
 import { notify } from "../../../../../services/notify";
+const { Text } = Typography;
 
 export const EditableCell = ({
   editing,
@@ -128,7 +129,11 @@ const VariantComponentData = ({ dataSource, size }) => {
       tempObject["variantTitle"] = key["variant_title"];
       tempObject["variantSKU"] = key["sku"];
       tempObject["variantBarcode"] = key["barcode"] ? key["barcode"] : "N/A";
-      tempObject["variantQuantity"] = key["quantity"];
+      tempObject["variantQuantity"] = key["quantity"] == 0 ? (
+        <Text type="danger">{key["quantity"]}</Text>
+      ) : (
+        key["quantity"]
+      );
       tempObject["variantPrice"] = key["price"];
 
       return tempObject;
@@ -261,26 +266,26 @@ const VariantComponentData = ({ dataSource, size }) => {
     //   //   },
     //   // ]}
     // >
-      <NestedTableComponent
-        size={size}
-        columns={mergedColumns}
-        dataSource={data}
-        bordered={true}
-        // rowSelection={{
-        //   type: selectionType,
-        //   ...rowSelection,
-        // }}
-        style={{
-          maxHeight: "500px",
-          overflowY: "scroll",
-        }}
-        pagination={false}
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-      />
+    <NestedTableComponent
+      size={size}
+      columns={mergedColumns}
+      dataSource={data}
+      bordered={true}
+      // rowSelection={{
+      //   type: selectionType,
+      //   ...rowSelection,
+      // }}
+      style={{
+        maxHeight: "500px",
+        overflowY: "scroll",
+      }}
+      pagination={false}
+      components={{
+        body: {
+          cell: EditableCell,
+        },
+      }}
+    />
     // </Card>
     // </Form>
   );
