@@ -449,7 +449,7 @@ function NewProductsNewFilters(props) {
   };
   const getProductStatusEbayResponse = (response) => {
     let statusStructures = [];
-    if (response) {
+    if (response && Object.keys(response).length) {
       for (const shopId in response) {
         let matchedAccount = connectedAccountsArray.find(
           (connectedAccount) => connectedAccount["shopId"] == shopId
