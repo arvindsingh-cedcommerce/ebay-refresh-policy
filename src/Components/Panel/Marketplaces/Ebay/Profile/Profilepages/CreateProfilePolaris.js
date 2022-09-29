@@ -238,8 +238,10 @@ const CreateProfilePolaris = (props) => {
               value: template["_id"].toString(),
               account: Object.keys(connectedAccountsObject).filter(
                 (account) =>
-                  connectedAccountsObject[account]["siteID"] ===
-                  template["data"]["site_id"]
+                  connectedAccountsObject[account]["shopId"] ==
+                  template["data"]["shop_id"]
+                // connectedAccountsObject[account]["siteID"] ===
+                // template["data"]["site_id"]
               )[0],
             });
             break;
