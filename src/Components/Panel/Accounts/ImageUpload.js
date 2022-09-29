@@ -88,7 +88,6 @@ const ImgUpload = ({ onChange, src }) => {
   );
 };
 const Profile = ({ onSubmit, src }) => {
-  console.log("Profile");
   return (
     <Card sectioned>
       <form
