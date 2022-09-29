@@ -187,7 +187,7 @@ const CreateProfilePolaris = (props) => {
       // );
       if (alreadyProfiledProductsCount == 0 && !overriceCheckboxStatus)
         await saveFunc(test);
-      if (alreadyProfiledProductsCount > 0 && overriceCheckboxStatus)
+      else if (alreadyProfiledProductsCount > 0 && overriceCheckboxStatus)
         await saveFunc(test);
       else
         notify.error(
