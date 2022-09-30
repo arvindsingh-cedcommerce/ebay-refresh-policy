@@ -42,9 +42,7 @@ const VariantsComponent = ({
       editedProductDataFromAPI?.variationProduct
     ) {
       let arr1 = editedProductDataFromAPI.variationProduct;
-      // console.log(arr1);
       let arr2 = [...temp];
-      // console.log(arr2);
       let arr3 = arr2.map((item, i) => {
         // console.log('arr1[i]', arr1[i], item);
         let tempObj = { ...item };
@@ -58,7 +56,6 @@ const VariantsComponent = ({
         // return Object.assign({}, item, arr1[`custom${i}`]);
         // return {...item, }
       });
-      // console.log("arr3", arr3);
       setTempState(arr3);
       // setVariantData(arr3);
       // setCu
@@ -88,7 +85,7 @@ const VariantsComponent = ({
   };
 
   useEffect(() => {
-    fillDataForEditedContent();
+    // fillDataForEditedContent();
     fillDataForShopifyContent();
   }, []);
 
@@ -130,6 +127,19 @@ const VariantsComponent = ({
     setTempState(check);
     // setVariantData(check);
     setVariantData(removedEditedKeywordArray);
+  };
+
+  const getCheckedAtleastOnce = () => {
+    let tempSwitcherExluded = [...shopifyTempState];
+    // console.log(e, shopifyTempState[index], key);
+    console.log(shopifyTempState);
+    let count = 0;
+    let variantCount = shopifyTempState.length;
+    shopifyTempState.forEach((obj) => {
+      console.log(obj, obj["isExclude"]);
+      if (!obj.hasOwnProperty("isExclude")) count++;
+    });
+    console.log("count", count, variantCount);
   };
 
   const tempVariantData = shopifyTempState.map((key, index) => {
@@ -196,6 +206,7 @@ const VariantsComponent = ({
       <Switch
         defaultChecked={key["isExclude"] ? false : true}
         onChange={async (e) => {
+          // getCheckedAtleastOnce(index, key);
           const { source_product_id } = key;
           const postData = {};
           postData["variant_id"] = [source_product_id];

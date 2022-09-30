@@ -54,6 +54,7 @@ import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import NoProductImage from "../../../../../assets/notfound.png";
 import AdditionalDetailsComponent from "./Components/AdditionalDetailsComponent";
 import {
+  getFillDataForEditedContent,
   getParsedMetaFieldsData,
   parseMetaFieldsData,
 } from "./helperFunctions/viewProductHelper";
@@ -170,7 +171,7 @@ const commonFields = [
   "unit",
   "packageType",
   "privateListing",
-  "subtitle"
+  "subtitle",
 ];
 const { Text } = Typography;
 
@@ -519,14 +520,21 @@ const ProductViewPolarisNew = (props) => {
           return row;
         }
       });
+      let tempUtkEditedData;
       if (editedData.length) {
-        seteditedProductDataFromAPI(
-          extractEditedData(
-            editedData,
-            sortedProductData.length,
-            ebay_product_response
-          )
+        tempUtkEditedData = extractEditedData(
+          editedData,
+          sortedProductData.length,
+          ebay_product_response
         );
+        seteditedProductDataFromAPI(tempUtkEditedData);
+        // seteditedProductDataFromAPI(
+        //   extractEditedData(
+        //     editedData,
+        //     sortedProductData.length,
+        //     ebay_product_response
+        //   )
+        // );
       }
       if (sortedProductData.length === 1) {
         mainProductData = sortedProductData[0];
@@ -554,7 +562,7 @@ const ProductViewPolarisNew = (props) => {
         unit,
         packageType,
         privateListing,
-        subtitle
+        subtitle,
       } = mainProductData;
       variant_attributes = Object.values(variant_attributes);
 
@@ -631,8 +639,11 @@ const ProductViewPolarisNew = (props) => {
         }
         return tempObj;
       });
+      let tempUtkEditedVariantProductsData = getFillDataForEditedContent(tempUtkEditedData, tempVariantProductsData)
       setVariants(variantProductsData);
-      setCustomVariants(tempVariantProductsData);
+      // setCustomVariants(tempVariantProductsData);
+      setCustomVariants(tempUtkEditedVariantProductsData)
+      setCustomVariantData(tempUtkEditedVariantProductsData)
     }
   };
 
@@ -650,7 +661,6 @@ const ProductViewPolarisNew = (props) => {
         let tempObj = { ...item };
         for (const key in arr1[i]) {
           // if(item.includes(key)) {
-            console.log(key);
           if (`custom${key}` in item) {
             tempObj[`custom${key}`] = arr1[i][key];
           }
@@ -1072,7 +1082,7 @@ const ProductViewPolarisNew = (props) => {
           "unit",
           "packageType",
           "privateListing",
-          "subtitle"
+          "subtitle",
         ].includes(key)
       ) {
         tempObj["containerData"][key] = mainProduct[key];
