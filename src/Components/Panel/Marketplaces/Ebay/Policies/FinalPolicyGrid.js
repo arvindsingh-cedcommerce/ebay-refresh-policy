@@ -373,6 +373,7 @@ const FinalPolicyGrid = (props) => {
                 "-" &&
                 getCountyrName(refreshPoliciesAccountSelectionModal.siteID)}
             </>
+            <div style={{width: '250px'}}>
             <PolarisSelect
               options={refreshPoliciesAccountSelectionModal.options}
               value={refreshPoliciesAccountSelectionModal.accountName}
@@ -389,6 +390,7 @@ const FinalPolicyGrid = (props) => {
                 });
               }}
             />
+            </div>
           </Stack>
         </Modal.Section>
       </Modal>
