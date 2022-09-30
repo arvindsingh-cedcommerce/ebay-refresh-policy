@@ -17,7 +17,9 @@ const ProductDataComponentNew = ({
     return filteredAccounts[0]["label"];
   };
 
-  return Object.keys(errorsData).length ? (
+  return Object.keys(errorsData).length &&
+    (Object.keys(errorsData["errorsObj"]).length > 0 ||
+      Object.keys(errorsData["itemIdObj"]).length > 0) ? (
     <Collapse onChange={() => {}}>
       {Object.keys(errorsData).length &&
         Object.keys(errorsData?.errorsObj).length && (

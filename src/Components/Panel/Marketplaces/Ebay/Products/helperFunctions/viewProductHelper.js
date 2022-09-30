@@ -33,7 +33,6 @@ export const getFillDataForEditedContent = (
       }
       return tempObj;
     });
-    console.log("helper arr3", arr3);
     return arr3;
   }
 };
