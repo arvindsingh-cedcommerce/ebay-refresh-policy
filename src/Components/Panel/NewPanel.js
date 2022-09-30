@@ -585,14 +585,14 @@ const NewPanel = (props) => {
               <Route
                 path="/panel/ebay/dashboard"
                 render={(props) => {
-                  // let refresh = false;
-                  // if (props.location.state) {
-                  //   refresh = props.location.state?.refresh;
-                  // }
+                  let refresh = false;
+                  if (props.location.state) {
+                    refresh = props.location.state?.refresh;
+                  }
                   return (
                     <FinalDashboard
                       queuedTasks={queuedTasks}
-                      // refresh={refresh}
+                      refresh={refresh}
                       {...props}
                     />
                   );

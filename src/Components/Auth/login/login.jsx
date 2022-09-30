@@ -48,11 +48,8 @@ class Login extends Component {
             globalState.setLocalStorage('user_authenticated', 'true');
             globalState.setLocalStorage('auth_token', getToken.data.token);
             notify.success(getToken.message);
-            this.setState({ loader :false}, async()=>{
-                let { success, data } = await getDashboardData(
-                    dashboardAnalyticsURL,
-                    {refreshDashboard: true}
-                );
+            this.setState({ loader :false}, ()=>{
+                
                 this.redirect('/welcome');
             });
         }else{
