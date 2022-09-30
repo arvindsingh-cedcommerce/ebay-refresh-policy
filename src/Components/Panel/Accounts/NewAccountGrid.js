@@ -592,18 +592,21 @@ export const EbayAccountDetails = ({
   setGetDetailsBtnLoader,
   getDetailsBtnLoader,
 }) => {
-  const [marketplaceAccountData, setMarketplaceAccountData] = useState(null);
+  const [marketplaceAccountData, setMarketplaceAccountData] = useState({});
   const [showMoreDetailsStatus, setShowMoreDetailsStatus] = useState(false);
 
   // skeletonFlag
   const [showSkeleton, setShowSkeleton] = useState(true);
 
-  const getUserDetails = async () => {
+  const getUserDetails = async (refresh) => {
     let dataToPost = {
-      marketplace: accountDetails["marketplace"],
+      // marketplace: accountDetails["marketplace"],
       shop_id: accountDetails["shopId"],
     };
-    let { success, data } = await viewUserDetailsEbay(dataToPost);
+    if (refresh === "refresh") {
+      dataToPost["refresh"] = true;
+    }
+    let { success, data, message } = await viewUserDetailsEbay(dataToPost);
     if (success) {
       let filteredDataToPass = {};
       filteredDataToPass["UserID"] = data["UserID"];
@@ -642,6 +645,9 @@ export const EbayAccountDetails = ({
         data["Store"] && data["Store"]["SubscriptionLevel"];
 
       setMarketplaceAccountData(filteredDataToPass);
+      notify.success(message)
+    } else {
+      notify.error(message)
     }
     setShowSkeleton(false);
   };
@@ -682,24 +688,25 @@ export const EbayAccountDetails = ({
         <ShopifyButton
           primary
           loading={getDetailsBtnLoader}
-          onClick={async () => {
-            setGetDetailsBtnLoader(true);
-            let { success, data, message } = await getDashboardData(
-              ebayDetails,
-              {
-                shop_id: accountDetails["shopId"],
-                refresh: true,
-              }
-            );
-            if (success) {
-              notify.success(message);
-            } else {
-              notify.error(message);
-            }
-            setGetDetailsBtnLoader(false);
+          onClick={() => {
+            getUserDetails("refresh");
+            // setGetDetailsBtnLoader(true);
+            // let { success, data, message } = await getDashboardData(
+            //   ebayDetails,
+            //   {
+            //     shop_id: accountDetails["shopId"],
+            //     refresh: true,
+            //   }
+            // );
+            // if (success) {
+            //   notify.success(message);
+            // } else {
+            //   notify.error(message);
+            // }
+            // setGetDetailsBtnLoader(false);
           }}
         >
-          Get eBay Details
+          Refresh Details
         </ShopifyButton>
       }
     >
@@ -709,7 +716,7 @@ export const EbayAccountDetails = ({
         marketplaceAccountData && showMoreDetailsSection()
       )}
       <br />
-      {!showSkeleton && (
+      {Object.keys(marketplaceAccountData).length > 0 && !showSkeleton && (
         <Text
           style={{ cursor: "pointer", color: "#096dd9" }}
           onClick={() => setShowMoreDetailsStatus(!showMoreDetailsStatus)}
