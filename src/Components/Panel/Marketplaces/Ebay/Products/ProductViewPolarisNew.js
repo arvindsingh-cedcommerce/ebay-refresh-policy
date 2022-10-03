@@ -247,6 +247,10 @@ const ProductViewPolarisNew = (props) => {
     return tempObj;
   };
 
+  useEffect(() => {
+    // console.log('itemUrls', itemUrls);
+  }, [itemUrls])
+
   const extractEditedDataForVariationProduct = (forvariationproduct, type) => {
     let tempArr = [];
     if (type === "variation") {
@@ -484,6 +488,18 @@ const ProductViewPolarisNew = (props) => {
     return editedProductData;
   };
 
+  const getCheckedAtleastOnce = (variantProductsData, index) => {
+    let count = 0;
+    let variantCount = variantProductsData.length;
+    let temp = [...variantProductsData];
+    temp.forEach((curr) => curr.isExclude === true && count++);
+    let flag = false
+    if(count+1 === variantCount) {
+      flag = true
+    } else flag = false
+    return flag
+  };
+
   const extractDataFromAPI = (productData, rows, ebay_product_response) => {
     let mainProduct = {};
     let variations = [];
@@ -639,8 +655,17 @@ const ProductViewPolarisNew = (props) => {
         }
         return tempObj;
       });
+      let includeIsExcludeKey = variantProductsData.map((e, index) => {
+        if(e.hasOwnProperty('isExclude')) {
+          return {...e, isExcludeDisabled: false}
+        } else {
+          let flag = getCheckedAtleastOnce(variantProductsData, index)
+          return {...e, isExclude: false, isExcludeDisabled: flag}
+        }
+      })
       let tempUtkEditedVariantProductsData = getFillDataForEditedContent(tempUtkEditedData, tempVariantProductsData)
-      setVariants(variantProductsData);
+      // setVariants(variantProductsData);
+      setVariants(includeIsExcludeKey)
       // setCustomVariants(tempVariantProductsData);
       setCustomVariants(tempUtkEditedVariantProductsData)
       setCustomVariantData(tempUtkEditedVariantProductsData)
@@ -1406,7 +1431,8 @@ const ProductViewPolarisNew = (props) => {
           Variants: (
             <VariantsComponent
               size={"small"}
-              dataSource={variants}
+              variants={variants}
+              setVariants={setVariants}
               customDataSource={customvariants}
               variantColumns={variantColumns}
               customVariantColumns={customVariantColumns}

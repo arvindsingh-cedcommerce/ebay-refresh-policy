@@ -16,7 +16,9 @@ import { changeVariantStatusURL } from "../../../../../../URLs/ProductsURL";
 import { notify } from "../../../../../../services/notify";
 
 const VariantsComponent = ({
-  dataSource,
+  // dataSource,
+  variants,
+  setVariants,
   customDataSource,
   size,
   variantColumns,
@@ -30,7 +32,7 @@ const VariantsComponent = ({
   setCustomVariantData,
 }) => {
   // console.log('customVariantColumns', customVariantColumns);
-  const [shopifyTempState, setShopifyTempState] = useState([...dataSource]);
+  // const [variants, setShopifyTempState] = useState([...dataSource]);
   const [tempState, setTempState] = useState([...customDataSource]);
   // console.log(tempState);
   const [switchShopifyCustom, setswitchShopifyCustom] = useState(false);
@@ -63,7 +65,7 @@ const VariantsComponent = ({
   };
 
   const fillDataForShopifyContent = async () => {
-    // console.log(shopifyTempState);
+    // console.log(variants);
     // let temp = [...tempState];
     // if (
     //   Object.keys(editedProductDataFromAPI).length > 0 &&
@@ -129,20 +131,30 @@ const VariantsComponent = ({
     setVariantData(removedEditedKeywordArray);
   };
 
-  const getCheckedAtleastOnce = () => {
-    let tempSwitcherExluded = [...shopifyTempState];
-    // console.log(e, shopifyTempState[index], key);
-    console.log(shopifyTempState);
+  const getCheckedAtleastOnce = (e, index) => {
     let count = 0;
-    let variantCount = shopifyTempState.length;
-    shopifyTempState.forEach((obj) => {
-      console.log(obj, obj["isExclude"]);
-      if (!obj.hasOwnProperty("isExclude")) count++;
-    });
-    console.log("count", count, variantCount);
+    let variantCount = variants.length;
+    let temp = [...variants];
+    let returnValue = true;
+    temp[index]["isExclude"] = !e;
+    temp.forEach((curr) => curr.isExclude === true && count++);
+    if (count + 1 === variantCount) {
+      let findIndex
+      variants.forEach((val, j, arr) => {
+        if(!arr[j]['isExclude']) {
+          findIndex = j
+        }
+      })
+      temp[findIndex]["isExcludeDisabled"] = true;
+      setVariants(temp);
+    } else {
+      let temp1 = temp.map((curr) => ({...curr, isExcludeDisabled: false}));
+      setVariants(temp1);
+    }
+    return returnValue;
   };
 
-  const tempVariantData = shopifyTempState.map((key, index) => {
+  const tempVariantData = variants.map((key, index) => {
     let tempObject = {};
     variantColumns.forEach((e) => {
       let check = e.dataIndex.replace("variant", "");
@@ -205,8 +217,9 @@ const VariantsComponent = ({
     tempObject["variantExcluded"] = (
       <Switch
         defaultChecked={key["isExclude"] ? false : true}
+        disabled={key["isExcludeDisabled"]}
         onChange={async (e) => {
-          // getCheckedAtleastOnce(index, key);
+          let returnValue = getCheckedAtleastOnce(e, index);
           const { source_product_id } = key;
           const postData = {};
           postData["variant_id"] = [source_product_id];
@@ -316,14 +329,14 @@ const VariantsComponent = ({
       />
     );
     if (
-      shopifyTempState[index]?.["variant_attributes"] &&
-      shopifyTempState[index]["variant_attributes"].length > 0
+      variants[index]?.["variant_attributes"] &&
+      variants[index]["variant_attributes"].length > 0
     ) {
-      shopifyTempState[index]["variant_attributes"].forEach(
+      variants[index]["variant_attributes"].forEach(
         (variantAttribute) => {
-          // console.log(shopifyTempState[index][variantAttribute]);
+          // console.log(variants[index][variantAttribute]);
           tempObject[`customvariant${variantAttribute}`] = (
-            // shopifyTempState[index][variantAttribute]
+            // variants[index][variantAttribute]
             <TextField
               placeholder={`custom ${variantAttribute}`}
               value={key[`custom${variantAttribute}`]}
