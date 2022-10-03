@@ -186,7 +186,7 @@ const VariantsComponent = ({
       // />
     );
     tempObject["variantQuantity"] = (
-      <>{key["quantity"].toString()}</>
+      key["quantity"] !== undefined ? <>{key["quantity"]?.toString()}</> : <></>
       // <TextField
       //   value={key["quantity"].toString()}
       //   onChange={(e) => variantValueChange(key, "quantity", e)}
@@ -194,7 +194,7 @@ const VariantsComponent = ({
       // />
     );
     tempObject["variantPrice"] = (
-      <>{key["price"].toString()}</>
+      key["price"] !== undefined ? <>{key["price"].toString()}</> : <></>
       // <TextField
       //   value={key["price"].toString()}
       //   onChange={(e) => variantValueChange(key, "price", e)}
