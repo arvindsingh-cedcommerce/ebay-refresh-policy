@@ -536,7 +536,7 @@ const ProductViewPolarisNew = (props) => {
           return row;
         }
       });
-      let tempUtkEditedData;
+      let tempUtkEditedData = {};
       if (editedData.length) {
         tempUtkEditedData = extractEditedData(
           editedData,
@@ -666,9 +666,13 @@ const ProductViewPolarisNew = (props) => {
       let tempUtkEditedVariantProductsData = getFillDataForEditedContent(tempUtkEditedData, tempVariantProductsData)
       // setVariants(variantProductsData);
       setVariants(includeIsExcludeKey)
+      if(tempUtkEditedVariantProductsData) setCustomVariants(tempUtkEditedVariantProductsData)
+      else setCustomVariants(tempVariantProductsData);
+      if(tempUtkEditedVariantProductsData) setCustomVariantData(tempUtkEditedVariantProductsData)
+      else setCustomVariantData(tempVariantProductsData);
       // setCustomVariants(tempVariantProductsData);
-      setCustomVariants(tempUtkEditedVariantProductsData)
-      setCustomVariantData(tempUtkEditedVariantProductsData)
+      // setCustomVariants(tempUtkEditedVariantProductsData)
+      // setCustomVariantData(tempUtkEditedVariantProductsData)
     }
   };
 
