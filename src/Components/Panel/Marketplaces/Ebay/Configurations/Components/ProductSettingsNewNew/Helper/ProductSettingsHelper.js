@@ -190,9 +190,15 @@ export const getAppToEbaySavedData = (
               restrictedToBusiness;
             temp[account]["fields"][field]["vatPercentage"] = vatPercentage;
           } else if (field === "match_from_ebay") {
-            temp[account]["fields"][field]["value"] = [
-              ...data[shopid]["data"]["product_settings"]["app_to_ebay"][field],
-            ];
+            temp[account]["fields"][field]["value"] = !data[shopid]["data"][
+              "product_settings"
+            ]["app_to_ebay"][field]
+              ? data[shopid]["data"]["product_settings"]["app_to_ebay"][field]
+              : [
+                  ...data[shopid]["data"]["product_settings"]["app_to_ebay"][
+                    field
+                  ],
+                ];
           } else if (field === "shopifyWarehouses") {
             temp[account]["fields"][field]["value"] =
               data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
