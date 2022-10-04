@@ -243,7 +243,13 @@ const ProfileGridComponent = (props) => {
           if (row.target) {
             test = Object.keys(row?.target).map((country) => getFlag(country));
             tempProfilesObj["productCount"] = (
-              <center>{row["product_count"]}</center>
+              <center>
+                {row["product_count"] == 0 ? (
+                  <Text type="danger">{row["product_count"]}</Text>
+                ) : (
+                  row["product_count"]
+                )}
+              </center>
             );
             tempProfilesObj["accountStatus"] = extractShopIDs(row.target);
             tempProfilesObj["profileName"] = (
@@ -609,8 +615,9 @@ const ProfileGridComponent = (props) => {
     }
   }, [filtersToPass]);
   useEffect(() => {
-    if (reduxState) setFiltersToPass(reduxState);
-  }, []);
+    if (reduxState && connectedAccountsArray.length)
+      setFiltersToPass(reduxState);
+  }, [connectedAccountsArray]);
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -662,7 +669,9 @@ const ProfileGridComponent = (props) => {
               </Stack.Item>
             </Stack>
             <Stack spacing="tight">
-              {filtersToPass && Object.keys(filtersToPass).length > 0 && tagMarkup()}
+              {filtersToPass &&
+                Object.keys(filtersToPass).length > 0 &&
+                tagMarkup()}
             </Stack>
           </div>
           <Row justify="space-between">

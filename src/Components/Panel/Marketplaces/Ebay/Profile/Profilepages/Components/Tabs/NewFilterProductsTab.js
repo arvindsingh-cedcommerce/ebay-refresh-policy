@@ -69,6 +69,8 @@ const NewFilterProductsTab = ({
   profileId,
   overriceCheckboxStatus,
   setOverriceCheckboxStatus,
+  alreadyProfiledProductsCount,
+  setAlreadyProfiledProductsCount,
 }) => {
   const [filtersArrayGroup, setFiltersArrayGroup] = useState([
     [{ attribute: "", condition: "", value: "" }],
@@ -76,6 +78,7 @@ const NewFilterProductsTab = ({
   const [filterAttributes, setFilterAttributes] = useState([]);
   const [productTypeList, setProductTypeList] = useState([]);
   const [vendorList, setVendorList] = useState([]);
+  const [collectionList, setCollectionList] = useState([]);
 
   const [query, setQuery] = useState("");
   const [sentenceQuery, setSentenceQuery] = useState("");
@@ -152,9 +155,19 @@ const NewFilterProductsTab = ({
       checked: true,
       editable: true,
     },
+    {
+      title: <center>Collection</center>,
+      dataIndex: "collection",
+      key: "collection",
+      className: "show",
+      label: "collection",
+      value: "collection",
+      checked: true,
+      editable: true,
+    },
   ]);
-  const [alreadyProfiledProductsCount, setAlreadyProfiledProductsCount] =
-    useState(0);
+  // const [alreadyProfiledProductsCount, setAlreadyProfiledProductsCount] =
+  //   useState(0);
   const [overrideProductsModalActive, setOverrideProductsModalActive] =
     useState(false);
   const [testBtnClickedCount, setTestBtnClickedCount] = useState(0);
@@ -170,6 +183,7 @@ const NewFilterProductsTab = ({
         returnedObj = { label: title, value: code };
         return returnedObj;
       });
+      // modifiedAttributeData.push({ label: "Collection", value: 'collection.collection_id' })
       setFilterAttributes(modifiedAttributeData);
     }
   };
@@ -177,7 +191,7 @@ const NewFilterProductsTab = ({
   const hitProductTypeVendors = async () => {
     let { success, data } = await getImportAttribute();
     if (success && data) {
-      const { product_type, vendor } = data;
+      const { product_type, vendor, collection } = data;
       product_type
         .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
         .reverse();
@@ -190,8 +204,12 @@ const NewFilterProductsTab = ({
       const vendorList = vendor.map((type) => {
         return { label: type, value: type };
       });
+      const collectionList = Object.entries(collection).map((val) => {
+        return { label: val[1], value: val[0] };
+      });
       setProductTypeList(productTypeList);
       setVendorList(vendorList);
+      setCollectionList(collectionList);
     }
   };
 
@@ -245,7 +263,7 @@ const NewFilterProductsTab = ({
       }
       if (
         fieldType === "attribute" &&
-        ["brand", "product_type"].includes(value)
+        ["brand", "product_type", "collection.collection_id"].includes(value)
       ) {
         tempFiltersArrayGroup[index][innerIndex]["condition"] = "==";
       }
@@ -275,7 +293,9 @@ const NewFilterProductsTab = ({
               label="Condition Selection"
               value={arrayGroup["condition"]}
               options={
-                ["brand", "product_type"].includes(arrayGroup["attribute"])
+                ["brand", "product_type", "collection.collection_id"].includes(
+                  arrayGroup["attribute"]
+                )
                   ? filterConditionsforDropdown
                   : ["title", "tags", "description"].includes(
                       arrayGroup["attribute"]
@@ -290,17 +310,23 @@ const NewFilterProductsTab = ({
               }
               disabled={
                 arrayGroup["attribute"] === "" ||
-                ["brand", "product_type"].includes(arrayGroup["attribute"])
+                ["brand", "product_type", "collection.collection_id"].includes(
+                  arrayGroup["attribute"]
+                )
               }
               error={errorsArray?.[index]?.[innerIndex]?.["condition"]}
             />
-            {["brand", "product_type"].includes(arrayGroup["attribute"]) ? (
+            {["brand", "product_type", "collection.collection_id"].includes(
+              arrayGroup["attribute"]
+            ) ? (
               <Select
                 label="Value"
                 value={arrayGroup["value"]}
                 options={
                   arrayGroup["attribute"] === "product_type"
                     ? productTypeList
+                    : arrayGroup["attribute"] === "collection.collection_id"
+                    ? collectionList
                     : arrayGroup["attribute"] === "brand" && vendorList
                 }
                 placeholder="Please Select..."
@@ -432,6 +458,7 @@ const NewFilterProductsTab = ({
           main_image,
           title,
           product_type,
+          collection,
           variant_attributes,
           variants,
           container_id,
@@ -474,6 +501,11 @@ const NewFilterProductsTab = ({
         tempObject["productType"] = (
           <center>
             <Text>{product_type}</Text>
+          </center>
+        );
+        tempObject["collection"] = (
+          <center>
+            <Text>{collection}</Text>
           </center>
         );
         tempObject["vendor"] = (
@@ -765,21 +797,36 @@ const NewFilterProductsTab = ({
         open={overrideProductsModalActive}
         onClose={() => setOverrideProductsModalActive(false)}
         title="Override Template"
-        primaryAction={{
-          content: "OK",
-          onAction: () => setOverrideProductsModalActive(false),
-        }}
       >
         <Modal.Section>
           <TextContainer>
-            <Checkbox
-              label={`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other template. Do
+            <Stack distribution="center">
+              {/* <Checkbox
+                label={`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other template. Do
               you want to override their previous template ?`}
-              checked={overriceCheckboxStatus}
-              onChange={() =>
-                setOverriceCheckboxStatus(!overriceCheckboxStatus)
-              }
-            />
+                checked={overriceCheckboxStatus}
+                onChange={() =>
+                  setOverriceCheckboxStatus(!overriceCheckboxStatus)
+                }
+              /> */}
+              <div>{`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other template. Do
+              you want to override their previous template ?`}</div>
+              <Stack>
+                <Button onClick={() => setOverrideProductsModalActive(false)}>
+                  Skip
+                </Button>
+                <Button
+                  // disabled={!overriceCheckboxStatus}
+                  primary
+                  onClick={() => {
+                    setOverriceCheckboxStatus(!overriceCheckboxStatus)
+                    setOverrideProductsModalActive(false);
+                  }}
+                >
+                  Override
+                </Button>
+              </Stack>
+            </Stack>
           </TextContainer>
         </Modal.Section>
       </Modal>

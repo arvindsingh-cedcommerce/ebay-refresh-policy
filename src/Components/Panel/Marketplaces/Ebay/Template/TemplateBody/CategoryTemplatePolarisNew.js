@@ -23,6 +23,7 @@ import {
   getEbayUserDetails,
   getMetafields,
   getParentCategories,
+  getStoreDetails,
   getTemplatebyId,
 } from "../../../../../../Apirequest/ebayApirequest/templatesApi";
 import { notify } from "../../../../../../services/notify";
@@ -787,12 +788,19 @@ const CategoryTemplatePolarisNew = (props) => {
           site_id: siteID,
           shop_id: shopID,
         });
-        // console.log("yhn", dataCategoryFeatures);
-        if (Object.keys(dataCategoryFeatures).length) {
-          if (dataCategoryFeatures["0"]) {
-            extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+        if (
+          dataCategoryFeatures.success &&
+          dataCategoryFeatures?.data?.length
+        ) {
+          if (dataCategoryFeatures["data"][0]) {
+            extractBarcodeCategoryOptions(dataCategoryFeatures["data"][0]);
           }
         }
+        // if (Object.keys(dataCategoryFeatures).length) {
+        //   if (dataCategoryFeatures["0"]) {
+        //     extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+        //   }
+        // }
         // console.log("here");
         setLoaderOverlayActive(true);
         let {
@@ -1009,11 +1017,17 @@ const CategoryTemplatePolarisNew = (props) => {
       site_id: siteID,
       shop_id: shopID,
     });
-    if (Object.keys(dataCategoryFeatures).length) {
-      if (dataCategoryFeatures["0"]) {
-        extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+    // console.log(dataCategoryFeatures);
+    if (dataCategoryFeatures.success && dataCategoryFeatures?.data?.length) {
+      if (dataCategoryFeatures["data"][0]) {
+        extractBarcodeCategoryOptions(dataCategoryFeatures["data"][0]);
       }
     }
+    // if (Object.keys(dataCategoryFeatures).length) {
+    //   if (dataCategoryFeatures["0"]) {
+    //     extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+    //   }
+    // }
     let {
       success: successattribCategorywise,
       data: attributeCategorywise,
@@ -1165,10 +1179,13 @@ const CategoryTemplatePolarisNew = (props) => {
   };
 
   const getStorefrontcategory = async () => {
-    console.log(siteID, shopID);
-    let { success, data } = await getEbayUserDetails({
-      site_id: siteID,
-      shop_id: shopID,
+    // console.log(siteID, shopID);
+    // let { success, data } = await getEbayUserDetails({
+    //   site_id: siteID,
+    //   shop_id: shopID,
+    // });
+    let { success, data } = await getStoreDetails({
+      refresh: true,
     });
     // if (success) this.extractStoreFrontcategory(data);
     // else {
@@ -1191,7 +1208,7 @@ const CategoryTemplatePolarisNew = (props) => {
     // getTemplate();
     // getConfigurableAttributes();
     // getAllConnectedAccounts();
-    // getStorefrontcategory();
+    getStorefrontcategory();
   }, []);
   useEffect(() => {
     // console.log("1196");
@@ -1429,11 +1446,17 @@ const CategoryTemplatePolarisNew = (props) => {
       site_id: siteID,
       shop_id: shopID,
     });
-    if (Object.keys(dataCategoryFeatures).length) {
-      if (dataCategoryFeatures["0"]) {
-        extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+    if (dataCategoryFeatures.success && dataCategoryFeatures?.data?.length) {
+      if (dataCategoryFeatures["data"][0]) {
+        // console.log(dataCategoryFeatures["data"][0]);
+        extractBarcodeCategoryOptions(dataCategoryFeatures["data"][0]);
       }
     }
+    // if (Object.keys(dataCategoryFeatures).length) {
+    //   if (dataCategoryFeatures["0"]) {
+    //     extractBarcodeCategoryOptions(dataCategoryFeatures["0"]);
+    //   }
+    // }
     // console.log("this");
     setLoaderOverlayActive(true);
     let {

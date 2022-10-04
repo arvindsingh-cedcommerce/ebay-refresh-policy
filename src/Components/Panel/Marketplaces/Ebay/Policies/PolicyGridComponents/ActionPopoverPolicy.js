@@ -60,7 +60,7 @@ const ActionPopoverPolicy = ({
         >
           <Stack>
             <EditOutlined />
-            <>Edit</>
+            <>Edit on eBay</>
           </Stack>
         </Button>
         <Button

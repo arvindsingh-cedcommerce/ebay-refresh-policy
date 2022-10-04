@@ -57,6 +57,7 @@ const ImportProducts = (props) => {
               .postRequest("ebay/csv/importCSV", tempdata)
               .then((data) => {
                 if (data.success) {
+                  props.history.push("/panel/ebay/activity");
                   if (data.data.info !== "" && data.data.info !== false) {
                     setfile_handle({
                       isfileUploaded: true,

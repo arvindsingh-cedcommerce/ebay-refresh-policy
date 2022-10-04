@@ -188,7 +188,8 @@ const TitleTemplatePolaris = (props) => {
         <Layout.AnnotatedSection
           id="templateName"
           title="Template name"
-          description="Enter a unique template name"
+          // description="Enter a unique template name"
+          description="Defined Name as per your understanding. It will use to identify template in other sections of the app like product's profile."
         >
           <Layout.Section>
             <Card sectioned>
@@ -210,7 +211,8 @@ const TitleTemplatePolaris = (props) => {
         <Layout.AnnotatedSection
           id="setSubtitle"
           title="Set Subtitle"
-          description="Facilitate you to add a sub-title for the products on eBay."
+          // description="Facilitate you to add a sub-title for the products on eBay."
+          description="Subtitle to use in addition to the title. Provides more keywords when buyers search in titles and descriptions. You cannot use HTML in the Subtitle. eBay will charge extra amount for adding Subtitle in product details."
         >
           <Layout.Section>
             <Card sectioned>
@@ -254,7 +256,8 @@ const TitleTemplatePolaris = (props) => {
           <Layout.AnnotatedSection
             id="templateName"
             title="Template name"
-            description="Enter a unique template name"
+            // description="Enter a unique template name"
+            description="Defined Name as per your understanding. It will use to identify template in other sections of the app like product's profile."
           >
             <Card sectioned>
               <TextField
@@ -314,7 +317,8 @@ const TitleTemplatePolaris = (props) => {
           <Layout.AnnotatedSection
             id="setSubtitle"
             title="Set Subtitle"
-            description="Facilitate you to add a sub-title for the products on eBay."
+            // description="Facilitate you to add a sub-title for the products on eBay."
+            description="Subtitle to use in addition to the title. Provides more keywords when buyers search in titles and descriptions. You cannot use HTML in the Subtitle. eBay will charge extra amount for adding Subtitle in product details."
           >
             <Card sectioned>
               <FormLayout>

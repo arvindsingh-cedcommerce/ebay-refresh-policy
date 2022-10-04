@@ -107,15 +107,15 @@ const filtersFields = [
     operator: "3",
     dataType: "string",
   },
-  {
-    label: "Customer Name",
-    // value: "client_details.name",
-    value: "customer.first_name",
-    searchType: "textField",
-    inputValue: "",
-    operator: "3",
-    dataType: "string",
-  },
+  // {
+  //   label: "Customer Name",
+  //   // value: "client_details.name",
+  //   value: "customer.first_name",
+  //   searchType: "textField",
+  //   inputValue: "",
+  //   operator: "3",
+  //   dataType: "string",
+  // },
 ];
 
 export const getFitersInitially = () => {
@@ -131,9 +131,9 @@ export const getFitersInitially = () => {
   return tempObj;
 };
 const NewOrdersGrid = (props) => {
-  const reduxState = useSelector(
-    (state) => state.orderFilterReducer.reduxFilters
-  );
+  const reduxState = useSelector((state) => {
+    return state.orderFilterReducer.reduxFilters;
+  });
   const dispatch = useDispatch();
 
   const [tab, setTab] = useState("0");
@@ -905,8 +905,10 @@ const NewOrdersGrid = (props) => {
     }
   }, [filtersToPass]);
   useEffect(() => {
-    if (reduxState) setFiltersToPass(reduxState);
-  }, []);
+    if (reduxState && connectedAccountsArray.length) {
+      setFiltersToPass(reduxState);
+    }
+  }, [connectedAccountsArray]);
   return (
     <PageHeader
       className="site-page-header-responsive"

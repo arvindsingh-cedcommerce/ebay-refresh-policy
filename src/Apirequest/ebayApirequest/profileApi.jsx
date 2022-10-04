@@ -17,6 +17,10 @@ export async function deleteProfile(id){
     return await  requests.postRequest("ebay/profile/deleteProfile", { id });
 }
 
+export async function uploadProductByProfileId(filters) {
+    return await requests.postRequest('ebay/product/uploadProductByProfile', filters);
+  }
+
 export async function getallProfile(filter = {} ){
     return await  requests.getRequest("connector/profile/getAllProfiles", filter );
 }

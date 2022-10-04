@@ -54,6 +54,7 @@ import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import NoProductImage from "../../../../../assets/notfound.png";
 import AdditionalDetailsComponent from "./Components/AdditionalDetailsComponent";
 import {
+  getFillDataForEditedContent,
   getParsedMetaFieldsData,
   parseMetaFieldsData,
 } from "./helperFunctions/viewProductHelper";
@@ -170,6 +171,7 @@ const commonFields = [
   "unit",
   "packageType",
   "privateListing",
+  "subtitle",
 ];
 const { Text } = Typography;
 
@@ -244,6 +246,10 @@ const ProductViewPolarisNew = (props) => {
     }
     return tempObj;
   };
+
+  useEffect(() => {
+    // console.log('itemUrls', itemUrls);
+  }, [itemUrls])
 
   const extractEditedDataForVariationProduct = (forvariationproduct, type) => {
     let tempArr = [];
@@ -482,6 +488,18 @@ const ProductViewPolarisNew = (props) => {
     return editedProductData;
   };
 
+  const getCheckedAtleastOnce = (variantProductsData, index) => {
+    let count = 0;
+    let variantCount = variantProductsData.length;
+    let temp = [...variantProductsData];
+    temp.forEach((curr) => curr.isExclude === true && count++);
+    let flag = false
+    if(count+1 === variantCount) {
+      flag = true
+    } else flag = false
+    return flag
+  };
+
   const extractDataFromAPI = (productData, rows, ebay_product_response) => {
     let mainProduct = {};
     let variations = [];
@@ -518,14 +536,21 @@ const ProductViewPolarisNew = (props) => {
           return row;
         }
       });
+      let tempUtkEditedData = {};
       if (editedData.length) {
-        seteditedProductDataFromAPI(
-          extractEditedData(
-            editedData,
-            sortedProductData.length,
-            ebay_product_response
-          )
+        tempUtkEditedData = extractEditedData(
+          editedData,
+          sortedProductData.length,
+          ebay_product_response
         );
+        seteditedProductDataFromAPI(tempUtkEditedData);
+        // seteditedProductDataFromAPI(
+        //   extractEditedData(
+        //     editedData,
+        //     sortedProductData.length,
+        //     ebay_product_response
+        //   )
+        // );
       }
       if (sortedProductData.length === 1) {
         mainProductData = sortedProductData[0];
@@ -553,6 +578,7 @@ const ProductViewPolarisNew = (props) => {
         unit,
         packageType,
         privateListing,
+        subtitle,
       } = mainProductData;
       variant_attributes = Object.values(variant_attributes);
 
@@ -615,7 +641,8 @@ const ProductViewPolarisNew = (props) => {
       tempObj["height"] = height ? height : "";
       tempObj["unit"] = unit ? unit : "in";
       tempObj["packageType"] = packageType ? packageType : "";
-      tempObj["privateListing"] = privateListing ? privateListing : "no";
+      tempObj["privateListing"] = privateListing ? privateListing : false;
+      tempObj["subtitle"] = subtitle ? subtitle : "";
       // tempObj["privateListing"] = privateListing ? privateListing : false;
       tempObj["variant_attributes"] =
         variant_attributes.length > 0 ? variant_attributes : [];
@@ -628,8 +655,55 @@ const ProductViewPolarisNew = (props) => {
         }
         return tempObj;
       });
-      setVariants(variantProductsData);
-      setCustomVariants(tempVariantProductsData);
+      let includeIsExcludeKey = variantProductsData.map((e, index) => {
+        if(e.hasOwnProperty('isExclude')) {
+          return {...e, isExcludeDisabled: false}
+        } else {
+          let flag = getCheckedAtleastOnce(variantProductsData, index)
+          return {...e, isExclude: false, isExcludeDisabled: flag}
+        }
+      })
+      let tempUtkEditedVariantProductsData = getFillDataForEditedContent(tempUtkEditedData, tempVariantProductsData)
+      // setVariants(variantProductsData);
+      setVariants(includeIsExcludeKey)
+      if(tempUtkEditedVariantProductsData) setCustomVariants(tempUtkEditedVariantProductsData)
+      else setCustomVariants(tempVariantProductsData);
+      if(tempUtkEditedVariantProductsData) setCustomVariantData(tempUtkEditedVariantProductsData)
+      else setCustomVariantData(tempVariantProductsData);
+      // setCustomVariants(tempVariantProductsData);
+      // setCustomVariants(tempUtkEditedVariantProductsData)
+      // setCustomVariantData(tempUtkEditedVariantProductsData)
+    }
+  };
+
+  // custom variant edited data - POPULATE
+  const fillDataForEditedContent = (editedData) => {
+    let temp = [...customvariants];
+    console.log("editedData", editedData);
+    if (Object.keys(editedData).length > 0 && editedData?.variationProduct) {
+      let arr1 = editedData.variationProduct;
+      console.log(arr1);
+      let arr2 = [...temp];
+      console.log(arr2);
+      let arr3 = arr2.map((item, i) => {
+        // console.log('arr1[i]', arr1[i], item);
+        let tempObj = { ...item };
+        for (const key in arr1[i]) {
+          // if(item.includes(key)) {
+          if (`custom${key}` in item) {
+            tempObj[`custom${key}`] = arr1[i][key];
+          }
+        }
+        return tempObj;
+        // return Object.assign({}, item, arr1[`custom${i}`]);
+        // return {...item, }
+      });
+      // console.log("arr3", arr3);
+      // setTempState(arr3);
+      // setVariantData(arr3);
+      console.log("arr3", arr3);
+      // setCustomVariants(arr3);
+      // setCu
     }
   };
   useEffect(() => {
@@ -926,7 +1000,8 @@ const ProductViewPolarisNew = (props) => {
         key="upload"
         onClick={() => {
           let postData = {
-            product_id: [apiCallMainProduct["source_product_id"]],
+            // product_id: [apiCallMainProduct["source_product_id"]],
+            product_id: [apiCallMainProduct["container_id"]],
             action: "upload_and_revise",
           };
           setModal({
@@ -1036,6 +1111,7 @@ const ProductViewPolarisNew = (props) => {
           "unit",
           "packageType",
           "privateListing",
+          "subtitle",
         ].includes(key)
       ) {
         tempObj["containerData"][key] = mainProduct[key];
@@ -1359,7 +1435,8 @@ const ProductViewPolarisNew = (props) => {
           Variants: (
             <VariantsComponent
               size={"small"}
-              dataSource={variants}
+              variants={variants}
+              setVariants={setVariants}
               customDataSource={customvariants}
               variantColumns={variantColumns}
               customVariantColumns={customVariantColumns}
@@ -1370,6 +1447,7 @@ const ProductViewPolarisNew = (props) => {
               customVariantData={customVariantData}
               setCustomVariantData={setCustomVariantData}
               editedProductDataFromAPI={editedProductDataFromAPI}
+              // setCustomVariants={setCustomVariants}
             />
           ),
           Images: <ImagesComponent mainProduct={mainProduct} />,

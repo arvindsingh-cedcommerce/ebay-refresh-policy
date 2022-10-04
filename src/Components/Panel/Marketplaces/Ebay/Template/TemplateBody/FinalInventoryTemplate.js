@@ -223,7 +223,8 @@ const FinalInventoryTemplate = (props) => {
         <Layout.AnnotatedSection
           id="templateName"
           title="Template name"
-          description="Enter a unique name"
+          // description="Enter a unique name"
+          description="Defined Name as per your understanding. It will use to identify template in other sections of the app like product's profile."
         >
           <Layout.Section>
             <Card sectioned>
@@ -310,7 +311,8 @@ const FinalInventoryTemplate = (props) => {
           <Layout.AnnotatedSection
             id="templateName"
             title="Template name"
-            description="Set unique name to identify in profile section."
+            // description="Set unique name to identify in profile section."
+            description="Defined Name as per your understanding. It will use to identify template in other sections of the app like product's profile."
           >
             <Card sectioned>
               <TextField

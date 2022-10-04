@@ -449,7 +449,7 @@ function NewProductsNewFilters(props) {
   };
   const getProductStatusEbayResponse = (response) => {
     let statusStructures = [];
-    if (response) {
+    if (response && Object.keys(response).length) {
       for (const shopId in response) {
         let matchedAccount = connectedAccountsArray.find(
           (connectedAccount) => connectedAccount["shopId"] == shopId
@@ -592,12 +592,12 @@ function NewProductsNewFilters(props) {
           );
           tempObject["productType"] = (
             <center>
-              <Text>{product_type}</Text>
+              <Text>{product_type ? product_type : '-'}</Text>
             </center>
           );
           tempObject["vendor"] = (
             <center>
-              <Text>{brand}</Text>
+              <Text>{brand ? brand : '-'}</Text>
             </center>
           );
           tempObject["profile"] = (
@@ -637,6 +637,7 @@ function NewProductsNewFilters(props) {
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
+      console.log(selectedRows);
       setSelectedRowKeys(selectedRowKeys);
       setSelectedRows(selectedRows);
     },
@@ -1038,8 +1039,11 @@ function NewProductsNewFilters(props) {
     }
   }, [filtersToPass]);
   useEffect(() => {
-    if (reduxState) setFiltersToPass(reduxState);
-  }, []);
+    // if (reduxState) setFiltersToPass(reduxState);
+    if (reduxState && connectedAccountsArray.length) {
+      setFiltersToPass(reduxState);
+    }
+  }, [connectedAccountsArray]);
   return (
     <PageHeader
       className="site-page-header-responsive"
