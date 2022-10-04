@@ -174,12 +174,14 @@ const ContactUs = () => {
                 setBtnLoaders({ ...btnLoaders, issue: true });
                 if(!issueSelected)
                   validationObj.section=true;
-                if(!issueDescription)
-                  validationObj.message=true;
-                  if(issueSelected && issueDescription)
+                // if(!issueDescription)
+                //   validationObj.message=true;
+                  if(issueSelected 
+                    //&& issueDescription
+                    )
                   {
                     validationObj.section=false;
-                    validationObj.message=false;
+                    //validationObj.message=false;
                   
                 
                 let postData = {
@@ -206,23 +208,26 @@ const ContactUs = () => {
               },
             }}
           >
-            <div>Accounts</div>
-            <Stack distribution="fillEvenly" spacing="extraTight">
-              {connectedAccountsArray.map((connectedAccount, index) => {
-                return (
-                  <Checkbox
-                    label={connectedAccount.label}
-                    checked={connectedAccount.checked}
-                    onChange={() => {
-                      let temp = [...connectedAccountsArray];
-                      temp[index]["checked"] = !connectedAccount.checked;
-                      setconnectedAccountsArray(temp);
-                    }}
-                  />
-                );
-              })}
-            </Stack>
-            {/* <Select
+            <Stack vertical>
+              <div>
+                <div>Accounts</div>
+                <Stack distribution="fillEvenly" spacing="extraTight">
+                  {connectedAccountsArray.map((connectedAccount, index) => {
+                    return (
+                      <Checkbox
+                        label={connectedAccount.label}
+                        checked={connectedAccount.checked}
+                        onChange={() => {
+                          let temp = [...connectedAccountsArray];
+                          temp[index]["checked"] = !connectedAccount.checked;
+                          setconnectedAccountsArray(temp);
+                        }}
+                      />
+                    );
+                  })}
+                </Stack>
+              </div>
+              {/* <Select
               onChange={(accountValue) => {
                 let matchedAccount = connectedAccountsArray.find(
                   (connectedAccounts) =>
@@ -239,12 +244,12 @@ const ContactUs = () => {
             <Select
               value={issueSelected}
               onChange={(e) => {  
-                if(e)
-                {
+              
                   const validationObj={...issueFormValidationErrors};
                   validationObj.section=false;
                   setIssueFormValidationErrors({...validationObj});
-                  setIssueSelected(e)}}}
+                  setIssueSelected(e)}}
+                  requiredIndicator
               placeholder="Select the section in which you are facing issue"
               options={[
                 { label: "Products", value: "products" },
@@ -263,15 +268,15 @@ const ContactUs = () => {
               label="Issue"
               value={issueDescription}
               onChange={(e) => {
-                if(e)
-                {
-                  const validationObj={...issueFormValidationErrors};
-                  validationObj.message=false;
-                  setIssueFormValidationErrors({...validationObj});
-                setIssueDescription(e);}}}
+                
+                  // const validationObj={...issueFormValidationErrors};
+                  // validationObj.message=false;
+                  // setIssueFormValidationErrors({...validationObj});
+                setIssueDescription(e);}}
               multiline={3}
-              error={issueFormValidationErrors.message?"Required Field":false}
+             // error={issueFormValidationErrors.message?"Required Field":false}
             />
+            </Stack>
           </Card>
         </Col>
         <Col span={12}>
@@ -283,6 +288,7 @@ const ContactUs = () => {
               content: "Submit",
               loading: btnLoaders["demo"],
               onAction: async () => {
+                setBtnLoaders({ ...btnLoaders, demo: true });
                 const scheduleValidationObj={...scheduleFormValidationErrors};
                 let finalValidator=false;
                 for(const scheduleProperty in scheduleValidationObj)
@@ -312,15 +318,19 @@ const ContactUs = () => {
                 setScheduleFormValidationErrors({...scheduleValidationObj});
                 if(!finalValidator)
                        {
-                let { success, message } = await submitIssue(
+               let { success, message } = await submitIssue(
                   demoScheduleURL,
                   demoDetails
                 );
-                if (success) {
+                 if (success) {
                   notify.success(message);
                 } else {
                   notify.error(message);
-                }}
+                }
+
+              }
+                
+              setBtnLoaders({ ...btnLoaders, demo: false });
               },
             }}
           >
@@ -332,7 +342,7 @@ const ContactUs = () => {
                   requiredIndicator
                   label="Email Address"
                   value={demoDetails.email}
-                  onChange={(e) => { if(e) {
+                  onChange={(e) => {
                     let emailRegex = /\S+@\S+\.\S+/;
                    if(emailRegex.test(e))
                    {
@@ -340,7 +350,7 @@ const ContactUs = () => {
                     scheduleValidationObj.email=false;
                     setScheduleFormValidationErrors({...scheduleValidationObj});
                    }
-                    setDemoDetails({ ...demoDetails, email: e })}}}
+                    setDemoDetails({ ...demoDetails, email: e })}}
                   error={scheduleFormValidationErrors.email?"Required":false}
                 />
                 <Select
@@ -349,12 +359,10 @@ const ContactUs = () => {
                   requiredIndicator
                   value={demoDetails.preferredMeeting}
                   onChange={(e) =>{
-                    if(e) {
                       const scheduleValidationObj={...scheduleFormValidationErrors};
                       scheduleValidationObj.preferredMeeting=false;
                       setScheduleFormValidationErrors({...scheduleValidationObj});
-                    setDemoDetails({ ...demoDetails, preferredMeeting: e });
-                    }
+                    setDemoDetails({ ...demoDetails, preferredMeeting: e });     
                   }
                   }
                   options={[
@@ -372,13 +380,11 @@ const ContactUs = () => {
                   requiredIndicator
                   value={demoDetails.timeZone}
                   onChange={(e) =>{
-                    if(e) {
                       const scheduleValidationObj={...scheduleFormValidationErrors};
                       scheduleValidationObj.timeZone=false;
                       setScheduleFormValidationErrors({...scheduleValidationObj});
                    
-                    setDemoDetails({ ...demoDetails, timeZone: e })
-                    }
+                    setDemoDetails({ ...demoDetails, timeZone: e }) 
                   }
                   }
                   options={timezone}
@@ -390,13 +396,12 @@ const ContactUs = () => {
                   requiredIndicator
                   value={demoDetails.preferredTime}
                   onChange={(e) =>{
-                    if(e) {
                       const scheduleValidationObj={...scheduleFormValidationErrors};
                       scheduleValidationObj.preferredTime=false;
                       setScheduleFormValidationErrors({...scheduleValidationObj});
                    
                     setDemoDetails({ ...demoDetails, preferredTime: e })
-                    }}}
+                    }}
                   options={preferredTime}
                   error={scheduleFormValidationErrors.preferredTime?"Required":false}
                 />
@@ -408,25 +413,27 @@ const ContactUs = () => {
                 type={"date"}
                 value={demoDetails.date}
                 onChange={(e) => {
-                  if(e) {
                     const scheduleValidationObj={...scheduleFormValidationErrors};
                     scheduleValidationObj.date=false;
                     setScheduleFormValidationErrors({...scheduleValidationObj});
                  
-                  setDemoDetails({ ...demoDetails, date: e });}}}
+                  setDemoDetails({ ...demoDetails, date: e });}}
                 error={scheduleFormValidationErrors.date?"Required":false}
               />
               {/*  not a mandatory field */}
               <TextField
-                placeholder="Any additional note..."
+                placeholder="Enter additional note..."
                 label="Additional Note"
                 multiline={
-                  connectedAccountsArray.length < 4
+                  connectedAccountsArray.length <= 3
                     ? 3
-                    : connectedAccountsArray.length > 3 &&
-                      connectedAccountsArray.length < 7
-                    ? 4
-                    : 5
+                    : connectedAccountsArray.length >=4 &&
+                      connectedAccountsArray.length <= 6
+                    ? 5
+                    : connectedAccountsArray.length >= 7 &&
+                      connectedAccountsArray.length <= 9
+                    ? 6
+                    : 8
                 }
                 value={demoDetails.additionalNote}
                 onChange={(e) =>
