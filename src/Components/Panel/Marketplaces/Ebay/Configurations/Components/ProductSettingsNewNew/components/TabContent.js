@@ -374,7 +374,7 @@ const TabContent = ({
                       {field === "autoProductSync" && fields[field]["value"] && (
                         <React.Fragment>
                           <br />
-                          <Stack spacing="tight" distribution="fill">
+                          <Stack spacing="tight">
                             {Object.keys(fields[field]["attributes"]).map(
                               (attribute, index) => {
                                 return (
