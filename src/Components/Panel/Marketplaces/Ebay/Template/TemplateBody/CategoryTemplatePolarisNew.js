@@ -1918,6 +1918,9 @@ break;
           lineHeight: "2.4rem !important",
         }}
         onSelect={(data) => {
+          const validationObj={...validationErrors};
+          validationObj.primaryCategoryValidation=new Array(6).fill(false);
+          setValidationErrors({...validationObj});
           let selected = [data];
           const selectedValue = primaryCategorySearchPredictionOptions.find(
             (option) => option.value === data
@@ -1952,6 +1955,9 @@ break;
           lineHeight: "2.4rem !important",
         }}
         onSelect={(data) => {
+          const validationObj={...validationErrors};
+          validationObj.secondaryCategoryValidation=new Array(6).fill(false);
+          setValidationErrors({...validationObj});
           let selected = [data];
           const selectedValue = secondaryCategorySearchPredictionOptions.find(
             (option) => option.value === data
