@@ -367,29 +367,34 @@ const FinalPolicyGrid = (props) => {
         }}
       >
         <Modal.Section>
+          <Banner status="info">
+            Please refresh policies on app after creating it on eBay.
+          </Banner>
+          <br />
           <Stack distribution="center" alignment="center">
             <>
               {getCountyrName(refreshPoliciesAccountSelectionModal.siteID) !==
                 "-" &&
                 getCountyrName(refreshPoliciesAccountSelectionModal.siteID)}
             </>
-            <div style={{width: '250px'}}>
-            <PolarisSelect
-              options={refreshPoliciesAccountSelectionModal.options}
-              value={refreshPoliciesAccountSelectionModal.accountName}
-              placeholder="Please Select..."
-              onChange={(e) => {
-                let temp = refreshPoliciesAccountSelectionModal.options.filter(
-                  (account) => account["value"] === e
-                );
-                setRefreshPoliciesAccountSelectionModal({
-                  ...refreshPoliciesAccountSelectionModal,
-                  accountName: temp[0]?.value,
-                  siteID: temp[0]?.siteID,
-                  shopID: temp[0]?.shopID,
-                });
-              }}
-            />
+            <div style={{ width: "250px" }}>
+              <PolarisSelect
+                options={refreshPoliciesAccountSelectionModal.options}
+                value={refreshPoliciesAccountSelectionModal.accountName}
+                placeholder="Please Select..."
+                onChange={(e) => {
+                  let temp =
+                    refreshPoliciesAccountSelectionModal.options.filter(
+                      (account) => account["value"] === e
+                    );
+                  setRefreshPoliciesAccountSelectionModal({
+                    ...refreshPoliciesAccountSelectionModal,
+                    accountName: temp[0]?.value,
+                    siteID: temp[0]?.siteID,
+                    shopID: temp[0]?.shopID,
+                  });
+                }}
+              />
             </div>
           </Stack>
         </Modal.Section>
@@ -409,10 +414,10 @@ const FinalPolicyGrid = (props) => {
         // }}
       >
         <Modal.Section>
-          <Banner status="info">
+          {/* <Banner status="info">
             Please refresh policies on app after creating it on eBay.
-          </Banner>
-          <br />
+          </Banner> */}
+          {/* <br /> */}
           <div
             style={{
               display: "flex",
