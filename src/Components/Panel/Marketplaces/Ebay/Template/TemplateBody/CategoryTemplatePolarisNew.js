@@ -278,15 +278,15 @@ const validatePrimaryAndSecondaryCategories=(type,index)=>{
           key={"Additional condition description"}
           value={condition_description}
           onChange={(e) => {
-            const validationObj={...validationErrors};
-            validationObj["productConditionValidation"][1]=false;
-            setValidationErrors({...validationObj});
+            // const validationObj={...validationErrors};
+            // validationObj["productConditionValidation"][1]=false;
+            // setValidationErrors({...validationObj});
             // let temp = { ...formData };
             // temp["primaryCategory"]["condition_description"] = e;
             // setFormData(temp);
             setCondition_description(e);
           }}
-          error={validationErrors["productConditionValidation"][1]?"Required Field":false}
+          //error={validationErrors["productConditionValidation"][1]?"Required Field":false}
          
           multiline={3}
         />
@@ -1618,11 +1618,11 @@ break;
     validationObject["productConditionValidation"][0]=true; 
     finalValidator=true;
   }
-  if(!condition_description)
-  {
-    validationObject["productConditionValidation"][1]=true; 
-    finalValidator=true;
-  }
+  // if(!condition_description)
+  // {
+  //   validationObject["productConditionValidation"][1]=true; 
+  //   finalValidator=true;
+  // }
 }
      if(checkFinalValidation(finalRequiredAttributeErrorObj))
     {
