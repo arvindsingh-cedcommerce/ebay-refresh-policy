@@ -5,6 +5,8 @@ import {globalState, refreshSession} from "../../../services/globalstate";
 import {notify} from "../../../services/notify";
 import {login} from "../../../Apirequest/authApi";
 import {parseQueryString} from "../../../services/helperFunction";
+import { getDashboardData } from '../../../APIrequests/DashboardAPI';
+import { dashboardAnalyticsURL } from '../../../URLs/DashboardURL';
 
 class Login extends Component {
 
@@ -47,6 +49,7 @@ class Login extends Component {
             globalState.setLocalStorage('auth_token', getToken.data.token);
             notify.success(getToken.message);
             this.setState({ loader :false}, ()=>{
+                
                 this.redirect('/welcome');
             });
         }else{

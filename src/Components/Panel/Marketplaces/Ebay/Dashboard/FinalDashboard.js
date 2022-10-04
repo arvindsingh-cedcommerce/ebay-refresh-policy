@@ -180,9 +180,9 @@ const FinalDashboard = (props) => {
     document.description =
       "CedCommerce introduces the eBay Marketplace Integration App enabling the Shopify merchants to sell on eBay by helping them to manage their products & orders.";
     getAllConnectedAccounts();
-    hitNews();
-    hitBlogs();
-    hitFAQs();
+    // hitNews();
+    // hitBlogs();
+    // hitFAQs();
   }, []);
 
   useEffect(() => {
@@ -674,6 +674,9 @@ const FinalDashboard = (props) => {
     if (connectedAccountsArray.length) {
       get21uniqueColors();
       refresh ? hitDashoboardAPI(refresh, false) : hitDashoboardAPI();
+      hitNews();
+      hitBlogs();
+      hitFAQs();
     }
   }, [connectedAccountsArray]);
 

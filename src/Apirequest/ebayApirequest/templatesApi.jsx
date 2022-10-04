@@ -48,7 +48,9 @@ export async function getcategoryFeatures( params ){
 export async function getEbayUserDetails( data ){
     return await requests.getRequest('ebayV1/get/userDetails', {...data});
 }
-
+export async function getStoreDetails(data) {
+    return await requests.getRequest('ebay/request/storeDetails', {...data})
+}
 export async function getAttributesByProductQuery( filters = {} ){
     return await requests.getRequest('connector/product/getAttributesByProductQuery', filters);
 }

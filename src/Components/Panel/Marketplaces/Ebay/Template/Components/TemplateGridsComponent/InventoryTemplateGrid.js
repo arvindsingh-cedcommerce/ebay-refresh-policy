@@ -14,6 +14,7 @@ import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getConnectedAccounts } from "../../../../../../../Apirequest/accountsApi";
 import { getTemplates } from "../../../../../../../APIrequests/TemplatesAPI";
@@ -95,6 +96,11 @@ const getFitersInitially = () => {
 };
 
 const InventoryTemplateGrid = (props) => {
+  const reduxState = useSelector(
+    (state) => state.inventoryGridFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
+
   const { cbFuncInventory } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
@@ -180,7 +186,7 @@ const InventoryTemplateGrid = (props) => {
       count: pageSize,
       activePage: activePage,
       // ...filtersToPass,
-      ...filterParsedData
+      ...filterParsedData,
     };
     if (Object.keys(filtersToPass).length) {
       postData["activePage"] = 1;
@@ -533,6 +539,14 @@ const InventoryTemplateGrid = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "inventoryFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <Card.Section>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>

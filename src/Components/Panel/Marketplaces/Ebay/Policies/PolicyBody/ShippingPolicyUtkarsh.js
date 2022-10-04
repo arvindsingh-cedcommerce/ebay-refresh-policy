@@ -395,7 +395,7 @@ const ShippingPolicyUtkarsh = (props) => {
             title={<Title level={4}>Shipping Policy</Title>}
             actions={[
               {
-                content: <Button primary>Edit</Button>,
+                content: <Button primary>Edit on eBay</Button>,
                 url: `https://www.bizpolicy.ebay${domainName}/businesspolicy/${type}?profileId=${id}`,
                 external: true,
               },
@@ -502,20 +502,20 @@ const ShippingPolicyUtkarsh = (props) => {
             <Card
               sectioned
               title={<Title level={4}>Domestic Shipping Services</Title>}
-              actions={[
-                {
-                  content: (
-                    <Button
-                      primary
-                      onClick={() => {
-                        addService("domestic");
-                      }}
-                    >
-                      Add Services
-                    </Button>
-                  ),
-                },
-              ]}
+              // actions={[
+              //   {
+              //     content: (
+              //       <Button
+              //         primary
+              //         onClick={() => {
+              //           addService("domestic");
+              //         }}
+              //       >
+              //         Add Services
+              //       </Button>
+              //     ),
+              //   },
+              // ]}
             >
               {domesticShippingServices["shippingServiceDomestic"].map(
                 (service, index) => {
@@ -820,15 +820,15 @@ const ShippingPolicyUtkarsh = (props) => {
             <Card
               sectioned
               title={<Title level={4}>International Shipping Services</Title>}
-              actions={[
-                {
-                  content: (
-                    <Button primary onClick={() => addService("international")}>
-                      Add Services
-                    </Button>
-                  ),
-                },
-              ]}
+              // actions={[
+              //   {
+              //     content: (
+              //       <Button primary onClick={() => addService("international")}>
+              //         Add Services
+              //       </Button>
+              //     ),
+              //   },
+              // ]}
             >
               {internationalShippingServices[
                 "shippingServiceInternational"
@@ -1029,7 +1029,7 @@ const ShippingPolicyUtkarsh = (props) => {
                         <Card sectioned>
                           <FormLayout>
                             <Stack vertical spacing="extraTight">
-                              <Button
+                              {/* <Button
                                 primary
                                 onClick={(e) => {
                                   let internationalShippingServicesCopy = {
@@ -1047,7 +1047,7 @@ const ShippingPolicyUtkarsh = (props) => {
                                 }}
                               >
                                 Choose Destinations
-                              </Button>
+                              </Button> */}
                               <Modal
                                 title="Choose Destinations"
                                 open={service["regionIncludedModalActive"]}
@@ -1110,14 +1110,14 @@ const ShippingPolicyUtkarsh = (props) => {
                 );
               })}
               <br />
-              <Button
+              {/* <Button
                 primary
                 onClick={() => {
                   setRegionExcludedModalActive(true);
                 }}
               >
                 Exclude Destinations
-              </Button>
+              </Button> */}
               <Modal
                 title="Exclude Destinations"
                 open={regionExcludedModalActive}

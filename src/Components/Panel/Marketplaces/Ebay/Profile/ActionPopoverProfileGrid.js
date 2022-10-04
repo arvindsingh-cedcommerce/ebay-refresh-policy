@@ -9,12 +9,16 @@ import { MobileVerticalDotsMajorMonotone } from "@shopify/polaris-icons";
 import { Button, Popover } from "antd";
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
-import { deleteProfile } from "../../../../../Apirequest/ebayApirequest/profileApi";
+import {
+  deleteProfile,
+  uploadProductByProfileId,
+} from "../../../../../Apirequest/ebayApirequest/profileApi";
 import { postActionOnProductById } from "../../../../../APIrequests/ProductsAPI";
 import { notify } from "../../../../../services/notify";
 import {
   disableItemURL,
   uploadProductByIdURL,
+  uploadProductByProfileURL,
 } from "../../../../../URLs/ProductsURL";
 
 const ActionPopoverProfileGrid = (props) => {
@@ -71,6 +75,27 @@ const ActionPopoverProfileGrid = (props) => {
           <Stack>
             <EditOutlined />
             <>Edit</>
+          </Stack>
+        </Button>
+        <Button
+          type="text"
+          onClick={async () => {
+            const { profile_id } = record;
+            let postData = {
+              profile_id: profile_id,
+            };
+            setModal({
+              ...modal,
+              active: true,
+              content: "upload this product",
+              actionName: uploadProductByProfileId,
+              actionPayload: { ...postData },
+            });
+          }}
+        >
+          <Stack>
+            <UploadOutlined />
+            <>Upload & Revise</>
           </Stack>
         </Button>
         <Button
@@ -135,7 +160,8 @@ const ActionPopoverProfileGrid = (props) => {
                   if (success) {
                     notify.success(message ? message : data);
                     // props.history.push("activity");
-                    modal.functionsAfterCall()
+                    if (modal.content === "delete this profile")
+                      modal.functionsAfterCall();
                     setModal({ ...modal, active: false });
                   } else {
                     notify.error(message ? message : data);

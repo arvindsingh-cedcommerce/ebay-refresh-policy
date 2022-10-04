@@ -191,23 +191,26 @@ const ContactUs = () => {
               },
             }}
           >
-            <div>Accounts</div>
-            <Stack distribution="fillEvenly" spacing="extraTight">
-              {connectedAccountsArray.map((connectedAccount, index) => {
-                return (
-                  <Checkbox
-                    label={connectedAccount.label}
-                    checked={connectedAccount.checked}
-                    onChange={() => {
-                      let temp = [...connectedAccountsArray];
-                      temp[index]["checked"] = !connectedAccount.checked;
-                      setconnectedAccountsArray(temp);
-                    }}
-                  />
-                );
-              })}
-            </Stack>
-            {/* <Select
+            <Stack vertical>
+              <div>
+                <div>Accounts</div>
+                <Stack distribution="fillEvenly" spacing="extraTight">
+                  {connectedAccountsArray.map((connectedAccount, index) => {
+                    return (
+                      <Checkbox
+                        label={connectedAccount.label}
+                        checked={connectedAccount.checked}
+                        onChange={() => {
+                          let temp = [...connectedAccountsArray];
+                          temp[index]["checked"] = !connectedAccount.checked;
+                          setconnectedAccountsArray(temp);
+                        }}
+                      />
+                    );
+                  })}
+                </Stack>
+              </div>
+              {/* <Select
               onChange={(accountValue) => {
                 let matchedAccount = connectedAccountsArray.find(
                   (connectedAccounts) =>
@@ -221,28 +224,29 @@ const ContactUs = () => {
               placeholder="Select to add account"
               label="Account"
             /> */}
-            <Select
-              value={issueSelected}
-              onChange={(e) => setIssueSelected(e)}
-              placeholder="Select the section in which you are facing issue"
-              options={[
-                { label: "Products", value: "products" },
-                { label: "Orders", value: "orders" },
-                { label: "Profiles", value: "profiles" },
-                { label: "Templates", value: "templates" },
-                { label: "Business Policy", value: "businessPolicy" },
-                { label: "Configuration", value: "configuration" },
-                { label: "Others", value: "others" },
-              ]}
-              label="Section"
-            />
-            <TextField
-              placeholder="Describe the issue you are facing..."
-              label="Issue"
-              value={issueDescription}
-              onChange={(e) => setIssueDescription(e)}
-              multiline={3}
-            />
+              <Select
+                value={issueSelected}
+                onChange={(e) => setIssueSelected(e)}
+                placeholder="Select the section in which you are facing issue"
+                options={[
+                  { label: "Products", value: "products" },
+                  { label: "Orders", value: "orders" },
+                  { label: "Profiles", value: "profiles" },
+                  { label: "Templates", value: "templates" },
+                  { label: "Business Policy", value: "businessPolicy" },
+                  { label: "Configuration", value: "configuration" },
+                  { label: "Others", value: "others" },
+                ]}
+                label="Section"
+              />
+              <TextField
+                placeholder="Describe the issue you are facing..."
+                label="Issue"
+                value={issueDescription}
+                onChange={(e) => setIssueDescription(e)}
+                multiline={3}
+              />
+            </Stack>
           </Card>
         </Col>
         <Col span={12}>
@@ -253,6 +257,7 @@ const ContactUs = () => {
               content: "Submit",
               loading: btnLoaders["demo"],
               onAction: async () => {
+                setBtnLoaders({ ...btnLoaders, demo: true });
                 let { success, message } = await submitIssue(
                   demoScheduleURL,
                   demoDetails
@@ -262,6 +267,7 @@ const ContactUs = () => {
                 } else {
                   notify.error(message);
                 }
+                setBtnLoaders({ ...btnLoaders, demo: false });
               },
             }}
           >
@@ -321,15 +327,18 @@ const ContactUs = () => {
                 onChange={(e) => setDemoDetails({ ...demoDetails, date: e })}
               />
               <TextField
-                placeholder="Any additional note..."
+                placeholder="Enter additional note..."
                 label="Additional Note"
                 multiline={
-                  connectedAccountsArray.length < 4
+                  connectedAccountsArray.length <= 3
                     ? 3
-                    : connectedAccountsArray.length > 3 &&
-                      connectedAccountsArray.length < 7
-                    ? 4
-                    : 5
+                    : connectedAccountsArray.length >=4 &&
+                      connectedAccountsArray.length <= 6
+                    ? 5
+                    : connectedAccountsArray.length >= 7 &&
+                      connectedAccountsArray.length <= 9
+                    ? 6
+                    : 8
                 }
                 value={demoDetails.additionalNote}
                 onChange={(e) =>

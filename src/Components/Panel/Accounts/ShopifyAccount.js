@@ -149,7 +149,7 @@ const ShopifyAccount = (props) => {
               content: "Submit",
               onAction: saveCustomDetails,
             }}
-            title="Additional User Details"
+            title="Contact Details"
           >
             <FormLayout>
               <FormLayout.Group>
@@ -165,7 +165,7 @@ const ShopifyAccount = (props) => {
                 />
                 <TextField
                   type="email"
-                  label="Account Email"
+                  label="Contact Email"
                   onChange={(value) =>
                     setCustomDetails({ ...customDetails, email: value })
                   }

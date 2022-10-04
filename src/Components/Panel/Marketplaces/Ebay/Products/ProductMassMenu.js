@@ -52,8 +52,9 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
                 onClick={() => {
                   let postData = [];
                   selectedRows.forEach((selectedRow) => {
-                    let { source_product_id } = selectedRow;
-                    postData.push(source_product_id);
+                    let { source_product_id, container_id } = selectedRow;
+                    // postData.push(source_product_id);
+                    postData.push(container_id);
                   });
                   setModal({
                     ...modal,

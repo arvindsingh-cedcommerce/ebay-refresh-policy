@@ -14,6 +14,7 @@ import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Image, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getConnectedAccounts } from "../../../../../../../Apirequest/accountsApi";
 import { getTemplates } from "../../../../../../../APIrequests/TemplatesAPI";
@@ -84,6 +85,11 @@ const getFitersInitially = () => {
 };
 
 const CategoryTemplateGrid = (props) => {
+  const reduxState = useSelector(
+    (state) => state.categoryGridFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
+
   const { cbFuncCategory } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
@@ -121,7 +127,7 @@ const CategoryTemplateGrid = (props) => {
           <center>
             <ActionPopoverTemplate
               record={record}
-              hitRequiredFuncs={getTemplatesList}
+              hitRequiredFuncs={getAllConnectedAccounts}
               cbFunc={cbFuncCategory}
             />
           </center>
@@ -574,6 +580,14 @@ const CategoryTemplateGrid = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "categoryFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <Card.Section>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>

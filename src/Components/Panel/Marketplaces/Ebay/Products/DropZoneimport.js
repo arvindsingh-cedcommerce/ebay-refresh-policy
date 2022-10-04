@@ -46,7 +46,7 @@ class DropZoneimport extends Component {
     const { files } = this.state;
     const validImageTypes = [];
 
-    const fileUpload = !files.length && <DropZone.FileUpload />;
+    const fileUpload = !files.length && <DropZone.FileUpload actionTitle="Add file"/>;
     const uploadedFiles = files.length > 0 && (
       <Stack vertical>
         {files.map((file, index) => (

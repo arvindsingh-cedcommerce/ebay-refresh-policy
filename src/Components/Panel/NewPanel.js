@@ -40,10 +40,12 @@ import {
   Stack,
   Popover as ShopifyPopover,
   ActionList,
+  Button,
 } from "@shopify/polaris";
 import {
   CircleCancelMinor,
   CircleTickOutlineMinor,
+  FilterMajorMonotone,
 } from "@shopify/polaris-icons";
 import { getAllNotifications } from "../../APIrequests/ActivitiesAPI";
 import { allNotificationsURL } from "../../URLs/ActivitiesURL";
@@ -516,6 +518,14 @@ const NewPanel = (props) => {
             }
           >
             <div style={{ paddingRight: 40, cursor: "pointer" }}>
+              {/* <Button
+                icon={<Icon source={FilterMajorMonotone} color="base" />}
+                // onClick={() => {
+                //   setFiltersDrawerVisible(true);
+                // }}
+              >
+                More Filters
+              </Button> */}
               <Stack distribution="trailing" alignment="center">
                 <div style={{ marginBottom: "-8px" }}>
                   <ShopifyPopover
@@ -575,9 +585,9 @@ const NewPanel = (props) => {
               <Route
                 path="/panel/ebay/dashboard"
                 render={(props) => {
-                  let refresh=false
-                  if(props.location.state) {
-                    refresh = props.location.state?.refresh
+                  let refresh = false;
+                  if (props.location.state) {
+                    refresh = props.location.state?.refresh;
                   }
                   return (
                     <FinalDashboard

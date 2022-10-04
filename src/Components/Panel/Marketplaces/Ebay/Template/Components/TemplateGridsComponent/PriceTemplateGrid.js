@@ -13,6 +13,7 @@ import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import { Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getTemplates } from "../../../../../../../APIrequests/TemplatesAPI";
 import { notify } from "../../../../../../../services/notify";
@@ -61,6 +62,11 @@ const getFitersInitially = () => {
 };
 
 const PriceTemplateGrid = (props) => {
+  const reduxState = useSelector(
+    (state) => state.priceGridFilterReducer.reduxFilters
+  );
+  const dispatch = useDispatch();
+
   const { cbFuncPrice } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
@@ -395,6 +401,14 @@ const PriceTemplateGrid = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "priceFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
+  useEffect(() => {
+    if (reduxState) setFiltersToPass(reduxState);
+  }, []);
   return (
     <Card.Section>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
