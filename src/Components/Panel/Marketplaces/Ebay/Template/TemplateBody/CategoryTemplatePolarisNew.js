@@ -58,7 +58,7 @@ const CategoryTemplatePolarisNew = (props) => {
   const [accountSelection, setaccountSelection] = useState("");
   const [siteIDSelection, setsiteIDSelection] = useState("");
   const [shopIDSelection, setshopIDSelection] = useState("");
-   const [validationErrors,setValidationErrors]= useState({"optionalValidation":[],"requiredValidation":[],"customValidation":[],"primaryCategoryValidation":new Array(6).fill(false),"secondaryCategoryValidation":new Array(6).fill(false)});
+   const [validationErrors,setValidationErrors]= useState({"productConditionValidation":new Array(2).fill(false),"optionalValidation":[],"requiredValidation":[],"customValidation":[],"primaryCategoryValidation":new Array(6).fill(false),"secondaryCategoryValidation":new Array(6).fill(false)});
    // form data
   const deselectedOptions = [];
   const [loaderOverlayActive, setLoaderOverlayActive] = useState(true);
@@ -258,8 +258,12 @@ const validatePrimaryAndSecondaryCategories=(type,index)=>{
             // let temp = { ...formData };
             // temp["primaryCategory"]["category_feature"] = e;
             // setFormData(temp);
+            const validationObj={...validationErrors};
+            validationObj["productConditionValidation"][0]=false;
+            setValidationErrors({...validationObj});
             setCategory_feature(e);
           }}
+          error={validationErrors["productConditionValidation"][0]?"Required Field":false}
           //   error={
           //     this.state.form_data.primaryCategory.category_feature.length == 0 &&
           //     this.state.dropdownErrorFlag &&
@@ -274,11 +278,16 @@ const validatePrimaryAndSecondaryCategories=(type,index)=>{
           key={"Additional condition description"}
           value={condition_description}
           onChange={(e) => {
+            const validationObj={...validationErrors};
+            validationObj["productConditionValidation"][1]=false;
+            setValidationErrors({...validationObj});
             // let temp = { ...formData };
             // temp["primaryCategory"]["condition_description"] = e;
             // setFormData(temp);
             setCondition_description(e);
           }}
+          error={validationErrors["productConditionValidation"][1]?"Required Field":false}
+         
           multiline={3}
         />
       </FormLayout>
@@ -1602,7 +1611,19 @@ finalValidator=true;
 break;
     }
     }
-  
+    if(categoryFeatureOptions.length > 0 )
+    {
+  if(!category_feature)
+  { 
+    validationObject["productConditionValidation"][0]=true; 
+    finalValidator=true;
+  }
+  if(!condition_description)
+  {
+    validationObject["productConditionValidation"][1]=true; 
+    finalValidator=true;
+  }
+}
      if(checkFinalValidation(finalRequiredAttributeErrorObj))
     {
       validationObject["requiredValidation"]=[...finalRequiredAttributeErrorObj]; 
