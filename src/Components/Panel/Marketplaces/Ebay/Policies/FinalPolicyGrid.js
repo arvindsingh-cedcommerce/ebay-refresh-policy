@@ -457,6 +457,7 @@ const FinalPolicyGrid = (props) => {
                 !accountSelectionModal.siteID && !accountSelectionModal.shopID
               }
               onClick={() => {
+                setaccountSelectionModal({ ...accountSelectionModal, active: false })
                 window.open(
                   `https://www.bizpolicy.ebay${accountSelectionModal.domainName}/businesspolicy/${accountSelectionModal.selectedPolicyValue}`
                 );
