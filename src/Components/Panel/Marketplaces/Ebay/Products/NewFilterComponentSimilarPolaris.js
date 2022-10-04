@@ -32,7 +32,7 @@ const NewFilterComponentSimilarPolaris = ({
     <Drawer
       title="Filters"
       placement={"right"}
-      width={500}
+      width={400}
       onClose={() => {
         setFiltersDrawerVisible(false);
       }}
