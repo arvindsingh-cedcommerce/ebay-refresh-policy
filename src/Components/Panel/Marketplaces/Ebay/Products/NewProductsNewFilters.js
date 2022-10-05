@@ -197,6 +197,16 @@ function NewProductsNewFilters(props) {
       checked: true,
       editable: true,
     },
+    // {
+    //   title: <center>Type</center>,
+    //   dataIndex: "simpleVariant",
+    //   key: "simpleVariant",
+    //   className: "show",
+    //   label: "Variant Count",
+    //   value: "Variant Count",
+    //   checked: true,
+    //   editable: true,
+    // },
     {
       title: <center>Profile</center>,
       dataIndex: "profile",
@@ -309,6 +319,9 @@ function NewProductsNewFilters(props) {
     active: false,
     content: [],
   });
+
+  // variant state
+  const [doVariantDataExists, setDoVariantDataExists] = useState({});
 
   useEffect(() => {
     hitGetProductsAPI();
@@ -509,6 +522,7 @@ function NewProductsNewFilters(props) {
       productOnly: true,
       count: pageSize,
       activePage: activePage,
+      grid: true,
       ...filterPostData,
     };
     if (Object.keys(filterPostData).length) {
@@ -539,13 +553,16 @@ function NewProductsNewFilters(props) {
             title,
             product_type,
             variant_attributes,
-            variants,
+            // variants,
             container_id,
             brand,
             profile_name,
             source_product_id,
             edited,
             ebay_response,
+            quantity,
+            total_variants,
+            total_quantity,
           } = row;
           let tempObject = {};
           tempObject["source_product_id"] = source_product_id;
@@ -592,12 +609,12 @@ function NewProductsNewFilters(props) {
           );
           tempObject["productType"] = (
             <center>
-              <Text>{product_type ? product_type : '-'}</Text>
+              <Text>{product_type ? product_type : "-"}</Text>
             </center>
           );
           tempObject["vendor"] = (
             <center>
-              <Text>{brand ? brand : '-'}</Text>
+              <Text>{brand ? brand : "-"}</Text>
             </center>
           );
           tempObject["profile"] = (
@@ -617,12 +634,34 @@ function NewProductsNewFilters(props) {
           tempObject["variantsCount"] = (
             <center>
               <Text>
-                {getVariantsCountDetails(variants, variant_attributes)}
+                {/* {getVariantsCountDetails(variants, variant_attributes)} */}
+                {total_variants > 0 ? (
+                  total_quantity == 0 ? (
+                    <Text type="danger">
+                      {total_quantity} in stock for {total_variants} variant(s)
+                    </Text>
+                  ) : (
+                    <>
+                      {total_quantity} in stock for {total_variants} variant(s)
+                    </>
+                  )
+                ) : quantity == 0 ? (
+                  <Text type="danger">{quantity} in stock</Text>
+                ) : (
+                  <>{quantity} in stock</>
+                )}
               </Text>
             </center>
           );
-          tempObject["variantsData"] = variants;
+          // tempObject["variantsData"] = variants;
           tempObject["container_id"] = container_id;
+          tempObject["simpleVariant"] = (
+            <center>
+              {variant_attributes.length > 0 ? "Variants" : "Simple"}
+            </center>
+          );
+          tempObject["showVariant"] =
+            variant_attributes.length > 0 ? true : false;
           return tempObject;
         });
         setProductData(tempProductData);
@@ -1107,13 +1146,24 @@ function NewProductsNewFilters(props) {
           scroll={{ x: 1500, y: 500 }}
           expandable={{
             expandedRowRender: (record) => {
-              return record["variantsData"] &&
-                record["variantsData"].length > 0 ? (
+              return record["showVariant"] ? (
+                // <>hi</>
                 <VariantComponentData
-                  dataSource={record["variantsData"]}
+                  // dataSource={record["variantsData"]}
+                  record={record}
                   size="small"
                 />
               ) : (
+                // <VariantComponentData
+                //   // dataSource={record["variantsData"]}
+                //   record={record}
+                //   size="small"
+                // />
+                // <RenderChild record={record} />
+                // <VariantComponentData
+                //   dataSource={record["variantsData"]}
+                //   size="small"
+                // />
                 <Alert message="No Variants Found" type="info" />
               );
               // <TabsComponent
@@ -1134,7 +1184,8 @@ function NewProductsNewFilters(props) {
               // );
             },
             expandIcon: ({ expanded, onExpand, record }) =>
-              expanded ? (
+              record["showVariant"] &&
+              (expanded ? (
                 <Tooltip content="Hide Variants">
                   <CaretUpOutlined onClick={(e) => onExpand(record, e)} />
                 </Tooltip>
@@ -1142,7 +1193,7 @@ function NewProductsNewFilters(props) {
                 <Tooltip content="View Variants">
                   <CaretDownOutlined onClick={(e) => onExpand(record, e)} />
                 </Tooltip>
-              ),
+              )),
           }}
         />
       </Card>
