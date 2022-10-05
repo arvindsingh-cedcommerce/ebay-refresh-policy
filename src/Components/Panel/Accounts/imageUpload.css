@@ -57,7 +57,7 @@
   border-radius: 50%;
 }
 .img-upload:before {
-  content: "\f093";
+  content: "";
   font-size: 10px;
   position: absolute;
   padding-top: 80px;
@@ -72,6 +72,10 @@
   opacity: 0;
   transition: 0.5s ease;
   background-color: #fff;
+  background-image: url(https://i.ibb.co/KLGDNZD/upload-icon.png);
+  background-size: 130px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .img-upload:hover:before {
   opacity: 1;
