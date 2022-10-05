@@ -260,7 +260,7 @@ function NewProductsNewFilters(props) {
       fixed: "right",
       render: (text, record) => {
         return (
-          <Stack distribution="equalSpacing" alignment="leading">
+          <Stack distribution="center" alignment="leading">
             <ActionPopover record={record} />
           </Stack>
         );
