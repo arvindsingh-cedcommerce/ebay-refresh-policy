@@ -1274,7 +1274,7 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16} xs={24} sm={24}>
+            <Col span={16} xs={24} sm={24} md={24} lg={16}>
               <Card
                 sectioned
                 title={
@@ -1309,7 +1309,7 @@ const FinalDashboard = (props) => {
                 </Tabs>
               </Card>
             </Col>
-            <Col span={8} xs={24} sm={24}>
+            <Col span={8} xs={24} sm={24} md={24} lg={8}>
               <Card
                 title={
                   <Tooltip content="Total revenue of orders created on Shopify">
