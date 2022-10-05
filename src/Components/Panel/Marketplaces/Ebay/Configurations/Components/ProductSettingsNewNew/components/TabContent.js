@@ -65,7 +65,7 @@ const TabContent = ({
 }) => {
   let { fields, value } = content;
   const [currencyLoader, setCurrencyLoader] = useState(false);
-
+   const [vatPercentageError,setVatPercentageError]=useState(false);
   const handleBtnPres = (value, field, innerField) => {
     let temp = { ...connectedAccountsObject };
     if (innerField) {
@@ -507,9 +507,21 @@ const TabContent = ({
                               label="VAT Percentage"
                               value={fields[field]["vatPercentage"]}
                               onChange={(value) =>
+                                {
+                                  if(value<0 || value>30)
+                                  {
+                                   setVatPercentageError(true);
+                                  }
+                                  else
+                                  {
+                                   
+                                    setVatPercentageError(false);
+                                  }
                                 handleBtnPres(value, field, "vatPercentage")
+                                }
                               }
                               type="number"
+                              error={vatPercentageError?"Value should be greater than or equal to 0 and less than or equal to 30":false}
                             />
                           </FormLayout.Group>
                         </FormLayout>
