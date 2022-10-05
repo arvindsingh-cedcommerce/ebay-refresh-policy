@@ -192,13 +192,14 @@ const ContactUs = () => {
                        validationObj.account=true;
                    else
                    validationObj.account=false;
-                // if(!issueDescription)
-                //   validationObj.message=true;
+                if(!issueDescription)
+                  validationObj.message=true;
+                else
+                   validationObj.message=false;
                   if(!validationObj.account && !validationObj.section
-                    //&& issueDescription
+                    && !validationObj.message
                     )
                   {
-                    //validationObj.message=false;
                   
                 
                 let postData = {
@@ -305,12 +306,12 @@ const ContactUs = () => {
               value={issueDescription}
               onChange={(e) => {
                 
-                  // const validationObj={...issueFormValidationErrors};
-                  // validationObj.message=false;
-                  // setIssueFormValidationErrors({...validationObj});
+                  const validationObj={...issueFormValidationErrors};
+                  validationObj.message=false;
+                  setIssueFormValidationErrors({...validationObj});
                 setIssueDescription(e);}}
               multiline={3}
-             // error={issueFormValidationErrors.message?"Required Field":false}
+              error={issueFormValidationErrors.message?"Required Field":false}
             />
             </Stack>
           </Card>
