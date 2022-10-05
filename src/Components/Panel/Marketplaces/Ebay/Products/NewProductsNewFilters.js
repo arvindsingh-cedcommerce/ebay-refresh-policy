@@ -10,6 +10,7 @@ import {
   getProductsCountURL,
   getVariantsURL,
 } from "../../../../../URLs/ProductsURL";
+import { dashboardAnalyticsURL } from "../../../../../URLs/DashboardURL";
 import {
   getProducts,
   getProductsCount,
@@ -40,7 +41,11 @@ import {
   getVariantsCountDetails,
   trimTitle,
 } from "./helperFunctions/commonHelper";
-import { AlertMinor, FilterMajorMonotone } from "@shopify/polaris-icons";
+import {
+  AlertMinor,
+  FilterMajorMonotone,
+  QuestionMarkMinor,
+} from "@shopify/polaris-icons";
 import { getProfilesURL } from "../../../../../URLs/ProfilesURL";
 import { getProfiles } from "../../../../../APIrequests/ProfilesAPI";
 import { getImportAttribute } from "../../../../../Apirequest/registrationApi";
@@ -55,6 +60,7 @@ import PopoverProduct from "./PopoverProduct";
 import ProductBulkMenu from "./ProductBulkMenu";
 import ProductMassMenu from "./ProductMassMenu";
 import { useDispatch, useSelector } from "react-redux";
+import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
 
 const { Text } = Typography;
 
@@ -322,6 +328,12 @@ function NewProductsNewFilters(props) {
 
   // variant state
   const [doVariantDataExists, setDoVariantDataExists] = useState({});
+
+  // product credits
+  const [productCredits, setProductCredits] = useState({
+    available: "",
+    total: "",
+  });
 
   useEffect(() => {
     hitGetProductsAPI();
@@ -977,6 +989,18 @@ function NewProductsNewFilters(props) {
     }
   };
 
+  const hitDashoboardAPI = async () => {
+    let { success, data } = await getDashboardData(dashboardAnalyticsURL);
+    if (success) {
+      const { available_credits, total_used_credits, service_credits } =
+        data?.planDetails?.productCredits?.prepaid;
+      let temp = { ...productCredits };
+      temp["available"] = available_credits;
+      temp["total"] = service_credits;
+      setProductCredits(temp);
+    }
+  };
+
   useEffect(() => {
     if (connectedAccountsArray.length) {
       hitGetProductsAPI();
@@ -985,6 +1009,7 @@ function NewProductsNewFilters(props) {
 
   useEffect(() => {
     getAccounts();
+    hitDashoboardAPI();
   }, []);
 
   const getFieldValue = (field) => {
@@ -1087,6 +1112,22 @@ function NewProductsNewFilters(props) {
     <PageHeader
       className="site-page-header-responsive"
       title={"Products"}
+      subTitle={
+        productCredits.total && (
+          <Badge>
+            <Text strong>
+              <Stack spacing="extraTight" alignment="center">
+                <>{`${productCredits.available}/${productCredits.total} product credits available`}</>
+                <div style={{ cursor: "pointer" }}>
+                  <Tooltip content="1 Product Credit means 1 product can be listed on eBay through the app">
+                    <Icon source={QuestionMarkMinor} />
+                  </Tooltip>
+                </div>
+              </Stack>
+            </Text>
+          </Badge>
+        )
+      }
       ghost={true}
       extra={[
         // <ProductMassMenu selectedRows={selectedRows} />,
