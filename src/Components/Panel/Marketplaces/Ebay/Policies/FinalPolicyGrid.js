@@ -318,7 +318,7 @@ const FinalPolicyGrid = (props) => {
         <Select
           key="addPolicies"
           value={addTemplateValue}
-          placeholder={<Text strong>Add Policy</Text>}
+          placeholder={<Text strong>Create Policy</Text>}
           onChange={(selectedPolicyValue) => {
             if (connectedAccountsArray.length === 1) {
               const { domainName } = connectedAccountsArray[0];
@@ -359,12 +359,12 @@ const FinalPolicyGrid = (props) => {
           })
         }
         title="Select account for refresh policy"
-        primaryAction={{
-          content: "Refresh",
-          onAction: () => getAllPoliciesRefresh(),
-          loading: refreshPolicyLoader,
-          disabled: !refreshPoliciesAccountSelectionModal.accountName,
-        }}
+        // primaryAction={{
+        //   content: "Refresh",
+        //   onAction: () => getAllPoliciesRefresh(),
+        //   loading: refreshPolicyLoader,
+        //   disabled: !refreshPoliciesAccountSelectionModal.accountName,
+        // }}
       >
         <Modal.Section>
           <Banner status="info">
@@ -397,6 +397,19 @@ const FinalPolicyGrid = (props) => {
               />
             </div>
           </Stack>
+          <br />
+          <Stack distribution="center">
+            <Button
+              primary
+              disabled={!refreshPoliciesAccountSelectionModal.accountName}
+              onClick={() => {
+                getAllPoliciesRefresh();
+              }}
+              loading={refreshPolicyLoader}
+            >
+              Refresh Policy
+            </Button>
+          </Stack>
         </Modal.Section>
       </Modal>
       <Modal
@@ -414,10 +427,11 @@ const FinalPolicyGrid = (props) => {
         // }}
       >
         <Modal.Section>
-          {/* <Banner status="info">
-            Please refresh policies on app after creating it on eBay.
-          </Banner> */}
-          {/* <br /> */}
+          <Banner status="info">
+            {/* Please refresh policies on app after creating it on eBay. */}
+            Select account to create policy on eBay
+          </Banner>
+          <br />
           <div
             style={{
               display: "flex",
@@ -457,13 +471,16 @@ const FinalPolicyGrid = (props) => {
                 !accountSelectionModal.siteID && !accountSelectionModal.shopID
               }
               onClick={() => {
-                setaccountSelectionModal({ ...accountSelectionModal, active: false })
+                setaccountSelectionModal({
+                  ...accountSelectionModal,
+                  active: false,
+                });
                 window.open(
                   `https://www.bizpolicy.ebay${accountSelectionModal.domainName}/businesspolicy/${accountSelectionModal.selectedPolicyValue}`
                 );
               }}
             >
-              Add
+              Create Policy
             </Button>
           </Stack>
         </Modal.Section>
