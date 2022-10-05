@@ -80,7 +80,7 @@ export const filtersFields = [
     value: "listing_id",
     searchType: "textField",
     inputValue: "",
-    operator: "3",
+    operator: "1",
     dataType: "number",
   },
   {
