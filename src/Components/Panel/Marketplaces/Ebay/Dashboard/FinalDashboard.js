@@ -786,7 +786,7 @@ const FinalDashboard = (props) => {
         )}
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16} xs={24} sm={24} md={16} lg={16}>
+            <Col span={16} xs={24} sm={24} md={24} lg={16}>
               <Card sectioned>
                 <Card.Section>
                   {dashboardSkeleton ? (
@@ -968,7 +968,7 @@ const FinalDashboard = (props) => {
                 </Card.Section>
               </Card>
             </Col>
-            <Col span={8} xs={24} sm={24} md={8} lg={8}>
+            <Col span={8} xs={24} sm={24} md={24} lg={8}>
               <CarouselComponent
                 reqiuredCurrentStep={reqiuredCurrentStep}
                 notProfiledProductCount={notProfiledProductCount}
@@ -980,7 +980,7 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={6} xs={24} sm={24} md={8} lg={6} >
+            <Col span={6} xs={24} sm={24} md={8} lg={8} xl={6} >
               <Card
                 title={
                   <Tooltip content="Number of active accounts connected on app">
@@ -1023,7 +1023,7 @@ const FinalDashboard = (props) => {
                 )}
               </Card>
             </Col>
-            <Col span={6} xs={24} sm={24} md={8} lg={6}>
+            <Col span={6} xs={24} sm={24} md={8} lg={8} xl={6}>
               <Card
                 title={
                   <Tooltip content="Number of products can list on eBay from app">
@@ -1070,7 +1070,7 @@ const FinalDashboard = (props) => {
                 )}
               </Card>
             </Col>
-            <Col span={6} xs={24} sm={24} md={8} lg={6}>
+            <Col span={6} xs={24} sm={24} md={8} lg={8} xl={6}>
               <Card
                 title={
                   <Tooltip content="Number of orders can create on Shopify">
@@ -1117,7 +1117,7 @@ const FinalDashboard = (props) => {
                 )}
               </Card>
             </Col>
-            <Col span={6} xs={24} sm={24} md={24} lg={6} style={{ height: "194px" }}>
+            <Col span={6} xs={24} sm={24} md={24} lg={24} xl={6} style={{ height: "194px" }}>
               <Card sectioned title="Plan Details">
                 {dashboardSkeleton ? (
                   <div style={{ padding: "36px 0px" }}>
