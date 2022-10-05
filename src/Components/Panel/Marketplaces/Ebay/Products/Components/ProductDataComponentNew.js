@@ -1,8 +1,9 @@
-import { Card, FormLayout, Layout } from "@shopify/polaris";
+import { Card, FormLayout, Layout, Stack } from "@shopify/polaris";
 import { Alert, Col, Collapse, Row } from "antd";
 import { isUndefined } from "lodash";
 import React from "react";
 import ReactJson from "react-json-view";
+import NoDataFound from "../../../../../../assets/data_nahi.png";
 
 const ProductDataComponentNew = ({
   data,
@@ -99,7 +100,10 @@ const ProductDataComponentNew = ({
   ) : (
     <Layout>
       <Layout.Section>
-        <Card title="Product is not uploaded yet" sectioned></Card>
+        <Stack distribution="center">
+          {/* <Card title="Product is not uploaded yet" sectioned></Card> */}
+          <img src={NoDataFound} width="100%" />
+        </Stack>
       </Layout.Section>
     </Layout>
   );
