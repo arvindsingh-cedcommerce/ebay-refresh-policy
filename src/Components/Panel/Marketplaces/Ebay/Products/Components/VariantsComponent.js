@@ -14,6 +14,7 @@ import { EditMinor } from "@shopify/polaris-icons";
 import { postActionOnProductById } from "../../../../../../APIrequests/ProductsAPI";
 import { changeVariantStatusURL } from "../../../../../../URLs/ProductsURL";
 import { notify } from "../../../../../../services/notify";
+import { EditFilled } from "@ant-design/icons";
 
 const VariantsComponent = ({
   // dataSource,
@@ -161,7 +162,7 @@ const VariantsComponent = ({
       if (key.hasOwnProperty(check)) {
         // console.log(e);
         tempObject[e.dataIndex] = key[check] ? (
-          <>{key[check]}</>
+          <>{key[check]}{ customVariantData[index][`custom${check}`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</>
         ) : (
           // <TextField
           //   value={key[check]}
@@ -178,7 +179,8 @@ const VariantsComponent = ({
       <Image width={25} preview={false} src={NoProductImage} />
     );
     tempObject["variantSKU"] = (
-      <>{key["sku"]}</>
+      <>{key["sku"]}  { customVariantData[index][`customsku`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</>
+   
       // <TextField
       //   // disabled
       //   value={key["sku"]}
@@ -186,7 +188,7 @@ const VariantsComponent = ({
       // />
     );
     tempObject["variantQuantity"] = (
-      key["quantity"] !== undefined ? <>{key["quantity"]?.toString()}</> : <></>
+      key["quantity"] !== undefined ? <>{key["quantity"]?.toString()}{ customVariantData[index][`customquantity`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</> : <></>
       // <TextField
       //   value={key["quantity"].toString()}
       //   onChange={(e) => variantValueChange(key, "quantity", e)}
@@ -194,7 +196,7 @@ const VariantsComponent = ({
       // />
     );
     tempObject["variantPrice"] = (
-      key["price"] !== undefined ? <>{key["price"].toString()}</> : <></>
+      key["price"] !== undefined ? <>{key["price"].toString()}{ customVariantData[index][`customprice`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</> : <></>
       // <TextField
       //   value={key["price"].toString()}
       //   onChange={(e) => variantValueChange(key, "price", e)}
@@ -202,7 +204,7 @@ const VariantsComponent = ({
       // />
     );
     tempObject["variantBarcode"] = key["barcode"] ? (
-      <>{key["barcode"]}</>
+      <>{key["barcode"]}{ customVariantData[index][`custombarcode`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</>
     ) : (
       // <TextField
       //   value={key["barcode"]}
@@ -242,7 +244,7 @@ const VariantsComponent = ({
     );
     tempObject["variantWeight"] =
       key["weight"] !== undefined ? (
-        <>{key["weight"].toString()}</>
+        <>{key["weight"].toString()}{ customVariantData[index][`customweight`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</>
       ) : (
         // <TextField
         //   value={key["weight"].toString()}
@@ -252,7 +254,7 @@ const VariantsComponent = ({
         "N/A"
       );
     tempObject["variantWeightUnit"] = key["weight_unit"]
-      ? key["weight_unit"]
+      ? <>{key["weight_unit"]}{ customVariantData[index][`customweight_unit`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</>
       : "N/A";
 
     if (key?.["variant_attributes"] && key["variant_attributes"].length > 0) {
@@ -549,7 +551,7 @@ const VariantsComponent = ({
 
   return (
     <>
-      <Stack distribution="center">
+    <Stack distribution="center">
         <React.Fragment style={switchShopifyCustom ? { opacity: "0.5" } : {}}>
           Shopify
         </React.Fragment>
@@ -578,7 +580,7 @@ const VariantsComponent = ({
           //   overflowY: "scroll",
           // }}
           pagination={false}
-        />
+          />
       ) : (
         <NestedTableComponent
           size={size}
@@ -590,7 +592,7 @@ const VariantsComponent = ({
           //   overflowY: "scroll",
           // }}
           pagination={false}
-        />
+         />
       )}
     </>
   );
