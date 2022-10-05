@@ -257,7 +257,10 @@ const TabContent = ({
       getCurrencyFunc();
     }
   }, [connectedAccountsObject]);
-
+const validateVatPercentageValue=(value)=>{
+  let pattern = /^\d+\.?\d*$/;
+  return !pattern.test(value);
+}
   const removeErrors = (value, field, innerField) => {
     let temp = { ...errorsData };
     if (value && innerField) {
@@ -521,7 +524,7 @@ const TabContent = ({
                                 errorsData?.[account]?.["fields"]?.[field]?.[
                                   "vatPercentage"
                                 ]
-                              ?"Value should be greater than or equal to 0 and less than or equal to 30":false}
+                              ?(validateVatPercentageValue(fields[field]["vatPercentage"])?"Invalid value format":"Value should be greater than or equal to 0 and less than or equal to 30"):false}
                             />
                           </FormLayout.Group>
                         </FormLayout>
