@@ -351,9 +351,10 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
           connectedAccountsObject={connectedAccountsObject}
           setconnectedAccountsObject={setconnectedAccountsObject}
         />
-      </Stack>
+      {/* </Stack> */}
       {panes.length > 0 && <Divider />}
-      <Card.Section title="Selected Accounts">
+      <>Selected Accounts</>  
+      {/* <Card.Section> */}
         <Tabs onChange={() => {}} type="card">
           {Object.keys(panes).map((pane) => {
             return (
@@ -394,7 +395,8 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
             );
           })}
         </Tabs>
-      </Card.Section>
+      {/* </Card.Section> */}
+      </Stack>
     </Card>
   );
 };
