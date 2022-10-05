@@ -58,8 +58,15 @@ const CategoryTemplatePolarisNew = (props) => {
   const [accountSelection, setaccountSelection] = useState("");
   const [siteIDSelection, setsiteIDSelection] = useState("");
   const [shopIDSelection, setshopIDSelection] = useState("");
-   const [validationErrors,setValidationErrors]= useState({"productConditionValidation":new Array(2).fill(false),"optionalValidation":[],"requiredValidation":[],"customValidation":[],"primaryCategoryValidation":new Array(6).fill(false),"secondaryCategoryValidation":new Array(6).fill(false)});
-   // form data
+  const [validationErrors, setValidationErrors] = useState({
+    productConditionValidation: new Array(2).fill(false),
+    optionalValidation: [],
+    requiredValidation: [],
+    customValidation: [],
+    primaryCategoryValidation: new Array(6).fill(false),
+    secondaryCategoryValidation: new Array(6).fill(false),
+  });
+  // form data
   const deselectedOptions = [];
   const [loaderOverlayActive, setLoaderOverlayActive] = useState(true);
   const [
@@ -85,7 +92,7 @@ const CategoryTemplatePolarisNew = (props) => {
     counter: 0,
     options: [],
   });
-  const [errorAttributes,setErrorAttributes]= useState([]);
+  const [errorAttributes, setErrorAttributes] = useState([]);
   const [optionalAttributesMapping, setOptionalAttributesMapping] = useState({
     mapping: [],
     counter: 0,
@@ -112,7 +119,9 @@ const CategoryTemplatePolarisNew = (props) => {
   const [configurableAttributes, setConfigurableAttributes] = useState([]);
   const [selectedConfigurableAttributes, setSelectedConfigurableAttributes] =
     useState([]);
-    const [optionalEbayAttributesList,setOptionalEbayAttributesList]=useState([]);
+  const [optionalEbayAttributesList, setOptionalEbayAttributesList] = useState(
+    []
+  );
   const [attributesLoader, setAttributesLoader] = useState(false);
   const [saveBtnLoader, setSaveBtnLoader] = useState(false);
   const [categoryFeatureOptions, setCategoryFeatureOptions] = useState([]);
@@ -130,22 +139,25 @@ const CategoryTemplatePolarisNew = (props) => {
   // account status
   const [accountStatus, setAccountStatus] = useState("active");
 
+  // storefront details
+  const [storeFrontList, setStoreFrontList] = useState([]);
+  const [storeFrontExists, setStoreFrontExists] = useState(false);
+  const [storeFrontSelected, setStoreFrontSelected] = useState("");
+
   /*
 rishi-feature-template-category-validation
 function to validate primary and secondary categories
   */
-const validatePrimaryAndSecondaryCategories=(type,index)=>{
-  let finalValidationObj={...validationErrors};
-  if(type==="primaryCategory")
-  {
-  finalValidationObj["primaryCategoryValidation"][index]=false;
-  }
-  else
-  {
-    finalValidationObj["secondaryCategoryValidation"][index]=false;
-  }
-  setValidationErrors({...finalValidationObj})
-}
+  const validatePrimaryAndSecondaryCategories = (type, index) => {
+    let finalValidationObj = { ...validationErrors };
+    if (type === "primaryCategory") {
+      finalValidationObj["primaryCategoryValidation"][index] = false;
+    } else {
+      finalValidationObj["secondaryCategoryValidation"][index] = false;
+    }
+    setValidationErrors({ ...finalValidationObj });
+  };
+
   const renderCategoryMapping = (
     categoryTypeMapping,
     setCategoryTypeMapping,
@@ -156,33 +168,40 @@ const validatePrimaryAndSecondaryCategories=(type,index)=>{
       structurePrepared = categoryTypeMapping.map((level, index) => {
         return (
           <Select
-           key={`${categoryType}-${index}`}
+            key={`${categoryType}-${index}`}
             placeholder="Please Select..."
             label={level?.["label"]}
             options={level?.["options"]}
             value={level?.["value"]}
             onChange={(e) => {
-              if(e)
-              {
-                validatePrimaryAndSecondaryCategories(categoryType,index);
-              let tempMapping = [...categoryTypeMapping];
-              setBarcodeOptions([]);
-              setCategoryFeatureOptions([]);
-              tempMapping.splice(index + 1);
-              tempMapping[index]["value"] = e;
-              tempMapping[index]["value"] &&
-                getCategory(
-                  {
-                    parent_category_id: tempMapping?.[index]?.["value"],
-                  },
-                  tempMapping,
-                  setCategoryTypeMapping,
-                  categoryType
-                );
-              setCategoryTypeMapping(tempMapping);
+              if (e) {
+                validatePrimaryAndSecondaryCategories(categoryType, index);
+                let tempMapping = [...categoryTypeMapping];
+                setBarcodeOptions([]);
+                setCategoryFeatureOptions([]);
+                tempMapping.splice(index + 1);
+                tempMapping[index]["value"] = e;
+                tempMapping[index]["value"] &&
+                  getCategory(
+                    {
+                      parent_category_id: tempMapping?.[index]?.["value"],
+                    },
+                    tempMapping,
+                    setCategoryTypeMapping,
+                    categoryType
+                  );
+                setCategoryTypeMapping(tempMapping);
               }
             }}
-            error={categoryType==="secondaryCategory"?(validationErrors["secondaryCategoryValidation"][index]?"No category is selected,Categories from root till leaf are required":false):(validationErrors["primaryCategoryValidation"][index]?"No category is selected,Categories from root till leaf are required":false)}
+            error={
+              categoryType === "secondaryCategory"
+                ? validationErrors["secondaryCategoryValidation"][index]
+                  ? "No category is selected,Categories from root till leaf are required"
+                  : false
+                : validationErrors["primaryCategoryValidation"][index]
+                ? "No category is selected,Categories from root till leaf are required"
+                : false
+            }
           />
         );
       });
@@ -258,12 +277,16 @@ const validatePrimaryAndSecondaryCategories=(type,index)=>{
             // let temp = { ...formData };
             // temp["primaryCategory"]["category_feature"] = e;
             // setFormData(temp);
-            const validationObj={...validationErrors};
-            validationObj["productConditionValidation"][0]=false;
-            setValidationErrors({...validationObj});
+            const validationObj = { ...validationErrors };
+            validationObj["productConditionValidation"][0] = false;
+            setValidationErrors({ ...validationObj });
             setCategory_feature(e);
           }}
-          error={validationErrors["productConditionValidation"][0]?"Required Field":false}
+          error={
+            validationErrors["productConditionValidation"][0]
+              ? "Required Field"
+              : false
+          }
           //   error={
           //     this.state.form_data.primaryCategory.category_feature.length == 0 &&
           //     this.state.dropdownErrorFlag &&
@@ -287,7 +310,7 @@ const validatePrimaryAndSecondaryCategories=(type,index)=>{
             setCondition_description(e);
           }}
           //error={validationErrors["productConditionValidation"][1]?"Required Field":false}
-         
+
           multiline={3}
         />
       </FormLayout>
@@ -298,19 +321,17 @@ const validatePrimaryAndSecondaryCategories=(type,index)=>{
    rishi-feature-category-template-validation 
   function to validate ebay attribute change
   */
-  const validateEBayAttributeChange=(e,index,fieldType)=>{
-    let finalValidation={...validationErrors};
-    if(e)
-    {
-      const errorArr=[...validationErrors[fieldType]];
-   const validatorObject= {...validationErrors[fieldType][index]};
-   if(validatorObject && validatorObject.eBayAttributeError)
-   {
-    validatorObject.eBayAttributeError=false;
-    errorArr[index]={...validatorObject};
-  finalValidation[fieldType]=[...errorArr];
-    setValidationErrors({...finalValidation});
-   }
+  const validateEBayAttributeChange = (e, index, fieldType) => {
+    let finalValidation = { ...validationErrors };
+    if (e) {
+      const errorArr = [...validationErrors[fieldType]];
+      const validatorObject = { ...validationErrors[fieldType][index] };
+      if (validatorObject && validatorObject.eBayAttributeError) {
+        validatorObject.eBayAttributeError = false;
+        errorArr[index] = { ...validatorObject };
+        finalValidation[fieldType] = [...errorArr];
+        setValidationErrors({ ...finalValidation });
+      }
     }
   };
 
@@ -318,61 +339,58 @@ const validatePrimaryAndSecondaryCategories=(type,index)=>{
   rishi-feature-category-template-validation
 function to validate shopify attribute value type change
   */
-const validateShopifyAttributeValueTypeChange=(e,index,fieldType)=>{
-  let finalValidation={...validationErrors};
-  if(e)
-  {
-    const errorArr=[...validationErrors[fieldType]];
- const validatorObject= {...validationErrors[fieldType][index]};
- if(validatorObject && validatorObject.selectedShopifyAttributeValueTypeError)
- {
-  validatorObject.selectedShopifyAttributeValueTypeError=false;
-  errorArr[index]={...validatorObject};
-finalValidation[fieldType]=[...errorArr];
-  setValidationErrors({...finalValidation});
- }
-  }
-};
+  const validateShopifyAttributeValueTypeChange = (e, index, fieldType) => {
+    let finalValidation = { ...validationErrors };
+    if (e) {
+      const errorArr = [...validationErrors[fieldType]];
+      const validatorObject = { ...validationErrors[fieldType][index] };
+      if (
+        validatorObject &&
+        validatorObject.selectedShopifyAttributeValueTypeError
+      ) {
+        validatorObject.selectedShopifyAttributeValueTypeError = false;
+        errorArr[index] = { ...validatorObject };
+        finalValidation[fieldType] = [...errorArr];
+        setValidationErrors({ ...finalValidation });
+      }
+    }
+  };
 
- /*
+  /*
   rishi-feature-category-template-validation
 function to validate shopify attribute change
   */
-const validateShopifyAttributeChange=(e,index,fieldType)=>{
-  let finalValidation={...validationErrors};
-  if(e)
-  {
-    const errorArr=[...validationErrors[fieldType]];
- const validatorObject= {...validationErrors[fieldType][index]};
- if(validatorObject && validatorObject.shopifyAttributeError)
- {
-  validatorObject.shopifyAttributeError=false;
-  errorArr[index]={...validatorObject};
-  finalValidation[fieldType]=[...errorArr];
-  setValidationErrors({...finalValidation});
- }
-  }
-}
+  const validateShopifyAttributeChange = (e, index, fieldType) => {
+    let finalValidation = { ...validationErrors };
+    if (e) {
+      const errorArr = [...validationErrors[fieldType]];
+      const validatorObject = { ...validationErrors[fieldType][index] };
+      if (validatorObject && validatorObject.shopifyAttributeError) {
+        validatorObject.shopifyAttributeError = false;
+        errorArr[index] = { ...validatorObject };
+        finalValidation[fieldType] = [...errorArr];
+        setValidationErrors({ ...finalValidation });
+      }
+    }
+  };
 
- /*
+  /*
   rishi-feature-category-template-validation
 function to validate custom attribute change
   */
-const validateCustomAttributeChange=(e,index,fieldType)=>{
-  let finalValidation={...validationErrors};
-  if(e)
-  {
-    const errorArr=[...validationErrors[fieldType]];
- const validatorObject= {...validationErrors[fieldType][index]};
- if(validatorObject && validatorObject.customAttributeError)
- {
-  validatorObject.customAttributeError=false;
-  errorArr[index]={...validatorObject};
-  finalValidation[fieldType]=[...errorArr];
-  setValidationErrors({...finalValidation});
- }
-  }
-};
+  const validateCustomAttributeChange = (e, index, fieldType) => {
+    let finalValidation = { ...validationErrors };
+    if (e) {
+      const errorArr = [...validationErrors[fieldType]];
+      const validatorObject = { ...validationErrors[fieldType][index] };
+      if (validatorObject && validatorObject.customAttributeError) {
+        validatorObject.customAttributeError = false;
+        errorArr[index] = { ...validatorObject };
+        finalValidation[fieldType] = [...errorArr];
+        setValidationErrors({ ...finalValidation });
+      }
+    }
+  };
   const renderRequiredAttributeMappingStructure = () => {
     let temp = { ...requiredAttributesMapping };
     let structurePrepared = [];
@@ -401,7 +419,7 @@ const validateCustomAttributeChange=(e,index,fieldType)=>{
                 }}
               />
               <Select
-              id={`shopifyAttribute-${index}`}
+                id={`shopifyAttribute-${index}`}
                 placeholder="Please Select..."
                 label="Shopify Attributes"
                 disabled={temp["mapping"][index]["eBayAttribute"] === ""}
@@ -410,79 +428,108 @@ const validateCustomAttributeChange=(e,index,fieldType)=>{
                   temp["mapping"][index]["selectedShopifyAttributeValueType"]
                 }
                 onChange={(e) => {
-                  validateShopifyAttributeValueTypeChange(e,index,"requiredValidation");
+                  validateShopifyAttributeValueTypeChange(
+                    e,
+                    index,
+                    "requiredValidation"
+                  );
                   let temp = { ...requiredAttributesMapping };
                   temp["mapping"][index]["shopifyAttribute"] = "";
                   temp["mapping"][index]["selectedShopifyAttributeValueType"] =
                     e;
                   setRequiredAttributesMapping(temp);
                 }}
-                error={validationErrors["requiredValidation"][index] && validationErrors["requiredValidation"][index].selectedShopifyAttributeValueTypeError?"Required Field":false}
+                error={
+                  validationErrors["requiredValidation"][index] &&
+                  validationErrors["requiredValidation"][index]
+                    .selectedShopifyAttributeValueTypeError
+                    ? "Required Field"
+                    : false
+                }
               />
-               </FormLayout.Group>
+            </FormLayout.Group>
             {requiredAttributesMapping["mapping"][index][
               "selectedShopifyAttributeValueType"
             ] === "EbayRecommendedAttributes" ? (
-              
               <Select
-              id={`ebayRecommend-${index}`}
+                id={`ebayRecommend-${index}`}
                 label={"Select eBay Recommendation"}
                 placeholder="Please Select..."
                 options={filteredObj?.["ebayRecommendedAttributesOptions"]}
                 value={temp["mapping"][index]["shopifyAttribute"]}
                 onChange={(e) => {
-                  validateShopifyAttributeChange(e,index,"requiredValidation");
+                  validateShopifyAttributeChange(
+                    e,
+                    index,
+                    "requiredValidation"
+                  );
                   let temp = { ...requiredAttributesMapping };
                   temp["mapping"][index]["shopifyAttribute"] = e;
                   setRequiredAttributesMapping(temp);
                 }}
-              error={validationErrors["requiredValidation"][index] && validationErrors["requiredValidation"][index].shopifyAttributeError?"Required Field":false}
+                error={
+                  validationErrors["requiredValidation"][index] &&
+                  validationErrors["requiredValidation"][index]
+                    .shopifyAttributeError
+                    ? "Required Field"
+                    : false
+                }
               />
-             
             ) : requiredAttributesMapping["mapping"][index][
                 "selectedShopifyAttributeValueType"
               ] === "ShopifyAttributes" ? (
-                
               <Select
-               id={`shopifyAttributeValue-${index}`}
+                id={`shopifyAttributeValue-${index}`}
                 label="Select Shopify Attribute"
                 placeholder="Please Select..."
                 options={filteredObj?.["shopifyAttributesOptions"]}
                 value={temp["mapping"][index]["shopifyAttribute"]}
                 onChange={(e) => {
-
-                  validateShopifyAttributeChange(e,index,"requiredValidation");
+                  validateShopifyAttributeChange(
+                    e,
+                    index,
+                    "requiredValidation"
+                  );
                   let temp = { ...requiredAttributesMapping };
                   temp["mapping"][index]["shopifyAttribute"] = e;
                   setRequiredAttributesMapping(temp);
                 }}
-
-              error={validationErrors["requiredValidation"][index] && validationErrors["requiredValidation"][index].shopifyAttributeError?"Required Field":false}
+                error={
+                  validationErrors["requiredValidation"][index] &&
+                  validationErrors["requiredValidation"][index]
+                    .shopifyAttributeError
+                    ? "Required Field"
+                    : false
+                }
               />
-              
             ) : (
               requiredAttributesMapping["mapping"][index][
                 "selectedShopifyAttributeValueType"
               ] === "Custom" && (
-              
                 <TextField
-                id={`customValue-${index}`}
+                  id={`customValue-${index}`}
                   label="Set Custom Value"
                   value={temp["mapping"][index]["shopifyAttribute"]}
                   onChange={(e) => {
-
-                  validateShopifyAttributeChange(e,index,"requiredValidation");
+                    validateShopifyAttributeChange(
+                      e,
+                      index,
+                      "requiredValidation"
+                    );
                     let temp = { ...requiredAttributesMapping };
                     temp["mapping"][index]["shopifyAttribute"] = e;
                     setRequiredAttributesMapping(temp);
                   }}
-
-              error={validationErrors["requiredValidation"][index] && validationErrors["requiredValidation"][index].shopifyAttributeError?"Required Field":false}
+                  error={
+                    validationErrors["requiredValidation"][index] &&
+                    validationErrors["requiredValidation"][index]
+                      .shopifyAttributeError
+                      ? "Required Field"
+                      : false
+                  }
                 />
-              
               )
             )}
-              
           </FormLayout>
         </Card.Section>
       );
@@ -529,9 +576,9 @@ const validateCustomAttributeChange=(e,index,fieldType)=>{
   };
   const removeOptionalAttributeMapping = (attribute, categoryType) => {
     let temp = { ...optionalAttributesMapping };
-    temp["options"].map((options,index)=> {
-      if(options.value===temp["mapping"][attribute].eBayAttribute)
-      temp["options"][index].disabled=false;
+    temp["options"].map((options, index) => {
+      if (options.value === temp["mapping"][attribute].eBayAttribute)
+        temp["options"][index].disabled = false;
     });
     temp["mapping"].splice(attribute, 1);
     setOptionalAttributesMapping(temp);
@@ -546,25 +593,23 @@ const validateCustomAttributeChange=(e,index,fieldType)=>{
 rishi-feature-category-template-validation
 function to handle optional attribute changes
   */
-  const optionalAttributeHandler=(optionalAttributes)=>{
-    const disabledAttributes=[];
-    const optionalEbayAttributes={...optionalAttributes};
-    optionalEbayAttributes["mapping"].map((optionalAttribute,index)=>{
-  if(optionalAttribute.eBayAttribute)
-  {
-    disabledAttributes.push(optionalAttribute.eBayAttribute);
-  }
+  const optionalAttributeHandler = (optionalAttributes) => {
+    const disabledAttributes = [];
+    const optionalEbayAttributes = { ...optionalAttributes };
+    optionalEbayAttributes["mapping"].map((optionalAttribute, index) => {
+      if (optionalAttribute.eBayAttribute) {
+        disabledAttributes.push(optionalAttribute.eBayAttribute);
+      }
     });
-    const finalArr=optionalEbayAttributes["options"].map((option,index)=>{
-      if(disabledAttributes.includes(option.value))
-      optionalEbayAttributes["options"][index].disabled=true;
-      else
-      optionalEbayAttributes["options"][index].disabled=false;
+    const finalArr = optionalEbayAttributes["options"].map((option, index) => {
+      if (disabledAttributes.includes(option.value))
+        optionalEbayAttributes["options"][index].disabled = true;
+      else optionalEbayAttributes["options"][index].disabled = false;
       return optionalEbayAttributes["options"][index];
     });
-    optionalEbayAttributes["options"]=[...finalArr];
-    return {...optionalEbayAttributes};
-  }
+    optionalEbayAttributes["options"] = [...finalArr];
+    return { ...optionalEbayAttributes };
+  };
   const renderOptionalAttributeMappingStructure = (categoryType) => {
     let temp = { ...optionalAttributesMapping };
     return (
@@ -604,23 +649,35 @@ function to handle optional attribute changes
                       options={temp["options"]}
                       value={temp["mapping"][index]["eBayAttribute"]}
                       onChange={(e) => {
-                        validateEBayAttributeChange(e,index,"optionalValidation");
+                        validateEBayAttributeChange(
+                          e,
+                          index,
+                          "optionalValidation"
+                        );
                         let temp = { ...optionalAttributesMapping };
                         temp["mapping"][index][
                           "selectedShopifyAttributeValueType"
                         ] = "";
                         temp["mapping"][index]["shopifyAttribute"] = "";
                         temp["mapping"][index]["eBayAttribute"] = e;
-                        const disabledOptionalAttributes=optionalAttributeHandler(temp);
-                      
-                        setOptionalAttributesMapping(disabledOptionalAttributes);
+                        const disabledOptionalAttributes =
+                          optionalAttributeHandler(temp);
+
+                        setOptionalAttributesMapping(
+                          disabledOptionalAttributes
+                        );
                       }}
-                      error={validationErrors["optionalValidation"][index] && validationErrors["optionalValidation"][index].eBayAttributeError?"Required Field":false}
-                      />
-                   
-                    
+                      error={
+                        validationErrors["optionalValidation"][index] &&
+                        validationErrors["optionalValidation"][index]
+                          .eBayAttributeError
+                          ? "Required Field"
+                          : false
+                      }
+                    />
+
                     <Select
-                    id="id3"
+                      id="id3"
                       placeholder="Please Select..."
                       label="Shopify Attributes"
                       disabled={temp["mapping"][index]["eBayAttribute"] === ""}
@@ -631,7 +688,11 @@ function to handle optional attribute changes
                         ]
                       }
                       onChange={(e) => {
-                        validateShopifyAttributeValueTypeChange(e,index,"optionalValidation");
+                        validateShopifyAttributeValueTypeChange(
+                          e,
+                          index,
+                          "optionalValidation"
+                        );
                         let temp = { ...optionalAttributesMapping };
                         temp["mapping"][index]["shopifyAttribute"] = "";
                         temp["mapping"][index][
@@ -639,16 +700,20 @@ function to handle optional attribute changes
                         ] = e;
                         setOptionalAttributesMapping(temp);
                       }}
-                      error={validationErrors["optionalValidation"][index] && validationErrors["optionalValidation"][index].selectedShopifyAttributeValueTypeError?"Required Field":""}
-              />
-           
+                      error={
+                        validationErrors["optionalValidation"][index] &&
+                        validationErrors["optionalValidation"][index]
+                          .selectedShopifyAttributeValueTypeError
+                          ? "Required Field"
+                          : ""
+                      }
+                    />
                   </FormLayout.Group>
                   {optionalAttributesMapping["mapping"][index][
                     "selectedShopifyAttributeValueType"
                   ] === "EbayRecommendedAttributes" ? (
-                  
                     <Select
-                    id={`ebayRecommendOptional-${index}`}
+                      id={`ebayRecommendOptional-${index}`}
                       label={"Select eBay Recommendation"}
                       placeholder="Please Select..."
                       options={
@@ -656,55 +721,77 @@ function to handle optional attribute changes
                       }
                       value={temp["mapping"][index]["shopifyAttribute"]}
                       onChange={(e) => {
-                        validateShopifyAttributeChange(e,index,"optionalValidation");
+                        validateShopifyAttributeChange(
+                          e,
+                          index,
+                          "optionalValidation"
+                        );
                         let temp = { ...optionalAttributesMapping };
                         temp["mapping"][index]["shopifyAttribute"] = e;
 
                         setOptionalAttributesMapping(temp);
                       }}
-                      error={validationErrors["optionalValidation"][index] && validationErrors["optionalValidation"][index].shopifyAttributeError?"Required Field":""}
-              
-              />
-           
+                      error={
+                        validationErrors["optionalValidation"][index] &&
+                        validationErrors["optionalValidation"][index]
+                          .shopifyAttributeError
+                          ? "Required Field"
+                          : ""
+                      }
+                    />
                   ) : optionalAttributesMapping["mapping"][index][
                       "selectedShopifyAttributeValueType"
                     ] === "ShopifyAttributes" ? (
-                     
                     <Select
-                    id={`shopifyAttributeValueOptional-${index}`}
+                      id={`shopifyAttributeValueOptional-${index}`}
                       label="Select Shopify Attribute"
                       placeholder="Please Select..."
                       options={filteredObj?.["shopifyAttributesOptions"]}
                       value={temp["mapping"][index]["shopifyAttribute"]}
                       onChange={(e) => {
-                        validateShopifyAttributeChange(e,index,"optionalValidation");
+                        validateShopifyAttributeChange(
+                          e,
+                          index,
+                          "optionalValidation"
+                        );
                         let temp = { ...optionalAttributesMapping };
                         temp["mapping"][index]["shopifyAttribute"] = e;
                         setOptionalAttributesMapping(temp);
                       }}
-                      error={validationErrors["optionalValidation"][index] && validationErrors["optionalValidation"][index].shopifyAttributeError?"Required Field":""}
-              
-              />
-             
+                      error={
+                        validationErrors["optionalValidation"][index] &&
+                        validationErrors["optionalValidation"][index]
+                          .shopifyAttributeError
+                          ? "Required Field"
+                          : ""
+                      }
+                    />
                   ) : (
                     optionalAttributesMapping["mapping"][index][
                       "selectedShopifyAttributeValueType"
                     ] === "Custom" && (
-                      
                       <TextField
-                       id={`customValueOptional-${index}`}
+                        id={`customValueOptional-${index}`}
                         label="Set Custom Value"
                         value={temp["mapping"][index]["shopifyAttribute"]}
                         onChange={(e) => {
-                          validateShopifyAttributeChange(e,index,"optionalValidation");
+                          validateShopifyAttributeChange(
+                            e,
+                            index,
+                            "optionalValidation"
+                          );
                           let temp = { ...optionalAttributesMapping };
                           temp["mapping"][index]["shopifyAttribute"] = e;
                           setOptionalAttributesMapping(temp);
                         }}
-                        error={validationErrors["optionalValidation"][index] && validationErrors["optionalValidation"][index].shopifyAttributeError?"Required Field":""}
-              
-                        />
-                 
+                        error={
+                          validationErrors["optionalValidation"][index] &&
+                          validationErrors["optionalValidation"][index]
+                            .shopifyAttributeError
+                            ? "Required Field"
+                            : ""
+                        }
+                      />
                     )
                   )}
                 </FormLayout>
@@ -743,12 +830,16 @@ function to handle optional attribute changes
                 <FormLayout>
                   <FormLayout.Group>
                     <TextField
-                    id="id4"
+                      id="id4"
                       placeholder="Create..."
                       label={"Custom attribute"}
                       value={mappedObject["customAttribute"]}
                       onChange={(e) => {
-                        validateCustomAttributeChange(e,index,"customValidation");
+                        validateCustomAttributeChange(
+                          e,
+                          index,
+                          "customValidation"
+                        );
                         let temp = { ...customAttributesMapping };
                         temp["mapping"][index][
                           "selectedShopifyAttributeValueType"
@@ -756,9 +847,15 @@ function to handle optional attribute changes
                         temp["mapping"][index]["customAttribute"] = e;
                         setCustomAttributesMapping(temp);
                       }}
-                      error={validationErrors["customValidation"][index] && validationErrors["customValidation"][index].customAttributeError?"Required Field":""}
-                      />
-                  
+                      error={
+                        validationErrors["customValidation"][index] &&
+                        validationErrors["customValidation"][index]
+                          .customAttributeError
+                          ? "Required Field"
+                          : ""
+                      }
+                    />
+
                     <Select
                       id="id5"
                       placeholder="Please Select..."
@@ -767,7 +864,11 @@ function to handle optional attribute changes
                       options={customAttributesMapping["optionsCheck"]}
                       value={mappedObject["selectedShopifyAttributeValueType"]}
                       onChange={(e) => {
-                        validateShopifyAttributeValueTypeChange(e,index,"customValidation");
+                        validateShopifyAttributeValueTypeChange(
+                          e,
+                          index,
+                          "customValidation"
+                        );
                         let temp = { ...customAttributesMapping };
                         temp["mapping"][index]["shopifyAttribute"] = "";
                         temp["mapping"][index][
@@ -775,47 +876,68 @@ function to handle optional attribute changes
                         ] = e;
                         setCustomAttributesMapping(temp);
                       }}
-                      error={validationErrors["customValidation"][index] && validationErrors["customValidation"][index].selectedShopifyAttributeValueTypeError?"Required Field":false}
-              />
-             
+                      error={
+                        validationErrors["customValidation"][index] &&
+                        validationErrors["customValidation"][index]
+                          .selectedShopifyAttributeValueTypeError
+                          ? "Required Field"
+                          : false
+                      }
+                    />
                   </FormLayout.Group>
                   {customAttributesMapping["mapping"][index][
                     "selectedShopifyAttributeValueType"
                   ] === "ShopifyAttributes" ? (
                     <Select
-                    id={`shopifyAttributeCustom-${index}`}
+                      id={`shopifyAttributeCustom-${index}`}
                       label="Select Shopify Attribute"
                       placeholder="Please Select..."
                       options={shopifyAttributes}
                       value={mappedObject["shopifyAttribute"]}
                       onChange={(e) => {
-                        validateShopifyAttributeChange(e,index,"customValidation");
+                        validateShopifyAttributeChange(
+                          e,
+                          index,
+                          "customValidation"
+                        );
                         let temp = { ...customAttributesMapping };
                         temp["mapping"][index]["shopifyAttribute"] = e;
                         setCustomAttributesMapping(temp);
                       }}
-                      error={validationErrors["customValidation"][index] && validationErrors["customValidation"][index].shopifyAttributeError?"Required Field":false}
-              
-                      />
-                    ) : (
+                      error={
+                        validationErrors["customValidation"][index] &&
+                        validationErrors["customValidation"][index]
+                          .shopifyAttributeError
+                          ? "Required Field"
+                          : false
+                      }
+                    />
+                  ) : (
                     customAttributesMapping["mapping"][index][
                       "selectedShopifyAttributeValueType"
                     ] === "Custom" && (
-                      
                       <TextField
-                      id={`shopifyValueCustom-${index}`}
+                        id={`shopifyValueCustom-${index}`}
                         label="Set Custom Value"
                         value={mappedObject["shopifyAttribute"]}
                         onChange={(e) => {
-                          validateShopifyAttributeChange(e,index,"customValidation");
+                          validateShopifyAttributeChange(
+                            e,
+                            index,
+                            "customValidation"
+                          );
                           let temp = { ...customAttributesMapping };
                           temp["mapping"][index]["shopifyAttribute"] = e;
                           setCustomAttributesMapping(temp);
                         }}
-                        error={validationErrors["customValidation"][index] && validationErrors["customValidation"][index].shopifyAttributeError?"Required Field":false}
-              
-                        />
-                      
+                        error={
+                          validationErrors["customValidation"][index] &&
+                          validationErrors["customValidation"][index]
+                            .shopifyAttributeError
+                            ? "Required Field"
+                            : false
+                        }
+                      />
                     )
                   )}
                 </FormLayout>
@@ -898,7 +1020,7 @@ function to handle optional attribute changes
     let barcode_options = [];
     let categoryFeature_options = [];
     let isBestOfferEnabled = false;
-    console.log('dataCategoryFeatures', dataCategoryFeatures);
+    console.log("dataCategoryFeatures", dataCategoryFeatures);
     if (dataCategoryFeatures) {
       Object.keys(dataCategoryFeatures).map((key) => {
         switch (key) {
@@ -950,13 +1072,13 @@ function to handle optional attribute changes
         value: "",
       });
     }
-    console.log('barcode_options', barcode_options);
+    console.log("barcode_options", barcode_options);
     setBarcodeOptions(barcode_options);
     setCategoryFeatureOptions(categoryFeature_options);
   };
   useEffect(() => {
-    console.log('barcodeOptions',barcodeOptions);
-  }, [barcodeOptions])
+    console.log("barcodeOptions", barcodeOptions);
+  }, [barcodeOptions]);
   const getCategory = async (
     requestObj,
     categoryTypeMapping,
@@ -1305,6 +1427,9 @@ function to handle optional attribute changes
     const primaryCategoryMappingData = data?.primaryCategoryMapping;
     const secondaryCategoryMappingData = data?.secondaryCategoryMapping;
     const attributeMappingData = data?.attributeMapping;
+    if (data?.storefront_category) {
+      setStoreFrontSelected(data.storefront_category);
+    }
     if (data?.enableSecondaryCategory) {
       setEnableSecondaryCategory(data.enableSecondaryCategory);
     }
@@ -1393,15 +1518,70 @@ function to handle optional attribute changes
     }
   };
 
-  const getStorefrontcategory = async () => {
+  const extractChildCategoryData = (data) => {
+    // console.log(data);
+    let tempData = data.map((category) => ({
+      label: category.Name,
+      value: category.CategoryID.toString(),
+    }));
+    return tempData;
+  };
+
+  const extractStoreFrontCategories = (data) => {
+    const tempStoreFrontList = data.map((category) => {
+      let tempObj = {};
+      if (
+        category?.ChildCategory &&
+        Array.isArray(category.ChildCategory) &&
+        category.ChildCategory.length
+      ) {
+        tempObj = {
+          title: category.Name,
+          options: [...extractChildCategoryData(category.ChildCategory)],
+        };
+      } else {
+        tempObj = {
+          label: category.Name,
+          value: category.CategoryID.toString(),
+        };
+      }
+      return tempObj;
+    });
+    setStoreFrontList(tempStoreFrontList);
+  };
+
+  const renderStoreFrontCategoryStructure = () => {
+    return (
+      <Select
+        placeholder="Please select..."
+        options={storeFrontList}
+        value={storeFrontSelected}
+        onChange={(e) => setStoreFrontSelected(e)}
+      />
+    );
+  };
+  const getStorefrontcategory = async (refresh = false) => {
     // console.log(siteID, shopID);
     // let { success, data } = await getEbayUserDetails({
     //   site_id: siteID,
     //   shop_id: shopID,
     // });
-    let { success, data } = await getStoreDetails({
-      refresh: true,
-    });
+    const postData = {
+      shop_id: shopID,
+    };
+    if (refresh) postData["refresh"] = refresh;
+    let { success, data } = await getStoreDetails(postData);
+    if (success) {
+      if (
+        data?.CustomCategories?.CustomCategory &&
+        Array.isArray(data?.CustomCategories?.CustomCategory) &&
+        data?.CustomCategories?.CustomCategory.length
+      ) {
+        // console.log('data',data);
+        setStoreFrontExists(true);
+        extractStoreFrontCategories(data?.CustomCategories?.CustomCategory);
+      }
+    }
     // if (success) this.extractStoreFrontcategory(data);
     // else {
     //   form_data.storefront_category_exists = false;
@@ -1457,6 +1637,7 @@ function to handle optional attribute changes
       (option) => option.value === lastLevel.value
     );
     let postData = {};
+    postData["storefront_category"] = storeFrontSelected;
     postData["selectedConfigurableAttributes"] = selectedConfigurableAttributes;
     postData["site_id"] = siteID;
     postData["shop_id"] = shopID;
@@ -1505,170 +1686,160 @@ function to handle optional attribute changes
 rishi-feature-category-template-validation
 function to check final validation
   */
-const checkFinalValidation=(errorObj)=>{
-     const isInvalid=errorObj.some((errorItem)=>{
-      return errorItem.selectedShopifyAttributeValueTypeError || errorItem.shopifyAttributeError
-     });
-     return isInvalid;
-}
+  const checkFinalValidation = (errorObj) => {
+    const isInvalid = errorObj.some((errorItem) => {
+      return (
+        errorItem.selectedShopifyAttributeValueTypeError ||
+        errorItem.shopifyAttributeError
+      );
+    });
+    return isInvalid;
+  };
   const saveFormdata = async () => {
-    let finalValidator=false;
-    const validationObject= {...validationErrors};
-    const errorAttribute=[];
+    let finalValidator = false;
+    const validationObject = { ...validationErrors };
+    const errorAttribute = [];
     //validateFields();
     //validateData(postData);
     setSaveBtnLoader(true);
     const postData = prepareDataForSave();
-    const finalRequiredAttributeErrorObj=postData.attributeMapping.requiredAttributesMapping.map((attribute,index)=>{
-      const errorObj={
-        shopifyAttributeError: false,
-        selectedShopifyAttributeValueTypeError: false
-      };
-      if(attribute.selectedShopifyAttributeValueType )
-      {
-        if(!attribute.shopifyAttribute)
-        errorObj.shopifyAttributeError=true;
-      }
-      else 
-      {
-        errorObj.selectedShopifyAttributeValueTypeError=true;
-      }
-      return {...errorObj};
-    });
-    const finalOptionalAttributeErrorObj=postData.attributeMapping.optionalAttributesMapping.map((attribute,index)=>{
-      const errorObjOptional={
-        eBayAttributeError:false,
-        shopifyAttributeError: false,
-        selectedShopifyAttributeValueTypeError: false
-      };
-      if(attribute.eBayAttribute)
-      {
-        if(!attribute.selectedShopifyAttributeValueType)
-       { errorObjOptional.selectedShopifyAttributeValueTypeError=true;
-        
-      }
-      else
-      {
-        if(!attribute.shopifyAttribute)
-          errorObjOptional.shopifyAttributeError=true;
-      }
-    }
-    else
-    {
-      errorObjOptional.eBayAttributeError=true;
-      errorObjOptional.selectedShopifyAttributeValueTypeError=true;
-      
-    }
-      return {...errorObjOptional};
-    });  
-    const finalCustomAttributeErrorObj=postData.attributeMapping.customAttributesMapping.map((attribute,index)=>{
-      const errorObjCustom={
-        customAttributeError:false,
-        shopifyAttributeError: false,
-        selectedShopifyAttributeValueTypeError: false
-      };
-      if(attribute.customAttribute)
-      {
-        if(!attribute.selectedShopifyAttributeValueType)
-       { errorObjCustom.selectedShopifyAttributeValueTypeError=true;
-        
-      }
-      else
-      {
-        if(!attribute.shopifyAttribute)
-        errorObjCustom.shopifyAttributeError=true;
-      }
-    }
-    else
-    {
-      errorObjCustom.customAttributeError=true;
-      errorObjCustom.selectedShopifyAttributeValueTypeError=true;
-      
-    }
-      return {...errorObjCustom};
-    });
-   
-    if(postData.enableSecondaryCategory)
-    {
+    const finalRequiredAttributeErrorObj =
+      postData.attributeMapping.requiredAttributesMapping.map(
+        (attribute, index) => {
+          const errorObj = {
+            shopifyAttributeError: false,
+            selectedShopifyAttributeValueTypeError: false,
+          };
+          if (attribute.selectedShopifyAttributeValueType) {
+            if (!attribute.shopifyAttribute)
+              errorObj.shopifyAttributeError = true;
+          } else {
+            errorObj.selectedShopifyAttributeValueTypeError = true;
+          }
+          return { ...errorObj };
+        }
+      );
+    const finalOptionalAttributeErrorObj =
+      postData.attributeMapping.optionalAttributesMapping.map(
+        (attribute, index) => {
+          const errorObjOptional = {
+            eBayAttributeError: false,
+            shopifyAttributeError: false,
+            selectedShopifyAttributeValueTypeError: false,
+          };
+          if (attribute.eBayAttribute) {
+            if (!attribute.selectedShopifyAttributeValueType) {
+              errorObjOptional.selectedShopifyAttributeValueTypeError = true;
+            } else {
+              if (!attribute.shopifyAttribute)
+                errorObjOptional.shopifyAttributeError = true;
+            }
+          } else {
+            errorObjOptional.eBayAttributeError = true;
+            errorObjOptional.selectedShopifyAttributeValueTypeError = true;
+          }
+          return { ...errorObjOptional };
+        }
+      );
+    const finalCustomAttributeErrorObj =
+      postData.attributeMapping.customAttributesMapping.map(
+        (attribute, index) => {
+          const errorObjCustom = {
+            customAttributeError: false,
+            shopifyAttributeError: false,
+            selectedShopifyAttributeValueTypeError: false,
+          };
+          if (attribute.customAttribute) {
+            if (!attribute.selectedShopifyAttributeValueType) {
+              errorObjCustom.selectedShopifyAttributeValueTypeError = true;
+            } else {
+              if (!attribute.shopifyAttribute)
+                errorObjCustom.shopifyAttributeError = true;
+            }
+          } else {
+            errorObjCustom.customAttributeError = true;
+            errorObjCustom.selectedShopifyAttributeValueTypeError = true;
+          }
+          return { ...errorObjCustom };
+        }
+      );
 
-    for(let index=0;index<postData.secondaryCategoryMapping.length;index++)
-    {
-    if(!postData.secondaryCategoryMapping[index].value)
-    {
-      validationObject["secondaryCategoryValidation"][index]=true;
-finalValidator=true;
-break;
+    if (postData.enableSecondaryCategory) {
+      for (
+        let index = 0;
+        index < postData.secondaryCategoryMapping.length;
+        index++
+      ) {
+        if (!postData.secondaryCategoryMapping[index].value) {
+          validationObject["secondaryCategoryValidation"][index] = true;
+          finalValidator = true;
+          break;
+        }
+      }
     }
+
+    for (
+      let index = 0;
+      index < postData.primaryCategoryMapping.length;
+      index++
+    ) {
+      if (!postData.primaryCategoryMapping[index].value) {
+        validationObject["primaryCategoryValidation"][index] = true;
+        finalValidator = true;
+        break;
+      }
     }
+    if (categoryFeatureOptions.length > 0) {
+      if (!category_feature) {
+        validationObject["productConditionValidation"][0] = true;
+        finalValidator = true;
+      }
+      // if(!condition_description)
+      // {
+      //   validationObject["productConditionValidation"][1]=true;
+      //   finalValidator=true;
+      // }
     }
-   
-      for(let index=0;index<postData.primaryCategoryMapping.length;index++)
-    {
-    if(!postData.primaryCategoryMapping[index].value)
-    {
-      validationObject["primaryCategoryValidation"][index]=true;
-finalValidator=true;
-break;
+    if (checkFinalValidation(finalRequiredAttributeErrorObj)) {
+      validationObject["requiredValidation"] = [
+        ...finalRequiredAttributeErrorObj,
+      ];
+      finalValidator = true;
     }
+    if (checkFinalValidation(finalOptionalAttributeErrorObj)) {
+      validationObject["optionalValidation"] = [
+        ...finalOptionalAttributeErrorObj,
+      ];
+      finalValidator = true;
     }
-    if(categoryFeatureOptions.length > 0 )
-    {
-  if(!category_feature)
-  { 
-    validationObject["productConditionValidation"][0]=true; 
-    finalValidator=true;
-  }
-  // if(!condition_description)
-  // {
-  //   validationObject["productConditionValidation"][1]=true; 
-  //   finalValidator=true;
-  // }
-}
-     if(checkFinalValidation(finalRequiredAttributeErrorObj))
-    {
-      validationObject["requiredValidation"]=[...finalRequiredAttributeErrorObj]; 
-      finalValidator=true;
+    if (checkFinalValidation(finalCustomAttributeErrorObj)) {
+      validationObject["customValidation"] = [...finalCustomAttributeErrorObj];
+      finalValidator = true;
     }
-    if(checkFinalValidation(finalOptionalAttributeErrorObj))
-    {
-      validationObject["optionalValidation"]=[...finalOptionalAttributeErrorObj];
-      finalValidator=true;
-    
-    }
-    if(checkFinalValidation(finalCustomAttributeErrorObj))
-    {
-      validationObject["customValidation"]=[...finalCustomAttributeErrorObj];
-      finalValidator=true;
-    }
-    if(!finalValidator)
-    { 
-    const data = {
-      marketplace: "ebay",
-      type: "category",
-      data: postData,
-      title: postData["name"],
-      site_id: siteID,
-      shop_id: shopID,
-    };
-    if (id) {
-      data["_id"] = id;
-    }
-    let returnedResponse = await props.recieveFormdata(data);
-    if (returnedResponse) {
-      redirect("/panel/ebay/templates");
+    if (!finalValidator) {
+      const data = {
+        marketplace: "ebay",
+        type: "category",
+        data: postData,
+        title: postData["name"],
+        site_id: siteID,
+        shop_id: shopID,
+      };
+      if (id) {
+        data["_id"] = id;
+      }
+      let returnedResponse = await props.recieveFormdata(data);
+      if (returnedResponse) {
+        redirect("/panel/ebay/templates");
+      } else {
+        // notify.error(message);
+        notify.error("Kindly fill all the required fields with proper values");
+      }
     } else {
-      // notify.error(message);
+      setValidationErrors({ ...validationObject });
       notify.error("Kindly fill all the required fields with proper values");
     }
-  
- 
-  }
-  else
-  {
-    setValidationErrors({...validationObject});
-    notify.error("Kindly fill all the required fields with proper values");
-  }
-  setSaveBtnLoader(false);
+    setSaveBtnLoader(false);
   };
   const hitPredictionAPI = async (passedObj, value, setState) => {
     setState([]);
@@ -1918,9 +2089,9 @@ break;
           lineHeight: "2.4rem !important",
         }}
         onSelect={(data) => {
-          const validationObj={...validationErrors};
-          validationObj.primaryCategoryValidation=new Array(6).fill(false);
-          setValidationErrors({...validationObj});
+          const validationObj = { ...validationErrors };
+          validationObj.primaryCategoryValidation = new Array(6).fill(false);
+          setValidationErrors({ ...validationObj });
           let selected = [data];
           const selectedValue = primaryCategorySearchPredictionOptions.find(
             (option) => option.value === data
@@ -1955,9 +2126,9 @@ break;
           lineHeight: "2.4rem !important",
         }}
         onSelect={(data) => {
-          const validationObj={...validationErrors};
-          validationObj.secondaryCategoryValidation=new Array(6).fill(false);
-          setValidationErrors({...validationObj});
+          const validationObj = { ...validationErrors };
+          validationObj.secondaryCategoryValidation = new Array(6).fill(false);
+          setValidationErrors({ ...validationObj });
           let selected = [data];
           const selectedValue = secondaryCategorySearchPredictionOptions.find(
             (option) => option.value === data
@@ -1969,13 +2140,13 @@ break;
             setSecondaryCategoryMapping,
             "secondary"
           );
-         setSecondarySelectedOptions(selected);
+          setSecondarySelectedOptions(selected);
           setSecondaryInputValue(selectedValue.label);
         }}
         onSearch={(e) => {
           setSecondaryInputValue(e);
         }}
-        placeholder="Search" 
+        placeholder="Search"
       />
     );
   };
@@ -2176,7 +2347,10 @@ break;
                 actions={[
                   {
                     content: "Add Attribute",
-                 disabled: optionalAttributesMapping["options"].length===0 || optionalAttributesMapping["options"].length=== optionalAttributesMapping["mapping"].length,      
+                    disabled:
+                      optionalAttributesMapping["options"].length === 0 ||
+                      optionalAttributesMapping["options"].length ===
+                        optionalAttributesMapping["mapping"].length,
                     onAction: () => addOptionalAttribute("primaryCategory"),
                   },
                 ]}
@@ -2216,6 +2390,14 @@ break;
               }
             >
               <Card sectioned>{getProductConditionStructure()}</Card>
+            </Layout.AnnotatedSection>
+          )}
+          {storeFrontExists && (
+            <Layout.AnnotatedSection
+              id="storeFront"
+              title="eBay Store Front Category"
+            >
+              <Card sectioned>{renderStoreFrontCategoryStructure()}</Card>
             </Layout.AnnotatedSection>
           )}
           {configurableAttributesRecieved && (
