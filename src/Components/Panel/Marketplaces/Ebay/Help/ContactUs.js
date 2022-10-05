@@ -22,6 +22,7 @@ import {
   TextField,
   Checkbox,
   Link,
+  TextStyle,
 } from "@shopify/polaris";
 import { submitIssue } from "../../../../../APIrequests/ContactUSAPI";
 import {
@@ -46,7 +47,7 @@ const ContactUs = () => {
   const [selectedShopId, setSelectedShopId] = useState("");
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [issueSelected, setIssueSelected] = useState("");
-  const [issueFormValidationErrors,setIssueFormValidationErrors]=useState({section:false,message:false});
+  const [issueFormValidationErrors,setIssueFormValidationErrors]=useState({account:false,section:false,message:false});
   const [scheduleFormValidationErrors,setScheduleFormValidationErrors] =useState({email:false,preferredMeeting:false,timeZone:false,preferredTime:false,date:false});
   const [issueDescription, setIssueDescription] = useState("");
   const [demoDetails, setDemoDetails] = useState({
@@ -174,14 +175,31 @@ const ContactUs = () => {
                 setBtnLoaders({ ...btnLoaders, issue: true });
                 if(!issueSelected)
                   validationObj.section=true;
-                // if(!issueDescription)
-                //   validationObj.message=true;
-                  if(issueSelected 
-                    //&& issueDescription
+                else
+                  validationObj.section=false;
+
+                  let checkAccountValidation=true;
+                  let temp = [...connectedAccountsArray];
+                for(let i=0;i<temp.length;i++)
+                   {
+                    if(temp[i]["checked"])
+                    {
+                      checkAccountValidation=false;
+                      break;
+                    }
+                   }
+                   if(checkAccountValidation)
+                       validationObj.account=true;
+                   else
+                   validationObj.account=false;
+                if(!issueDescription)
+                  validationObj.message=true;
+                else
+                   validationObj.message=false;
+                  if(!validationObj.account && !validationObj.section
+                    && !validationObj.message
                     )
                   {
-                    validationObj.section=false;
-                    //validationObj.message=false;
                   
                 
                 let postData = {
@@ -210,7 +228,11 @@ const ContactUs = () => {
           >
             <Stack vertical>
               <div>
-                <div>Accounts</div>
+                <div>Accounts <TextStyle variation="negative">*</TextStyle></div>
+                {
+                    issueFormValidationErrors.account?
+                  <TextStyle variation="negative">Select atleast one account</TextStyle>
+                 :"" }
                 <Stack distribution="fillEvenly" spacing="extraTight">
                   {connectedAccountsArray.map((connectedAccount, index) => {
                     return (
@@ -218,8 +240,23 @@ const ContactUs = () => {
                         label={connectedAccount.label}
                         checked={connectedAccount.checked}
                         onChange={() => {
+                          let checkAccountValidation=true;
                           let temp = [...connectedAccountsArray];
                           temp[index]["checked"] = !connectedAccount.checked;
+                        for(let i=0;i<temp.length;i++)
+                           {
+                            if(temp[i]["checked"])
+                            {
+                              checkAccountValidation=false;
+                              break;
+                            }
+                           }
+                           if(!checkAccountValidation && issueFormValidationErrors.account)
+                           {
+                            const errorObj={...issueFormValidationErrors};
+                            errorObj.account=false;
+                            setIssueFormValidationErrors({...errorObj});
+                           }
                           setconnectedAccountsArray(temp);
                         }}
                       />
@@ -265,16 +302,17 @@ const ContactUs = () => {
             />
             <TextField
               placeholder="Describe the issue you are facing..."
+              requiredIndicator
               label="Issue"
               value={issueDescription}
               onChange={(e) => {
                 
-                  // const validationObj={...issueFormValidationErrors};
-                  // validationObj.message=false;
-                  // setIssueFormValidationErrors({...validationObj});
+                  const validationObj={...issueFormValidationErrors};
+                  validationObj.message=false;
+                  setIssueFormValidationErrors({...validationObj});
                 setIssueDescription(e);}}
               multiline={3}
-             // error={issueFormValidationErrors.message?"Required Field":false}
+              error={issueFormValidationErrors.message?"Required Field":false}
             />
             </Stack>
           </Card>
@@ -406,7 +444,7 @@ const ContactUs = () => {
                   error={scheduleFormValidationErrors.preferredTime?"Required":false}
                 />
               </Stack>
-              <TextField
+             <TextField
                 label="Preferred Date"
                 placeholder="Please provide valid email address"
                 requiredIndicator
