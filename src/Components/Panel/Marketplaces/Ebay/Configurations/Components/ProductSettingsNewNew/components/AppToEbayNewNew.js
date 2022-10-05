@@ -22,12 +22,12 @@ const AppToEbayNewNew = ({
 }) => {
   // const [connectedAccountsObject, setconnectedAccountsObject] = useState({});
   const [errorsData, setErrorsData] = useState({});
-
+  
   // tabs
   const [panes, setPanes] = useState({});
 
   const [saveBtnLoader, setSaveBtnLoader] = useState(false);
-
+   
   useEffect(() => {
     if (Object.keys(connectedAccountsObject).length > 0) {
       const filteredArray = Object.keys(connectedAccountsObject)
@@ -97,6 +97,16 @@ const AppToEbayNewNew = ({
               if (!data[account][attribute][field]["ebayCurrencyValue"]) {
                 errorData[account][attribute][field][
                   "ebayCurrencyValue"
+                ] = true;
+                errorCount++;
+              }
+            }
+            if(field==="vatDetails")
+            {
+              errorData[account][attribute][field] = {};
+              if (data[account][attribute][field]["vatPercentage"]<0 || data[account][attribute][field]["vatPercentage"]>30) {
+                errorData[account][attribute][field][
+                  "vatPercentage"
                 ] = true;
                 errorCount++;
               }
