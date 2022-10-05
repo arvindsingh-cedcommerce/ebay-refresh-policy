@@ -165,3 +165,31 @@ code {
   height: 35px !important;
   line-height: 35px !important;
 }
+.statusInactive {
+  -webkit-filter: blur(0.5px);
+  -moz-filter: blur(0.5px);
+  -o-filter: blur(0.5px);
+  -ms-filter: blur(0.5px);
+  filter: blur(0.5px);
+  /* background-color: #ccc; */
+}
+
+
+.plansCard{
+  border: 1px solid #dcdada !important;
+  transition: all ease-in-out .3s;
+  box-shadow: 0 30px 30px -20px rgb(0 0 0 / 20%);
+}
+.plansCard.active, .plansCard:hover{
+  box-shadow: 0 30px 40px -10px rgb(0 0 0 / 40%);
+  transform: scale(1.05);
+  border: 2px solid #1072c6 !important;
+  z-index: 1;
+}
+
+.bulk-dropdown-hide{
+  opacity: 0;
+}
+.h-200{
+  height: 200px;
+}
