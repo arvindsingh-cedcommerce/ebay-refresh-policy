@@ -228,7 +228,7 @@ const ContactUs = () => {
           >
             <Stack vertical>
               <div>
-                <div>Accounts</div>
+                <div>Accounts <TextStyle variation="negative">*</TextStyle></div>
                 {
                     issueFormValidationErrors.account?
                   <TextStyle variation="negative">Select atleast one account</TextStyle>
@@ -302,6 +302,7 @@ const ContactUs = () => {
             />
             <TextField
               placeholder="Describe the issue you are facing..."
+              requiredIndicator
               label="Issue"
               value={issueDescription}
               onChange={(e) => {
