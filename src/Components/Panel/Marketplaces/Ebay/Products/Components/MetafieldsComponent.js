@@ -1,5 +1,6 @@
-import { Card, Layout } from "@shopify/polaris";
+import { Card, Layout, Stack } from "@shopify/polaris";
 import React from "react";
+import NoDataFound from "../../../../../../assets/data_nahi.png";
 
 const MetafieldsComponent = ({ metafields }) => {
   return metafields["present"] ? (
@@ -15,7 +16,11 @@ const MetafieldsComponent = ({ metafields }) => {
   ) : (
     <Layout>
       <Layout.Section>
-        <Card title="Metafields not found" sectioned></Card>
+        {/* <Card title="Metafields not found" sectioned></Card> */}
+        <Stack distribution="center">
+          {/* <Card title="Product is not uploaded yet" sectioned></Card> */}
+          <img src={NoDataFound} width="100%" />
+        </Stack>
       </Layout.Section>
     </Layout>
   );
