@@ -27,6 +27,7 @@ import {
   DropboxOutlined,
   GroupOutlined,
   PieChartOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import PlansComponentAnt from "../Registration/PlansComponentAnt";
 import OrdersComponent from "./Marketplaces/Ebay/Orders/OrdersComponent";
@@ -204,6 +205,7 @@ const NewPanel = (props) => {
             key={"left"}
             width={drawerVisible ? "80" : "200"}
           >
+            <div style={{display:"flex"}}>
             <Sider
               style={{
                 overflow: "auto",
@@ -214,6 +216,7 @@ const NewPanel = (props) => {
                 top: 0,
                 bottom: 0,
                 zIndex: "100",
+                justifyContent:"space-between"
               }}
             >
               <div
@@ -346,7 +349,20 @@ const NewPanel = (props) => {
                   key="forSider"
                 ></Menu.Item>
               </Menu>
-            </Sider>            
+            </Sider> 
+            <div style={{   overflow: "auto",
+                height: "10vh",
+                color:"white",
+                position: "fixed",
+                left: 210,
+                width: "5rem",
+                top: 15,
+                bottom: 0,
+                zIndex: "100",
+                justifyContent:"space-between"}} onClick={() => setdrawerVisible(false)}>
+              <CloseOutlined style={{fontSize:"2rem"}} />
+            </div>
+            </div>           
           </Drawer>
         ) : (
           <Sider
