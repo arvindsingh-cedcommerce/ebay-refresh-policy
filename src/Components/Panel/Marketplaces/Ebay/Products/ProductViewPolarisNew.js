@@ -994,84 +994,6 @@ const ProductViewPolarisNew = (props) => {
     return postData;
   };
 
-  const menu = (
-    <Menu>
-      <Menu.Item
-        key="upload"
-        onClick={() => {
-          let postData = {
-            // product_id: [apiCallMainProduct["source_product_id"]],
-            product_id: [apiCallMainProduct["container_id"]],
-            action: "upload_and_revise",
-          };
-          setModal({
-            ...modal,
-            active: true,
-            content: "Upload and Revise on eBay",
-            actionName: postActionOnProductById,
-            actionPayload: postData,
-            api: uploadProductByIdURL,
-          });
-        }}
-      >
-        <UploadOutlined /> Upload and Revise on eBay
-      </Menu.Item>
-      <Menu.Item
-        key="Sync from Shopify"
-        onClick={() => {
-          let postData = {
-            product_id: [apiCallMainProduct["container_id"]],
-          };
-          setModal({
-            ...modal,
-            active: true,
-            content: "Sync from Shopify",
-            actionName: postActionOnProductById,
-            actionPayload: postData,
-            api: syncProductDetails,
-          });
-        }}
-      >
-        <SyncOutlined /> Sync from Shopify
-      </Menu.Item>
-      <Menu.Item
-        key="end"
-        onClick={() => {
-          let postData = {
-            product_id: [apiCallMainProduct["source_product_id"]],
-          };
-          setModal({
-            ...modal,
-            active: true,
-            content: "End",
-            actionName: postActionOnProductById,
-            actionPayload: postData,
-            api: endProductByIdURL,
-          });
-        }}
-      >
-        <DeleteOutlined /> End
-      </Menu.Item>
-      <Menu.Item
-        key="Relist Item"
-        onClick={() => {
-          let postData = {
-            product_id: [apiCallMainProduct["source_product_id"]],
-          };
-          setModal({
-            ...modal,
-            active: true,
-            content: "Relist Item",
-            actionName: postActionOnProductById,
-            actionPayload: postData,
-            api: relistItemURL,
-          });
-        }}
-      >
-        <RollbackOutlined /> Relist Item
-      </Menu.Item>
-    </Menu>
-  );
 
   const differenceArrayDeepNew = (data) => {
     // console.log(data);
@@ -1303,7 +1225,86 @@ const ProductViewPolarisNew = (props) => {
     });
     return statusStructures;
   };
-
+  
+  const menu = (
+    <Menu>
+      <Menu.Item
+        key="upload"
+        onClick={() => {
+          let postData = {
+            // product_id: [apiCallMainProduct["source_product_id"]],
+            product_id: [apiCallMainProduct["container_id"]],
+            action: "upload_and_revise",
+          };
+          setModal({
+            ...modal,
+            active: true,
+            content: "Upload and Revise on eBay",
+            actionName: postActionOnProductById,
+            actionPayload: postData,
+            api: uploadProductByIdURL,
+          });
+        }}
+      >
+        <UploadOutlined /> Upload and Revise on eBay
+      </Menu.Item>
+      <Menu.Item
+        key="Sync from Shopify"
+        onClick={() => {
+          let postData = {
+            product_id: [apiCallMainProduct["container_id"]],
+          };
+          setModal({
+            ...modal,
+            active: true,
+            content: "Sync from Shopify",
+            actionName: postActionOnProductById,
+            actionPayload: postData,
+            api: syncProductDetails,
+          });
+        }}
+      >
+        <SyncOutlined /> Sync from Shopify
+      </Menu.Item>
+      {!getItemURLs().every(item => item == false)?
+      <Menu.Item
+        key="end"
+        onClick={() => {
+          let postData = {
+            product_id: [apiCallMainProduct["source_product_id"]],
+          };
+          setModal({
+            ...modal,
+            active: true,
+            content: "End",
+            actionName: postActionOnProductById,
+            actionPayload: postData,
+            api: endProductByIdURL,
+          });
+        }}
+      >
+        <DeleteOutlined /> End
+      </Menu.Item>:<></>}
+      {!getItemURLs().every(item => item == false)?<Menu.Item
+        key="Relist Item"
+        onClick={() => {
+          let postData = {
+            product_id: [apiCallMainProduct["source_product_id"]],
+          };
+          setModal({
+            ...modal,
+            active: true,
+            content: "Relist Item",
+            actionName: postActionOnProductById,
+            actionPayload: postData,
+            api: relistItemURL,
+          });
+        }}
+      >
+        <RollbackOutlined /> Relist Item
+      </Menu.Item>:<></>}
+    </Menu>
+  );
   return showSkeleton ? (
     <SkeletonPage primaryAction fullWidth>
       <SkeletonBodyText lines={2} />
