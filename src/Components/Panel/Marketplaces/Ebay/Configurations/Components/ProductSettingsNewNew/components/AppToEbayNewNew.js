@@ -105,7 +105,7 @@ const AppToEbayNewNew = ({
             {
               let pattern = /^\d+\.?\d*$/;
               errorData[account][attribute][field] = {};
-              if (data[account][attribute][field]["vatPercentage"]<0 || data[account][attribute][field]["vatPercentage"]>30 || !pattern.test(data[account][attribute][field]["vatPercentage"])) {
+              if (data[account][attribute][field]["vatPercentage"] && (data[account][attribute][field]["vatPercentage"]<0 || data[account][attribute][field]["vatPercentage"]>30 || !pattern.test(data[account][attribute][field]["vatPercentage"]))) {
                 errorData[account][attribute][field][
                   "vatPercentage"
                 ] = true;
