@@ -66,6 +66,7 @@ const TabContent = ({
   let { fields, value } = content;
   const [currencyLoader, setCurrencyLoader] = useState(false);
   const handleBtnPres = (value, field, innerField) => {
+    console.log("final value",value, field, innerField);
     let temp = { ...connectedAccountsObject };
     if (innerField) {
       temp[account]["fields"][field][innerField] = value;
@@ -506,10 +507,11 @@ const validateVatPercentageValue=(value)=>{
                               options={restrictedToBusinessOptions}
                             />
                             <TextField
-                              label="VAT Percentage"
+                              label="VAT Percentage1"
                               value={fields[field]["vatPercentage"]}
                               onChange={(value) =>
                                 {
+                                  console.log("FINAL VALUE",value);
                                 if(  errorsData?.[account]?.["fields"]?.[field]?.[
                                   "vatPercentage"
                                 ] && (value>=0 && value<=30))
@@ -519,7 +521,7 @@ const validateVatPercentageValue=(value)=>{
                                 handleBtnPres(value, field, "vatPercentage")
                                 }
                               }
-                              type="number"
+                              type="text"
                               error={
                                 errorsData?.[account]?.["fields"]?.[field]?.[
                                   "vatPercentage"
