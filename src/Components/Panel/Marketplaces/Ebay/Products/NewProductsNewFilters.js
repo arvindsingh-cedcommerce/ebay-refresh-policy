@@ -10,6 +10,7 @@ import {
   getProductsCountURL,
   getVariantsURL,
 } from "../../../../../URLs/ProductsURL";
+import { dashboardAnalyticsURL } from "../../../../../URLs/DashboardURL";
 import {
   getProducts,
   getProductsCount,
@@ -40,7 +41,11 @@ import {
   getVariantsCountDetails,
   trimTitle,
 } from "./helperFunctions/commonHelper";
-import { AlertMinor, FilterMajorMonotone } from "@shopify/polaris-icons";
+import {
+  AlertMinor,
+  FilterMajorMonotone,
+  QuestionMarkMinor,
+} from "@shopify/polaris-icons";
 import { getProfilesURL } from "../../../../../URLs/ProfilesURL";
 import { getProfiles } from "../../../../../APIrequests/ProfilesAPI";
 import { getImportAttribute } from "../../../../../Apirequest/registrationApi";
@@ -55,6 +60,7 @@ import PopoverProduct from "./PopoverProduct";
 import ProductBulkMenu from "./ProductBulkMenu";
 import ProductMassMenu from "./ProductMassMenu";
 import { useDispatch, useSelector } from "react-redux";
+import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
 
 const { Text } = Typography;
 
@@ -197,6 +203,16 @@ function NewProductsNewFilters(props) {
       checked: true,
       editable: true,
     },
+    // {
+    //   title: <center>Type</center>,
+    //   dataIndex: "simpleVariant",
+    //   key: "simpleVariant",
+    //   className: "show",
+    //   label: "Variant Count",
+    //   value: "Variant Count",
+    //   checked: true,
+    //   editable: true,
+    // },
     {
       title: <center>Profile</center>,
       dataIndex: "profile",
@@ -250,7 +266,7 @@ function NewProductsNewFilters(props) {
       fixed: "right",
       render: (text, record) => {
         return (
-          <Stack distribution="equalSpacing" alignment="leading">
+          <Stack distribution="center" alignment="leading">
             <ActionPopover record={record} />
           </Stack>
         );
@@ -308,6 +324,15 @@ function NewProductsNewFilters(props) {
   const [errorPopup, setErrorPopup] = useState({
     active: false,
     content: [],
+  });
+
+  // variant state
+  const [doVariantDataExists, setDoVariantDataExists] = useState({});
+
+  // product credits
+  const [productCredits, setProductCredits] = useState({
+    available: "",
+    total: "",
   });
 
   useEffect(() => {
@@ -509,6 +534,7 @@ function NewProductsNewFilters(props) {
       productOnly: true,
       count: pageSize,
       activePage: activePage,
+      grid: true,
       ...filterPostData,
     };
     if (Object.keys(filterPostData).length) {
@@ -539,13 +565,16 @@ function NewProductsNewFilters(props) {
             title,
             product_type,
             variant_attributes,
-            variants,
+            // variants,
             container_id,
             brand,
             profile_name,
             source_product_id,
             edited,
             ebay_response,
+            quantity,
+            total_variants,
+            total_quantity,
           } = row;
           let tempObject = {};
           tempObject["source_product_id"] = source_product_id;
@@ -592,12 +621,12 @@ function NewProductsNewFilters(props) {
           );
           tempObject["productType"] = (
             <center>
-              <Text>{product_type ? product_type : '-'}</Text>
+              <Text>{product_type ? product_type : "-"}</Text>
             </center>
           );
           tempObject["vendor"] = (
             <center>
-              <Text>{brand ? brand : '-'}</Text>
+              <Text>{brand ? brand : "-"}</Text>
             </center>
           );
           tempObject["profile"] = (
@@ -617,12 +646,34 @@ function NewProductsNewFilters(props) {
           tempObject["variantsCount"] = (
             <center>
               <Text>
-                {getVariantsCountDetails(variants, variant_attributes)}
+                {/* {getVariantsCountDetails(variants, variant_attributes)} */}
+                {total_variants > 0 ? (
+                  total_quantity == 0 ? (
+                    <Text type="danger">
+                      {total_quantity} in stock for {total_variants} variant(s)
+                    </Text>
+                  ) : (
+                    <>
+                      {total_quantity} in stock for {total_variants} variant(s)
+                    </>
+                  )
+                ) : quantity == 0 ? (
+                  <Text type="danger">{quantity} in stock</Text>
+                ) : (
+                  <>{quantity} in stock</>
+                )}
               </Text>
             </center>
           );
-          tempObject["variantsData"] = variants;
+          // tempObject["variantsData"] = variants;
           tempObject["container_id"] = container_id;
+          tempObject["simpleVariant"] = (
+            <center>
+              {variant_attributes.length > 0 ? "Variants" : "Simple"}
+            </center>
+          );
+          tempObject["showVariant"] =
+            variant_attributes.length > 0 ? true : false;
           return tempObject;
         });
         setProductData(tempProductData);
@@ -938,6 +989,18 @@ function NewProductsNewFilters(props) {
     }
   };
 
+  const hitDashoboardAPI = async () => {
+    let { success, data } = await getDashboardData(dashboardAnalyticsURL);
+    if (success) {
+      const { available_credits, total_used_credits, service_credits } =
+        data?.planDetails?.productCredits?.prepaid;
+      let temp = { ...productCredits };
+      temp["available"] = available_credits;
+      temp["total"] = service_credits;
+      setProductCredits(temp);
+    }
+  };
+
   useEffect(() => {
     if (connectedAccountsArray.length) {
       hitGetProductsAPI();
@@ -946,6 +1009,7 @@ function NewProductsNewFilters(props) {
 
   useEffect(() => {
     getAccounts();
+    hitDashoboardAPI();
   }, []);
 
   const getFieldValue = (field) => {
@@ -1048,6 +1112,22 @@ function NewProductsNewFilters(props) {
     <PageHeader
       className="site-page-header-responsive"
       title={"Products"}
+      subTitle={
+        productCredits.total && (
+          <Badge>
+            <Text strong>
+              <Stack spacing="extraTight" alignment="center">
+                <>{`${productCredits.available}/${productCredits.total} product credits available`}</>
+                <div style={{ cursor: "pointer" }}>
+                  <Tooltip content="1 Product Credit means 1 product can be listed on eBay through the app">
+                    <Icon source={QuestionMarkMinor} />
+                  </Tooltip>
+                </div>
+              </Stack>
+            </Text>
+          </Badge>
+        )
+      }
       ghost={true}
       extra={[
         // <ProductMassMenu selectedRows={selectedRows} />,
@@ -1107,13 +1187,24 @@ function NewProductsNewFilters(props) {
           scroll={{ x: 1500, y: 500 }}
           expandable={{
             expandedRowRender: (record) => {
-              return record["variantsData"] &&
-                record["variantsData"].length > 0 ? (
+              return record["showVariant"] ? (
+                // <>hi</>
                 <VariantComponentData
-                  dataSource={record["variantsData"]}
+                  // dataSource={record["variantsData"]}
+                  record={record}
                   size="small"
                 />
               ) : (
+                // <VariantComponentData
+                //   // dataSource={record["variantsData"]}
+                //   record={record}
+                //   size="small"
+                // />
+                // <RenderChild record={record} />
+                // <VariantComponentData
+                //   dataSource={record["variantsData"]}
+                //   size="small"
+                // />
                 <Alert message="No Variants Found" type="info" />
               );
               // <TabsComponent
@@ -1134,7 +1225,8 @@ function NewProductsNewFilters(props) {
               // );
             },
             expandIcon: ({ expanded, onExpand, record }) =>
-              expanded ? (
+              record["showVariant"] &&
+              (expanded ? (
                 <Tooltip content="Hide Variants">
                   <CaretUpOutlined onClick={(e) => onExpand(record, e)} />
                 </Tooltip>
@@ -1142,7 +1234,7 @@ function NewProductsNewFilters(props) {
                 <Tooltip content="View Variants">
                   <CaretDownOutlined onClick={(e) => onExpand(record, e)} />
                 </Tooltip>
-              ),
+              )),
           }}
         />
       </Card>

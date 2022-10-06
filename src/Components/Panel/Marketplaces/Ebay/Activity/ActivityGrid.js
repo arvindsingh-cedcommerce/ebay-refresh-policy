@@ -13,8 +13,10 @@ import {
 } from "@shopify/polaris";
 import {
   AlertMinor,
+  CircleAlertMajorFilled,
   CircleCancelMinor,
   CircleChevronDownMinor,
+  CircleTickMajorFilled,
   CircleTickOutlineMinor,
   ImportMinor,
 } from "@shopify/polaris-icons";
@@ -160,11 +162,11 @@ const ActivityGrid = (props) => {
   const getSeverityIcon = (severity) => {
     switch (severity) {
       case "success":
-        return <Icon source={CircleTickOutlineMinor} color="success" />;
+        return <Icon source={CircleTickMajorFilled} color="success" />;
       case "failed":
-        return <Icon source={CircleCancelMinor} color="critical" />;
+        return <Icon source={CircleTickMajorFilled} color="critical" />;
       case "error":
-        return <Icon source={AlertMinor} color="critical" />;
+        return <Icon source={CircleAlertMajorFilled} color="critical" />;
       default:
         break;
     }

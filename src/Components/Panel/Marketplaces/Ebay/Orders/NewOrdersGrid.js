@@ -47,14 +47,18 @@ import {
   Modal,
   TextContainer,
   Banner,
+  Badge,
+  Tooltip,
 } from "@shopify/polaris";
-import { FilterMajorMonotone } from "@shopify/polaris-icons";
+import { FilterMajorMonotone, QuestionMarkMinor } from "@shopify/polaris-icons";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
 import NewFilterComponentSimilarPolaris from "../Products/NewFilterComponentSimilarPolaris";
 import { stringOperatorOptions } from "../Products/NewProductsNewFilters";
 import OrderMassMenu from "../Products/OrderMassMenu";
 import NewFilterComponentSimilarPolarisOrders from "./NewFilterComponentSimilarPolarisOrders";
 import { useDispatch, useSelector } from "react-redux";
+import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
+import { dashboardAnalyticsURL } from "../../../../../URLs/DashboardURL";
 
 const { Text } = Typography;
 let demo = {
@@ -289,6 +293,12 @@ const NewOrdersGrid = (props) => {
     id: "",
   });
 
+  // order credits
+  const [orderCredits, setOrderCredits] = useState({
+    available: "",
+    total: "",
+  });
+
   const getAllOrders = (ordersData) => {
     let tempOrderData = [];
     tempOrderData = ordersData["rows"].map((order, index) => {
@@ -517,11 +527,24 @@ const NewOrdersGrid = (props) => {
     setMassActionsModal(test);
   }, [massActionSelected]);
 
+  const hitDashoboardAPI = async () => {
+    let { success, data } = await getDashboardData(dashboardAnalyticsURL);
+    if (success) {
+      const { available_credits, total_used_credits, service_credits } =
+        data?.planDetails?.orderCredits?.prepaid;
+      let temp = { ...orderCredits };
+      temp["available"] = available_credits;
+      temp["total"] = service_credits;
+      setOrderCredits(temp);
+    }
+  };
+
   useEffect(() => {
     document.title = "Orders | Integration for eBay";
     document.description =
       "Order section helps you to keep a track of your orders (Fulfilled/Unfulfilled/Failed/Cancelled). It updates you about each new order received on eBay.";
     getAllConnectedAccounts();
+    hitDashoboardAPI();
   }, []);
 
   const getAllConnectedAccounts = async () => {
@@ -914,6 +937,22 @@ const NewOrdersGrid = (props) => {
       className="site-page-header-responsive"
       title="Orders"
       ghost={true}
+      subTitle={
+        orderCredits.total && (
+          <Badge>
+            <Text strong>
+              <Stack spacing="extraTight" alignment="center">
+                <>{`${orderCredits.available}/${orderCredits.total} order credits available`}</>
+                <div style={{ cursor: "pointer" }}>
+                  <Tooltip content="1 Order credit means 1 eBay Order can be managed from Shopify through the app">
+                    <Icon source={QuestionMarkMinor} />
+                  </Tooltip>
+                </div>
+              </Stack>
+            </Text>
+          </Badge>
+        )
+      }
       extra={[
         // <OrderMassMenu
         //   selectedRows={selectedRows}
