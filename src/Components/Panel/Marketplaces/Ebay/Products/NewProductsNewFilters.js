@@ -576,6 +576,7 @@ function NewProductsNewFilters(props) {
             container_id,
             brand,
             profile_name,
+            profile_id,
             source_product_id,
             edited,
             ebay_response,
@@ -638,7 +639,13 @@ function NewProductsNewFilters(props) {
           );
           tempObject["profile"] = (
             <center>
-              <Text>{profile_name ? profile_name : "-"}</Text>
+              
+              <Text onClick={(e) => {
+                  return props.history.push(
+                    `/panel/ebay/profiles/edit?id=${profile_id}`
+                  );
+                }}
+                style={{ cursor: "pointer" }}>{profile_name ? profile_name : "-"}</Text>
             </center>
           );
           tempObject["variantAttributes"] = (
