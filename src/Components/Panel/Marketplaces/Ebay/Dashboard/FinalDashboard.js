@@ -21,6 +21,7 @@ import {
   SkeletonBodyText,
   SkeletonDisplayText,
   Tooltip,
+  Scrollable,
 } from "@shopify/polaris";
 import { Button as AntButton } from "antd";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
@@ -786,11 +787,18 @@ const FinalDashboard = (props) => {
         )}
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16} xs={24} sm={24} md={24} lg={16}>
+            <Col
+              span={16}
+              xs={24}
+              sm={24}
+              md={24}
+              lg={16}
+              className="welcome-box"
+            >
               <Card sectioned>
                 <Card.Section>
                   {dashboardSkeleton ? (
-                    <SkeletonDisplayText size="extraLarge" />
+                    <SkeletonBodyText size="Large" />
                   ) : (
                     <Stack vertical spacing="tight">
                       <Title level={1} style={{ margin: 0 }}>
@@ -801,7 +809,7 @@ const FinalDashboard = (props) => {
                 </Card.Section>
                 <Card.Section>
                   {dashboardSkeleton ? (
-                    <SkeletonBodyText lines={6} />
+                    <SkeletonBodyText lines={3} />
                   ) : (
                     <>
                       {reqiuredCurrentStep < 2 && (
@@ -968,7 +976,14 @@ const FinalDashboard = (props) => {
                 </Card.Section>
               </Card>
             </Col>
-            <Col span={8} xs={24} sm={24} md={24} lg={8}>
+            <Col
+              span={8}
+              xs={24}
+              sm={24}
+              md={24}
+              lg={8}
+              className="carousel-box"
+            >
               <CarouselComponent
                 reqiuredCurrentStep={reqiuredCurrentStep}
                 notProfiledProductCount={notProfiledProductCount}
@@ -980,7 +995,7 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={6} xs={24} sm={24} md={8} lg={8} xl={6} >
+            <Col span={6} xs={24} sm={24} md={8} lg={8} xl={6}>
               <Card
                 title={
                   <Tooltip content="Number of active accounts connected on app">
@@ -1117,23 +1132,33 @@ const FinalDashboard = (props) => {
                 )}
               </Card>
             </Col>
-            <Col span={6} xs={24} sm={24} md={24} lg={24} xl={6} style={{ height: "194px" }}>
+            <Col
+              span={6}
+              xs={24}
+              sm={24}
+              md={24}
+              lg={24}
+              xl={6}
+              style={{ height: "194px" }}
+            >
               <Card sectioned title="Plan Details">
                 {dashboardSkeleton ? (
                   <div style={{ padding: "36px 0px" }}>
                     <SkeletonBodyText lines={3} />
                   </div>
                 ) : (
-                  <Stack vertical spacing="extraTight">
-                    {Object.keys(currentPlanDetails).map((planDetail) => {
-                      return (
-                        <Stack distribution="equalSpacing">
-                          <Text>{planDetail}</Text>
-                          <Text strong>{currentPlanDetails[planDetail]}</Text>
-                        </Stack>
-                      );
-                    })}
-                  </Stack>
+                  <Scrollable shadow style={{ height: "126px" }} focusable>
+                    <Stack vertical spacing="extraTight">
+                      {Object.keys(currentPlanDetails).map((planDetail) => {
+                        return (
+                          <Stack distribution="equalSpacing">
+                            <Text>{planDetail}</Text>
+                            <Text strong>{currentPlanDetails[planDetail]}</Text>
+                          </Stack>
+                        );
+                      })}
+                    </Stack>
+                  </Scrollable>
                 )}
               </Card>
             </Col>
@@ -1141,7 +1166,14 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={12} xs={24} sm={24} md={24} lg={12}>
+            <Col
+              span={12}
+              xs={24}
+              sm={24}
+              md={24}
+              lg={12}
+              className="analytics-box"
+            >
               <Card
                 sectioned
                 size="small"
@@ -1203,7 +1235,14 @@ const FinalDashboard = (props) => {
                 </div>
               </Card>
             </Col>
-            <Col span={12} xs={24} sm={24} md={24} lg={12}>
+            <Col
+              span={12}
+              xs={24}
+              sm={24}
+              md={24}
+              lg={12}
+              className="analytics-box"
+            >
               <Card
                 sectioned
                 size="small"
@@ -1370,22 +1409,24 @@ const FinalDashboard = (props) => {
                   onAction: () => props.history.push("help"),
                 }}
               >
-                <ResourceList
-                  items={faqsData}
-                  renderItem={(item) => {
-                    const { title } = item;
-                    return (
-                      <ResourceList.Item
-                        onClick={(e) => props.history.push("help")}
-                        accessibilityLabel={`View details for ${title}`}
-                      >
-                        <h3>
-                          <TextStyle variation="strong">{title}</TextStyle>
-                        </h3>
-                      </ResourceList.Item>
-                    );
-                  }}
-                />
+                <Scrollable shadow style={{ height: "217px" }} focusable>
+                  <ResourceList
+                    items={faqsData}
+                    renderItem={(item) => {
+                      const { title } = item;
+                      return (
+                        <ResourceList.Item
+                          onClick={(e) => props.history.push("help")}
+                          accessibilityLabel={`View details for ${title}`}
+                        >
+                          <h3>
+                            <TextStyle variation="strong">{title}</TextStyle>
+                          </h3>
+                        </ResourceList.Item>
+                      );
+                    }}
+                  />
+                </Scrollable>
               </Card>
             </Col>
           </Row>
@@ -1399,33 +1440,35 @@ const FinalDashboard = (props) => {
                 size="small"
                 style={{ borderRadius: "8px" }}
               >
-                <ResourceList
-                  items={news}
-                  renderItem={(item) => {
-                    const { content_link, title, description, image_url } =
-                      item;
+                <Scrollable shadow style={{ height: "280px" }} focusable>
+                  <ResourceList
+                    items={news}
+                    renderItem={(item) => {
+                      const { content_link, title, description, image_url } =
+                        item;
 
-                    return (
-                      <a
-                        href={content_link}
-                        target="_blank"
-                        style={{ textDecoration: "none", color: "#000" }}
-                      >
-                        <ResourceList.Item
-                          media={
-                            <Thumbnail source={image_url} alt="News Logo" />
-                          }
-                          accessibilityLabel={`View details for ${title}`}
+                      return (
+                        <a
+                          href={content_link}
+                          target="_blank"
+                          style={{ textDecoration: "none", color: "#000" }}
                         >
-                          <h3>
-                            <TextStyle variation="strong">{title}</TextStyle>
-                          </h3>
-                          <label>{description}</label>
-                        </ResourceList.Item>
-                      </a>
-                    );
-                  }}
-                />
+                          <ResourceList.Item
+                            media={
+                              <Thumbnail source={image_url} alt="News Logo" />
+                            }
+                            accessibilityLabel={`View details for ${title}`}
+                          >
+                            <h3>
+                              <TextStyle variation="strong">{title}</TextStyle>
+                            </h3>
+                            <label>{description}</label>
+                          </ResourceList.Item>
+                        </a>
+                      );
+                    }}
+                  />
+                </Scrollable>
               </Card>
             </Col>
             <Col span={8} xs={24} sm={24} md={24} lg={8}>
@@ -1442,33 +1485,35 @@ const FinalDashboard = (props) => {
                   },
                 ]}
               >
-                <ResourceList
-                  items={blogs}
-                  renderItem={(item) => {
-                    const { content_link, title, image_url, description } =
-                      item;
+                <Scrollable shadow style={{ height: "280px" }} focusable>
+                  <ResourceList
+                    items={blogs}
+                    renderItem={(item) => {
+                      const { content_link, title, image_url, description } =
+                        item;
 
-                    return (
-                      <a
-                        href={content_link}
-                        target="_blank"
-                        style={{ textDecoration: "none", color: "#000" }}
-                      >
-                        <ResourceList.Item
-                          media={
-                            <Thumbnail source={image_url} alt="News Logo" />
-                          }
-                          accessibilityLabel={`View details for ${title}`}
+                      return (
+                        <a
+                          href={content_link}
+                          target="_blank"
+                          style={{ textDecoration: "none", color: "#000" }}
                         >
-                          <h3>
-                            <TextStyle variation="strong">{title}</TextStyle>
-                          </h3>
-                          <label>{description}</label>
-                        </ResourceList.Item>
-                      </a>
-                    );
-                  }}
-                />
+                          <ResourceList.Item
+                            media={
+                              <Thumbnail source={image_url} alt="News Logo" />
+                            }
+                            accessibilityLabel={`View details for ${title}`}
+                          >
+                            <h3>
+                              <TextStyle variation="strong">{title}</TextStyle>
+                            </h3>
+                            <label>{description}</label>
+                          </ResourceList.Item>
+                        </a>
+                      );
+                    }}
+                  />
+                </Scrollable>
               </Card>
             </Col>
             <Col span={8} xs={24} sm={24} md={24} lg={8}>
@@ -1483,67 +1528,69 @@ const FinalDashboard = (props) => {
                   },
                 ]}
               >
-                <ResourceList
-                  items={[
-                    {
-                      url: "https://apps.shopify.com/amazon-by-cedcommerce",
-                      name: "Amazon by CedCommerce",
-                      description:
-                        "Selling on Amazon becomes easy with the Amazon sales channel",
-                      media: (
-                        <Thumbnail
-                          source="https://cdn.shopify.com/app-store/listing_images/0632f97b04f3464ee3d9148e7b84c9a9/icon/CMP07ajunPQCEAE=.png?height=50&width=50"
-                          alt="Amazon by CedCommerce logo"
-                        />
-                      ),
-                    },
-                    {
-                      url: "https://apps.shopify.com/etsy-marketplace-integration",
-                      name: "Etsy Marketplace Integration",
-                      description:
-                        "Easily manage listings, inventory, orders & more on Etsy.com",
-                      media: (
-                        <Thumbnail
-                          source="https://cdn.shopify.com/app-store/listing_images/2fa150931ca28a5ed6a17dc69c40477b/icon/CNLtvLz0lu8CEAE=.png?height=50&amp;width=50"
-                          alt="Etsy Marketplace Integration logo"
-                        />
-                      ),
-                    },
-                    {
-                      url: "https://apps.shopify.com/facebook-marketplace-connector",
-                      name: "Facebook & Instagram Shopping",
-                      description:
-                        "Sell on Facebook & Instagram, list products and manage orders.",
-                      media: (
-                        <Thumbnail
-                          source="https://cdn.shopify.com/app-store/listing_images/8e58c700f1ecc2539682f6a04a8852c7/icon/CNyDx+T0lu8CEAE=.png?height=50&width=50"
-                          alt="facebook marketplace connector"
-                        />
-                      ),
-                    },
-                  ]}
-                  renderItem={(item) => {
-                    const { url, name, media, description } = item;
+                <Scrollable shadow style={{ height: "280px" }} focusable>
+                  <ResourceList
+                    items={[
+                      {
+                        url: "https://apps.shopify.com/amazon-by-cedcommerce",
+                        name: "Amazon by CedCommerce",
+                        description:
+                          "Selling on Amazon becomes easy with the Amazon sales channel",
+                        media: (
+                          <Thumbnail
+                            source="https://cdn.shopify.com/app-store/listing_images/0632f97b04f3464ee3d9148e7b84c9a9/icon/CMP07ajunPQCEAE=.png?height=50&width=50"
+                            alt="Amazon by CedCommerce logo"
+                          />
+                        ),
+                      },
+                      {
+                        url: "https://apps.shopify.com/etsy-marketplace-integration",
+                        name: "Etsy Marketplace Integration",
+                        description:
+                          "Easily manage listings, inventory, orders & more on Etsy.com",
+                        media: (
+                          <Thumbnail
+                            source="https://cdn.shopify.com/app-store/listing_images/2fa150931ca28a5ed6a17dc69c40477b/icon/CNLtvLz0lu8CEAE=.png?height=50&amp;width=50"
+                            alt="Etsy Marketplace Integration logo"
+                          />
+                        ),
+                      },
+                      {
+                        url: "https://apps.shopify.com/facebook-marketplace-connector",
+                        name: "Facebook & Instagram Shopping",
+                        description:
+                          "Sell on Facebook & Instagram, list products and manage orders.",
+                        media: (
+                          <Thumbnail
+                            source="https://cdn.shopify.com/app-store/listing_images/8e58c700f1ecc2539682f6a04a8852c7/icon/CNyDx+T0lu8CEAE=.png?height=50&width=50"
+                            alt="facebook marketplace connector"
+                          />
+                        ),
+                      },
+                    ]}
+                    renderItem={(item) => {
+                      const { url, name, media, description } = item;
 
-                    return (
-                      <a
-                        href={url}
-                        target="_blank"
-                        style={{ textDecoration: "none", color: "#000" }}
-                      >
-                        <ResourceList.Item
-                          media={media}
-                          accessibilityLabel={`View details for ${name}`}
+                      return (
+                        <a
+                          href={url}
+                          target="_blank"
+                          style={{ textDecoration: "none", color: "#000" }}
                         >
-                          <h3>
-                            <TextStyle variation="strong">{name}</TextStyle>
-                          </h3>
-                          <Label>{description}</Label>
-                        </ResourceList.Item>
-                      </a>
-                    );
-                  }}
-                />
+                          <ResourceList.Item
+                            media={media}
+                            accessibilityLabel={`View details for ${name}`}
+                          >
+                            <h3>
+                              <TextStyle variation="strong">{name}</TextStyle>
+                            </h3>
+                            <Label>{description}</Label>
+                          </ResourceList.Item>
+                        </a>
+                      );
+                    }}
+                  />
+                </Scrollable>
               </Card>
             </Col>
           </Row>
