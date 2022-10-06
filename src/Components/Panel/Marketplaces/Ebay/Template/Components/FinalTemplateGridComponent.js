@@ -369,7 +369,7 @@ const FinalTemplateGridComponent = (props) => {
                 );
               }}
             >
-              Add
+              Add Template
             </Button>
           </Stack>
         </Modal.Section>
