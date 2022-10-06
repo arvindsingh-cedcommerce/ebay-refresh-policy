@@ -88,6 +88,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "number",
+    placeholder:'Product Type'
   },
   {
     label: "Product Type",
@@ -96,6 +97,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "string",
+    placeholder:'Product Type'
   },
   {
     label: "Vendor",
@@ -104,6 +106,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "string",
+    placeholder:'Product Type'
   },
   {
     label: "Tags",
@@ -112,6 +115,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "3",
     dataType: "string",
+    placeholder:'Product Type'
   },
   {
     label: "Price",
@@ -120,6 +124,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "number",
+    placeholder:'Product Type'
   },
   {
     label: "Inventory",
@@ -128,6 +133,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "number",
+    placeholder:'Product Type'
   },
 ];
 
@@ -139,6 +145,7 @@ export const getFitersInitially = () => {
       value: field["inputValue"],
       label: field["label"],
       dataType: field["dataType"],
+      placeholder: field["placeholder"],
     };
     if (field?.["searchType"] === "dropdown") {
       tempObj[field["value"]]["options"] = [];
