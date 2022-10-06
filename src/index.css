@@ -132,10 +132,6 @@ code {
   color: #2a78ba !important;
 }
 .floating-right-bottom-btn {
-  /* position : fixed;
-    left:65px;
-    bottom : 40px;
-    z-index: 99; */
   animation: shake 1.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -174,9 +170,8 @@ code {
   /* background-color: #ccc; */
 }
 
-
 .plansCard{
-  border: 1px solid #dcdada !important;
+  border: 2px solid #ebebeb !important;
   transition: all ease-in-out .3s;
   box-shadow: 0 30px 30px -20px rgb(0 0 0 / 20%);
 }
@@ -192,4 +187,21 @@ code {
 }
 .h-200{
   height: 200px;
+}
+.welcome-box .Polaris-Card, .carousel-box{
+    height: 225px;
+}
+.carousel-box img{
+  border-radius: 0.8rem;
+}
+.analytics-box .Polaris-Card{
+  height: 382px;
+}
+.step-card {
+  box-shadow: 0 30px 30px -20px rgb(0 0 0 / 20%);
+  border-radius: 10px;
+
+}
+.step-card .Polaris-Card{
+  min-height: 644px;
 }
