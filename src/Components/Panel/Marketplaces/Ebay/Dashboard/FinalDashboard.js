@@ -970,12 +970,16 @@ const FinalDashboard = (props) => {
               </Card>
             </Col>
             <Col span={8} className='carousel-box'>
-              <CarouselComponent
+            {dashboardSkeleton ? (
+              <SkeletonBodyText lines={11} />
+            ) : (
+            <CarouselComponent
                 reqiuredCurrentStep={reqiuredCurrentStep}
                 notProfiledProductCount={notProfiledProductCount}
                 orderManagementDisabledCount={orderManagementDisabledCount}
                 productManagementDisabledCount={productManagementDisabledCount}
               />
+            )}
             </Col>
           </Row>
         </Col>
@@ -1278,7 +1282,7 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16}>
+            <Col span={16} className='order-static-box'>
               <Card
                 sectioned
                 title={
