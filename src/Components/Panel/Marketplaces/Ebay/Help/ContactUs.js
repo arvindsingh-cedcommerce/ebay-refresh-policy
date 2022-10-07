@@ -47,8 +47,19 @@ const ContactUs = () => {
   const [selectedShopId, setSelectedShopId] = useState("");
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [issueSelected, setIssueSelected] = useState("");
-  const [issueFormValidationErrors,setIssueFormValidationErrors]=useState({account:false,section:false,message:false});
-  const [scheduleFormValidationErrors,setScheduleFormValidationErrors] =useState({email:false,preferredMeeting:false,timeZone:false,preferredTime:false,date:false});
+  const [issueFormValidationErrors, setIssueFormValidationErrors] = useState({
+    account: false,
+    section: false,
+    message: false,
+  });
+  const [scheduleFormValidationErrors, setScheduleFormValidationErrors] =
+    useState({
+      email: false,
+      preferredMeeting: false,
+      timeZone: false,
+      preferredTime: false,
+      date: false,
+    });
   const [issueDescription, setIssueDescription] = useState("");
   const [demoDetails, setDemoDetails] = useState({
     preferredMeeting: "",
@@ -171,68 +182,66 @@ const ContactUs = () => {
               content: "Submit",
               loading: btnLoaders["issue"],
               onAction: async () => {
-                const validationObj={...issueFormValidationErrors};
+                const validationObj = { ...issueFormValidationErrors };
                 setBtnLoaders({ ...btnLoaders, issue: true });
-                if(!issueSelected)
-                  validationObj.section=true;
-                else
-                  validationObj.section=false;
+                if (!issueSelected) validationObj.section = true;
+                else validationObj.section = false;
 
-                  let checkAccountValidation=true;
-                  let temp = [...connectedAccountsArray];
-                for(let i=0;i<temp.length;i++)
-                   {
-                    if(temp[i]["checked"])
-                    {
-                      checkAccountValidation=false;
-                      break;
-                    }
-                   }
-                   if(checkAccountValidation)
-                       validationObj.account=true;
-                   else
-                   validationObj.account=false;
-                if(!issueDescription)
-                  validationObj.message=true;
-                else
-                   validationObj.message=false;
-                  if(!validationObj.account && !validationObj.section
-                    && !validationObj.message
-                    )
-                  {
-                  
-                
-                let postData = {
-                  body: issueDescription,
-                  subject: `We have Received Your Query Related to ${issueSelected}`,
-                  account: connectedAccountsArray
-                    .filter((connectedAccounts) => connectedAccounts["checked"])
-                    .map((connectedAccounts) => {
-                      return connectedAccounts["value"];
-                    }),
-                };
-                let { success, message } = await submitIssue(
-                  submitIssueURL,
-                  postData
-                );
-                if (success) {
-                  notify.success(message);
-                } else {
-                  notify.error(message);
+                let checkAccountValidation = true;
+                let temp = [...connectedAccountsArray];
+                for (let i = 0; i < temp.length; i++) {
+                  if (temp[i]["checked"]) {
+                    checkAccountValidation = false;
+                    break;
+                  }
                 }
-              }
-              setIssueFormValidationErrors({...validationObj});
+                if (checkAccountValidation) validationObj.account = true;
+                else validationObj.account = false;
+                if (!issueDescription) validationObj.message = true;
+                else validationObj.message = false;
+                if (
+                  !validationObj.account &&
+                  !validationObj.section &&
+                  !validationObj.message
+                ) {
+                  let postData = {
+                    body: issueDescription,
+                    subject: `We have Received Your Query Related to ${issueSelected}`,
+                    account: connectedAccountsArray
+                      .filter(
+                        (connectedAccounts) => connectedAccounts["checked"]
+                      )
+                      .map((connectedAccounts) => {
+                        return connectedAccounts["value"];
+                      }),
+                  };
+                  let { success, message } = await submitIssue(
+                    submitIssueURL,
+                    postData
+                  );
+                  if (success) {
+                    notify.success(message);
+                  } else {
+                    notify.error(message);
+                  }
+                }
+                setIssueFormValidationErrors({ ...validationObj });
                 setBtnLoaders({ ...btnLoaders, issue: false });
               },
             }}
           >
             <Stack vertical>
               <div>
-                <div>Accounts <TextStyle variation="negative">*</TextStyle></div>
-                {
-                    issueFormValidationErrors.account?
-                  <TextStyle variation="negative">Select atleast one account</TextStyle>
-                 :"" }
+                <div>
+                  Accounts <TextStyle variation="negative">*</TextStyle>
+                </div>
+                {issueFormValidationErrors.account ? (
+                  <TextStyle variation="negative">
+                    Select atleast one account
+                  </TextStyle>
+                ) : (
+                  ""
+                )}
                 <Stack distribution="fillEvenly" spacing="extraTight">
                   {connectedAccountsArray.map((connectedAccount, index) => {
                     return (
@@ -240,23 +249,23 @@ const ContactUs = () => {
                         label={connectedAccount.label}
                         checked={connectedAccount.checked}
                         onChange={() => {
-                          let checkAccountValidation=true;
+                          let checkAccountValidation = true;
                           let temp = [...connectedAccountsArray];
                           temp[index]["checked"] = !connectedAccount.checked;
-                        for(let i=0;i<temp.length;i++)
-                           {
-                            if(temp[i]["checked"])
-                            {
-                              checkAccountValidation=false;
+                          for (let i = 0; i < temp.length; i++) {
+                            if (temp[i]["checked"]) {
+                              checkAccountValidation = false;
                               break;
                             }
-                           }
-                           if(!checkAccountValidation && issueFormValidationErrors.account)
-                           {
-                            const errorObj={...issueFormValidationErrors};
-                            errorObj.account=false;
-                            setIssueFormValidationErrors({...errorObj});
-                           }
+                          }
+                          if (
+                            !checkAccountValidation &&
+                            issueFormValidationErrors.account
+                          ) {
+                            const errorObj = { ...issueFormValidationErrors };
+                            errorObj.account = false;
+                            setIssueFormValidationErrors({ ...errorObj });
+                          }
                           setconnectedAccountsArray(temp);
                         }}
                       />
@@ -278,97 +287,96 @@ const ContactUs = () => {
               placeholder="Select to add account"
               label="Account"
             /> */}
-            <Select
-              value={issueSelected}
-              onChange={(e) => {  
-              
-                  const validationObj={...issueFormValidationErrors};
-                  validationObj.section=false;
-                  setIssueFormValidationErrors({...validationObj});
-                  setIssueSelected(e)}}
-                  requiredIndicator
-              placeholder="Select the section in which you are facing issue"
-              options={[
-                { label: "Products", value: "products" },
-                { label: "Orders", value: "orders" },
-                { label: "Profiles", value: "profiles" },
-                { label: "Templates", value: "templates" },
-                { label: "Business Policy", value: "businessPolicy" },
-                { label: "Configuration", value: "configuration" },
-                { label: "Others", value: "others" },
-              ]}
-              label="Section"
-              error={issueFormValidationErrors.section?"Required Field":false}
-            />
-            <TextField
-              placeholder="Describe the issue you are facing..."
-              requiredIndicator
-              label="Issue"
-              value={issueDescription}
-              onChange={(e) => {
-                
-                  const validationObj={...issueFormValidationErrors};
-                  validationObj.message=false;
-                  setIssueFormValidationErrors({...validationObj});
-                setIssueDescription(e);}}
-              multiline={3}
-              error={issueFormValidationErrors.message?"Required Field":false}
-            />
+              <Select
+                value={issueSelected}
+                onChange={(e) => {
+                  const validationObj = { ...issueFormValidationErrors };
+                  validationObj.section = false;
+                  setIssueFormValidationErrors({ ...validationObj });
+                  setIssueSelected(e);
+                }}
+                requiredIndicator
+                placeholder="Select the section in which you are facing issue"
+                options={[
+                  { label: "Products", value: "products" },
+                  { label: "Orders", value: "orders" },
+                  { label: "Profiles", value: "profiles" },
+                  { label: "Templates", value: "templates" },
+                  { label: "Business Policy", value: "businessPolicy" },
+                  { label: "Configuration", value: "configuration" },
+                  { label: "Others", value: "others" },
+                ]}
+                label="Section"
+                error={
+                  issueFormValidationErrors.section ? "Required Field" : false
+                }
+              />
+              <TextField
+                placeholder="Describe the issue you are facing..."
+                requiredIndicator
+                label="Issue"
+                value={issueDescription}
+                onChange={(e) => {
+                  const validationObj = { ...issueFormValidationErrors };
+                  validationObj.message = false;
+                  setIssueFormValidationErrors({ ...validationObj });
+                  setIssueDescription(e);
+                }}
+                // multiline={3}
+                multiline={connectedAccountsArray.length === 0 ? 4 : 3}
+                error={
+                  issueFormValidationErrors.message ? "Required Field" : false
+                }
+              />
             </Stack>
           </Card>
         </Col>
-        <Col span={12}>
+        <Col span={12} className="contactus-form-box">
           <Card
             title="Schedule Demo"
             sectioned
             primaryFooterAction={{
-
               content: "Submit",
               loading: btnLoaders["demo"],
               onAction: async () => {
                 setBtnLoaders({ ...btnLoaders, demo: true });
-                const scheduleValidationObj={...scheduleFormValidationErrors};
-                let finalValidator=false;
-                for(const scheduleProperty in scheduleValidationObj)
-                {
-                  if(scheduleProperty==="email")
-                  {
+                const scheduleValidationObj = {
+                  ...scheduleFormValidationErrors,
+                };
+                let finalValidator = false;
+                for (const scheduleProperty in scheduleValidationObj) {
+                  if (scheduleProperty === "email") {
                     let emailRegex = /\S+@\S+\.\S+/;
-                    if(!demoDetails.email || !emailRegex.test(demoDetails.email))
-                  { scheduleValidationObj[`${scheduleProperty}`]=true;
-                  finalValidator=true;
-                  }
-                  else
-                  {
-                    scheduleValidationObj[`${scheduleProperty}`]=false;
-                  }
-                  }
-                  else if(!demoDetails[`${scheduleProperty}`])
-                  {
-                    scheduleValidationObj[`${scheduleProperty}`]=true;
-                    finalValidator=true;
-                  }
-                  else
-                  {
-                    scheduleValidationObj[`${scheduleProperty}`]=false;
+                    if (
+                      !demoDetails.email ||
+                      !emailRegex.test(demoDetails.email)
+                    ) {
+                      scheduleValidationObj[`${scheduleProperty}`] = true;
+                      finalValidator = true;
+                    } else {
+                      scheduleValidationObj[`${scheduleProperty}`] = false;
+                    }
+                  } else if (!demoDetails[`${scheduleProperty}`]) {
+                    scheduleValidationObj[`${scheduleProperty}`] = true;
+                    finalValidator = true;
+                  } else {
+                    scheduleValidationObj[`${scheduleProperty}`] = false;
                   }
                 }
-                setScheduleFormValidationErrors({...scheduleValidationObj});
-                if(!finalValidator)
-                       {
-               let { success, message } = await submitIssue(
-                  demoScheduleURL,
-                  demoDetails
-                );
-                 if (success) {
-                  notify.success(message);
-                } else {
-                  notify.error(message);
+                setScheduleFormValidationErrors({ ...scheduleValidationObj });
+                if (!finalValidator) {
+                  let { success, message } = await submitIssue(
+                    demoScheduleURL,
+                    demoDetails
+                  );
+                  if (success) {
+                    notify.success(message);
+                  } else {
+                    notify.error(message);
+                  }
                 }
 
-              }
-                
-              setBtnLoaders({ ...btnLoaders, demo: false });
+                setBtnLoaders({ ...btnLoaders, demo: false });
               },
             }}
           >
@@ -382,33 +390,46 @@ const ContactUs = () => {
                   value={demoDetails.email}
                   onChange={(e) => {
                     let emailRegex = /\S+@\S+\.\S+/;
-                   if(emailRegex.test(e))
-                   {
-                    const scheduleValidationObj={...scheduleFormValidationErrors};
-                    scheduleValidationObj.email=false;
-                    setScheduleFormValidationErrors({...scheduleValidationObj});
-                   }
-                    setDemoDetails({ ...demoDetails, email: e })}}
-                  error={scheduleFormValidationErrors.email?"Required":false}
+                    if (emailRegex.test(e)) {
+                      const scheduleValidationObj = {
+                        ...scheduleFormValidationErrors,
+                      };
+                      scheduleValidationObj.email = false;
+                      setScheduleFormValidationErrors({
+                        ...scheduleValidationObj,
+                      });
+                    }
+                    setDemoDetails({ ...demoDetails, email: e });
+                  }}
+                  error={
+                    scheduleFormValidationErrors.email ? "Required" : false
+                  }
                 />
                 <Select
                   placeholder="Select Medium"
                   label="Medium"
                   requiredIndicator
                   value={demoDetails.preferredMeeting}
-                  onChange={(e) =>{
-                      const scheduleValidationObj={...scheduleFormValidationErrors};
-                      scheduleValidationObj.preferredMeeting=false;
-                      setScheduleFormValidationErrors({...scheduleValidationObj});
-                    setDemoDetails({ ...demoDetails, preferredMeeting: e });     
-                  }
-                  }
+                  onChange={(e) => {
+                    const scheduleValidationObj = {
+                      ...scheduleFormValidationErrors,
+                    };
+                    scheduleValidationObj.preferredMeeting = false;
+                    setScheduleFormValidationErrors({
+                      ...scheduleValidationObj,
+                    });
+                    setDemoDetails({ ...demoDetails, preferredMeeting: e });
+                  }}
                   options={[
                     { label: "Skype", value: "skype" },
                     { label: "Google Meet", value: "googleMeet" },
                     { label: " Zoom Meet", value: "zoomMeet" },
                   ]}
-                  error={scheduleFormValidationErrors.preferredMeeting?"Required":false}
+                  error={
+                    scheduleFormValidationErrors.preferredMeeting
+                      ? "Required"
+                      : false
+                  }
                 />
               </Stack>
               <Stack distribution="fillEvenly">
@@ -417,55 +438,85 @@ const ContactUs = () => {
                   placeholder="Select Time Zone"
                   requiredIndicator
                   value={demoDetails.timeZone}
-                  onChange={(e) =>{
-                      const scheduleValidationObj={...scheduleFormValidationErrors};
-                      scheduleValidationObj.timeZone=false;
-                      setScheduleFormValidationErrors({...scheduleValidationObj});
-                   
-                    setDemoDetails({ ...demoDetails, timeZone: e }) 
-                  }
-                  }
+                  onChange={(e) => {
+                    const scheduleValidationObj = {
+                      ...scheduleFormValidationErrors,
+                    };
+                    scheduleValidationObj.timeZone = false;
+                    setScheduleFormValidationErrors({
+                      ...scheduleValidationObj,
+                    });
+
+                    setDemoDetails({ ...demoDetails, timeZone: e });
+                  }}
                   options={timezone}
-                  error={scheduleFormValidationErrors.timeZone?"Required":false}
+                  error={
+                    scheduleFormValidationErrors.timeZone ? "Required" : false
+                  }
                 />
                 <Select
                   label="Time"
                   placeholder="Select Time"
                   requiredIndicator
                   value={demoDetails.preferredTime}
-                  onChange={(e) =>{
-                      const scheduleValidationObj={...scheduleFormValidationErrors};
-                      scheduleValidationObj.preferredTime=false;
-                      setScheduleFormValidationErrors({...scheduleValidationObj});
-                   
-                    setDemoDetails({ ...demoDetails, preferredTime: e })
-                    }}
+                  onChange={(e) => {
+                    const scheduleValidationObj = {
+                      ...scheduleFormValidationErrors,
+                    };
+                    scheduleValidationObj.preferredTime = false;
+                    setScheduleFormValidationErrors({
+                      ...scheduleValidationObj,
+                    });
+
+                    setDemoDetails({ ...demoDetails, preferredTime: e });
+                  }}
                   options={preferredTime}
-                  error={scheduleFormValidationErrors.preferredTime?"Required":false}
+                  error={
+                    scheduleFormValidationErrors.preferredTime
+                      ? "Required"
+                      : false
+                  }
                 />
               </Stack>
-             <TextField
+              <TextField
                 label="Preferred Date"
                 placeholder="Please provide valid email address"
                 requiredIndicator
                 type={"date"}
                 value={demoDetails.date}
                 onChange={(e) => {
-                    const scheduleValidationObj={...scheduleFormValidationErrors};
-                    scheduleValidationObj.date=false;
-                    setScheduleFormValidationErrors({...scheduleValidationObj});
-                 
-                  setDemoDetails({ ...demoDetails, date: e });}}
-                error={scheduleFormValidationErrors.date?"Required":false}
+                  const scheduleValidationObj = {
+                    ...scheduleFormValidationErrors,
+                  };
+                  scheduleValidationObj.date = false;
+                  setScheduleFormValidationErrors({ ...scheduleValidationObj });
+
+                  setDemoDetails({ ...demoDetails, date: e });
+                }}
+                error={scheduleFormValidationErrors.date ? "Required" : false}
               />
               {/*  not a mandatory field */}
               <TextField
                 placeholder="Enter additional note..."
                 label="Additional Note"
+                // multiline={
+                //   connectedAccountsArray.length <= 3
+                //     ? 3
+                //     : connectedAccountsArray.length >=4 &&
+                //       connectedAccountsArray.length <= 6
+                //     ? 5
+                //     : connectedAccountsArray.length >= 7 &&
+                //       connectedAccountsArray.length <= 9
+                //     ? 6
+                //     : 8
+                // }
                 multiline={
-                  connectedAccountsArray.length <= 3
+                  connectedAccountsArray.length >= 1 &&
+                  connectedAccountsArray.length <= 2
+                    ? 2
+                    : connectedAccountsArray.length <= 3
                     ? 3
-                    : connectedAccountsArray.length >=4 &&
+                    : connectedAccountsArray.length >= 4 &&
                       connectedAccountsArray.length <= 6
                     ? 5
                     : connectedAccountsArray.length >= 7 &&

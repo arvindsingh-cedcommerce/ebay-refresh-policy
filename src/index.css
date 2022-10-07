@@ -206,3 +206,7 @@ code {
 .step-card .Polaris-Card{
   min-height: 644px;
 }
+
+.contactus-form-box  .Polaris-Card{
+  height: 100%;
+}
