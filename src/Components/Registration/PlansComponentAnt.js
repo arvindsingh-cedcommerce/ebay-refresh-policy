@@ -413,7 +413,7 @@ const PlansComponentAnt = ({
                                   );
                                 }}
                               />
-                              <Row justify="end" style={{marginTop:'20px'}}>
+                              <Row justify="center" style={{marginTop:'20px'}}>
                                 <ShopifyButton
                                   primary
                                   size="slim"
