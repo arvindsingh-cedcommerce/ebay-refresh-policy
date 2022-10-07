@@ -1,6 +1,8 @@
 import { Icon, Link } from "@shopify/polaris";
+import { Link, SkeletonBodyText } from "@shopify/polaris";
 import { Carousel } from "antd";
 import React from "react";
+import { useState, useEffect } from "react";
 import CarouselImage1 from "../../../../../assets/Digital-Marketing-Shopify-Expert-Solutions.jpg";
 import CarouselImage2 from "../../../../../assets/Sell-on-leading-global-marketplaces-with-CedCommerce.jpg";
 import {
@@ -67,13 +69,13 @@ const CarouselComponent = ({
               reqiuredCurrentStep == 3
                 ? orderManagementDisabledCount == 0 ||
                   productManagementDisabledCount == 0
-                  ? "225px"
-                  : "265px"
+                  ? "240px"
+                  : "240px"
                 : reqiuredCurrentStep >= 2
                 ? notProfiledProductCount > 0
-                  ? "187px"
-                  : "225px"
-                : "269px"
+                  ? "240px"
+                  : "240px"
+                : "240px"
             }
             src={CarouselImage1}
             alt=""
@@ -88,13 +90,13 @@ const CarouselComponent = ({
               reqiuredCurrentStep == 3
                 ? orderManagementDisabledCount == 0 ||
                   productManagementDisabledCount == 0
-                  ? "225px"
-                  : "265px"
+                  ? "240px"
+                  : "240px"
                 : reqiuredCurrentStep >= 2
                 ? notProfiledProductCount > 0
-                  ? "187px"
-                  : "225px"
-                : "269px"
+                  ? "240px"
+                  : "240px"
+                : "240px"
             }
             src={CarouselImage2}
             alt=""

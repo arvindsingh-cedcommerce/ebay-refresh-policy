@@ -976,7 +976,7 @@ const FinalDashboard = (props) => {
                 </Card.Section>
               </Card>
             </Col>
-            <Col
+            {/* <Col
               span={8}
               xs={24}
               sm={24}
@@ -984,12 +984,27 @@ const FinalDashboard = (props) => {
               lg={8}
               className="carousel-box"
             >
-              <CarouselComponent
-                reqiuredCurrentStep={reqiuredCurrentStep}
-                notProfiledProductCount={notProfiledProductCount}
-                orderManagementDisabledCount={orderManagementDisabledCount}
-                productManagementDisabledCount={productManagementDisabledCount}
-              />
+              <CarouselComponent */}
+            <Col
+              span={8}
+              className="carousel-box"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={8}
+            >
+              {dashboardSkeleton ? (
+                <SkeletonBodyText lines={11} />
+              ) : (
+                <CarouselComponent
+                  reqiuredCurrentStep={reqiuredCurrentStep}
+                  notProfiledProductCount={notProfiledProductCount}
+                  orderManagementDisabledCount={orderManagementDisabledCount}
+                  productManagementDisabledCount={
+                    productManagementDisabledCount
+                  }
+                />
+              )}
             </Col>
           </Row>
         </Col>
@@ -1313,7 +1328,15 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16} xs={24} sm={24} md={24} lg={16}>
+            <Col
+              span={16}
+              xs={24}
+              sm={24}
+              md={24}
+              lg={16}
+              className="order-static-box"
+            >
+              {/* <Col span={16} > */}
               <Card
                 sectioned
                 title={
