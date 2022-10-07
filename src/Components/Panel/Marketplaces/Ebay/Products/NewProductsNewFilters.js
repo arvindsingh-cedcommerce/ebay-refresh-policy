@@ -639,15 +639,17 @@ function NewProductsNewFilters(props) {
           );
           tempObject["profile"] = (
             <center>
-              
-              <Text onClick={(e) => {
-                  return props.history.push(
-                    `/panel/ebay/profiles/edit?id=${profile_id}`
-                  );
-                }}
-                strong
-                style={{ cursor: "pointer" }}>{profile_name ? profile_name : "-"}</Text>
-            </center>
+              <Button
+      plain
+      onClick={(e) => {
+        return props.history.push(
+          `/panel/ebay/profiles/edit?id=${profile_id}`
+        );
+      }}
+    >
+      {profile_name ? profile_name : "-"}
+    </Button>
+                    </center>
           );
           tempObject["variantAttributes"] = (
             <center>
