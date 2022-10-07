@@ -103,6 +103,10 @@ const ProductBulkMenu = (props) => {
     <>
       <Dropdown
         key="bulkAction"
+        overlayStyle={{
+          maxHeight:"40rem",
+          overflowY:"scroll"
+        }}
         overlay={
            <Menu className={scroll ? "bulk-dropdown-hide" : ""}>
             <Menu.ItemGroup key="g3" title="eBay Actions">
