@@ -1,5 +1,5 @@
 import { Card, FormLayout, Layout, Stack } from "@shopify/polaris";
-import { Alert, Col, Collapse, Row } from "antd";
+import { Alert, Col, Collapse, Image, Row } from "antd";
 import { isUndefined } from "lodash";
 import React from "react";
 import ReactJson from "react-json-view";
@@ -15,7 +15,17 @@ const ProductDataComponentNew = ({
     let filteredAccounts = connectedAccounts.filter(
       (account) => account["shopId"] == shopId
     );
-    return filteredAccounts[0]["label"];
+   
+    return <> <Image
+    preview={false}
+    width={25}
+  
+    src={
+      filteredAccounts[0]["siteID"] &&
+      require(`../../../../../../assets/flags/${filteredAccounts[0]["siteID"]}.png`)
+    }
+    style={{ borderRadius: "50%",marginRight:"20px"}}
+  />{filteredAccounts[0]["label"]}</>;
   };
 
   return Object.keys(errorsData).length &&
