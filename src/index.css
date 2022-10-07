@@ -206,3 +206,10 @@ code {
 .step-card .Polaris-Card{
   min-height: 644px;
 }
+
+.bulk-dropdown-show{
+  max-height: 40rem;
+  overflow-y: scroll;
+  border-radius: 0.8rem !important;
+  min-width: 200px;
+}
