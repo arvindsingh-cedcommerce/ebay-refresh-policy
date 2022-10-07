@@ -44,6 +44,10 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
     <>
       <Dropdown
         key="massAction"
+        overlayStyle={{
+          height:"40rem",
+          overflow:"scroll",
+        }}
         overlay={
           <Menu>
             <Menu.ItemGroup key="g3" title="eBay Actions">
