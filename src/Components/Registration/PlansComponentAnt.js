@@ -233,9 +233,9 @@ const PlansComponentAnt = ({
             <Col span={24}>
               {fromOnBoarding ? (
                 <React.Fragment>
-                  <Row justify="center">
+                  <Row justify="space-between"  style={{marginBottom:'20px'}}>
                     <Col>
-                      <Title level={4}>Choose Plan</Title>
+                      <Title style={{marginRight:'20px'}} level={4}>Choose Plan</Title>
                     </Col>
                     <Col>
                       <ShopifyButton
@@ -413,7 +413,7 @@ const PlansComponentAnt = ({
                                   );
                                 }}
                               />
-                              <Row justify="center" style={{marginTop:'20px'}}>
+                              <Row justify="end" style={{marginTop:'20px'}}>
                                 <ShopifyButton
                                   primary
                                   size="slim"
@@ -438,7 +438,7 @@ const PlansComponentAnt = ({
                                   // }
                                 >
                                   Choose Plan
-                                </ShopifyButton>
+                                 </ShopifyButton>
                               </Row>
                             </Card>
                           </Col>
