@@ -259,7 +259,7 @@ const VariantComponentData = ({ record, size }) => {
       More actions
     </Button>
   );
-
+  
   return (
     // <Form form={form} component={false}>
     // <Card
@@ -301,6 +301,7 @@ const VariantComponentData = ({ record, size }) => {
           cell: EditableCell,
         },
       }}
+      loading={data.length > 0 ? false : true}
     />
     // </Card>
     // </Form>
