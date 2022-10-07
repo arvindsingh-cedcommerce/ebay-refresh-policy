@@ -1,5 +1,5 @@
 import { Icon, Link } from "@shopify/polaris";
-import { Link, SkeletonBodyText } from "@shopify/polaris";
+import { SkeletonBodyText } from "@shopify/polaris";
 import { Carousel } from "antd";
 import React from "react";
 import { useState, useEffect } from "react";
