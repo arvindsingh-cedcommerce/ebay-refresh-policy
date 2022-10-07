@@ -16,7 +16,7 @@ const ProductDataComponentNew = ({
       (account) => account["shopId"] == shopId
     );
    
-    return <> <Image
+    return <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}> <div><Image
     preview={false}
     width={25}
   
@@ -24,8 +24,8 @@ const ProductDataComponentNew = ({
       filteredAccounts[0]["siteID"] &&
       require(`../../../../../../assets/flags/${filteredAccounts[0]["siteID"]}.png`)
     }
-    style={{ borderRadius: "50%",marginRight:"20px"}}
-  />{filteredAccounts[0]["label"]}</>;
+    style={{ borderRadius: "50%"}}
+  /></div><div style={{marginLeft:"1rem"}}>{filteredAccounts[0]["label"]}</div></div>;
   };
 
   return Object.keys(errorsData).length &&

@@ -532,7 +532,16 @@ const NewPanel = (props) => {
                     active={bellClicked}
                     activator={activator}
                     onClose={(e) => setBellClicked(!bellClicked)}
+                  preferredAlignment="left"
+                
                   >
+                    <div style={{display:"flex",padding:"2rem",width:"inherit",backgroundColor:"#ADD8E6",alignItems:"center",justifyContent:"space-between"}}><div style={{fontWeight:"bold",fontSize:"2rem"}}>Activities</div>
+                    <Button size="medium" primary style={{fontWeight:"bold",textDecoration:"underline", fontSize:"1.7rem",cursor:"pointer"}} onClick={(e) => {
+                      setBellClicked(!bellClicked);
+                  return props.history.push(
+                    `/panel/ebay/activity`
+                  );
+                }}>View All</Button></div>
                     <ActionList
                       actionRole="menuitem"
                       items={allNotifications}

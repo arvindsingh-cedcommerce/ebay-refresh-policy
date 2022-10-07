@@ -8,6 +8,7 @@ import {
   Select,
   Stack,
   TextField,
+  TextStyle,
   Tooltip,
 } from "@shopify/polaris";
 import { EditMinor } from "@shopify/polaris-icons";
@@ -177,8 +178,18 @@ const VariantsComponent = ({
     ) : (
       <Image width={25} preview={false} src={NoProductImage} />
     );
+    let skuText=key["sku"];
+        if(skuText.length>80)
     tempObject["variantSKU"] = (
-      <>{key["sku"]}</>
+      <Tooltip content={skuText}><TextStyle>{`${skuText.substring(0,79)}...`}</TextStyle></Tooltip>
+      // <TextField
+      //   // disabled
+      //   value={key["sku"]}
+      //   onChange={(e) => variantValueChange(key, "sku", e)}
+      // />
+    );
+    else
+    tempObject["variantSKU"] = (skuText
       // <TextField
       //   // disabled
       //   value={key["sku"]}
