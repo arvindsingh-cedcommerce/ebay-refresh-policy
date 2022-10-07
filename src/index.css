@@ -165,3 +165,7 @@ code {
   height: 35px !important;
   line-height: 35px !important;
 }
+
+.contactus-form-box  .Polaris-Card{
+  height: 100%;
+}
