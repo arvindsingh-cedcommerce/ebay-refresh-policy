@@ -645,6 +645,7 @@ function NewProductsNewFilters(props) {
                     `/panel/ebay/profiles/edit?id=${profile_id}`
                   );
                 }}
+                strong
                 style={{ cursor: "pointer" }}>{profile_name ? profile_name : "-"}</Text>
             </center>
           );
