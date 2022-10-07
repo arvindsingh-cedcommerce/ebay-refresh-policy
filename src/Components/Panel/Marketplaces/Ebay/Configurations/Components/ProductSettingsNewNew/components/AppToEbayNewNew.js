@@ -154,7 +154,7 @@ const AppToEbayNewNew = ({
             parsedData[shopId][field] = false;
           } else {
             const { label, description, ...remainingKeys } = fields[field];
-            parsedData[shopId][field] = {...remainingKeys}
+            parsedData[shopId][field] = { ...remainingKeys };
           }
         } else parsedData[shopId][field] = fields[field]["value"];
       }
@@ -296,30 +296,35 @@ export const CheckboxComponent = ({
                   temp[account]["checked"] = e.target.checked;
                   setconnectedAccountsObject(temp);
                 }}
-              ></Checkbox>
-              {connectedAccountsObject[account]["siteId"] ? (
-                <div
-                style={connectedAccountsObject[account]["status"] === "inactive" ? {
-                  pointerEvents: "none",
-                  opacity: 0.4,
-                }: {}}
-                >
-                <Stack alignment="fill" spacing="tight">
-                  <Image
-                    preview={false}
-                    width={25}
-                    src={
-                      connectedAccountsObject[account]["siteId"] &&
-                      require(`../../../../../../../../assets/flags/${connectedAccountsObject[account]["siteId"]}.png`)
+              >
+                {connectedAccountsObject[account]["siteId"] ? (
+                  <div
+                    style={
+                      connectedAccountsObject[account]["status"] === "inactive"
+                        ? {
+                            pointerEvents: "none",
+                            opacity: 0.4,
+                          }
+                        : {}
                     }
-                    style={{ borderRadius: "50%" }}
-                  />
-                  <>{account.split("-")[1]}</>
-                </Stack>
-                </div>
-              ) : (
-                <p>{account}</p>
-              )}
+                  >
+                    <Stack alignment="fill" spacing="tight">
+                      <Image
+                        preview={false}
+                        width={25}
+                        src={
+                          connectedAccountsObject[account]["siteId"] &&
+                          require(`../../../../../../../../assets/flags/${connectedAccountsObject[account]["siteId"]}.png`)
+                        }
+                        style={{ borderRadius: "50%" }}
+                      />
+                      <>{account.split("-")[1]}</>
+                    </Stack>
+                  </div>
+                ) : (
+                  <p>{account}</p>
+                )}
+              </Checkbox>
             </Stack>
           );
         })}
