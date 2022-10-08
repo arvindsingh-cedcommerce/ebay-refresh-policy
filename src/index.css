@@ -207,6 +207,12 @@ code {
   min-height: 644px;
 }
 
-.contactus-form-box  .Polaris-Card{
+.contactus-form-box {
   height: 100%;
+}
+.bulk-dropdown-show{
+  max-height: 40rem;
+  overflow-y: scroll;
+  border-radius: 0.8rem !important;
+  min-width: 200px;
 }
