@@ -88,7 +88,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "3",
     dataType: "number",
-    placeholder:'Product Type'
+    placeholder: "Enter eBay Item Id",
   },
   {
     label: "Product Type",
@@ -97,7 +97,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "string",
-    placeholder:'Product Type'
+    placeholder: "Select Product Type",
   },
   {
     label: "Vendor",
@@ -106,7 +106,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "string",
-    placeholder:'Product Type'
+    placeholder: "Select Vendor",
   },
   {
     label: "Tags",
@@ -115,7 +115,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "3",
     dataType: "string",
-    placeholder:'Product Type'
+    placeholder: "Enter Tags",
   },
   {
     label: "Price",
@@ -124,7 +124,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "number",
-    placeholder:'Product Type'
+    placeholder: "Enter Price",
   },
   {
     label: "Inventory",
@@ -133,7 +133,7 @@ export const filtersFields = [
     inputValue: "",
     operator: "1",
     dataType: "number",
-    placeholder:'Product Type'
+    placeholder: "Enter Inventory",
   },
 ];
 
@@ -159,6 +159,8 @@ function NewProductsNewFilters(props) {
     (state) => state.productFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const [productData, setProductData] = useState([]);
 
@@ -1115,6 +1117,16 @@ function NewProductsNewFilters(props) {
       setFiltersToPass(reduxState);
     }
   }, [connectedAccountsArray]);
+
+  function handleScroll(e) {
+    if (
+      e.currentTarget.querySelector(".ant-table-wrapper").className ===
+      "ant-table-wrapper"
+    ) {
+      setIsOpen(false);
+    }
+  }
+
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -1163,7 +1175,11 @@ function NewProductsNewFilters(props) {
             style={{ marginBottom: 10 }}
           >
             <Col className="gutter-row" span={6}>
-              <ProductMassMenu selectedRows={selectedRows} />
+              <ProductMassMenu
+                selectedRows={selectedRows}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
             </Col>
             <Col className="gutter-row" span={18}>
               <Stack distribution="trailing">
@@ -1181,69 +1197,71 @@ function NewProductsNewFilters(props) {
             </Col>
           </Row>
         </div>
-        <NestedTableComponent
-          loading={gridLoader}
-          size={"small"}
-          pagination={false}
-          columns={productColumns}
-          dataSource={productData}
-          rowSelection={{
-            type: selectionType,
-            ...rowSelection,
-          }}
-          scroll={{ x: 1500, y: 500 }}
-          expandable={{
-            expandedRowRender: (record) => {
-              return record["showVariant"] ? (
-                // <>hi</>
-                <VariantComponentData
-                  // dataSource={record["variantsData"]}
-                  record={record}
-                  size="small"
-                />
-              ) : (
-                // <VariantComponentData
-                //   // dataSource={record["variantsData"]}
-                //   record={record}
-                //   size="small"
+        <div className="wrapper" onScroll={handleScroll}>
+          <NestedTableComponent
+            loading={gridLoader}
+            size={"small"}
+            pagination={false}
+            columns={productColumns}
+            dataSource={productData}
+            rowSelection={{
+              type: selectionType,
+              ...rowSelection,
+            }}
+            scroll={{ x: 1500, y: 500 }}
+            expandable={{
+              expandedRowRender: (record) => {
+                return record["showVariant"] ? (
+                  // <>hi</>
+                  <VariantComponentData
+                    // dataSource={record["variantsData"]}
+                    record={record}
+                    size="small"
+                  />
+                ) : (
+                  // <VariantComponentData
+                  //   // dataSource={record["variantsData"]}
+                  //   record={record}
+                  //   size="small"
+                  // />
+                  // <RenderChild record={record} />
+                  // <VariantComponentData
+                  //   dataSource={record["variantsData"]}
+                  //   size="small"
+                  // />
+                  <Alert message="No Variants Found" type="info" />
+                );
+                // <TabsComponent
+                //   totalTabs={1}
+                //   tabContents={{
+                //     "Variant Listings":
+                //       record["variantsData"] &&
+                //       record["variantsData"].length > 0 ? (
+                //         <VariantComponentData
+                //           dataSource={record["variantsData"]}
+                //           size="small"
+                //         />
+                //       ) : (
+                //         <Alert message="No Variants Found" type="info" />
+                //       ),
+                //   }}
                 // />
-                // <RenderChild record={record} />
-                // <VariantComponentData
-                //   dataSource={record["variantsData"]}
-                //   size="small"
-                // />
-                <Alert message="No Variants Found" type="info" />
-              );
-              // <TabsComponent
-              //   totalTabs={1}
-              //   tabContents={{
-              //     "Variant Listings":
-              //       record["variantsData"] &&
-              //       record["variantsData"].length > 0 ? (
-              //         <VariantComponentData
-              //           dataSource={record["variantsData"]}
-              //           size="small"
-              //         />
-              //       ) : (
-              //         <Alert message="No Variants Found" type="info" />
-              //       ),
-              //   }}
-              // />
-              // );
-            },
-            expandIcon: ({ expanded, onExpand, record }) =>
-              record["showVariant"] &&
-              (expanded ? (
-                <Tooltip content="Hide Variants">
-                  <CaretUpOutlined onClick={(e) => onExpand(record, e)} />
-                </Tooltip>
-              ) : (
-                <Tooltip content="View Variants">
-                  <CaretDownOutlined onClick={(e) => onExpand(record, e)} />
-                </Tooltip>
-              )),
-          }}
-        />
+                // );
+              },
+              expandIcon: ({ expanded, onExpand, record }) =>
+                record["showVariant"] &&
+                (expanded ? (
+                  <Tooltip content="Hide Variants">
+                    <CaretUpOutlined onClick={(e) => onExpand(record, e)} />
+                  </Tooltip>
+                ) : (
+                  <Tooltip content="View Variants">
+                    <CaretDownOutlined onClick={(e) => onExpand(record, e)} />
+                  </Tooltip>
+                )),
+            }}
+          />
+        </div>
       </Card>
       <NewFilterComponentSimilarPolaris
         setFiltersDrawerVisible={setFiltersDrawerVisible}

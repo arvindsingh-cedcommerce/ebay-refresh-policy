@@ -10,7 +10,7 @@ import {
   DollarOutlined,
   RedoOutlined,
   ExportOutlined,
-  EyeInvisibleOutlined
+  EyeInvisibleOutlined,
 } from "@ant-design/icons";
 import { Button, Modal, Stack } from "@shopify/polaris";
 import { Dropdown, Menu } from "antd";
@@ -30,7 +30,7 @@ import {
   uploadProductByIdURL,
 } from "../../../../../URLs/ProductsURL";
 
-const ProductMassMenu = ({ selectedRows, ...props }) => {
+const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
   const [modal, setModal] = useState({
     active: false,
     content: "",
@@ -39,7 +39,6 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
     api: "",
   });
   const [btnLoader, setBtnLoader] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -56,7 +55,7 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
           overflowY: "scroll",
           zIndex: 50,
           borderRadius: "10px !important",
-          border: '1px solid #e2d8d8'
+          border: "1px solid #e2d8d8",
         }}
         visible={isOpen}
         overlay={
@@ -401,7 +400,10 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
         trigger={["click"]}
         disabled={selectedRows.length > 0 ? false : true}
       >
-        <Button primary={selectedRows.length} onClick={() => setIsOpen(!isOpen)}>
+        <Button
+          primary={selectedRows.length}
+          onClick={() => setIsOpen(!isOpen)}
+        >
           <div>
             {selectedRows.length
               ? `${selectedRows.length} product(s) selected`
