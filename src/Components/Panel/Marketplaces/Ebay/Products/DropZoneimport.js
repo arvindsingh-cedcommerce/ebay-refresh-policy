@@ -5,6 +5,7 @@ import {
   List,
   Thumbnail,
   Caption,
+  Button,
 } from "@shopify/polaris";
 import React, { Component } from "react";
 
@@ -18,6 +19,8 @@ class DropZoneimport extends Component {
     files: [],
     hasError: false,
     rejectedFiles: [],
+    acceptedFiles:[],
+    uploadBtnStatus: false,
   };
 
   removefiles() {
@@ -25,7 +28,13 @@ class DropZoneimport extends Component {
     this.state.rejectedFiles = [];
     this.setState(this.state);
   }
-
+   componentDidUpdate()
+   {
+    if(this.state.uploadBtnStatus)
+    {
+      this.props.getFile(this.state.acceptedFiles, this.state.rejectedFiles);
+    }
+   }
   render() {
     const { hasError, rejectedFiles } = this.state;
     const errorMessage = hasError && (
@@ -67,7 +76,6 @@ class DropZoneimport extends Component {
         ))}
       </Stack>
     );
-
     return (
       <Stack vertical>
         {errorMessage}
@@ -78,10 +86,10 @@ class DropZoneimport extends Component {
           onDrop={(files, acceptedFiles, rejectedFiles) => {
             this.setState({
               files: [...this.state.files, ...acceptedFiles],
+              acceptedFiles: acceptedFiles,
               rejectedFiles: rejectedFiles,
               hasError: rejectedFiles.length > 0,
             });
-            this.props.getFile(acceptedFiles, rejectedFiles);
           }}
           allowMultiple={false}
           disabled={this.state.files.length > 1}
@@ -89,6 +97,11 @@ class DropZoneimport extends Component {
           {uploadedFiles}
           {fileUpload}
         </DropZone>
+        <div style={{display:"flex",justifyContent:"center"}}>
+          <Button primary disabled={files.length===0 || files.length>1} onClick={()=>{
+            this.setState({...this.state,uploadBtnStatus:true});
+          }}>Upload</Button></div>
+       
       </Stack>
     );
   }
