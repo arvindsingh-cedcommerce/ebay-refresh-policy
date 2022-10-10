@@ -49,6 +49,7 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
   return (
     <>
       <Dropdown
+        overlayClassName="massMenu"
         key="massAction"
         overlayStyle={{
           maxHeight: "40rem",
