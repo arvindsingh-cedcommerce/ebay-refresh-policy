@@ -61,6 +61,7 @@ import ProductBulkMenu from "./ProductBulkMenu";
 import ProductMassMenu from "./ProductMassMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
+import OutsideAlerter from "./OutsideAlerter";
 
 const { Text } = Typography;
 
@@ -161,6 +162,7 @@ function NewProductsNewFilters(props) {
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenBulk, setIsOpenBulk] = useState(false);
 
   const [productData, setProductData] = useState([]);
 
@@ -1150,7 +1152,13 @@ function NewProductsNewFilters(props) {
       ghost={true}
       extra={[
         // <ProductMassMenu selectedRows={selectedRows} />,
-        <ProductBulkMenu profileList={profileList} />,
+        <OutsideAlerter isOpen={isOpenBulk} setIsOpen={setIsOpenBulk}>
+          <ProductBulkMenu
+            profileList={profileList}
+            isOpenBulk={isOpenBulk}
+            setIsOpenBulk={setIsOpenBulk}
+          />
+        </OutsideAlerter>,
       ]}
     >
       <Card sectioned>
@@ -1175,11 +1183,13 @@ function NewProductsNewFilters(props) {
             style={{ marginBottom: 10 }}
           >
             <Col className="gutter-row" span={6}>
-              <ProductMassMenu
-                selectedRows={selectedRows}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-              />
+              <OutsideAlerter isOpen={isOpen} setIsOpen={setIsOpen}>
+                <ProductMassMenu
+                  selectedRows={selectedRows}
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                />
+              </OutsideAlerter>
             </Col>
             <Col className="gutter-row" span={18}>
               <Stack distribution="trailing">
@@ -1208,7 +1218,8 @@ function NewProductsNewFilters(props) {
               type: selectionType,
               ...rowSelection,
             }}
-            scroll={{ x: 1500, y: 500 }}
+            // scroll={{ x: 1500, y: 500 }}
+            scroll={{ x: 1500 }}
             expandable={{
               expandedRowRender: (record) => {
                 return record["showVariant"] ? (

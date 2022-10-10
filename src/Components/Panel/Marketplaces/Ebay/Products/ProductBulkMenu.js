@@ -43,8 +43,8 @@ import {
 } from "../../../../../URLs/ProductsURL";
 
 const ProductBulkMenu = (props) => {
-  const { profileList } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  const { profileList, isOpenBulk, setIsOpenBulk } = props;
+  // const [isOpen, setIsOpen] = useState(false);
   const [modal, setModal] = useState({
     active: false,
     content: "",
@@ -95,7 +95,7 @@ const ProductBulkMenu = (props) => {
   // const [scroll, setScroll] = useState(false)
   useEffect(() => {
     window.addEventListener("scroll", () => {
-      setIsOpen(false);
+      setIsOpenBulk(false);
       // setScroll(window.scrollY >= 10)
     });
   }, []);
@@ -111,7 +111,7 @@ const ProductBulkMenu = (props) => {
           borderRadius: "10px !important",
           border: '1px solid #e2d8d8'
         }}
-        visible={isOpen}
+        visible={isOpenBulk}
         // arrow={true}
         overlay={
           <Menu
@@ -360,7 +360,7 @@ const ProductBulkMenu = (props) => {
         }
         trigger={["click"]}
       >
-        <Button onClick={() => setIsOpen(!isOpen)}>
+        <Button onClick={() => setIsOpenBulk(!isOpenBulk)}>
           <div>
             Bulk Actions <DownOutlined />
           </div>
