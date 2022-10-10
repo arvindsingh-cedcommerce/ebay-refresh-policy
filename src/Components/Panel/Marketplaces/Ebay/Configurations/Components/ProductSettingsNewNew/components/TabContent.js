@@ -507,7 +507,7 @@ const validateVatPercentageValue=(value)=>{
                               options={restrictedToBusinessOptions}
                             />
                             <TextField
-                              label="VAT Percentage1"
+                              label="VAT Percentage"
                               value={fields[field]["vatPercentage"]}
                               onChange={(value) =>
                                 {
