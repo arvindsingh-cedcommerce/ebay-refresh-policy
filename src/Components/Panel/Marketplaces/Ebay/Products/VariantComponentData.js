@@ -58,16 +58,55 @@ export const EditableCell = ({
 const VariantComponentData = ({ record, size }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
+  const [variants,setVariants] = useState([]);
   const [editingKey, setEditingKey] = useState("");
   const [selectionType, setSelectionType] = useState("checkbox");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-
+useEffect(()=>{
+if(variants.length>0)
+{
+  getAllVariants([...variants]);
+}
+},[variants]);
   const [popoverActive, setPopoverActive] = useState(false);
 
   const isEditing = (record) => record.key === editingKey;
-
+  const getCheckedAtleastOnceFlag = (variantProductsData, index) => {
+    let count = 0;
+    let variantCount = variantProductsData.length;
+    let temp = [...variantProductsData];
+    temp.forEach((curr) => curr.isExclude === true && count++);
+    let flag = false
+    if(count+1 === variantCount) {
+      flag = true
+    } else flag = false
+    return flag
+  };
+  const getCheckedAtleastOnce = (e, index) => {
+    let count = 0;
+    let variantCount = variants.length;
+    let temp = [...variants];
+    let returnValue = true;
+    temp[index]["isExclude"] = !e;
+    temp.forEach((curr) => curr.isExclude === true && count++);
+    if (count + 1 === variantCount) {
+      let findIndex
+      variants.forEach((val, j, arr) => {
+        if(!arr[j]['isExclude']) {
+          findIndex = j
+        }
+      })
+      temp[findIndex]["isExcludeDisabled"] = true;
+      setVariants(temp);
+    } else {
+      let temp1 = temp.map((curr) => ({...curr, isExcludeDisabled: false}));
+      setVariants(temp1);
+    }
+    return returnValue;
+  };
   const getAllVariants = (data) => {
+    console.log("start data",data);
     let tempVariantData = [];
     tempVariantData = data.map((key, index) => {
       let tempObject = {};
@@ -83,8 +122,11 @@ const VariantComponentData = ({ record, size }) => {
           {/* <>Excluded</> */}
           <Switch
             defaultChecked={key["isExclude"] ? false : true}
+            disabled={key["isExcludeDisabled"]}
             onChange={async (e) => {
               const { source_product_id } = key;
+console.log("variant arr",variants);
+          let returnValue = getCheckedAtleastOnce(e, index);
               const postData = {};
               postData["variant_id"] = [source_product_id];
               postData["status"] = !e ? "Exclude" : "Include";
@@ -149,7 +191,18 @@ const VariantComponentData = ({ record, size }) => {
       Array.isArray(productsData[container_id]["variations"])
     ) {
       // console.log(productsData[container_id]["variations"]);
-      getAllVariants(productsData[container_id]["variations"]);
+      const variantProductsData=[...productsData[container_id]["variations"]];
+      let includeIsExcludeKey = variantProductsData.map((e, index) => {
+        if(e.hasOwnProperty('isExclude')) {
+          return {...e, isExcludeDisabled: false}
+        } else {
+          let flag = getCheckedAtleastOnceFlag(variantProductsData, index)
+          return {...e, isExclude: false, isExcludeDisabled: flag}
+        }
+      })
+      setVariants([...includeIsExcludeKey]);
+      //getAllVariants([...includeIsExcludeKey]);
+
     }
   };
 
