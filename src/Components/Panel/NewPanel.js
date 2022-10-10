@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Ebaymessage from "./Marketplaces/Ebay/Message/ebaymessage";
-import { Layout, Menu, Image, Avatar, Drawer, Button } from "antd";
+import { Layout, Menu, Image, Avatar, Drawer } from "antd";
 import Logo from "../../assets/ced-ebay-logo.png";
 import CollapsedLogo from "../../assets/cedcommercelogoCollapsed.png";
-import {
-  MobileHamburgerMajor, MobileHamburgerMajorMonotone
-} from '@shopify/polaris-icons';
+
 import {
   UserOutlined,
   BarChartOutlined,
@@ -42,10 +40,12 @@ import {
   Stack,
   Popover as ShopifyPopover,
   ActionList,
+  Button,
 } from "@shopify/polaris";
 import {
   CircleCancelMinor,
   CircleTickOutlineMinor,
+  FilterMajorMonotone,
 } from "@shopify/polaris-icons";
 import { getAllNotifications } from "../../APIrequests/ActivitiesAPI";
 import { allNotificationsURL } from "../../URLs/ActivitiesURL";
@@ -190,16 +190,12 @@ const NewPanel = (props) => {
   return (
     <div>
       <Layout className="layout">
-        {/* <Button type="primary" onClick={()=>{setdrawerVisible(!drawerVisible)}}>
-          Open
-        </Button> */}
         {window.innerWidth <= 768 ? (
           <Drawer
-            placement="left"
-            closable={false}
-            open={drawerVisible}
+            placement={"left"}
+            closable={true}
             maskClosable={true}
-            onClose={() => setdrawerVisible(false)}
+            onClose={() => setdrawerVisible(!drawerVisible)}
             visible={drawerVisible}
             key={"left"}
             width={drawerVisible ? "80" : "200"}
@@ -346,7 +342,7 @@ const NewPanel = (props) => {
                   key="forSider"
                 ></Menu.Item>
               </Menu>
-            </Sider>            
+            </Sider>
           </Drawer>
         ) : (
           <Sider
@@ -521,10 +517,8 @@ const NewPanel = (props) => {
                   }
             }
           >
-             
-            
             <div style={{ paddingRight: 40, cursor: "pointer" }}>
-             {/* <Button
+              {/* <Button
                 icon={<Icon source={FilterMajorMonotone} color="base" />}
                 // onClick={() => {
                 //   setFiltersDrawerVisible(true);
@@ -532,50 +526,46 @@ const NewPanel = (props) => {
               >
                 More Filters
               </Button> */}
-             <Stack>    
-              <Stack.Item fill>
-                 {window.innerWidth <= 768?   
-                <div style={{paddingLeft:0,cursor:"pointer"}}>
-                    <Button style={{backgroundColor:"#001529",border:"0"}} onClick={()=>{setdrawerVisible(!drawerVisible)}}> <Icon source={MobileHamburgerMajorMonotone} color={"success"} /></Button>
-                 
-                </div>:""}
-               
-              </Stack.Item>
-              <Stack.Item>
-              <div style={{ marginBottom: "-8px" }}>
-                <ShopifyPopover
-                  active={bellClicked}
-                  activator={activator}
-                  onClose={(e) => setBellClicked(!bellClicked)}
-                >
-                  <ActionList
-                    actionRole="menuitem"
-                    items={allNotifications}
-                  />
-                </ShopifyPopover>
-              </div>
-              
-              </Stack.Item>
-              <Stack.Item>
-              <div
-                onClick={() => props.history.push("/panel/ebay/appaccount")}
-              >
-                <Stack distribution="trailing" alignment="center">
-                  <Avatar
-                    style={{
-                      color: "#084e8a",
-                      backgroundColor: "rgb(206 224 237 / 1)",
-                    }}
+              <Stack distribution="trailing" alignment="center">
+                <div style={{ marginBottom: "-8px" }}>
+                  <ShopifyPopover
+                    active={bellClicked}
+                    activator={activator}
+                    onClose={(e) => setBellClicked(!bellClicked)}
+                  preferredAlignment="left"
+                
                   >
-                    {shopURL?.[0]?.toUpperCase()}
-                  </Avatar>
-                  <div style={{ color: "#fff" }}>
-                    {shopURL?.split(".")?.[0]}
-                  </div>
-          </Stack>
-              </div>
-</Stack.Item>             
-            </Stack>     
+                    <div style={{display:"flex",padding:"2rem",width:"inherit",backgroundColor:"#ADD8E6",alignItems:"center",justifyContent:"space-between"}}><div style={{fontWeight:"bold",fontSize:"2rem"}}>Activities</div>
+                    <Button size="medium" primary style={{fontWeight:"bold",textDecoration:"underline", fontSize:"1.7rem",cursor:"pointer"}} onClick={(e) => {
+                      setBellClicked(!bellClicked);
+                  return props.history.push(
+                    `/panel/ebay/activity`
+                  );
+                }}>View All</Button></div>
+                    <ActionList
+                      actionRole="menuitem"
+                      items={allNotifications}
+                    />
+                  </ShopifyPopover>
+                </div>
+                <div
+                  onClick={() => props.history.push("/panel/ebay/appaccount")}
+                >
+                  <Stack distribution="trailing" alignment="center">
+                    <Avatar
+                      style={{
+                        color: "#084e8a",
+                        backgroundColor: "rgb(206 224 237 / 1)",
+                      }}
+                    >
+                      {shopURL?.[0]?.toUpperCase()}
+                    </Avatar>
+                    <div style={{ color: "#fff" }}>
+                      {shopURL?.split(".")?.[0]}
+                    </div>
+                  </Stack>
+                </div>
+              </Stack>
             </div>
           </Header>
           <Content
@@ -604,9 +594,9 @@ const NewPanel = (props) => {
               <Route
                 path="/panel/ebay/dashboard"
                 render={(props) => {
-                  let refresh=false
-                  if(props.location.state) {
-                    refresh = props.location.state?.refresh
+                  let refresh = false;
+                  if (props.location.state) {
+                    refresh = props.location.state?.refresh;
                   }
                   return (
                     <FinalDashboard

@@ -8,6 +8,7 @@ import {
   Select,
   Stack,
   TextField,
+  TextStyle,
   Tooltip,
 } from "@shopify/polaris";
 import { EditMinor } from "@shopify/polaris-icons";
@@ -178,15 +179,27 @@ const VariantsComponent = ({
     ) : (
       <Image width={25} preview={false} src={NoProductImage} />
     );
+    let skuText=key["sku"];
+        if(skuText.length>80)
     tempObject["variantSKU"] = (
-      <>{key["sku"]}  { customVariantData[index][`customsku`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</>
+      // <>{key["sku"]}  { customVariantData[index][`customsku`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</>
    
+      <Tooltip content={skuText}><TextStyle>{`${skuText.substring(0,79)}...`}{ customVariantData[index][`customsku`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</TextStyle></Tooltip>
       // <TextField
       //   // disabled
       //   value={key["sku"]}
       //   onChange={(e) => variantValueChange(key, "sku", e)}
       // />
     );
+    else
+    tempObject["variantSKU"] = <TextStyle>{skuText}{ customVariantData[index][`customsku`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</TextStyle>
+    // tempObject["variantSKU"] = (skuText
+    //   // <TextField
+    //   //   // disabled
+    //   //   value={key["sku"]}
+    //   //   onChange={(e) => variantValueChange(key, "sku", e)}
+    //   // />
+    // );
     tempObject["variantQuantity"] = (
       key["quantity"] !== undefined ? <>{key["quantity"]?.toString()}{ customVariantData[index][`customquantity`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</> : <></>
       // <TextField
