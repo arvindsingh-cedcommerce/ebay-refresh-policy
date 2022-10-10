@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Ebaymessage from "./Marketplaces/Ebay/Message/ebaymessage";
-import { Layout, Menu, Image, Avatar, Drawer } from "antd";
+import { Layout, Menu, Image, Avatar, Drawer, Button } from "antd";
 import Logo from "../../assets/ced-ebay-logo.png";
 import CollapsedLogo from "../../assets/cedcommercelogoCollapsed.png";
-
+import {
+  MobileHamburgerMajor, MobileHamburgerMajorMonotone
+} from '@shopify/polaris-icons';
 import {
   UserOutlined,
   BarChartOutlined,
@@ -25,6 +27,7 @@ import {
   DropboxOutlined,
   GroupOutlined,
   PieChartOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import PlansComponentAnt from "../Registration/PlansComponentAnt";
 import OrdersComponent from "./Marketplaces/Ebay/Orders/OrdersComponent";
@@ -40,12 +43,10 @@ import {
   Stack,
   Popover as ShopifyPopover,
   ActionList,
-  Button,
 } from "@shopify/polaris";
 import {
   CircleCancelMinor,
   CircleTickOutlineMinor,
-  FilterMajorMonotone,
 } from "@shopify/polaris-icons";
 import { getAllNotifications } from "../../APIrequests/ActivitiesAPI";
 import { allNotificationsURL } from "../../URLs/ActivitiesURL";
@@ -190,16 +191,21 @@ const NewPanel = (props) => {
   return (
     <div>
       <Layout className="layout">
+        {/* <Button type="primary" onClick={()=>{setdrawerVisible(!drawerVisible)}}>
+          Open
+        </Button> */}
         {window.innerWidth <= 768 ? (
           <Drawer
-            placement={"left"}
-            closable={true}
+            placement="left"
+            closable={false}
+            open={drawerVisible}
             maskClosable={true}
-            onClose={() => setdrawerVisible(!drawerVisible)}
+            onClose={() => setdrawerVisible(false)}
             visible={drawerVisible}
             key={"left"}
             width={drawerVisible ? "80" : "200"}
           >
+            <div style={{display:"flex"}}>
             <Sider
               style={{
                 overflow: "auto",
@@ -210,6 +216,7 @@ const NewPanel = (props) => {
                 top: 0,
                 bottom: 0,
                 zIndex: "100",
+                justifyContent:"space-between"
               }}
             >
               <div
@@ -342,7 +349,20 @@ const NewPanel = (props) => {
                   key="forSider"
                 ></Menu.Item>
               </Menu>
-            </Sider>
+            </Sider> 
+            <div style={{   overflow: "auto",
+                height: "10vh",
+                color:"white",
+                position: "fixed",
+                left: 210,
+                width: "5rem",
+                top: 15,
+                bottom: 0,
+                zIndex: "100",
+                justifyContent:"space-between"}} onClick={() => setdrawerVisible(false)}>
+              <CloseOutlined style={{fontSize:"2rem"}} />
+            </div>
+            </div>           
           </Drawer>
         ) : (
           <Sider
@@ -517,8 +537,10 @@ const NewPanel = (props) => {
                   }
             }
           >
+             
+            
             <div style={{ paddingRight: 40, cursor: "pointer" }}>
-              {/* <Button
+             {/* <Button
                 icon={<Icon source={FilterMajorMonotone} color="base" />}
                 // onClick={() => {
                 //   setFiltersDrawerVisible(true);
@@ -526,12 +548,21 @@ const NewPanel = (props) => {
               >
                 More Filters
               </Button> */}
-              <Stack distribution="trailing" alignment="center">
-                <div style={{ marginBottom: "-8px" }}>
-                  <ShopifyPopover
-                    active={bellClicked}
-                    activator={activator}
-                    onClose={(e) => setBellClicked(!bellClicked)}
+             <Stack>    
+              <Stack.Item fill>
+                 {window.innerWidth <= 768?   
+                <div style={{paddingLeft:0,cursor:"pointer"}}>
+                    <Button style={{backgroundColor:"#001529",border:"0"}} onClick={()=>{setdrawerVisible(!drawerVisible)}}> <Icon source={MobileHamburgerMajorMonotone} color={"success"} /></Button>
+                 
+                </div>:""}
+               
+              </Stack.Item>
+              <Stack.Item>
+              <div style={{ marginBottom: "-8px" }}>
+                <ShopifyPopover
+                  active={bellClicked}
+                  activator={activator}
+                  onClose={(e) => setBellClicked(!bellClicked)}
                   preferredAlignment="left"
                 
                   >
@@ -542,30 +573,34 @@ const NewPanel = (props) => {
                     `/panel/ebay/activity`
                   );
                 }}>View All</Button></div>
-                    <ActionList
-                      actionRole="menuitem"
-                      items={allNotifications}
-                    />
-                  </ShopifyPopover>
-                </div>
-                <div
-                  onClick={() => props.history.push("/panel/ebay/appaccount")}
-                >
-                  <Stack distribution="trailing" alignment="center">
-                    <Avatar
-                      style={{
-                        color: "#084e8a",
-                        backgroundColor: "rgb(206 224 237 / 1)",
-                      }}
-                    >
-                      {shopURL?.[0]?.toUpperCase()}
-                    </Avatar>
-                    <div style={{ color: "#fff" }}>
-                      {shopURL?.split(".")?.[0]}
-                    </div>
-                  </Stack>
-                </div>
-              </Stack>
+                  <ActionList
+                    actionRole="menuitem"
+                    items={allNotifications}
+                  />
+                </ShopifyPopover>
+              </div>
+              
+              </Stack.Item>
+              <Stack.Item>
+              <div
+                onClick={() => props.history.push("/panel/ebay/appaccount")}
+              >
+                <Stack distribution="trailing" alignment="center">
+                  <Avatar
+                    style={{
+                      color: "#084e8a",
+                      backgroundColor: "rgb(206 224 237 / 1)",
+                    }}
+                  >
+                    {shopURL?.[0]?.toUpperCase()}
+                  </Avatar>
+                  <div style={{ color: "#fff" }}>
+                    {shopURL?.split(".")?.[0]}
+                  </div>
+          </Stack>
+              </div>
+</Stack.Item>             
+            </Stack>     
             </div>
           </Header>
           <Content
@@ -594,9 +629,9 @@ const NewPanel = (props) => {
               <Route
                 path="/panel/ebay/dashboard"
                 render={(props) => {
-                  let refresh = false;
-                  if (props.location.state) {
-                    refresh = props.location.state?.refresh;
+                  let refresh=false
+                  if(props.location.state) {
+                    refresh = props.location.state?.refresh
                   }
                   return (
                     <FinalDashboard
