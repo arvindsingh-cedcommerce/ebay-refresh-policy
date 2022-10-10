@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 /**
  * Component that alerts if you click outside of it
  */
-export default class OutsideAlerter extends Component {
+export default class OutsideAlerterMassMenu extends Component {
   constructor(props) {
     super(props);
     // let {popoverActive, setPopoverActive} = props
@@ -33,11 +33,11 @@ export default class OutsideAlerter extends Component {
   handleClickOutside(event) {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       // alert("You clicked outside of me!");
-      console.log(document.getElementsByClassName('bulkMenu123')[0].className);
-      let classNameExtracted = document.getElementsByClassName('bulkMenu123')[0].className
-      if (classNameExtracted.includes("bulkMenu123"))
-        this.props.setIsOpenBulk(true);
-      else this.props.setIsOpenBulk(false);
+      console.log(document.getElementsByClassName('massMenu')[0].className);
+      let classNameExtracted = document.getElementsByClassName('massMenu')[0].className
+      if (classNameExtracted.includes("massMenu"))
+        this.props.setIsOpen(true);
+      else this.props.setIsOpen(false);
     }
   }
 

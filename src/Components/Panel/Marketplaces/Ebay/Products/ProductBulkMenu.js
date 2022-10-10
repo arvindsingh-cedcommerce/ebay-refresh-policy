@@ -104,12 +104,13 @@ const ProductBulkMenu = (props) => {
     <>
       <Dropdown
         key="bulkAction"
+        overlayClassName="bulkMenu123"
         overlayStyle={{
           maxHeight: "40rem",
           overflowY: "scroll",
           zIndex: 50,
           borderRadius: "10px !important",
-          border: '1px solid #e2d8d8'
+          border: "1px solid #e2d8d8",
         }}
         visible={isOpenBulk}
         // arrow={true}
