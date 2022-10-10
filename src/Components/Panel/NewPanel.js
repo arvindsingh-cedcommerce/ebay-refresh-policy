@@ -557,7 +557,6 @@ const NewPanel = (props) => {
                 </div>:""}
                
               </Stack.Item>
-              <Stack.Item>
               <div style={{ marginBottom: "-8px" }}>
                 <ShopifyPopover
                   active={bellClicked}
@@ -566,41 +565,37 @@ const NewPanel = (props) => {
                   preferredAlignment="left"
                 
                   >
-                    <div style={{display:"flex",padding:"2rem",width:"inherit",backgroundColor:"#ADD8E6",alignItems:"center",justifyContent:"space-between"}}><div style={{fontWeight:"bold",fontSize:"2rem"}}>Activities</div>
-                    <Button size="medium" primary style={{fontWeight:"bold",textDecoration:"underline", fontSize:"1.7rem",cursor:"pointer"}} onClick={(e) => {
+                    <div style={{display:"flex",padding:"2rem 2rem 0 0",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"end"}}>
+                    <p style={{fontWeight:"bold",color:"#2c6ecb", fontSize:"1.3rem",cursor:"pointer"}} onClick={(e) => {
                       setBellClicked(!bellClicked);
                   return props.history.push(
                     `/panel/ebay/activity`
                   );
-                }}>View All</Button></div>
-                  <ActionList
-                    actionRole="menuitem"
-                    items={allNotifications}
-                  />
-                </ShopifyPopover>
-              </div>
-              
-              </Stack.Item>
-              <Stack.Item>
-              <div
-                onClick={() => props.history.push("/panel/ebay/appaccount")}
-              >
-                <Stack distribution="trailing" alignment="center">
-                  <Avatar
-                    style={{
-                      color: "#084e8a",
-                      backgroundColor: "rgb(206 224 237 / 1)",
-                    }}
-                  >
-                    {shopURL?.[0]?.toUpperCase()}
-                  </Avatar>
-                  <div style={{ color: "#fff" }}>
-                    {shopURL?.split(".")?.[0]}
-                  </div>
-          </Stack>
-              </div>
-</Stack.Item>             
-            </Stack>     
+                }}>View All</p></div>
+                    <ActionList
+                      actionRole="menuitem"
+                      items={allNotifications}
+                    />
+                  </ShopifyPopover>
+                </div>
+                <div
+                  onClick={() => props.history.push("/panel/ebay/appaccount")}
+                >
+                  <Stack distribution="trailing" alignment="center">
+                    <Avatar
+                      style={{
+                        color: "#084e8a",
+                        backgroundColor: "rgb(206 224 237 / 1)",
+                      }}
+                    >
+                      {shopURL?.[0]?.toUpperCase()}
+                    </Avatar>
+                    <div style={{ color: "#fff" }}>
+                      {shopURL?.split(".")?.[0]}
+                    </div>
+                  </Stack>
+                </div>
+              </Stack>
             </div>
           </Header>
           <Content
