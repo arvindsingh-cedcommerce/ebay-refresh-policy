@@ -62,6 +62,7 @@ import ProductMassMenu from "./ProductMassMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
 import OutsideAlerter from "./OutsideAlerter";
+import OutsideAlerterMassMenu from "./OutsideAlerterMassMenu";
 
 const { Text } = Typography;
 
@@ -1162,13 +1163,13 @@ function NewProductsNewFilters(props) {
       ghost={true}
       extra={[
         // <ProductMassMenu selectedRows={selectedRows} />,
-        <OutsideAlerter isOpen={isOpenBulk} setIsOpen={setIsOpenBulk}>
+        // <OutsideAlerter isOpenBulk={isOpenBulk} setIsOpenBulk={setIsOpenBulk}>
           <ProductBulkMenu
             profileList={profileList}
             isOpenBulk={isOpenBulk}
             setIsOpenBulk={setIsOpenBulk}
           />
-        </OutsideAlerter>,
+        // {/* </OutsideAlerter> */}
       ]}
     >
       <Card sectioned>
@@ -1193,13 +1194,13 @@ function NewProductsNewFilters(props) {
             style={{ marginBottom: 10 }}
           >
             <Col className="gutter-row" span={6}>
-              <OutsideAlerter isOpen={isOpen} setIsOpen={setIsOpen}>
+              {/* <OutsideAlerterMassMenu isOpen={isOpen} setIsOpen={setIsOpen}> */}
                 <ProductMassMenu
                   selectedRows={selectedRows}
                   isOpen={isOpen}
                   setIsOpen={setIsOpen}
                 />
-              </OutsideAlerter>
+              {/* </OutsideAlerterMassMenu> */}
             </Col>
             <Col className="gutter-row" span={18}>
               <Stack distribution="trailing">

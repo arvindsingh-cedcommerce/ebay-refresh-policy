@@ -534,7 +534,7 @@ const CategoryTemplateGrid = (props) => {
         activator={countryActivator}
         onClose={() => popOverHandler("country")}
       >
-        <div style={{ margin: "10px" }}>
+        <div style={{ margin: "10px", width: "200px" }}>
           <ChoiceList
             choices={filters.country.options}
             selected={selected["country"]}
@@ -596,7 +596,8 @@ const CategoryTemplateGrid = (props) => {
             <Stack.Item fill>{renderCategorySearch()}</Stack.Item>
             <Stack.Item>{renderChoiceListForNameCategoryMapping()}</Stack.Item>
             <Stack.Item>
-              <div style={{ width: 200 }}>{renderOtherFilters()}</div>
+              {/* <div style={{ width: 200 }}>{renderOtherFilters()}</div> */}
+              {renderOtherFilters()}
             </Stack.Item>
           </Stack>
           <Stack spacing="tight">
