@@ -10,11 +10,11 @@ import {
   DollarOutlined,
   RedoOutlined,
   ExportOutlined,
-  EyeInvisibleOutlined
+  EyeInvisibleOutlined,
 } from "@ant-design/icons";
 import { Button, Modal, Stack } from "@shopify/polaris";
 import { Dropdown, Menu } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { postActionOnProductById } from "../../../../../APIrequests/ProductsAPI";
 import { notify } from "../../../../../services/notify";
@@ -30,7 +30,7 @@ import {
   uploadProductByIdURL,
 } from "../../../../../URLs/ProductsURL";
 
-const ProductMassMenu = ({ selectedRows, ...props }) => {
+const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
   const [modal, setModal] = useState({
     active: false,
     content: "",
@@ -40,10 +40,24 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
   });
   const [btnLoader, setBtnLoader] = useState(false);
 
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      setIsOpen(false);
+    });
+  }, []);
+
   return (
     <>
       <Dropdown
         key="massAction"
+        overlayStyle={{
+          maxHeight: "40rem",
+          overflowY: "scroll",
+          zIndex: 50,
+          borderRadius: "10px !important",
+          border: "1px solid #e2d8d8",
+        }}
+        visible={isOpen}
         overlay={
           <Menu>
             <Menu.ItemGroup key="g3" title="eBay Actions">
@@ -386,7 +400,10 @@ const ProductMassMenu = ({ selectedRows, ...props }) => {
         trigger={["click"]}
         disabled={selectedRows.length > 0 ? false : true}
       >
-        <Button primary={selectedRows.length}>
+        <Button
+          primary={selectedRows.length}
+          onClick={() => setIsOpen(!isOpen)}
+        >
           <div>
             {selectedRows.length
               ? `${selectedRows.length} product(s) selected`

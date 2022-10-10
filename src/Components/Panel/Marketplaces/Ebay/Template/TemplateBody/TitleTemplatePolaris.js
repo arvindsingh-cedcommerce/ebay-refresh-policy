@@ -189,7 +189,7 @@ const TitleTemplatePolaris = (props) => {
           id="templateName"
           title="Template name"
           // description="Enter a unique template name"
-          description="Defined Name as per your understanding. It will use to identify template in other sections of the app like product's profile."
+          description="Define name as it will be used to identify template in other sections of the app like product's profile."
         >
           <Layout.Section>
             <Card sectioned>
@@ -257,7 +257,7 @@ const TitleTemplatePolaris = (props) => {
             id="templateName"
             title="Template name"
             // description="Enter a unique template name"
-            description="Defined Name as per your understanding. It will use to identify template in other sections of the app like product's profile."
+            description="Define name as it will be used to identify template in other sections of the app like product's profile."
           >
             <Card sectioned>
               <TextField

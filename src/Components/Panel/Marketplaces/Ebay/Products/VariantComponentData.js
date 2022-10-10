@@ -12,10 +12,11 @@ import {
   Stack,
 } from "@shopify/polaris";
 import {
+  getProducts,
   getrequest,
   postActionOnProductById,
 } from "../../../../../APIrequests/ProductsAPI";
-import { changeVariantStatusURL } from "../../../../../URLs/ProductsURL";
+import { changeVariantStatusURL, getVariantsURL } from "../../../../../URLs/ProductsURL";
 import { notify } from "../../../../../services/notify";
 const { Text } = Typography;
 
@@ -54,7 +55,7 @@ export const EditableCell = ({
   );
 };
 
-const VariantComponentData = ({ dataSource, size }) => {
+const VariantComponentData = ({ record, size }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState("");
@@ -65,19 +66,6 @@ const VariantComponentData = ({ dataSource, size }) => {
   const [popoverActive, setPopoverActive] = useState(false);
 
   const isEditing = (record) => record.key === editingKey;
-
-  const edit = (record) => {
-    form.setFieldsValue({
-      variantImage: "",
-      variantTitle: "",
-      variantSKU: "",
-      variantBarcode: "",
-      variantQuantity: "",
-      variantPrice: "",
-      ...record,
-    });
-    setEditingKey(record.key);
-  };
 
   const getAllVariants = (data) => {
     let tempVariantData = [];
@@ -141,9 +129,37 @@ const VariantComponentData = ({ dataSource, size }) => {
     setData(tempVariantData);
   };
 
+
+  const callVariantData = async (record) => {
+    // console.log("record", record);
+    const { source_product_id, container_id } = record;
+    let {
+      success: productsDataSuccess,
+      data: productsData,
+      message,
+      code,
+    } = await getProducts(getVariantsURL, {
+      container_id: container_id,
+    });
+    if (
+      productsDataSuccess &&
+      productsData &&
+      productsData[container_id] &&
+      productsData[container_id]["variations"] &&
+      Array.isArray(productsData[container_id]["variations"])
+    ) {
+      // console.log(productsData[container_id]["variations"]);
+      getAllVariants(productsData[container_id]["variations"]);
+    }
+  };
+
   useEffect(() => {
-    getAllVariants(dataSource);
+    callVariantData(record);
   }, []);
+
+  // useEffect(() => {
+  //   getAllVariants(dataSource);
+  // }, []);
 
   const columns = [
     {
@@ -165,12 +181,12 @@ const VariantComponentData = ({ dataSource, size }) => {
       dataIndex: "variantTitle",
       key: "variantTitle",
       width: "33%",
-      filters: dataSource.map((key, index) => {
-        let tempObject = {};
-        tempObject["text"] = key["variant_title"];
-        tempObject["value"] = key["variant_title"];
-        return tempObject;
-      }),
+      // filters: record.map((key, index) => {
+      //   let tempObject = {};
+      //   tempObject["text"] = key["variant_title"];
+      //   tempObject["value"] = key["variant_title"];
+      //   return tempObject;
+      // }),
       onFilter: (value, record) => {
         return record.variantTitle.indexOf(value) === 0;
       },
@@ -243,7 +259,7 @@ const VariantComponentData = ({ dataSource, size }) => {
       More actions
     </Button>
   );
-
+  
   return (
     // <Form form={form} component={false}>
     // <Card
@@ -285,6 +301,7 @@ const VariantComponentData = ({ dataSource, size }) => {
           cell: EditableCell,
         },
       }}
+      loading={data.length > 0 ? false : true}
     />
     // </Card>
     // </Form>

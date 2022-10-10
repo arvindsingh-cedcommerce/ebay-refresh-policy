@@ -1367,7 +1367,7 @@ const ProductViewPolarisNew = (props) => {
           />
           <Stack vertical spacing="extraTight">
             <>{mainProduct["title"]}</>
-            {itemUrls.length && (
+            {!getItemURLs().every(item => item == false) && itemUrls.length && (
               <Popover
                 placement="right"
                 content={getItemURLs()}

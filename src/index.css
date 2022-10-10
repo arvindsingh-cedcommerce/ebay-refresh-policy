@@ -132,10 +132,6 @@ code {
   color: #2a78ba !important;
 }
 .floating-right-bottom-btn {
-  /* position : fixed;
-    left:65px;
-    bottom : 40px;
-    z-index: 99; */
   animation: shake 1.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -164,4 +160,56 @@ code {
 .ant-layout-sider-trigger {
   height: 35px !important;
   line-height: 35px !important;
+}
+.statusInactive {
+  -webkit-filter: blur(0.5px);
+  -moz-filter: blur(0.5px);
+  -o-filter: blur(0.5px);
+  -ms-filter: blur(0.5px);
+  filter: blur(0.5px);
+  /* background-color: #ccc; */
+}
+
+.plansCard{
+  border: 2px solid #ebebeb !important;
+  transition: all ease-in-out .3s;
+  box-shadow: 0 30px 30px -20px rgb(0 0 0 / 20%);
+  height: 330px;
+}
+.plansCard.active, .plansCard:hover{
+  box-shadow: 0 30px 40px -10px rgb(0 0 0 / 40%);
+  transform: scale(1.05);
+  border: 2px solid #1072c6 !important;
+  z-index: 1;
+}
+
+.bulk-dropdown-hide{
+  opacity: 0;
+}
+.h-200{
+  height: 200px;
+}
+.welcome-box .Polaris-Card, .carousel-box{
+    height: 240px;
+}
+.carousel-box img{
+  border-radius: 0.8rem;
+}
+.analytics-box .Polaris-Card{
+  height: 382px;
+}
+.step-card {
+  box-shadow: 0 30px 30px -20px rgb(0 0 0 / 20%);
+  border-radius: 10px;
+
+}
+.step-card .Polaris-Card{
+  min-height: 644px;
+}
+
+.bulk-dropdown-show{
+  max-height: 40rem;
+  overflow-y: scroll;
+  border-radius: 0.8rem !important;
+  min-width: 200px;
 }

@@ -294,6 +294,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     } else {
       notify.error(message);
     }
+    await hitAPIsInitialRender();
     setRefreshCollectionBtnLoader(false);
   };
 

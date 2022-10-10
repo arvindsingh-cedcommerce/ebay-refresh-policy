@@ -21,6 +21,7 @@ import {
   SkeletonBodyText,
   SkeletonDisplayText,
   Tooltip,
+  Scrollable
 } from "@shopify/polaris";
 import { Button as AntButton } from "antd";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
@@ -786,11 +787,11 @@ const FinalDashboard = (props) => {
         )}
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16}>
+            <Col span={16} className='welcome-box' >
               <Card sectioned>
                 <Card.Section>
                   {dashboardSkeleton ? (
-                    <SkeletonDisplayText size="extraLarge" />
+                    <SkeletonBodyText size="Large" />
                   ) : (
                     <Stack vertical spacing="tight">
                       <Title level={1} style={{ margin: 0 }}>
@@ -801,7 +802,7 @@ const FinalDashboard = (props) => {
                 </Card.Section>
                 <Card.Section>
                   {dashboardSkeleton ? (
-                    <SkeletonBodyText lines={6} />
+                    <SkeletonBodyText lines={3} />
                   ) : (
                     <>
                       {reqiuredCurrentStep < 2 && (
@@ -968,13 +969,17 @@ const FinalDashboard = (props) => {
                 </Card.Section>
               </Card>
             </Col>
-            <Col span={8}>
-              <CarouselComponent
+            <Col span={8} className='carousel-box'>
+            {dashboardSkeleton ? (
+              <SkeletonBodyText lines={11} />
+            ) : (
+            <CarouselComponent
                 reqiuredCurrentStep={reqiuredCurrentStep}
                 notProfiledProductCount={notProfiledProductCount}
                 orderManagementDisabledCount={orderManagementDisabledCount}
                 productManagementDisabledCount={productManagementDisabledCount}
               />
+            )}
             </Col>
           </Row>
         </Col>
@@ -1124,6 +1129,8 @@ const FinalDashboard = (props) => {
                     <SkeletonBodyText lines={3} />
                   </div>
                 ) : (
+                  <Scrollable shadow style={{height: '126px'}} focusable>
+
                   <Stack vertical spacing="extraTight">
                     {Object.keys(currentPlanDetails).map((planDetail) => {
                       return (
@@ -1134,6 +1141,7 @@ const FinalDashboard = (props) => {
                       );
                     })}
                   </Stack>
+                  </Scrollable>
                 )}
               </Card>
             </Col>
@@ -1141,7 +1149,7 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={12}>
+            <Col span={12} className='analytics-box'>
               <Card
                 sectioned
                 size="small"
@@ -1203,7 +1211,7 @@ const FinalDashboard = (props) => {
                 </div>
               </Card>
             </Col>
-            <Col span={12}>
+            <Col span={12} className='analytics-box'>
               <Card
                 sectioned
                 size="small"
@@ -1274,7 +1282,7 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16}>
+            <Col span={16} className='order-static-box'>
               <Card
                 sectioned
                 title={
@@ -1370,6 +1378,7 @@ const FinalDashboard = (props) => {
                   onAction: () => props.history.push("help"),
                 }}
               >
+              <Scrollable shadow style={{height: '217px'}} focusable>
                 <ResourceList
                   items={faqsData}
                   renderItem={(item) => {
@@ -1386,6 +1395,7 @@ const FinalDashboard = (props) => {
                     );
                   }}
                 />
+                </Scrollable>
               </Card>
             </Col>
           </Row>
@@ -1399,6 +1409,7 @@ const FinalDashboard = (props) => {
                 size="small"
                 style={{ borderRadius: "8px" }}
               >
+              <Scrollable shadow style={{height: '280px'}} focusable>
                 <ResourceList
                   items={news}
                   renderItem={(item) => {
@@ -1426,6 +1437,7 @@ const FinalDashboard = (props) => {
                     );
                   }}
                 />
+                </Scrollable>
               </Card>
             </Col>
             <Col span={8}>
@@ -1442,6 +1454,7 @@ const FinalDashboard = (props) => {
                   },
                 ]}
               >
+              <Scrollable shadow style={{height: '280px'}} focusable>
                 <ResourceList
                   items={blogs}
                   renderItem={(item) => {
@@ -1469,6 +1482,7 @@ const FinalDashboard = (props) => {
                     );
                   }}
                 />
+                </Scrollable>
               </Card>
             </Col>
             <Col span={8}>
@@ -1483,6 +1497,7 @@ const FinalDashboard = (props) => {
                   },
                 ]}
               >
+              <Scrollable shadow style={{height: '280px'}} focusable>
                 <ResourceList
                   items={[
                     {
@@ -1544,6 +1559,7 @@ const FinalDashboard = (props) => {
                     );
                   }}
                 />
+                </Scrollable>
               </Card>
             </Col>
           </Row>

@@ -43,7 +43,8 @@ import {
 } from "../../../../../URLs/ProductsURL";
 
 const ProductBulkMenu = (props) => {
-  const { profileList } = props;
+  const { profileList, isOpenBulk, setIsOpenBulk } = props;
+  // const [isOpen, setIsOpen] = useState(false);
   const [modal, setModal] = useState({
     active: false,
     content: "",
@@ -91,12 +92,31 @@ const ProductBulkMenu = (props) => {
     return validID;
   };
 
+  // const [scroll, setScroll] = useState(false)
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      setIsOpenBulk(false);
+      // setScroll(window.scrollY >= 10)
+    });
+  }, []);
+
   return (
     <>
       <Dropdown
         key="bulkAction"
+        overlayStyle={{
+          maxHeight: "40rem",
+          overflowY: "scroll",
+          zIndex: 50,
+          borderRadius: "10px !important",
+          border: '1px solid #e2d8d8'
+        }}
+        visible={isOpenBulk}
+        // arrow={true}
         overlay={
-          <Menu>
+          <Menu
+          //  className={scroll ? "bulk-dropdown-hide" : "bulk-dropdown-show"}
+          >
             <Menu.ItemGroup key="g3" title="eBay Actions">
               <Menu.Item
                 key="Match from eBay"
@@ -340,7 +360,7 @@ const ProductBulkMenu = (props) => {
         }
         trigger={["click"]}
       >
-        <Button>
+        <Button onClick={() => setIsOpenBulk(!isOpenBulk)}>
           <div>
             Bulk Actions <DownOutlined />
           </div>

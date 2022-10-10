@@ -129,7 +129,6 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
         if (attribute === "fields") {
           errorData[account][attribute] = {};
           for (const field in data[account][attribute]) {
-            
             if (
               field === "orderCancelation" &&
               data[account][attribute][field]["value"] &&
@@ -225,9 +224,16 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
               //   errorData[account][attribute][field]["name"] = true;
               //   errorCount++;
               // } else errorData[account][attribute][field]["name"] = false;
-            } else if(field === 'setOrderName' && data?.[account]?.[attribute]?.[field]?.['value'] === 'custom' && !data?.[account]?.[attribute]?.[field]?.['customValue'].includes("{{ebay_order_id}}")) {
-              errorData[account][attribute][field] = {}
-              errorData[account][attribute][field]['customValue'] = "must contain ebay order id";
+            } else if (
+              field === "setOrderName" &&
+              data?.[account]?.[attribute]?.[field]?.["value"] === "custom" &&
+              !data?.[account]?.[attribute]?.[field]?.["customValue"].includes(
+                "{{ebay_order_id}}"
+              )
+            ) {
+              errorData[account][attribute][field] = {};
+              errorData[account][attribute][field]["customValue"] =
+                "must contain ebay order id";
               errorCount++;
             } else {
               errorData[account][attribute][field] = false;
@@ -248,7 +254,6 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
       const shopId = data[account]["shopId"];
       parsedData[shopId] = {};
       const { fields } = data[account];
-      console.log(account, 'fields', fields);
       for (const field in fields) {
         if (field === "shipmentSync" && fields[field]["value"]) {
           let shipmentSyncContainerObj = {};
@@ -351,9 +356,10 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
           connectedAccountsObject={connectedAccountsObject}
           setconnectedAccountsObject={setconnectedAccountsObject}
         />
-      </Stack>
-      {panes.length > 0 && <Divider />}
-      <Card.Section title="Selected Accounts">
+        {/* </Stack> */}
+        {panes.length > 0 && <Divider />}
+        <>Selected Accounts</>
+        {/* <Card.Section> */}
         <Tabs onChange={() => {}} type="card">
           {Object.keys(panes).map((pane) => {
             return (
@@ -394,7 +400,8 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
             );
           })}
         </Tabs>
-      </Card.Section>
+        {/* </Card.Section> */}
+      </Stack>
     </Card>
   );
 };
@@ -426,30 +433,35 @@ const CheckboxComponent = ({
                   temp[account]["checked"] = e.target.checked;
                   setconnectedAccountsObject(temp);
                 }}
-              ></Checkbox>
-              {connectedAccountsObject[account]["siteId"] ? (
-                <div
-                style={connectedAccountsObject[account]["status"] === "inactive" ? {
-                  pointerEvents: "none",
-                  opacity: 0.4,
-                }: {}}
-                >
-                <Stack alignment="fill" spacing="tight">
-                  <Image
-                    preview={false}
-                    width={25}
-                    src={
-                      connectedAccountsObject[account]["siteId"] &&
-                      require(`../../../../../../../assets/flags/${connectedAccountsObject[account]["siteId"]}.png`)
+              >
+                {connectedAccountsObject[account]["siteId"] ? (
+                  <div
+                    style={
+                      connectedAccountsObject[account]["status"] === "inactive"
+                        ? {
+                            pointerEvents: "none",
+                            opacity: 0.4,
+                          }
+                        : {}
                     }
-                    style={{ borderRadius: "50%" }}
-                  />
-                  <>{account.split("-")[1]}</>
-                </Stack>
-                </div>
-              ) : (
-                <p>{account}</p>
-              )}
+                  >
+                    <Stack alignment="fill" spacing="tight">
+                      <Image
+                        preview={false}
+                        width={25}
+                        src={
+                          connectedAccountsObject[account]["siteId"] &&
+                          require(`../../../../../../../assets/flags/${connectedAccountsObject[account]["siteId"]}.png`)
+                        }
+                        style={{ borderRadius: "50%" }}
+                      />
+                      <>{account.split("-")[1]}</>
+                    </Stack>
+                  </div>
+                ) : (
+                  <p>{account}</p>
+                )}
+              </Checkbox>
             </Stack>
           );
         })}

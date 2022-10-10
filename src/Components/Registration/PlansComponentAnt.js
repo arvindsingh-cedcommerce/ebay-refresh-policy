@@ -131,6 +131,20 @@ const PlansComponentAnt = ({
       setPlans([...plans]);
     }
   };
+
+
+  const onMouseHoverCard = () =>{
+  var plansCard =  document.getElementsByClassName('plansCard');
+    for (var i = 0; i < plansCard.length; i++) {
+      plansCard[i].addEventListener("mouseover", function() {
+      var current = document.getElementsByClassName("active");
+      current[0].className = current[0].className.replace(" active", "");
+      this.className += " active";
+      });
+  }
+
+}
+
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -215,13 +229,13 @@ const PlansComponentAnt = ({
           //   ]
           // }
         >
-          <Row gutter={[8, 32]} justify="center">
+          <Row gutter={[8, 32]} justify="center" className="plansCardRow">
             <Col span={24}>
               {fromOnBoarding ? (
                 <React.Fragment>
-                  <Row justify="space-between">
+                  <Row justify="space-between"  style={{marginBottom:'20px'}}>
                     <Col>
-                      <Title level={4}>Choose Plan</Title>
+                      <Title style={{marginRight:'20px'}} level={4}>Choose Plan</Title>
                     </Col>
                     <Col>
                       <ShopifyButton
@@ -231,7 +245,7 @@ const PlansComponentAnt = ({
                           await saveCompletedStep(3);
                           let { success, data } = await checkStepCompleted();
                           if (success) {
-                            setCurrentStep(data);
+                            setCurrentStep(data);                          
                           }
                         }}
                       >
@@ -319,7 +333,7 @@ const PlansComponentAnt = ({
               </Row>
             </Col>
             <Col span={24}>
-              <Row justify="space-around" gutter={8}>
+              <Row justify="center" gutter={8} style={{marginBottom:'30px'}}>
                 {showSkeleton
                   ? [1, 2, 3, 4, 5].map((e) => (
                       <Col span={4}>
@@ -336,12 +350,14 @@ const PlansComponentAnt = ({
                       )
                       .map((plan, index) => {
                         return (
-                          <Col span={4}>
+                          
+                          <Col span={4} style={{padding:'0'}}>
+                         
                             <Card
                               title={<Title level={5}> {plan["title"]}</Title>}
                               size="small"
-                              // className="hoverCss"
-                              hoverable
+                              className={plan["title"] === 'Silver' ? 'plansCard active' : 'plansCard'}
+                              onMouseOver={onMouseHoverCard}
                               style={{ borderRadius: "8px" }}
                             >
                               <Row align="middle">
@@ -397,7 +413,7 @@ const PlansComponentAnt = ({
                                   );
                                 }}
                               />
-                              <Row justify="end">
+                              <Row justify="end" style={{marginTop:'20px'}}>
                                 <ShopifyButton
                                   primary
                                   size="slim"
@@ -422,7 +438,7 @@ const PlansComponentAnt = ({
                                   // }
                                 >
                                   Choose Plan
-                                </ShopifyButton>
+                                 </ShopifyButton>
                               </Row>
                             </Card>
                           </Col>

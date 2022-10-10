@@ -33,9 +33,11 @@ import {
   Stack,
   Select as ShopifySelect,
   SkeletonBodyText,
+  Tooltip,
 } from "@shopify/polaris";
 import { getDashboardData } from "../../../APIrequests/DashboardAPI";
 import { dashboardAnalyticsURL, ebayDetails } from "../../../URLs/DashboardURL";
+import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 
 export const getCountryName = (site_id) => {
   let countryName = json.flag_country.filter(
@@ -372,6 +374,16 @@ const NewAccount = (props) => {
                 />
               );
             },
+            expandIcon: ({ expanded, onExpand, record }) =>
+              expanded ? (
+                <Tooltip content="Hide Details">
+                  <CaretUpOutlined onClick={(e) => onExpand(record, e)} />
+                </Tooltip>
+              ) : (
+                <Tooltip content="View Details">
+                  <CaretDownOutlined onClick={(e) => onExpand(record, e)} />
+                </Tooltip>
+              ),
           }}
         />
       </ShopifyCard>
@@ -645,9 +657,9 @@ export const EbayAccountDetails = ({
         data["Store"] && data["Store"]["SubscriptionLevel"];
 
       setMarketplaceAccountData(filteredDataToPass);
-      notify.success(message)
+      notify.success(message);
     } else {
-      notify.error(message)
+      notify.error(message);
     }
     setShowSkeleton(false);
   };

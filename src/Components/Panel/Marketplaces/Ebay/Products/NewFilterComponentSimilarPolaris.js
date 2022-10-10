@@ -32,7 +32,7 @@ const NewFilterComponentSimilarPolaris = ({
     <Drawer
       title="Filters"
       placement={"right"}
-      width={500}
+      width={400}
       onClose={() => {
         setFiltersDrawerVisible(false);
       }}
@@ -137,6 +137,7 @@ const NewFilterComponentSimilarPolaris = ({
                       borderRadius: "2px !important",
                     }}
                     value={filters[filter]["value"]}
+                    placeholder={filters[filter]["placeholder"]}
                     onChange={(e) => {
                       let cloneObj = { ...filters };
                       cloneObj[filter]["value"] = e.target.value;

@@ -318,7 +318,7 @@ const FinalPolicyGrid = (props) => {
         <Select
           key="addPolicies"
           value={addTemplateValue}
-          placeholder={<Text strong>Add Policy</Text>}
+          placeholder={<Text strong>Create Policy</Text>}
           onChange={(selectedPolicyValue) => {
             if (connectedAccountsArray.length === 1) {
               const { domainName } = connectedAccountsArray[0];
@@ -359,38 +359,56 @@ const FinalPolicyGrid = (props) => {
           })
         }
         title="Select account for refresh policy"
-        primaryAction={{
-          content: "Refresh",
-          onAction: () => getAllPoliciesRefresh(),
-          loading: refreshPolicyLoader,
-          disabled: !refreshPoliciesAccountSelectionModal.accountName,
-        }}
+        // primaryAction={{
+        //   content: "Refresh",
+        //   onAction: () => getAllPoliciesRefresh(),
+        //   loading: refreshPolicyLoader,
+        //   disabled: !refreshPoliciesAccountSelectionModal.accountName,
+        // }}
       >
         <Modal.Section>
+          <Banner status="info">
+            Please refresh policies on app after creating it on eBay.
+          </Banner>
+          <br />
           <Stack distribution="center" alignment="center">
             <>
               {getCountyrName(refreshPoliciesAccountSelectionModal.siteID) !==
                 "-" &&
                 getCountyrName(refreshPoliciesAccountSelectionModal.siteID)}
             </>
-            <div style={{width: '250px'}}>
-            <PolarisSelect
-              options={refreshPoliciesAccountSelectionModal.options}
-              value={refreshPoliciesAccountSelectionModal.accountName}
-              placeholder="Please Select..."
-              onChange={(e) => {
-                let temp = refreshPoliciesAccountSelectionModal.options.filter(
-                  (account) => account["value"] === e
-                );
-                setRefreshPoliciesAccountSelectionModal({
-                  ...refreshPoliciesAccountSelectionModal,
-                  accountName: temp[0]?.value,
-                  siteID: temp[0]?.siteID,
-                  shopID: temp[0]?.shopID,
-                });
-              }}
-            />
+            <div style={{ width: "250px" }}>
+              <PolarisSelect
+                options={refreshPoliciesAccountSelectionModal.options}
+                value={refreshPoliciesAccountSelectionModal.accountName}
+                placeholder="Please Select..."
+                onChange={(e) => {
+                  let temp =
+                    refreshPoliciesAccountSelectionModal.options.filter(
+                      (account) => account["value"] === e
+                    );
+                  setRefreshPoliciesAccountSelectionModal({
+                    ...refreshPoliciesAccountSelectionModal,
+                    accountName: temp[0]?.value,
+                    siteID: temp[0]?.siteID,
+                    shopID: temp[0]?.shopID,
+                  });
+                }}
+              />
             </div>
+          </Stack>
+          <br />
+          <Stack distribution="center">
+            <Button
+              primary
+              disabled={!refreshPoliciesAccountSelectionModal.accountName}
+              onClick={() => {
+                getAllPoliciesRefresh();
+              }}
+              loading={refreshPolicyLoader}
+            >
+              Refresh Policy
+            </Button>
           </Stack>
         </Modal.Section>
       </Modal>
@@ -410,7 +428,8 @@ const FinalPolicyGrid = (props) => {
       >
         <Modal.Section>
           <Banner status="info">
-            Please refresh policies on app after creating it on eBay.
+            {/* Please refresh policies on app after creating it on eBay. */}
+            Select account to create policy on eBay
           </Banner>
           <br />
           <div
@@ -452,12 +471,16 @@ const FinalPolicyGrid = (props) => {
                 !accountSelectionModal.siteID && !accountSelectionModal.shopID
               }
               onClick={() => {
+                setaccountSelectionModal({
+                  ...accountSelectionModal,
+                  active: false,
+                });
                 window.open(
                   `https://www.bizpolicy.ebay${accountSelectionModal.domainName}/businesspolicy/${accountSelectionModal.selectedPolicyValue}`
                 );
               }}
             >
-              Add
+              Create Policy
             </Button>
           </Stack>
         </Modal.Section>

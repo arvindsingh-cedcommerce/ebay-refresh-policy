@@ -128,6 +128,11 @@ const CategoryTemplatePolarisNew = (props) => {
   // account status
   const [accountStatus, setAccountStatus] = useState("active");
 
+  // storefront details
+  const [storeFrontList, setStoreFrontList] = useState([]);
+  const [storeFrontExists, setStoreFrontExists] = useState(false);
+  const [storeFrontSelected, setStoreFrontSelected] = useState("");
+
   const renderCategoryMapping = (
     categoryTypeMapping,
     setCategoryTypeMapping,
@@ -1090,6 +1095,9 @@ const CategoryTemplatePolarisNew = (props) => {
     const primaryCategoryMappingData = data?.primaryCategoryMapping;
     const secondaryCategoryMappingData = data?.secondaryCategoryMapping;
     const attributeMappingData = data?.attributeMapping;
+    if (data?.storefront_category) {
+      setStoreFrontSelected(data.storefront_category)
+    }
     if (data?.enableSecondaryCategory) {
       setEnableSecondaryCategory(data.enableSecondaryCategory);
     }
@@ -1178,15 +1186,70 @@ const CategoryTemplatePolarisNew = (props) => {
     }
   };
 
-  const getStorefrontcategory = async () => {
+  const extractChildCategoryData = (data) => {
+    // console.log(data);
+    let tempData = data.map((category) => ({
+      label: category.Name,
+      value: category.CategoryID.toString(),
+    }));
+    return tempData;
+  };
+
+  const extractStoreFrontCategories = (data) => {
+    const tempStoreFrontList = data.map((category) => {
+      let tempObj = {};
+      if (
+        category?.ChildCategory &&
+        Array.isArray(category.ChildCategory) &&
+        category.ChildCategory.length
+      ) {
+        tempObj = {
+          title: category.Name,
+          options: [...extractChildCategoryData(category.ChildCategory)],
+        };
+      } else {
+        tempObj = {
+          label: category.Name,
+          value: category.CategoryID.toString(),
+        };
+      }
+      return tempObj;
+    });
+    setStoreFrontList(tempStoreFrontList);
+  };
+
+  const renderStoreFrontCategoryStructure = () => {
+    return (
+      <Select
+        placeholder="Please select..."
+        options={storeFrontList}
+        value={storeFrontSelected}
+        onChange={(e) => setStoreFrontSelected(e)}
+      />
+    );
+  };
+  const getStorefrontcategory = async (refresh = false) => {
     // console.log(siteID, shopID);
     // let { success, data } = await getEbayUserDetails({
     //   site_id: siteID,
     //   shop_id: shopID,
     // });
-    let { success, data } = await getStoreDetails({
-      refresh: true,
-    });
+    const postData = {
+      shop_id: shopID,
+    };
+    if (refresh) postData["refresh"] = refresh;
+    let { success, data } = await getStoreDetails(postData);
+    if (success) {
+      if (
+        data?.CustomCategories?.CustomCategory &&
+        Array.isArray(data?.CustomCategories?.CustomCategory) &&
+        data?.CustomCategories?.CustomCategory.length
+      ) {
+        // console.log('data',data);
+        setStoreFrontExists(true);
+        extractStoreFrontCategories(data?.CustomCategories?.CustomCategory);
+      }
+    }
     // if (success) this.extractStoreFrontcategory(data);
     // else {
     //   form_data.storefront_category_exists = false;
@@ -1242,6 +1305,7 @@ const CategoryTemplatePolarisNew = (props) => {
       (option) => option.value === lastLevel.value
     );
     let postData = {};
+    postData["storefront_category"] = storeFrontSelected;
     postData["selectedConfigurableAttributes"] = selectedConfigurableAttributes;
     postData["site_id"] = siteID;
     postData["shop_id"] = shopID;
@@ -1849,6 +1913,14 @@ const CategoryTemplatePolarisNew = (props) => {
               }
             >
               <Card sectioned>{getProductConditionStructure()}</Card>
+            </Layout.AnnotatedSection>
+          )}
+          {storeFrontExists && (
+            <Layout.AnnotatedSection
+              id="storeFront"
+              title="eBay Store Front Category"
+            >
+              <Card sectioned>{renderStoreFrontCategoryStructure()}</Card>
             </Layout.AnnotatedSection>
           )}
           {configurableAttributesRecieved && (
