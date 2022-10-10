@@ -174,6 +174,7 @@ code {
   border: 2px solid #ebebeb !important;
   transition: all ease-in-out .3s;
   box-shadow: 0 30px 30px -20px rgb(0 0 0 / 20%);
+  height: 330px;
 }
 .plansCard.active, .plansCard:hover{
   box-shadow: 0 30px 40px -10px rgb(0 0 0 / 40%);
@@ -189,7 +190,7 @@ code {
   height: 200px;
 }
 .welcome-box .Polaris-Card, .carousel-box{
-    height: 225px;
+    height: 240px;
 }
 .carousel-box img{
   border-radius: 0.8rem;
@@ -204,4 +205,11 @@ code {
 }
 .step-card .Polaris-Card{
   min-height: 644px;
+}
+
+.bulk-dropdown-show{
+  max-height: 40rem;
+  overflow-y: scroll;
+  border-radius: 0.8rem !important;
+  min-width: 200px;
 }

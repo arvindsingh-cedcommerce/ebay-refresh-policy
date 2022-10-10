@@ -44,6 +44,7 @@ import {
 
 const ProductBulkMenu = (props) => {
   const { profileList } = props;
+  const [isOpen, setIsOpen] = useState(false);
   const [modal, setModal] = useState({
     active: false,
     content: "",
@@ -91,24 +92,31 @@ const ProductBulkMenu = (props) => {
     return validID;
   };
 
-  const [scroll, setScroll] = useState(false)
+  // const [scroll, setScroll] = useState(false)
   useEffect(() => {
     window.addEventListener("scroll", () => {
-      setScroll(window.scrollY >= 10)
-    })
-  }, [])
-
+      setIsOpen(false);
+      // setScroll(window.scrollY >= 10)
+    });
+  }, []);
 
   return (
     <>
       <Dropdown
         key="bulkAction"
         overlayStyle={{
-          maxHeight:"40rem",
-          overflowY:"scroll"
+          maxHeight: "40rem",
+          overflowY: "scroll",
+          zIndex: 50,
+          borderRadius: "10px !important",
+          border: '1px solid #e2d8d8'
         }}
+        visible={isOpen}
+        // arrow={true}
         overlay={
-           <Menu className={scroll ? "bulk-dropdown-hide" : ""}>
+          <Menu
+          //  className={scroll ? "bulk-dropdown-hide" : "bulk-dropdown-show"}
+          >
             <Menu.ItemGroup key="g3" title="eBay Actions">
               <Menu.Item
                 key="Match from eBay"
@@ -352,272 +360,272 @@ const ProductBulkMenu = (props) => {
         }
         trigger={["click"]}
       >
-        <Button>
+        <Button onClick={() => setIsOpen(!isOpen)}>
           <div>
             Bulk Actions <DownOutlined />
           </div>
         </Button>
       </Dropdown>
-          <Modal
-          open={uploadAndReviseOnEbay.modal.active}
-          onClose={() => {
-            let temp = { ...uploadAndReviseOnEbay };
-            temp["modal"]["active"] = false;
-            setUploadAndReviseOnEbay(temp);
-          }}
-          title="Permission required"
-        >
-          <Modal.Section>
-            <Stack vertical spacing="tight">
-              <Banner status="info">
-                If you want to upload the product(s) with single profile kindly
-                select one from below and click on Upload, or your all product(s)
-                get uploaded with all profiles.
-              </Banner>
-              <Select
-                options={profileList}
-                label="Select profile"
-                value={selectedProfle}
-                onChange={(e) => {
-                  setSelectedProfle(e);
+      <Modal
+        open={uploadAndReviseOnEbay.modal.active}
+        onClose={() => {
+          let temp = { ...uploadAndReviseOnEbay };
+          temp["modal"]["active"] = false;
+          setUploadAndReviseOnEbay(temp);
+        }}
+        title="Permission required"
+      >
+        <Modal.Section>
+          <Stack vertical spacing="tight">
+            <Banner status="info">
+              If you want to upload the product(s) with single profile kindly
+              select one from below and click on Upload, or your all product(s)
+              get uploaded with all profiles.
+            </Banner>
+            <Select
+              options={profileList}
+              label="Select profile"
+              value={selectedProfle}
+              onChange={(e) => {
+                setSelectedProfle(e);
+              }}
+              placeholder="Please Select..."
+            />
+            <Stack distribution="center" spacing="tight">
+              <Button
+                onClick={() => {
+                  let temp = { ...uploadAndReviseOnEbay };
+                  temp["modal"]["active"] = false;
+                  setUploadAndReviseOnEbay(temp);
+                  setSelectedProfle("");
                 }}
-                placeholder="Please Select..."
-              />
-              <Stack distribution="center" spacing="tight">
-                <Button
-                  onClick={() => {
-                    let temp = { ...uploadAndReviseOnEbay };
-                    temp["modal"]["active"] = false;
-                    setUploadAndReviseOnEbay(temp);
-                    setSelectedProfle("");
+              >
+                Cancel
+              </Button>
+              <Button
+                primary
+                loading={btnLoader}
+                onClick={async () => {
+                  setBtnLoader(true);
+                  if (selectedProfle === "all") {
+                    let { success, message, data } =
+                      await uploadAndReviseOnEbay.modal.actionName(
+                        uploadAndReviseOnEbay.modal.apiByAll,
+                        uploadAndReviseOnEbay.modal.actionPayloadByAll
+                      );
+                    if (success) {
+                      notify.success(message ? message : data);
+                      props.history.push("/panel/ebay/activity");
+                    } else {
+                      notify.error(message ? message : data);
+                      // setModal({ ...modal, active: false });
+                      let temp = { ...uploadAndReviseOnEbay };
+                      temp["modal"]["active"] = false;
+                      setUploadAndReviseOnEbay(temp);
+                    }
+                  } else if (selectedProfle !== "") {
+                    let selectedProfleDetails = profileList.find(
+                      (profile) => profile.value === selectedProfle
+                    );
+                    let { success, message, data } =
+                      await uploadAndReviseOnEbay.modal.actionName(
+                        uploadAndReviseOnEbay.modal.apiById,
+                        { profile_id: selectedProfleDetails.profileId }
+                      );
+                    if (success) {
+                      notify.success(message ? message : data);
+                      props.history.push("/panel/ebay/activity");
+                    } else {
+                      notify.error(message ? message : data);
+                      // setModal({ ...modal, active: false });
+                      let temp = { ...uploadAndReviseOnEbay };
+                      temp["modal"]["active"] = false;
+                      setUploadAndReviseOnEbay(temp);
+                    }
+                  }
+                  setBtnLoader(false);
+                }}
+              >
+                Upload
+              </Button>
+            </Stack>
+          </Stack>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={importProductById.modal.active}
+        onClose={() => {
+          // let temp = { ...importProductById };
+          // temp["modal"]["active"] = false;
+          // setImportProductById(temp);
+          setImportProductById({
+            id: "",
+            modal: {
+              active: false,
+              content: "",
+              actionName: "",
+              actionPayload: {},
+              api: "",
+            },
+            btnLoader: false,
+            idArray: [],
+          });
+          // setModal({ ...modal, active: false });
+        }}
+        title="Permission required"
+      >
+        <Modal.Section>
+          {/* <FormLayout> */}
+          <Stack vertical spacing="tight">
+            <Stack wrap={true}>
+              <Stack.Item fill>
+                <TextField
+                  placeholder="Enter shopify product id"
+                  value={importProductById["id"]}
+                  onChange={(e) => {
+                    setImportProductById({ ...importProductById, id: e });
                   }}
-                >
-                  Cancel
-                </Button>
+                  type="number"
+                  min={0}
+                  error={importByIdError}
+                  // maxLength={13}
+                  // autoComplete="off"
+                  showCharacterCount
+                />
+              </Stack.Item>
+              <Stack.Item>
                 <Button
                   primary
-                  loading={btnLoader}
-                  onClick={async () => {
-                    setBtnLoader(true);
-                    if (selectedProfle === "all") {
-                      let { success, message, data } =
-                        await uploadAndReviseOnEbay.modal.actionName(
-                          uploadAndReviseOnEbay.modal.apiByAll,
-                          uploadAndReviseOnEbay.modal.actionPayloadByAll
+                  onClick={() => {
+                    const validID = checkImportProductById(
+                      importProductById["id"]
+                    );
+                    if (validID) {
+                      let temp = { ...importProductById };
+                      if (
+                        !importProductById["idArray"].includes(
+                          importProductById["id"]
+                        )
+                      ) {
+                        temp["idArray"].push(importProductById["id"]);
+                        temp["id"] = "";
+                        temp["modal"]["actionPayload"]["product_id"].push(
+                          importProductById["id"]
                         );
-                      if (success) {
-                        notify.success(message ? message : data);
-                        props.history.push("/panel/ebay/activity");
-                      } else {
-                        notify.error(message ? message : data);
-                        // setModal({ ...modal, active: false });
-                        let temp = { ...uploadAndReviseOnEbay };
-                        temp["modal"]["active"] = false;
-                        setUploadAndReviseOnEbay(temp);
-                      }
-                    } else if (selectedProfle !== "") {
-                      let selectedProfleDetails = profileList.find(
-                        (profile) => profile.value === selectedProfle
-                      );
-                      let { success, message, data } =
-                        await uploadAndReviseOnEbay.modal.actionName(
-                          uploadAndReviseOnEbay.modal.apiById,
-                          { profile_id: selectedProfleDetails.profileId }
-                        );
-                      if (success) {
-                        notify.success(message ? message : data);
-                        props.history.push("/panel/ebay/activity");
-                      } else {
-                        notify.error(message ? message : data);
-                        // setModal({ ...modal, active: false });
-                        let temp = { ...uploadAndReviseOnEbay };
-                        temp["modal"]["active"] = false;
-                        setUploadAndReviseOnEbay(temp);
+                        setImportProductById(temp);
                       }
                     }
-                    setBtnLoader(false);
                   }}
+                  disabled={importProductById["id"] === ""}
                 >
-                  Upload
+                  Add
                 </Button>
-              </Stack>
+              </Stack.Item>
             </Stack>
-          </Modal.Section>
-        </Modal>
-        <Modal
-          open={importProductById.modal.active}
-          onClose={() => {
-            // let temp = { ...importProductById };
-            // temp["modal"]["active"] = false;
-            // setImportProductById(temp);
-            setImportProductById({
-              id: "",
-              modal: {
-                active: false,
-                content: "",
-                actionName: "",
-                actionPayload: {},
-                api: "",
-              },
-              btnLoader: false,
-              idArray: [],
-            });
-            // setModal({ ...modal, active: false });
-          }}
-          title="Permission required"
-        >
-          <Modal.Section>
-            {/* <FormLayout> */}
-            <Stack vertical spacing="tight">
-              <Stack wrap={true}>
-                <Stack.Item fill>
-                  <TextField
-                    placeholder="Enter shopify product id"
-                    value={importProductById["id"]}
-                    onChange={(e) => {
-                      setImportProductById({ ...importProductById, id: e });
-                    }}
-                    type="number"
-                    min={0}
-                    error={importByIdError}
-                    // maxLength={13}
-                    // autoComplete="off"
-                    showCharacterCount
-                  />
-                </Stack.Item>
-                <Stack.Item>
-                  <Button
-                    primary
-                    onClick={() => {
-                      const validID = checkImportProductById(
-                        importProductById["id"]
-                      );
-                      if (validID) {
-                        let temp = { ...importProductById };
-                        if (
-                          !importProductById["idArray"].includes(
-                            importProductById["id"]
-                          )
-                        ) {
-                          temp["idArray"].push(importProductById["id"]);
-                          temp["id"] = "";
-                          temp["modal"]["actionPayload"]["product_id"].push(
-                            importProductById["id"]
-                          );
-                          setImportProductById(temp);
-                        }
-                      }
-                    }}
-                    disabled={importProductById["id"] === ""}
-                  >
-                    Add
-                  </Button>
-                </Stack.Item>
-              </Stack>
-              {importProductById["idArray"].length && (
-                <Banner status="info">
-                  <>Selected product id(s) will get imported!</>
-                </Banner>
-              )}
-              <Stack>
-                {importProductById["idArray"].map((id, index) => (
-                  <Tag
-                    onRemove={() => {
-                      let temp = { ...importProductById };
-                      temp["idArray"].splice(index, 1);
-                      setImportProductById(temp);
-                    }}
-                  >
-                    {id}
-                  </Tag>
-                ))}
-              </Stack>
-              <Stack distribution="center" spacing="tight">
-                <Button
-                  onClick={() => {
-                    // setModal({ ...modal, active: false });
+            {importProductById["idArray"].length && (
+              <Banner status="info">
+                <>Selected product id(s) will get imported!</>
+              </Banner>
+            )}
+            <Stack>
+              {importProductById["idArray"].map((id, index) => (
+                <Tag
+                  onRemove={() => {
                     let temp = { ...importProductById };
-                    temp["modal"]["active"] = false;
+                    temp["idArray"].splice(index, 1);
                     setImportProductById(temp);
                   }}
                 >
-                  Cancel
-                </Button>
-                <Button
-                  primary
-                  loading={importProductById.btnLoader}
-                  disabled={!importProductById.idArray.length}
-                  onClick={async () => {
-                    setImportProductById({
-                      ...importProductById,
-                      btnLoader: true,
-                    });
-                    let { success, message, data } =
-                      await importProductById.modal.actionName(
-                        importProductById.modal.api,
-                        importProductById.modal.actionPayload
-                      );
-                    if (success) {
-                      notify.success(message ? message : data);
-                      props.history.push("/panel/ebay/activity");
-                    } else {
-                      notify.error(message ? message : data);
-                      let temp = { ...importProductById };
-                      temp["modal"]["active"] = false;
-                      setImportProductById(temp);
-                    }
-                    setImportProductById({
-                      ...importProductById,
-                      btnLoader: false,
-                    });
-                  }}
-                >
-                  OK
-                </Button>
-              </Stack>
+                  {id}
+                </Tag>
+              ))}
             </Stack>
-            {/* </FormLayout> */}
-          </Modal.Section>
-        </Modal>
-        <Modal
-          open={modal.active}
-          onClose={() => setModal({ ...modal, active: false })}
-          title="Permission required"
-        >
-          <Modal.Section>
-            <Stack vertical spacing="extraTight">
-              <p>
-                Are you sure you want to initiate {modal.content} bulk action ?
-              </p>
-              <Stack distribution="center" spacing="tight">
-                <Button onClick={() => setModal({ ...modal, active: false })}>
-                  Cancel
-                </Button>
-                <Button
-                  primary
-                  loading={btnLoader}
-                  onClick={async () => {
-                    setBtnLoader(true);
-                    let { success, message, data } = await modal.actionName(
-                      modal.api,
-                      modal.actionPayload
+            <Stack distribution="center" spacing="tight">
+              <Button
+                onClick={() => {
+                  // setModal({ ...modal, active: false });
+                  let temp = { ...importProductById };
+                  temp["modal"]["active"] = false;
+                  setImportProductById(temp);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                primary
+                loading={importProductById.btnLoader}
+                disabled={!importProductById.idArray.length}
+                onClick={async () => {
+                  setImportProductById({
+                    ...importProductById,
+                    btnLoader: true,
+                  });
+                  let { success, message, data } =
+                    await importProductById.modal.actionName(
+                      importProductById.modal.api,
+                      importProductById.modal.actionPayload
                     );
-                    if (success) {
-                      notify.success(message ? message : data);
-                      props.history.push("/panel/ebay/activity");
-                    } else {
-                      notify.error(message ? message : data);
-                      setModal({ ...modal, active: false });
-                    }
-                    setBtnLoader(false);
-                  }}
-                >
-                  OK
-                </Button>
-              </Stack>
+                  if (success) {
+                    notify.success(message ? message : data);
+                    props.history.push("/panel/ebay/activity");
+                  } else {
+                    notify.error(message ? message : data);
+                    let temp = { ...importProductById };
+                    temp["modal"]["active"] = false;
+                    setImportProductById(temp);
+                  }
+                  setImportProductById({
+                    ...importProductById,
+                    btnLoader: false,
+                  });
+                }}
+              >
+                OK
+              </Button>
             </Stack>
-          </Modal.Section>
-        </Modal>
+          </Stack>
+          {/* </FormLayout> */}
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={modal.active}
+        onClose={() => setModal({ ...modal, active: false })}
+        title="Permission required"
+      >
+        <Modal.Section>
+          <Stack vertical spacing="extraTight">
+            <p>
+              Are you sure you want to initiate {modal.content} bulk action ?
+            </p>
+            <Stack distribution="center" spacing="tight">
+              <Button onClick={() => setModal({ ...modal, active: false })}>
+                Cancel
+              </Button>
+              <Button
+                primary
+                loading={btnLoader}
+                onClick={async () => {
+                  setBtnLoader(true);
+                  let { success, message, data } = await modal.actionName(
+                    modal.api,
+                    modal.actionPayload
+                  );
+                  if (success) {
+                    notify.success(message ? message : data);
+                    props.history.push("/panel/ebay/activity");
+                  } else {
+                    notify.error(message ? message : data);
+                    setModal({ ...modal, active: false });
+                  }
+                  setBtnLoader(false);
+                }}
+              >
+                OK
+              </Button>
+            </Stack>
+          </Stack>
+        </Modal.Section>
+      </Modal>
     </>
   );
 };

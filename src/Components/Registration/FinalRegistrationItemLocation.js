@@ -827,7 +827,7 @@ export const FinalRegistrationItemLocation = (props) => {
       />
     </Page>
   ) : (
-    <div style={{ margin: "35px 0px" }}>
+    <div style={{ margin: "35px 0px",  }}>
       <Page fullWidth>
         <Card>
           {[0, 1, 2, 3].includes(currentStep) && (
@@ -852,16 +852,19 @@ export const FinalRegistrationItemLocation = (props) => {
             currentStep === 1 ||
             //   currentStep === 2 ||
             currentStep === 2) && (
+            <div style={{padding:'20px'}}>
+          
             <Card.Section>
               <Layout>
                 <Layout.Section oneThird>
-                  <div
+                  <div className="step-card"
                     style={
                       currentStep === 0
                         ? {
-                            border: "2px solid #084e8a",
-                            borderRadius: "3px",
-                            boxShadow: "0px 0px 5px 5px rgb(8 78 138 / 0.29)",
+                            border: "2px solid #1072c6",
+                            borderRadius: "10px",
+                            boxShadow: "0 30px 40px -10px rgb(0 0 0 / 40%)",
+                            transform:'scale(1.05)'
                             // minHeight: "100%",
                             // minHeight: '100vh'
                           }
@@ -1094,7 +1097,7 @@ export const FinalRegistrationItemLocation = (props) => {
                   <div
                     style={
                       {
-                        // minHeight: "100%",
+                        //  border: "1px solid blue",
                       }
                     }
                   >
@@ -1103,10 +1106,10 @@ export const FinalRegistrationItemLocation = (props) => {
                         style={
                           currentStep === 1
                             ? {
-                                border: "2px solid #084e8a",
-                                borderRadius: "3px",
-                                boxShadow:
-                                  "0px 0px 5px 5px rgb(8 78 138 / 0.29)",
+                              border: "2px solid #1072c6",
+                              borderRadius: "10px",
+                              boxShadow: "0 30px 40px -10px rgb(0 0 0 / 40%)",
+                              transform:'scale(1.05)'
                               }
                             : {
                                 pointerEvents: "none",
@@ -1114,6 +1117,7 @@ export const FinalRegistrationItemLocation = (props) => {
                               }
                         }
                       >
+                      <div  style={{borderRadius:'10px', boxShadow:'0 30px 30px -20px rgb(0 0 0 / 20%)'}}>
                         <Card
                           // sectioned
                           // title="Step 2"
@@ -1262,6 +1266,7 @@ export const FinalRegistrationItemLocation = (props) => {
                             </Stack>
                           </Card.Section>
                         </Card>
+                        </div>
                       </div>
                     </Stack>
                   </div>
@@ -1271,9 +1276,10 @@ export const FinalRegistrationItemLocation = (props) => {
                     style={
                       currentStep === 2
                         ? {
-                            border: "2px solid #084e8a",
-                            borderRadius: "3px",
-                            boxShadow: "0px 0px 5px 5px rgb(8 78 138 / 0.29)",
+                          border: "2px solid #1072c6",
+                          borderRadius: "10px",
+                          boxShadow: "0 30px 40px -10px rgb(0 0 0 / 40%)",
+                          transform:'scale(1.05)'
                           }
                         : {
                             pointerEvents: "none",
@@ -1281,6 +1287,7 @@ export const FinalRegistrationItemLocation = (props) => {
                           }
                     }
                   >
+                  <div  style={{borderRadius:'10px', boxShadow:'0 30px 30px -20px rgb(0 0 0 / 20%)'}}>
                     <Card
                       title={
                         <Stack distribution="equalSpacing">
@@ -1419,10 +1426,12 @@ export const FinalRegistrationItemLocation = (props) => {
                         </Stack>
                       </Card.Section>
                     </Card>
+                    </div>
                   </div>
                 </Layout.Section>
               </Layout>
             </Card.Section>
+            </div>
           )}
           {currentStep === 3 && (
             <PlansComponentAnt

@@ -502,7 +502,7 @@ const NewPanel = (props) => {
                     padding: "0px",
                     position: "fixed",
                     width: "calc(100% - 80px)",
-                    zIndex: "100",
+                    zIndex: "999",
                     marginLeft: "80px",
                   }
                 : {
@@ -512,7 +512,7 @@ const NewPanel = (props) => {
                       window.innerWidth > 768
                         ? "calc(100% - 200px)"
                         : "calc(100% - 0px)",
-                    zIndex: "100",
+                    zIndex: "999",
                     marginLeft: window.innerWidth > 768 ? "200px" : "0px",
                   }
             }
