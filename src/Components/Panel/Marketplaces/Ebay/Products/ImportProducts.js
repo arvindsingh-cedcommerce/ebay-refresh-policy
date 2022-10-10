@@ -73,7 +73,7 @@ const ImportProducts = (props) => {
                     });
                   }
                 } else {
-                  notify.warn(data.message);
+                  notify.warn(data.data);
                   setfile_handle({
                     ...file_handle,
                     isFileuploading: false,

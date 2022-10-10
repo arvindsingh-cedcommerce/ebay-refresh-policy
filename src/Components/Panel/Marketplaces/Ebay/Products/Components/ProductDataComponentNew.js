@@ -16,7 +16,7 @@ const ProductDataComponentNew = ({
       (account) => account["shopId"] == shopId
     );
    
-    return <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}> <div><Image
+    return <div style={{display:"flex",justifyContent:"flex-start",alignItems:"center"}}> <div><Image
     preview={false}
     width={25}
   
