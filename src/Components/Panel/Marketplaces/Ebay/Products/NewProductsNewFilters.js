@@ -61,6 +61,7 @@ import ProductBulkMenu from "./ProductBulkMenu";
 import ProductMassMenu from "./ProductMassMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
+import CsvBulkMenu from "./CsvBulkMenu";
 
 const { Text } = Typography;
 
@@ -161,9 +162,17 @@ function NewProductsNewFilters(props) {
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
-
+  const [isProductBulkMenuOpen,setIsProductBulkMenuOpen]=useState(false);
+  const [isCsvBulkMenuOpen,setIsCsvBulkMenuOpen]=useState(false);
   const [productData, setProductData] = useState([]);
-
+  const setCallbackCsvFunction=(openState)=>{
+    setIsCsvBulkMenuOpen(openState);
+    setIsProductBulkMenuOpen(false);
+  }
+  const setCallbackProductBulkFunction=(openState)=>{
+    setIsProductBulkMenuOpen(openState);
+    setIsCsvBulkMenuOpen(false);
+  }
   const [productColumns, setProductColumns] = useState([
     {
       title: <center>Image</center>,
@@ -1159,8 +1168,9 @@ function NewProductsNewFilters(props) {
       }
       ghost={true}
       extra={[
+        <CsvBulkMenu profileList={profileList} isCsvBulkMenuOpen={isCsvBulkMenuOpen} setCallbackCsvFunction={setCallbackCsvFunction}/>,
         // <ProductMassMenu selectedRows={selectedRows} />,
-        <ProductBulkMenu profileList={profileList} />,
+        <ProductBulkMenu profileList={profileList} isProductBulkMenuOpen={isProductBulkMenuOpen} setCallbackProductBulkFunction={setCallbackProductBulkFunction}/>,
       ]}
     >
       <Card sectioned>

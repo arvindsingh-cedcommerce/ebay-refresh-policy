@@ -44,7 +44,6 @@ import {
 
 const ProductBulkMenu = (props) => {
   const { profileList } = props;
-  const [isOpen, setIsOpen] = useState(false);
   const [modal, setModal] = useState({
     active: false,
     content: "",
@@ -95,7 +94,7 @@ const ProductBulkMenu = (props) => {
   // const [scroll, setScroll] = useState(false)
   useEffect(() => {
     window.addEventListener("scroll", () => {
-      setIsOpen(false);
+      props.setCallbackProductBulkFunction(false);
       // setScroll(window.scrollY >= 10)
     });
   }, []);
@@ -111,7 +110,7 @@ const ProductBulkMenu = (props) => {
           borderRadius: "10px !important",
           border: '1px solid #e2d8d8'
         }}
-        visible={isOpen}
+        visible={props.isProductBulkMenuOpen}
         // arrow={true}
         overlay={
           <Menu
@@ -202,7 +201,11 @@ const ProductBulkMenu = (props) => {
                 <UploadOutlined /> Upload Products
               </Menu.Item>
             </Menu.ItemGroup>
-            <Menu.ItemGroup key="g1" title="CSV Actions">
+
+
+
+
+            {/* <Menu.ItemGroup key="g1" title="CSV Actions">
               <Menu.Item
                 key="Export"
                 onClick={() => {
@@ -226,7 +229,11 @@ const ProductBulkMenu = (props) => {
               >
                 <ImportOutlined /> Bulk Update
               </Menu.Item>
-            </Menu.ItemGroup>
+            </Menu.ItemGroup> */}
+
+
+
+
             <Menu.Divider />
             <Menu.ItemGroup key="g2" title="Shopify Actions">
               <Menu.Item
@@ -360,7 +367,7 @@ const ProductBulkMenu = (props) => {
         }
         trigger={["click"]}
       >
-        <Button onClick={() => setIsOpen(!isOpen)}>
+        <Button onClick={() => props.setCallbackProductBulkFunction(!props.isProductBulkMenuOpen)}>
           <div>
             Bulk Actions <DownOutlined />
           </div>

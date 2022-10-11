@@ -125,10 +125,12 @@ const NewPanel = (props) => {
         let testObj = {};
         if (row.hasOwnProperty("message") && row["message"] !== null) {
           testObj["content"] = (
-            <Stack alignment="center" spacing="extraTight" wrap={false}>
-              <>{getSeverityIcon(row["severity"])}</>
-              <>{row["message"]}</>
-            </Stack>
+            <div style={{display:"flex",marginBottom:"-1rem"}}>
+             
+              <div style={{justifySelf:"flex-start"}}>{getSeverityIcon(row["severity"])}</div>
+              <div style={{justifySelf:"flex-start"}}>{row["message"]}</div>
+            </div>
+          
           );
         }
         return testObj;
@@ -535,7 +537,8 @@ const NewPanel = (props) => {
                   preferredAlignment="left"
                 
                   >
-                    <div style={{display:"flex",padding:"2rem 2rem 0 0",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"end"}}>
+                    <div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
+                    <p style={{fontWeight:"bold",color:"#000000", fontSize:"1.8rem"}}>Recent Activities</p>
                     <p style={{fontWeight:"bold",color:"#2c6ecb", fontSize:"1.3rem",cursor:"pointer"}} onClick={(e) => {
                       setBellClicked(!bellClicked);
                   return props.history.push(
