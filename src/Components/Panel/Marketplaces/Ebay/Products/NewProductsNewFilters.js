@@ -542,6 +542,8 @@ function NewProductsNewFilters(props) {
         filterPostData[key] = filtersToPass[key];
       }
     }
+    // filterPostData  = {...filterPostData, ...reduxState}
+    // console.log('filterPostData', filterPostData);
     let postData = {
       productOnly: true,
       count: pageSize,
@@ -1014,8 +1016,11 @@ function NewProductsNewFilters(props) {
   };
 
   useEffect(() => {
-    if (connectedAccountsArray.length) {
-      hitGetProductsAPI();
+    // if (connectedAccountsArray.length) {
+    //   hitGetProductsAPI();
+    // }
+    if (reduxState && connectedAccountsArray.length) {
+      setFiltersToPass(reduxState);
     }
   }, [connectedAccountsArray]);
 
@@ -1114,12 +1119,12 @@ function NewProductsNewFilters(props) {
       dispatch({ type: "productFilter", payload: filtersToPass });
     }
   }, [filtersToPass]);
-  useEffect(() => {
-    // if (reduxState) setFiltersToPass(reduxState);
-    if (reduxState && connectedAccountsArray.length) {
-      setFiltersToPass(reduxState);
-    }
-  }, [connectedAccountsArray]);
+  // useEffect(() => {
+  //   // if (reduxState) setFiltersToPass(reduxState);
+  //   if (reduxState && connectedAccountsArray.length) {
+  //     setFiltersToPass(reduxState);
+  //   }
+  // }, [connectedAccountsArray]);
 
   function handleScroll(e) {
     if (
