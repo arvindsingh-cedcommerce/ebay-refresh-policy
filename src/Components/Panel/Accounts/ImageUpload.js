@@ -9,13 +9,16 @@ const ImageUpload = ({ person, setPerson }) => {
     e.preventDefault();
     const reader = new FileReader();
     const file = e.target.files[0];
-    reader.onloadend = () => {
-      setPerson({
-        ...person,
-        file: file,
-        imagePreviewUrl: reader.result,
-      });
-    };
+    let imageTypes = ["image/png", "image/jpg", "image/jpeg"];
+    if (imageTypes.includes(file.type)) {
+      reader.onloadend = () => {
+        setPerson({
+          ...person,
+          file: file,
+          imagePreviewUrl: reader.result,
+        });
+      };
+    } else notify.error("File is not in correct format");
     reader.readAsDataURL(file);
   };
 
