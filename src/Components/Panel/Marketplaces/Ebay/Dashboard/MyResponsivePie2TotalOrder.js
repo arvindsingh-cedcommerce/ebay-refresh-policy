@@ -57,7 +57,7 @@ const MyResponsivePie2TotalOrder = ({
     </Stack>
   ) : (
     <ResponsivePie
-      arcLabelsComponent={({ datum, label, style }) => (
+      arcLabelsComponent={({ datum, label, style }) =>{ if(datum.value >0) return (
         <animated.g
           transform={style.transform}
           style={{ pointerEvents: "none" }}
@@ -74,7 +74,10 @@ const MyResponsivePie2TotalOrder = ({
             {label}
           </text>
         </animated.g>
-      )}
+      )
+    else
+       return <></>
+    }}
       layers={["arcs", "arcLabels", "arcLinkLabels", "legends", CenteredMetric]}
       enableArcLabels={true}
       data={tempData}
@@ -84,6 +87,7 @@ const MyResponsivePie2TotalOrder = ({
       }}
       fit={true}
       tooltip={(point) => {
+       if(point.datum.value>0)
         return (
           <div
             style={{
@@ -115,9 +119,14 @@ const MyResponsivePie2TotalOrder = ({
             </Stack>
           </div>
         );
+        else
+          return <></>;
       }}
       arcLabel={(point) => {
+        if(point.value>0)
         return `${point.value}`;
+        else
+        return "";
       }}
       colors={{ datum: "data.color" }}
       sortByValue={true}
@@ -125,11 +134,11 @@ const MyResponsivePie2TotalOrder = ({
       padAngle={0}
       cornerRadius={0}
       activeOuterRadiusOffset={8}
-      borderWidth={1}
-      borderColor={{
-        from: "color",
-        modifiers: [["darker", 0.2]],
-      }}
+      // borderWidth={1}
+      // borderColor={{
+      //   from: "color",
+      //   modifiers: [["darker", 0.2]],
+      // }}
       arcLinkLabelsSkipAngle={10}
       arcLinkLabelsTextColor="#333333"
       arcLinkLabelsThickness={2}
