@@ -1016,13 +1016,13 @@ export const FinalRegistrationItemLocation = (props) => {
                             }}
                           >
                             <Stack vertical spacing="extraTight">
-                              <Link removeUnderline external>
+                              <Link removeUnderline external url="https://www.ebay.com/help/policies/business-policy/business-policies?id=4212">
                                 Opt Business Policy
                               </Link>
-                              <Link removeUnderline external>
+                              <Link removeUnderline external url="https://signin.ebay.com/ws/eBayISAPI.dll?SignIn&UsingSSL=1&siteid=0&co_partnerId=2&pageType=2493094&ru=https%3A%2F%2Fwww.ebay.com%2Fhelp%2Fselling%2Ffees-credits-invoices%2Fsetting-changing-payment-method-fees-selling-costs%3Fid%3D5270">
                                 Automatic Payment Account Added
                               </Link>
-                              <Link removeUnderline external>
+                              <Link removeUnderline external url="https://www.ebay.com/help/selling/listings/selling-limits?id=4107">
                                 Listing Limit Not Exausted
                               </Link>
                             </Stack>
