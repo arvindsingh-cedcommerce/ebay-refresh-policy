@@ -126,10 +126,12 @@ const NewPanel = (props) => {
         let testObj = {};
         if (row.hasOwnProperty("message") && row["message"] !== null) {
           testObj["content"] = (
+            <div style={{marginBottom: '-10px'}}>
             <Stack alignment="center" spacing="extraTight" wrap={false}>
               <>{getSeverityIcon(row["severity"])}</>
               <>{row["message"]}</>
             </Stack>
+            </div>
           );
         }
         return testObj;
@@ -565,13 +567,14 @@ const NewPanel = (props) => {
                   preferredAlignment="left"
                 
                   >
-                    <div style={{display:"flex",padding:"2rem 2rem 0 0",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"end"}}>
-                    <p style={{fontWeight:"bold",color:"#2c6ecb", fontSize:"1.3rem",cursor:"pointer"}} onClick={(e) => {
+                    <div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
+                    <div style={{fontWeight:"bold",color:"#000000", fontSize:"1.8rem"}}>Recent Activities</div>
+                    <div style={{fontWeight:"bold",color:"#2c6ecb", fontSize:"1.3rem",cursor:"pointer"}} onClick={(e) => {
                       setBellClicked(!bellClicked);
                   return props.history.push(
                     `/panel/ebay/activity`
                   );
-                }}>View All</p></div>
+                }}>View All</div></div>
                     <ActionList
                       actionRole="menuitem"
                       items={allNotifications}
