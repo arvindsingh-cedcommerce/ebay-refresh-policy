@@ -409,8 +409,7 @@ const ActivityGrid = (props) => {
                       {/* <p>{task["created_at"]}</p> */}
                       <p>
                         Processes will keep running in background. It may take
-                        some time. You can close the app and do any other thing
-                        in mean time.
+                        some time.
                       </p>
                       <img
                       width={"100%"}
