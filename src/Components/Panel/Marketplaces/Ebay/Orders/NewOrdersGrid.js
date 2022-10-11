@@ -639,6 +639,7 @@ const NewOrdersGrid = (props) => {
         returnFormElement = (
           <Row gutter={16}>
             <Col span={12}>
+              <>From</>
               <Input
                 placeholder="Start Date"
                 type={"date"}
@@ -649,6 +650,7 @@ const NewOrdersGrid = (props) => {
               />
             </Col>
             <Col span={12}>
+              <>To</>
               <Input
                 placeholder="End Date"
                 type={"date"}
@@ -665,6 +667,7 @@ const NewOrdersGrid = (props) => {
         returnFormElement = (
           <Row gutter={16}>
             <Col span={12}>
+              <>From</>
               <Input
                 placeholder="Start Date"
                 type={"date"}
@@ -675,6 +678,7 @@ const NewOrdersGrid = (props) => {
               />
             </Col>
             <Col span={12}>
+              <>To</>
               <Input
                 placeholder="End Date"
                 type={"date"}
@@ -1090,7 +1094,7 @@ const NewOrdersGrid = (props) => {
                 layout="vertical"
               >
                 <Form.Item
-                  label="Accounts"
+                  label="Select Account"
                   name="accounts"
                   rules={[
                     { required: true, message: "Please select your account!" },
