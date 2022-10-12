@@ -163,7 +163,7 @@ const ContactUs = () => {
                 <Link url={socialMediaLinks.whatsApp} external>
                   <Image src={WhatsApp} width={50} preview={false} />
                 </Link>
-                <Link url={socialMediaLinks.whatsApp} external>
+                <Link url={socialMediaLinks.skype} external>
                   <Image src={Skype} width={50} preview={false} />
                 </Link>
                 <a
