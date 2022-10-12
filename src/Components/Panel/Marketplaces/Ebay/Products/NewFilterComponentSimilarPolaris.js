@@ -28,6 +28,31 @@ const NewFilterComponentSimilarPolaris = ({
   setFilterTitleORsku,
   setSelected,
 }) => {
+
+  const handleDisabled=(currentValue,currentFilter)=>{
+     const filterObj={...filters};
+    if(currentFilter==="listing_id")
+     {
+      if(currentValue)
+      {
+      filterObj["price"]["disabled"]=true;
+      filterObj["quantity"]["disabled"]=true;
+      }
+      else
+      {
+        filterObj["price"]["disabled"]=false;
+        filterObj["quantity"]["disabled"]=false;
+      }
+     }
+     else if(currentFilter==="price"||currentFilter==="quantity")
+     {
+      if(currentValue)
+      filterObj["listing_id"]["disabled"]=true;
+      else
+      filterObj["listing_id"]["disabled"]=false;
+     }
+  };
+
   return (
     <Drawer
       title="Filters"
@@ -97,7 +122,7 @@ const NewFilterComponentSimilarPolaris = ({
             >
               <Stack vertical spacing="extraTight">
                 <Select
-                  disabled={filters[filter]?.["options"] ? true : false}
+                  disabled={filters[filter]?.["options"] || filters[filter]["disabled"]? true : false}
                   options={
                     filters[filter]["dataType"] === "string"
                       ? stringOperatorOptions
@@ -121,7 +146,9 @@ const NewFilterComponentSimilarPolaris = ({
                     placeholder="Please Select..."
                     options={filters[filter]["options"]}
                     value={filters[filter]["value"]}
+                    disabled={filters[filter]["disabled"]}
                     onChange={(e) => {
+                      handleDisabled(e,filter);
                       let cloneObj = { ...filters };
                       cloneObj[filter]["value"] = e;
                       setFilters(cloneObj);
@@ -138,7 +165,9 @@ const NewFilterComponentSimilarPolaris = ({
                     }}
                     value={filters[filter]["value"]}
                     placeholder={filters[filter]["placeholder"]}
+                    disabled={filters[filter]["disabled"]}
                     onChange={(e) => {
+                      handleDisabled(e.target.value,filter);
                       let cloneObj = { ...filters };
                       cloneObj[filter]["value"] = e.target.value;
                       setFilters(cloneObj);

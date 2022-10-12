@@ -147,6 +147,7 @@ export const getFitersInitially = () => {
       label: field["label"],
       dataType: field["dataType"],
       placeholder: field["placeholder"],
+      disabled:false,
     };
     if (field?.["searchType"] === "dropdown") {
       tempObj[field["value"]]["options"] = [];
