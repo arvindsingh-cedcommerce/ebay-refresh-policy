@@ -1,6 +1,7 @@
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Stack } from "@shopify/polaris";
 import {
+  Alert,
   Button,
   Collapse,
   Drawer,
@@ -97,6 +98,14 @@ const NewFilterComponentSimilarPolaris = ({
         </Space>
       }
     >
+       <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%",
+        }}
+      >
       <Collapse
         defaultActiveKey={false}
         onChange={() => {}}
@@ -184,6 +193,14 @@ const NewFilterComponentSimilarPolaris = ({
           );
         })}
       </Collapse>
+      <Alert
+          style={{ borderRadius: "10px" }}
+          message="Note"
+          description="eBay Item Id filter don't work along with price & quantity filter vice-versa"
+          type="info"
+          showIcon
+        />
+      </div>
     </Drawer>
   );
 };
