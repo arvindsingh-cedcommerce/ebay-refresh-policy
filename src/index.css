@@ -171,44 +171,45 @@ code {
   /* background-color: #ccc; */
 }
 
-.plansCard{
+.plansCard {
   border: 2px solid #ebebeb !important;
-  transition: all ease-in-out .3s;
+  transition: all ease-in-out 0.3s;
   box-shadow: 0 30px 30px -20px rgb(0 0 0 / 20%);
   height: 330px;
 }
-.plansCard.active, .plansCard:hover{
+.plansCard.active,
+.plansCard:hover {
   box-shadow: 0 30px 40px -10px rgb(0 0 0 / 40%);
   transform: scale(1.05);
   border: 2px solid #1072c6 !important;
   z-index: 1;
 }
 
-.bulk-dropdown-hide{
+.bulk-dropdown-hide {
   opacity: 0;
 }
-.h-200{
+.h-200 {
   height: 200px;
 }
-.welcome-box .Polaris-Card, .carousel-box{
-    height: 240px;
+.welcome-box .Polaris-Card,
+.carousel-box {
+  height: 240px;
 }
-.carousel-box img{
+.carousel-box img {
   border-radius: 0.8rem;
 }
-.analytics-box .Polaris-Card{
+.analytics-box .Polaris-Card {
   height: 382px;
 }
 .step-card {
   box-shadow: 0 30px 30px -20px rgb(0 0 0 / 20%);
   border-radius: 10px;
-
 }
-.step-card .Polaris-Card{
+.step-card .Polaris-Card {
   min-height: 644px;
 }
 
-.bulk-dropdown-show{
+.bulk-dropdown-show {
   max-height: 40rem;
   overflow-y: scroll;
   border-radius: 0.8rem !important;
@@ -222,15 +223,19 @@ code {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgba(136, 136, 136, 0.547); 
+  background: rgba(136, 136, 136, 0.547);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(85, 85, 85, 0.51); 
+  background: rgba(85, 85, 85, 0.51);
+}
+
+.ant-drawer {
+  z-index: 1060 !important;
 }
