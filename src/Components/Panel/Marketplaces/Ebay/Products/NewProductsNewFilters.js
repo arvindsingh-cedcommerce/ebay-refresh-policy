@@ -1075,6 +1075,16 @@ function NewProductsNewFilters(props) {
     }
     return value;
   };
+const disableFiltersHandler=(temp,object)=>{
+  const arr=Object.keys(temp).map((item, index)=> {
+    let indexOfFirstOpeningBracket = item.indexOf("[");
+    let indexOfFirstClosingBracket = item.indexOf("]");
+    return item.substring(
+    indexOfFirstOpeningBracket + 1,
+    indexOfFirstClosingBracket
+  )})
+  return arr;
+};
 
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
@@ -1100,15 +1110,29 @@ function NewProductsNewFilters(props) {
         <Tag
           key={filter}
           onRemove={() => {
-            const temp = Object.keys(filtersToPass).reduce((object, key) => {
+            const temp = Object.keys(filtersToPass).reduce((object, key) => {           
               if (key !== filter) {
                 object[key] = filtersToPass[key];
               }
               return object;
             }, {});
-            let tempObj = { ...filters };
+             let tempObj = { ...filters };
+            let disabledArr=[];
             Object.keys(tempObj).forEach((object) => {
               if (object === fieldValue) {
+                if(object==="listing_id")
+                {
+                  tempObj["price"]["disabled"]=false;
+                  tempObj["quantity"]["disabled"]=false;
+                }
+                else if(object==="price" || object==="quantity")
+                {
+                  disabledArr=disableFiltersHandler(temp,object);
+                  if(!disabledArr.includes("price")&&!disabledArr.includes("quantity"))
+                  {
+                    tempObj["listing_id"]["disabled"]=false;
+                  }
+                }
                 tempObj[object]["value"] = "";
               }
             });
