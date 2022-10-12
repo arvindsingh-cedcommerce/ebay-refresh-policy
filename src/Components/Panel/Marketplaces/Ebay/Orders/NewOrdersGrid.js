@@ -49,6 +49,8 @@ import {
   Banner,
   Badge,
   Tooltip,
+  List,
+  Link,
 } from "@shopify/polaris";
 import { FilterMajorMonotone, QuestionMarkMinor } from "@shopify/polaris-icons";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
@@ -971,28 +973,24 @@ const NewOrdersGrid = (props) => {
       ]}
     >
       <Banner status={"info"}>
-        <ul>
-          <li>
-            New Order(s), whose payment has been done, is synced from eBay to
-            Shopify within 30 minutes.
-          </li>
-          <li>
-            For syncing old order(s){" "}
-            <span
-              style={{ color: "#0000FF", cursor: "pointer" }}
-              onClick={() => {
-                props.history.push("/panel/ebay/contactUs");
-              }}
+        <List type="bullet">
+          <List.Item>
+            By Default, we fetched only paid and non-shipped eBay orders. for
+            fetching other types of orders please contact us.
+          </List.Item>
+          <List.Item>
+            It is recommended that sellers should fulfil orders after 1 hour of
+            their purchase because buyer are eligible for cancelling the order
+            with in 1 hour of their purchase.
+            <Link
+              url="https://community.ebay.com/t5/Selling/1-Hour-Order-Cancellation-Time-Frame/td-p/31178605"
+              external
+              // removeUnderline
             >
-              contact us
-            </span>
-            .
-          </li>
-          <li>
-            It is recommended that sellers must fulfill orders after 1 hour of
-            their creation.
-          </li>
-        </ul>
+              Read More
+            </Link>
+          </List.Item>
+        </List>
       </Banner>
       <br />
       <Card sectioned>
