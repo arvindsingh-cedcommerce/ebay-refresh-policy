@@ -331,7 +331,7 @@ const ProductBulkMenu = (props) => {
                   })
                 }
               >
-                <DownloadOutlined /> Import metafileds of products
+                <DownloadOutlined /> Import metafields of products
               </Menu.Item>
               <Menu.Item
                 key="Import product by Id"
