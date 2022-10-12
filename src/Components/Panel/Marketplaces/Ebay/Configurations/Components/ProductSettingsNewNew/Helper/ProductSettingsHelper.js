@@ -16,12 +16,12 @@ export const getParsedEbayAccounts = (ebayAccounts, shopifyWarehouses) => {
         attributes: {
           title: true,
           description: true,
-          main_image: true,
-          weight: true,
-          item_specifics: true,
-          variation_pictures: true,
-          quantity: true,
           price: true,
+          quantity: true,
+          main_image: true,
+          variation_pictures: true,
+          item_specifics: true,
+          weight: true,
         },
       },
       autoEndProduct: {
