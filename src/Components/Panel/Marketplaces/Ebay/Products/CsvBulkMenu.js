@@ -148,7 +148,7 @@ import {
         >
           <Button onClick={() => props.setCallbackCsvFunction(!props.isCsvBulkMenuOpen)}>
             <div>
-              CSV Actions <DownOutlined />
+              CSV Bulk Actions <DownOutlined />
             </div>
           </Button>
         </Dropdown>
