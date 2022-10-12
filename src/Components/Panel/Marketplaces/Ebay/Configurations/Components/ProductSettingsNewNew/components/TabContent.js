@@ -139,7 +139,7 @@ const TabContent = ({
                 <FormLayout>
                   <FormLayout.Group>
                     <Select
-                      label="Shopify Reason"
+                      label="Shopify Attribute"
                       value={shopify_attribute}
                       options={matchfromShopifyOptions}
                       onChange={(e) =>
@@ -152,7 +152,7 @@ const TabContent = ({
                       }
                     />
                     <Select
-                      label="eBay Reason"
+                      label="eBay Attribute"
                       value={ebay_attribute}
                       options={matchfromEbayOptions}
                       onChange={(e) =>
@@ -179,7 +179,7 @@ const TabContent = ({
         label = "Description";
         break;
       case "main_image":
-        label = "Main Image";
+        label = "Main Images";
         break;
       case "weight":
         label = "Weight";
@@ -188,7 +188,7 @@ const TabContent = ({
         label = "Item Specifics";
         break;
       case "variation_pictures":
-        label = "Variation Pictures";
+        label = "Variation Images";
         break;
       case "quantity":
         label = "Quantity";
