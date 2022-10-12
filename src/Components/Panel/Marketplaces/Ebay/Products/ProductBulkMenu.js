@@ -103,12 +103,13 @@ const ProductBulkMenu = (props) => {
     <>
       <Dropdown
         key="bulkAction"
+        overlayClassName="bulkMenu123"
         overlayStyle={{
           maxHeight: "40rem",
           overflowY: "scroll",
           zIndex: 50,
           borderRadius: "10px !important",
-          border: '1px solid #e2d8d8'
+          border: "1px solid #e2d8d8",
         }}
         visible={props.isProductBulkMenuOpen}
         // arrow={true}
@@ -330,7 +331,7 @@ const ProductBulkMenu = (props) => {
                   })
                 }
               >
-                <DownloadOutlined /> Import metafileds of products
+                <DownloadOutlined /> Import metafields of products
               </Menu.Item>
               <Menu.Item
                 key="Import product by Id"

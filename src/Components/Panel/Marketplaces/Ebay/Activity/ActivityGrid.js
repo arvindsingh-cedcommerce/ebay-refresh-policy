@@ -20,7 +20,7 @@ import {
   CircleTickOutlineMinor,
   ImportMinor,
 } from "@shopify/polaris-icons";
-import { Alert, Badge, Col, PageHeader, Progress, Row, Tooltip } from "antd";
+import { Alert, Badge, Col, Image, PageHeader, Progress, Row, Tooltip } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { getAllNotifications } from "../../../../../APIrequests/ActivitiesAPI";
 import { notify } from "../../../../../services/notify";
@@ -37,6 +37,7 @@ import {
 } from "../Products/NewProductsNewFilters";
 import { queuedActivities } from "../Products/SampleProductData";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
+import LoaderImage from "../../../../../assets/loader/bannerActivityLoader.gif";
 
 const filtersFields = [
   {
@@ -71,7 +72,7 @@ const ActivityGrid = (props) => {
       title: "",
       dataIndex: "message",
       key: "message",
-      width: '80%'
+      width: "80%",
     },
     {
       title: "",
@@ -398,13 +399,24 @@ const ActivityGrid = (props) => {
                       </Stack.Item>
                     </Stack>
                   ) : (
-                    <Banner title={task["message"]} status="success">
+                    // <img
+                    //   width={"100%"}
+                    //   style={{borderRadius: '10px'}}
+                    //   src={LoaderImage}
+                    //   alt=""
+                    // />
+                    <Banner title={task["message"]} status="info">
                       {/* <p>{task["created_at"]}</p> */}
                       <p>
                         Processes will keep running in background. It may take
-                        some time. You can close the app and do any other thing
-                        in mean time.
+                        some time.
                       </p>
+                      <img
+                      width={"100%"}
+                      style={{borderRadius: '10px'}}
+                      src={LoaderImage}
+                      alt=""
+                    />
                     </Banner>
                   );
                 })}

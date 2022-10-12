@@ -345,7 +345,7 @@ const PaymentPolicyGrid = (props) => {
         activator={countryActivator}
         onClose={() => popOverHandler("country")}
       >
-        <div style={{ margin: "10px" }}>
+        <div style={{ margin: "10px", width: "200px" }}>
           <ChoiceList
             choices={connectedAccountsArray}
             selected={selected["country"]}
@@ -503,7 +503,9 @@ const PaymentPolicyGrid = (props) => {
           <Stack wrap>
             <Stack.Item fill>{renderShippingPolicySearch()}</Stack.Item>
             <Stack.Item>
-              <div style={{ width: 200 }}>{renderOtherFilters()}</div>
+              {/* <div style={{ width: 200 }}> */}
+                {renderOtherFilters()}
+                {/* </div> */}
             </Stack.Item>
           </Stack>
           <Stack spacing="tight">

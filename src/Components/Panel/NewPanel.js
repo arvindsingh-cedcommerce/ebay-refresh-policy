@@ -504,7 +504,7 @@ const NewPanel = (props) => {
                     padding: "0px",
                     position: "fixed",
                     width: "calc(100% - 80px)",
-                    zIndex: "999",
+                    zIndex: "1055",
                     marginLeft: "80px",
                   }
                 : {
@@ -514,7 +514,7 @@ const NewPanel = (props) => {
                       window.innerWidth > 768
                         ? "calc(100% - 200px)"
                         : "calc(100% - 0px)",
-                    zIndex: "999",
+                    zIndex: "1055",
                     marginLeft: window.innerWidth > 768 ? "200px" : "0px",
                   }
             }
@@ -537,14 +537,16 @@ const NewPanel = (props) => {
                   preferredAlignment="left"
                 
                   >
-                    <div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
+                    {allNotifications.length>0?<div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
                     <p style={{fontWeight:"bold",color:"#000000", fontSize:"1.8rem"}}>Recent Activities</p>
                     <p style={{fontWeight:"bold",color:"#2c6ecb", fontSize:"1.3rem",cursor:"pointer"}} onClick={(e) => {
                       setBellClicked(!bellClicked);
                   return props.history.push(
                     `/panel/ebay/activity`
                   );
-                }}>View All</p></div>
+                }}>View All</p></div>:<div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
+                   <p style={{fontWeight:"bold",color:"#000000", fontSize:"1.8rem"}}>No Activities</p>
+                 </div>}
                     <ActionList
                       actionRole="menuitem"
                       items={allNotifications}

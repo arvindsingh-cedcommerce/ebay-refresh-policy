@@ -520,7 +520,7 @@ const ProfileGridComponent = (props) => {
       activator={countryActivator}
       onClose={() => popOverHandler("country")}
     >
-      <div style={{ margin: "10px" }}>
+      <div style={{ margin: "10px", width: "200px" }}>
         <ChoiceList
           choices={connectedAccountsArray}
           selected={selected["country"]}
@@ -663,9 +663,9 @@ const ProfileGridComponent = (props) => {
               <Stack.Item>{renderChoiceListForNameQuery()}</Stack.Item>
               {/* <Stack.Item>{renderOtherFilters()}</Stack.Item> */}
               <Stack.Item>
-                <div style={{ width: 200 }}>
-                  {renderChoiceListForProfilenameCountry()}
-                </div>
+                {/* <div style={{ width: 200 }}> */}
+                {renderChoiceListForProfilenameCountry()}
+                {/* </div> */}
               </Stack.Item>
             </Stack>
             <Stack spacing="tight">

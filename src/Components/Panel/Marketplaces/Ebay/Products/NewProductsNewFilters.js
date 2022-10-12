@@ -62,6 +62,8 @@ import ProductMassMenu from "./ProductMassMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
 import CsvBulkMenu from "./CsvBulkMenu";
+import OutsideAlerter from "./OutsideAlerter";
+import OutsideAlerterMassMenu from "./OutsideAlerterMassMenu";
 
 const { Text } = Typography;
 
@@ -549,6 +551,8 @@ function NewProductsNewFilters(props) {
         filterPostData[key] = filtersToPass[key];
       }
     }
+    // filterPostData  = {...filterPostData, ...reduxState}
+    // console.log('filterPostData', filterPostData);
     let postData = {
       productOnly: true,
       count: pageSize,
@@ -839,7 +843,7 @@ function NewProductsNewFilters(props) {
       setInnerFilterCount(Object.keys(temp).length);
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      // notify.warn("No filters applied");
+      notify.warn("No filters applied");
       setFiltersDrawerVisible(false);
       setInnerFilterCount(0);
       setFiltersToPass("");
@@ -1031,8 +1035,11 @@ function NewProductsNewFilters(props) {
   };
 
   useEffect(() => {
-    if (connectedAccountsArray.length) {
-      hitGetProductsAPI();
+    // if (connectedAccountsArray.length) {
+    //   hitGetProductsAPI();
+    // }
+    if (reduxState && connectedAccountsArray.length) {
+      setFiltersToPass(reduxState);
     }
   }, [connectedAccountsArray]);
 
@@ -1155,12 +1162,12 @@ const disableFiltersHandler=(temp,object)=>{
       dispatch({ type: "productFilter", payload: filtersToPass });
     }
   }, [filtersToPass]);
-  useEffect(() => {
-    // if (reduxState) setFiltersToPass(reduxState);
-    if (reduxState && connectedAccountsArray.length) {
-      setFiltersToPass(reduxState);
-    }
-  }, [connectedAccountsArray]);
+  // useEffect(() => {
+  //   // if (reduxState) setFiltersToPass(reduxState);
+  //   if (reduxState && connectedAccountsArray.length) {
+  //     setFiltersToPass(reduxState);
+  //   }
+  // }, [connectedAccountsArray]);
 
   function handleScroll(e) {
     if (
@@ -1220,11 +1227,13 @@ const disableFiltersHandler=(temp,object)=>{
             style={{ marginBottom: 10 }}
           >
             <Col className="gutter-row" span={6}>
-              <ProductMassMenu
-                selectedRows={selectedRows}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-              />
+              {/* <OutsideAlerterMassMenu isOpen={isOpen} setIsOpen={setIsOpen}> */}
+                <ProductMassMenu
+                  selectedRows={selectedRows}
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                />
+              {/* </OutsideAlerterMassMenu> */}
             </Col>
             <Col className="gutter-row" span={18}>
               <Stack distribution="trailing">
@@ -1253,7 +1262,8 @@ const disableFiltersHandler=(temp,object)=>{
               type: selectionType,
               ...rowSelection,
             }}
-            scroll={{ x: 1500, y: 500 }}
+            // scroll={{ x: 1500, y: 500 }}
+            scroll={{ x: 1500 }}
             expandable={{
               expandedRowRender: (record) => {
                 return record["showVariant"] ? (

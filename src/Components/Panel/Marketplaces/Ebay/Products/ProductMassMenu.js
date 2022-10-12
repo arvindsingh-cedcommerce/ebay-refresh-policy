@@ -49,6 +49,7 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
   return (
     <>
       <Dropdown
+        overlayClassName="massMenu"
         key="massAction"
         overlayStyle={{
           maxHeight: "40rem",
@@ -157,8 +158,8 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                 onClick={() => {
                   let postData = [];
                   selectedRows.forEach((selectedRow) => {
-                    let { source_product_id } = selectedRow;
-                    postData.push(source_product_id);
+                    let { source_product_id, container_id } = selectedRow;
+                    postData.push(container_id);
                   });
                   setModal({
                     ...modal,

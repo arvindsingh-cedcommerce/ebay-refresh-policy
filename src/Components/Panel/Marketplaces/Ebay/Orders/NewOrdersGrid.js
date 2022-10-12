@@ -639,6 +639,7 @@ const NewOrdersGrid = (props) => {
         returnFormElement = (
           <Row gutter={16}>
             <Col span={12}>
+              <>From</>
               <Input
                 placeholder="Start Date"
                 type={"date"}
@@ -649,6 +650,7 @@ const NewOrdersGrid = (props) => {
               />
             </Col>
             <Col span={12}>
+              <>To</>
               <Input
                 placeholder="End Date"
                 type={"date"}
@@ -665,6 +667,7 @@ const NewOrdersGrid = (props) => {
         returnFormElement = (
           <Row gutter={16}>
             <Col span={12}>
+              <>From</>
               <Input
                 placeholder="Start Date"
                 type={"date"}
@@ -675,6 +678,7 @@ const NewOrdersGrid = (props) => {
               />
             </Col>
             <Col span={12}>
+              <>To</>
               <Input
                 placeholder="End Date"
                 type={"date"}
@@ -966,6 +970,31 @@ const NewOrdersGrid = (props) => {
         </ShopifyButton>,
       ]}
     >
+      <Banner status={"info"}>
+        <ul>
+          <li>
+            New Order(s), whose payment has been done, is synced from eBay to
+            Shopify within 30 minutes.
+          </li>
+          <li>
+            For syncing old order(s){" "}
+            <span
+              style={{ color: "#0000FF", cursor: "pointer" }}
+              onClick={() => {
+                props.history.push("/panel/ebay/contactUs");
+              }}
+            >
+              contact us
+            </span>
+            .
+          </li>
+          <li>
+            It is recommended that sellers must fulfill orders after 1 hour of
+            their creation.
+          </li>
+        </ul>
+      </Banner>
+      <br />
       <Card sectioned>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <div
@@ -1090,7 +1119,7 @@ const NewOrdersGrid = (props) => {
                 layout="vertical"
               >
                 <Form.Item
-                  label="Accounts"
+                  label="Select Account"
                   name="accounts"
                   rules={[
                     { required: true, message: "Please select your account!" },
