@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { animated } from "@react-spring/web";
 
 const MyResponsiveChild = ({ accountClicked }) => {
+  console.log("New pie 2");
   const [tempData, setTempData] = useState([])
   useEffect(() => {
     let temp = [...tempData]
@@ -46,7 +47,7 @@ const MyResponsiveChild = ({ accountClicked }) => {
 
   return (
     <ResponsivePie
-      arcLabelsComponent={({ datum, label, style }) => (
+      arcLabelsComponent={({ datum, label, style }) => { if(datum.value >0) return (
         <animated.g
           transform={style.transform}
           style={{ pointerEvents: "none" }}
@@ -65,7 +66,10 @@ const MyResponsiveChild = ({ accountClicked }) => {
             {label}
           </text>
         </animated.g>
-      )}
+      )
+    else return <></>
+          }
+  }
       //   layers={["arcs", "arcLabels", "arcLinkLabels", "legends", CenteredMetric]}
       // enableArcLabels={false}
       data={tempData}
@@ -77,6 +81,7 @@ const MyResponsiveChild = ({ accountClicked }) => {
       }}
       fit={true}
       tooltip={(point) => {
+        if(point.datum.value>0)
         return (
           <div
             style={{
@@ -90,9 +95,14 @@ const MyResponsiveChild = ({ accountClicked }) => {
             </b>
           </div>
         );
+        else
+        return <></>;
       }}
       arcLabel={(point) => {
+        if(point.value>0)
         return `${point.value}`;
+        else 
+        return "";
       }}
       colors={{ datum: "data.color" }}
       // enableArcLinkLabels={true}
@@ -101,11 +111,11 @@ const MyResponsiveChild = ({ accountClicked }) => {
       padAngle={0}
       cornerRadius={0}
       activeOuterRadiusOffset={8}
-      borderWidth={1}
-      borderColor={{
-        from: "color",
-        modifiers: [["darker", 0.2]],
-      }}
+      // borderWidth={1}
+      // borderColor={{
+      //   from: "color",
+      //   modifiers: [["darker", 0.2]],
+      // }}
       arcLinkLabelsSkipAngle={10}
       arcLinkLabelsTextColor="#333333"
       arcLinkLabelsThickness={2}

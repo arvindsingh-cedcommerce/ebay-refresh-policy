@@ -11,6 +11,7 @@ const MyResponsivePie2 = ({
   setAccountClicked,
   accountClickedDetails,
 }) => {
+  console.log("New pie");
   const [hasProductFlag, setHasProductFlag] = useState(false);
 
   useEffect(() => {
@@ -65,7 +66,7 @@ const MyResponsivePie2 = ({
     // Object.keys(accountClickedDetails).length === 0 &&
     // Object.getPrototypeOf(accountClickedDetails) === Object.prototype && (
     <ResponsivePie
-      arcLabelsComponent={({ datum, label, style }) => (
+      arcLabelsComponent={({ datum, label, style }) => { if(datum.value >0) return (
         <animated.g
           transform={style.transform}
           style={{ pointerEvents: "none" }}
@@ -89,7 +90,8 @@ const MyResponsivePie2 = ({
             {label}
           </text>
         </animated.g>
-      )}
+      )
+    else return <></>}}
       layers={["arcs", "arcLabels", "arcLinkLabels", "legends", CenteredMetric]}
       enableArcLabels={true}
       data={tempData}
@@ -102,6 +104,7 @@ const MyResponsivePie2 = ({
       fit={true}
       tooltip={(point) => {
         // console.log(point.datum);
+        if(point.datum.value>0)
         return (
           <div
             style={{
@@ -122,9 +125,12 @@ const MyResponsivePie2 = ({
             </Stack>
           </div>
         );
+        else return <></>;
       }}
       arcLabel={(point) => {
+        if(point.value>0)
         return `${point.value}`;
+        else return "";
       }}
       colors={{ datum: "data.color" }}
       // enableArcLinkLabels={false}
@@ -133,11 +139,11 @@ const MyResponsivePie2 = ({
       padAngle={0}
       cornerRadius={0}
       activeOuterRadiusOffset={8}
-      borderWidth={1}
-      borderColor={{
-        from: "color",
-        modifiers: [["darker", 0.2]],
-      }}
+      // borderWidth={1}
+      // borderColor={{
+      //   from: "color",
+      //   modifiers: [["darker", 0.2]],
+      // }}
       arcLinkLabelsSkipAngle={10}
       arcLinkLabelsTextColor="#333333"
       arcLinkLabelsThickness={2}
