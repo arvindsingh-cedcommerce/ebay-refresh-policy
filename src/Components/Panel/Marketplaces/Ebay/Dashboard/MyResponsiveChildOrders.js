@@ -8,6 +8,7 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
   //   console.log(accountClickedOrders.data);
   // let tempData = [];
   const [tempData, setTempData] = useState([]);
+  console.log("new pie 3");
 
   useEffect(() => {
     let temp = [...tempData];
@@ -51,7 +52,7 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
 
   return (
     <ResponsivePie
-      arcLabelsComponent={({ datum, label, style }) => (
+      arcLabelsComponent={({ datum, label, style }) => { if(datum.value >0) return (
         <animated.g
           transform={style.transform}
           style={{ pointerEvents: "none" }}
@@ -68,7 +69,9 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
             {label}
           </text>
         </animated.g>
-      )}
+      )
+       else return <></>
+      }}
       data={tempData}
       margin={{
         top: 55,
@@ -76,6 +79,7 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
       }}
       fit={true}
       tooltip={(point) => {
+       if(point.datum.value>0)
         return (
           <div
             style={{
@@ -85,13 +89,18 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
             }}
           >
             <b>
-              {point.datum.label}: {point.datum.value} products
+              {point.datum.label}: {point.datum.value} orders
             </b>
           </div>
         );
+        else
+          return <></>;
       }}
       arcLabel={(point) => {
+        if(point.value>0)
         return `${point.value}`;
+        else
+        return "";
       }}
       colors={{ datum: "data.color" }}
       sortByValue={true}
@@ -99,11 +108,11 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
       padAngle={0}
       cornerRadius={0}
       activeOuterRadiusOffset={8}
-      borderWidth={1}
-      borderColor={{
-        from: "color",
-        modifiers: [["darker", 0.2]],
-      }}
+      // borderWidth={1}
+      // borderColor={{
+      //   from: "color",
+      //   modifiers: [["darker", 0.2]],
+      // }}
       arcLinkLabelsSkipAngle={10}
       arcLinkLabelsTextColor="#333333"
       arcLinkLabelsThickness={2}
