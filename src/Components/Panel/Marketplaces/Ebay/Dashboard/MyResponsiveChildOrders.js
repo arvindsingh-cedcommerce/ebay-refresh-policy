@@ -16,28 +16,28 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
       switch (key) {
         case "unfulfilledOrders":
           tempObj["id"] = key;
-          tempObj["label"] = "Unfulfilled Orders";
+          tempObj["label"] = "Unfulfilled";
           tempObj["value"] = accountClickedOrders.data[key];
           tempObj["color"] = "#40e0d0";
           temp.push(tempObj);
           break;
         case "fulfilledOrders":
           tempObj["id"] = key;
-          tempObj["label"] = "Fulfilled Orders";
+          tempObj["label"] = "Fulfilled";
           tempObj["value"] = accountClickedOrders.data[key];
           tempObj["color"] = "#4169e1";
           temp.push(tempObj);
           break;
         case "cancelledOrders":
           tempObj["id"] = key;
-          tempObj["label"] = "Cancelled Orders";
+          tempObj["label"] = "Cancelled";
           tempObj["value"] = accountClickedOrders.data[key];
           tempObj["color"] = "#6a5acd";
           temp.push(tempObj);
           break;
         case "failedOrders":
           tempObj["id"] = key;
-          tempObj["label"] = "Failed Orders";
+          tempObj["label"] = "Failed";
           tempObj["value"] = accountClickedOrders.data[key];
           tempObj["color"] = "#0047ab";
           temp.push(tempObj);
