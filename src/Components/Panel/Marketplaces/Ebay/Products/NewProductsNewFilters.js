@@ -564,9 +564,9 @@ function NewProductsNewFilters(props) {
       grid: true,
       ...filterPostData,
     };
-    if (Object.keys(filterPostData).length) {
-      postData["activePage"] = 1;
-    }
+    // if (Object.keys(filterPostData).length) {
+    //   postData["activePage"] = 1;
+    // }
     let {
       success: productsDataSuccess,
       data: productsData,
