@@ -694,7 +694,7 @@ const NewFilterProductsTab = ({
             <>
               <>
                 Create rules to filter, group and assign Shopify Products to
-                this newly created Template.
+                this newly created Profile.
               </>
               <Card.Section title="Add Group">
                 <p>
