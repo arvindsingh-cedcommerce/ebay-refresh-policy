@@ -29,7 +29,6 @@ import {
   PageHeader,
   Progress,
   Row,
-  Tooltip,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { getAllNotifications } from "../../../../../APIrequests/ActivitiesAPI";
