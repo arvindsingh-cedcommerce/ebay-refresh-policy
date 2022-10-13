@@ -8,7 +8,6 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
   //   console.log(accountClickedOrders.data);
   // let tempData = [];
   const [tempData, setTempData] = useState([]);
-  console.log("new pie 3");
 
   useEffect(() => {
     let temp = [...tempData];
@@ -17,28 +16,28 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
       switch (key) {
         case "unfulfilledOrders":
           tempObj["id"] = key;
-          tempObj["label"] = "Not Uploaded";
+          tempObj["label"] = "Unfulfilled Orders";
           tempObj["value"] = accountClickedOrders.data[key];
           tempObj["color"] = "#40e0d0";
           temp.push(tempObj);
           break;
         case "fulfilledOrders":
           tempObj["id"] = key;
-          tempObj["label"] = "Uploaded";
+          tempObj["label"] = "Fulfilled Orders";
           tempObj["value"] = accountClickedOrders.data[key];
           tempObj["color"] = "#4169e1";
           temp.push(tempObj);
           break;
         case "cancelledOrders":
           tempObj["id"] = key;
-          tempObj["label"] = "Error";
+          tempObj["label"] = "Cancelled Orders";
           tempObj["value"] = accountClickedOrders.data[key];
           tempObj["color"] = "#6a5acd";
           temp.push(tempObj);
           break;
         case "failedOrders":
           tempObj["id"] = key;
-          tempObj["label"] = "Ended";
+          tempObj["label"] = "Failed Orders";
           tempObj["value"] = accountClickedOrders.data[key];
           tempObj["color"] = "#0047ab";
           temp.push(tempObj);
@@ -52,25 +51,27 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
 
   return (
     <ResponsivePie
-      arcLabelsComponent={({ datum, label, style }) => { if(datum.value >0) return (
-        <animated.g
-          transform={style.transform}
-          style={{ pointerEvents: "none" }}
-        >
-          <text
-            textAnchor="middle"
-            dominantBaseline="central"
-            fill={style.textColor}
-            style={{
-              fontSize: 20,
-              fontWeight: 800,
-            }}
-          >
-            {label}
-          </text>
-        </animated.g>
-      )
-       else return <></>
+      arcLabelsComponent={({ datum, label, style }) => {
+        if (datum.value > 0)
+          return (
+            <animated.g
+              transform={style.transform}
+              style={{ pointerEvents: "none" }}
+            >
+              <text
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill={style.textColor}
+                style={{
+                  fontSize: 20,
+                  fontWeight: 800,
+                }}
+              >
+                {label}
+              </text>
+            </animated.g>
+          );
+        else return <></>;
       }}
       data={tempData}
       margin={{
@@ -79,28 +80,25 @@ const MyResponsiveChildOrders = ({ accountClickedOrders }) => {
       }}
       fit={true}
       tooltip={(point) => {
-       if(point.datum.value>0)
-        return (
-          <div
-            style={{
-              background: "#DDE4E5",
-              padding: "10px",
-              borderRadius: 5,
-            }}
-          >
-            <b>
-              {point.datum.label}: {point.datum.value} orders
-            </b>
-          </div>
-        );
-        else
-          return <></>;
+        if (point.datum.value > 0)
+          return (
+            <div
+              style={{
+                background: "#DDE4E5",
+                padding: "10px",
+                borderRadius: 5,
+              }}
+            >
+              <b>
+                {point.datum.label}: {point.datum.value} orders
+              </b>
+            </div>
+          );
+        else return <></>;
       }}
       arcLabel={(point) => {
-        if(point.value>0)
-        return `${point.value}`;
-        else
-        return "";
+        if (point.value > 0) return `${point.value}`;
+        else return "";
       }}
       colors={{ datum: "data.color" }}
       sortByValue={true}
