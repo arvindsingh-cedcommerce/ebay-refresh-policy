@@ -550,9 +550,10 @@ function NewProductsNewFilters(props) {
           );
           filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
         }
-      } else {
+      else {
         filterPostData[key] = filtersToPass[key];
       }
+    }
     }
     // filterPostData  = {...filterPostData, ...reduxState}
     // console.log('filterPostData', filterPostData);
