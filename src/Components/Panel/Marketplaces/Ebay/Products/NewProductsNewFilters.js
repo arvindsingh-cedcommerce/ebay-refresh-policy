@@ -1103,72 +1103,72 @@ function NewProductsNewFilters(props) {
 
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
-      if (key !== "filtersPresent") {
+      // if (key !== "filtersPresent") {
 
-
-        if (
-                !filter.includes("filtersPresent") ||
-                (filter.includes("filtersPresent") && filter["filtersPresent"])
-              ) {
-      let indexOfFirstOpeningBracket = filter.indexOf("[");
-      let indexOfFirstClosingBracket = filter.indexOf("]");
-      let indexOfSecondOpeningBracket = filter.indexOf(
-        "[",
-        indexOfFirstOpeningBracket + 1
-      );
-      let indexOfSecondClosingBracket = filter.indexOf(
-        "]",
-        indexOfFirstClosingBracket + 1
-      );
-      let fieldValue = filter.substring(
-        indexOfFirstOpeningBracket + 1,
-        indexOfFirstClosingBracket
-      );
-      let operatorValue = filter.substring(
-        indexOfSecondOpeningBracket + 1,
-        indexOfSecondClosingBracket
-      );
-      return (
-        <Tag
-          key={filter}
-          onRemove={() => {
-            const temp = Object.keys(filtersToPass).reduce((object, key) => {
-              if (key !== filter) {
-                object[key] = filtersToPass[key];
-              }
-              return object;
-            }, {});
-            let tempObj = { ...filters };
-            let disabledArr = [];
-            Object.keys(tempObj).forEach((object) => {
-              if (object === fieldValue) {
-                if (object === "listing_id") {
-                  tempObj["price"]["disabled"] = false;
-                  tempObj["quantity"]["disabled"] = false;
-                } else if (object === "price" || object === "quantity") {
-                  disabledArr = disableFiltersHandler(temp, object);
-                  if (
-                    !disabledArr.includes("price") &&
-                    !disabledArr.includes("quantity")
-                  ) {
-                    tempObj["listing_id"]["disabled"] = false;
-                  }
+      if (
+        !filter.includes("filtersPresent") ||
+        (filter.includes("filtersPresent") && filter["filtersPresent"])
+      ) {
+        let indexOfFirstOpeningBracket = filter.indexOf("[");
+        let indexOfFirstClosingBracket = filter.indexOf("]");
+        let indexOfSecondOpeningBracket = filter.indexOf(
+          "[",
+          indexOfFirstOpeningBracket + 1
+        );
+        let indexOfSecondClosingBracket = filter.indexOf(
+          "]",
+          indexOfFirstClosingBracket + 1
+        );
+        let fieldValue = filter.substring(
+          indexOfFirstOpeningBracket + 1,
+          indexOfFirstClosingBracket
+        );
+        let operatorValue = filter.substring(
+          indexOfSecondOpeningBracket + 1,
+          indexOfSecondClosingBracket
+        );
+        return (
+          <Tag
+            key={filter}
+            onRemove={() => {
+              const temp = Object.keys(filtersToPass).reduce((object, key) => {
+                if (key !== filter) {
+                  object[key] = filtersToPass[key];
                 }
-                tempObj[object]["value"] = "";
-              }
-            });
-            // setFilterTitleORsku("");
-            ["title", "sku"].includes(fieldValue) && setFilterTitleORsku("");
-            setFilters(tempObj);
-            setFiltersToPass(temp);
-            setSelected({ ...selected, [fieldValue]: [] });
-          }}
-        >
-          {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-          {filtersToPass[filter]}
-        </Tag>
-      );
-    }}});
+                return object;
+              }, {});
+              let tempObj = { ...filters };
+              let disabledArr = [];
+              Object.keys(tempObj).forEach((object) => {
+                if (object === fieldValue) {
+                  if (object === "listing_id") {
+                    tempObj["price"]["disabled"] = false;
+                    tempObj["quantity"]["disabled"] = false;
+                  } else if (object === "price" || object === "quantity") {
+                    disabledArr = disableFiltersHandler(temp, object);
+                    if (
+                      !disabledArr.includes("price") &&
+                      !disabledArr.includes("quantity")
+                    ) {
+                      tempObj["listing_id"]["disabled"] = false;
+                    }
+                  }
+                  tempObj[object]["value"] = "";
+                }
+              });
+              // setFilterTitleORsku("");
+              ["title", "sku"].includes(fieldValue) && setFilterTitleORsku("");
+              setFilters(tempObj);
+              setFiltersToPass(temp);
+              setSelected({ ...selected, [fieldValue]: [] });
+            }}
+          >
+            {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
+            {filtersToPass[filter]}
+          </Tag>
+        );
+      }
+    });
   };
 
   useEffect(() => {
