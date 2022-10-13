@@ -239,3 +239,7 @@ code {
 .ant-drawer {
   z-index: 1060 !important;
 }
+
+.ant-select-dropdown{
+  z-index: 1065 !important;
+}
