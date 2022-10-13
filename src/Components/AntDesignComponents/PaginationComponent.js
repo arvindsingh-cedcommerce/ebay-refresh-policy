@@ -3,6 +3,7 @@ import React from "react";
 
 const PaginationComponent = ({
   totalCount,
+  hitGetProductsAPI,
   pageSizeOptions,
   activePage,
   setActivePage,
@@ -25,6 +26,7 @@ const PaginationComponent = ({
       onChange={(page, pageSize) => {
         setActivePage(page);
         setPageSize(pageSize);
+        hitGetProductsAPI(page,pageSize);
       }}
       pageSizeOptions={pageSizeOptions}
       pageSize={pageSize}

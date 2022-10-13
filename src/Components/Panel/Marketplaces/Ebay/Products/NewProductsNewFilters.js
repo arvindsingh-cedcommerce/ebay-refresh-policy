@@ -349,17 +349,19 @@ function NewProductsNewFilters(props) {
 
   // variant state
   const [doVariantDataExists, setDoVariantDataExists] = useState({});
-
   // product credits
   const [productCredits, setProductCredits] = useState({
     available: "",
     total: "",
   });
-
+  
   useEffect(() => {
-    hitGetProductsAPI();
-  }, [activePage, pageSize, filtersToPass]);
-
+       if(filtersToPass)
+       {
+    hitGetProductsAPI(activePage,pageSize);
+       }
+  }, [ filtersToPass]);
+  
   const getBadge = (test) => {
     if (test?.ended && test?.Errors) {
       return (
@@ -537,7 +539,7 @@ function NewProductsNewFilters(props) {
       );
     }
   };
-  const hitGetProductsAPI = async () => {
+  const hitGetProductsAPI = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
@@ -555,8 +557,8 @@ function NewProductsNewFilters(props) {
     // console.log('filterPostData', filterPostData);
     let postData = {
       productOnly: true,
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       grid: true,
       ...filterPostData,
     };
@@ -737,13 +739,13 @@ function NewProductsNewFilters(props) {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       } else if (filtersToPass.hasOwnProperty("filter[sku][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent: true };
         delete temp["filter[sku][3]"];
         setFiltersToPass(temp);
       }
@@ -846,7 +848,7 @@ function NewProductsNewFilters(props) {
       notify.warn("No filters applied");
       setFiltersDrawerVisible(false);
       setInnerFilterCount(0);
-      setFiltersToPass("");
+      setFiltersToPass({filtersPresent:false});
       setFilterTitleORsku("");
     }
   };
@@ -1239,6 +1241,7 @@ const disableFiltersHandler=(temp,object)=>{
               <Stack distribution="trailing">
                 <PaginationComponent
                   totalCount={totalProductsCount}
+                  hitGetProductsAPI={hitGetProductsAPI}
                   pageSizeOptions={pageSizeOptions}
                   activePage={activePage}
                   setActivePage={setActivePage}
