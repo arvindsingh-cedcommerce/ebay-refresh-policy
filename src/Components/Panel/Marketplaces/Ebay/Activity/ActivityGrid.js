@@ -10,6 +10,7 @@ import {
   Stack,
   Tag,
   TextField,
+  Tooltip,
 } from "@shopify/polaris";
 import {
   AlertMinor,
@@ -20,7 +21,7 @@ import {
   CircleTickOutlineMinor,
   ImportMinor,
 } from "@shopify/polaris-icons";
-import { Alert, Badge, Col, Image, PageHeader, Progress, Row, Tooltip } from "antd";
+import { Alert, Badge, Col, Image, PageHeader, Progress, Row } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { getAllNotifications } from "../../../../../APIrequests/ActivitiesAPI";
 import { notify } from "../../../../../services/notify";
@@ -138,7 +139,7 @@ const ActivityGrid = (props) => {
       tempObject["message"] = (
         <Stack alignment="center" spacing="tight" wrap={false}>
           <>{getSeverityIcon(activity["severity"])}</>
-          <>{activity["message"]}</>
+          <>{activity["message"].length<=160?activity["message"]:<Tooltip content={activity["message"]}><div>{`${activity["message"].substring(0,160)}...`}</div></Tooltip>}</>
           {activity["url"] && (
             <Tooltip content={"Download Report"}>
               <div

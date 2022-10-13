@@ -61,9 +61,9 @@ import ProductBulkMenu from "./ProductBulkMenu";
 import ProductMassMenu from "./ProductMassMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
+import CsvBulkMenu from "./CsvBulkMenu";
 import OutsideAlerter from "./OutsideAlerter";
 import OutsideAlerterMassMenu from "./OutsideAlerterMassMenu";
-import CsvBulkMenu from "./CsvBulkMenu";
 
 const { Text } = Typography;
 
@@ -149,7 +149,7 @@ export const getFitersInitially = () => {
       label: field["label"],
       dataType: field["dataType"],
       placeholder: field["placeholder"],
-      disabled:false,
+      disabled: false,
     };
     if (field?.["searchType"] === "dropdown") {
       tempObj[field["value"]]["options"] = [];
@@ -165,19 +165,17 @@ function NewProductsNewFilters(props) {
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenBulk, setIsOpenBulk] = useState(false);
-
-  const [isProductBulkMenuOpen,setIsProductBulkMenuOpen]=useState(false);
-  const [isCsvBulkMenuOpen,setIsCsvBulkMenuOpen]=useState(false);
+  const [isProductBulkMenuOpen, setIsProductBulkMenuOpen] = useState(false);
+  const [isCsvBulkMenuOpen, setIsCsvBulkMenuOpen] = useState(false);
   const [productData, setProductData] = useState([]);
-  const setCallbackCsvFunction=(openState)=>{
+  const setCallbackCsvFunction = (openState) => {
     setIsCsvBulkMenuOpen(openState);
     setIsProductBulkMenuOpen(false);
-  }
-  const setCallbackProductBulkFunction=(openState)=>{
+  };
+  const setCallbackProductBulkFunction = (openState) => {
     setIsProductBulkMenuOpen(openState);
     setIsCsvBulkMenuOpen(false);
-  }
+  };
   const [productColumns, setProductColumns] = useState([
     {
       title: <center>Image</center>,
@@ -351,7 +349,6 @@ function NewProductsNewFilters(props) {
 
   // variant state
   const [doVariantDataExists, setDoVariantDataExists] = useState({});
-
   // product credits
   const [productCredits, setProductCredits] = useState({
     available: "",
@@ -359,8 +356,10 @@ function NewProductsNewFilters(props) {
   });
 
   useEffect(() => {
-    hitGetProductsAPI();
-  }, [activePage, pageSize, filtersToPass]);
+    if (filtersToPass) {
+      hitGetProductsAPI(activePage, pageSize);
+    }
+  }, [filtersToPass]);
 
   const getBadge = (test) => {
     if (test?.ended && test?.Errors) {
@@ -539,26 +538,29 @@ function NewProductsNewFilters(props) {
       );
     }
   };
-  const hitGetProductsAPI = async () => {
+  const hitGetProductsAPI = async (activePageNumber, activePageSize) => {
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
-      if (key === "filter[country][1]") {
-        let matchedAccoount = connectedAccountsArray.find(
-          (connectedAccount) =>
-            connectedAccount["value"] === filtersToPass["filter[country][1]"]
-        );
-        filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
-      } else {
+      if (key !== "filtersPresent") {
+        if (key === "filter[country][1]") {
+          let matchedAccoount = connectedAccountsArray.find(
+            (connectedAccount) =>
+              connectedAccount["value"] === filtersToPass["filter[country][1]"]
+          );
+          filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
+        }
+      else {
         filterPostData[key] = filtersToPass[key];
       }
+    }
     }
     // filterPostData  = {...filterPostData, ...reduxState}
     // console.log('filterPostData', filterPostData);
     let postData = {
       productOnly: true,
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       grid: true,
       ...filterPostData,
     };
@@ -658,16 +660,16 @@ function NewProductsNewFilters(props) {
           tempObject["profile"] = (
             <center>
               <Button
-      plain
-      onClick={(e) => {
-        return props.history.push(
-          `/panel/ebay/profiles/edit?id=${profile_id}`
-        );
-      }}
-    >
-      {profile_name ? profile_name : "-"}
-    </Button>
-                    </center>
+                plain
+                onClick={(e) => {
+                  return props.history.push(
+                    `/panel/ebay/profiles/edit?id=${profile_id}`
+                  );
+                }}
+              >
+                {profile_name ? profile_name : "-"}
+              </Button>
+            </center>
           );
           tempObject["variantAttributes"] = (
             <center>
@@ -739,13 +741,17 @@ function NewProductsNewFilters(props) {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({
+          ...filtersToPass,
+          ...titleFilterObj,
+          filtersPresent: true,
+        });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass, filtersPresent: true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       } else if (filtersToPass.hasOwnProperty("filter[sku][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass, filtersPresent: true };
         delete temp["filter[sku][3]"];
         setFiltersToPass(temp);
       }
@@ -845,10 +851,10 @@ function NewProductsNewFilters(props) {
       setInnerFilterCount(Object.keys(temp).length);
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      // notify.warn("No filters applied");
       setFiltersDrawerVisible(false);
       setInnerFilterCount(0);
-      setFiltersToPass("");
+      setFiltersToPass({ filtersPresent: false });
       setFilterTitleORsku("");
     }
   };
@@ -1080,82 +1086,89 @@ function NewProductsNewFilters(props) {
       findValue = numberOperatorOptions.find(
         (option) => option["value"] === operator
       );
-      value = findValue["label"];
+      value = findValue?.["label"];
     }
     return value;
   };
-const disableFiltersHandler=(temp,object)=>{
-  const arr=Object.keys(temp).map((item, index)=> {
-    let indexOfFirstOpeningBracket = item.indexOf("[");
-    let indexOfFirstClosingBracket = item.indexOf("]");
-    return item.substring(
-    indexOfFirstOpeningBracket + 1,
-    indexOfFirstClosingBracket
-  )})
-  return arr;
-};
-
-  const tagMarkup = () => {
-    return Object.keys(filtersToPass).map((filter, index) => {
-      let indexOfFirstOpeningBracket = filter.indexOf("[");
-      let indexOfFirstClosingBracket = filter.indexOf("]");
-      let indexOfSecondOpeningBracket = filter.indexOf(
-        "[",
-        indexOfFirstOpeningBracket + 1
-      );
-      let indexOfSecondClosingBracket = filter.indexOf(
-        "]",
-        indexOfFirstClosingBracket + 1
-      );
-      let fieldValue = filter.substring(
+  const disableFiltersHandler = (temp, object) => {
+    const arr = Object.keys(temp).map((item, index) => {
+      let indexOfFirstOpeningBracket = item.indexOf("[");
+      let indexOfFirstClosingBracket = item.indexOf("]");
+      return item.substring(
         indexOfFirstOpeningBracket + 1,
         indexOfFirstClosingBracket
       );
-      let operatorValue = filter.substring(
-        indexOfSecondOpeningBracket + 1,
-        indexOfSecondClosingBracket
-      );
-      return (
-        <Tag
-          key={filter}
-          onRemove={() => {
-            const temp = Object.keys(filtersToPass).reduce((object, key) => {           
-              if (key !== filter) {
-                object[key] = filtersToPass[key];
-              }
-              return object;
-            }, {});
-             let tempObj = { ...filters };
-            let disabledArr=[];
-            Object.keys(tempObj).forEach((object) => {
-              if (object === fieldValue) {
-                if(object==="listing_id")
-                {
-                  tempObj["price"]["disabled"]=false;
-                  tempObj["quantity"]["disabled"]=false;
+    });
+    return arr;
+  };
+
+  const tagMarkup = () => {
+    return Object.keys(filtersToPass).map((filter, index) => {
+      // if (key !== "filtersPresent") {
+
+      if (
+        !filter.includes("filtersPresent") ||
+        (filter.includes("filtersPresent") && filter["filtersPresent"])
+      ) {
+        let indexOfFirstOpeningBracket = filter.indexOf("[");
+        let indexOfFirstClosingBracket = filter.indexOf("]");
+        let indexOfSecondOpeningBracket = filter.indexOf(
+          "[",
+          indexOfFirstOpeningBracket + 1
+        );
+        let indexOfSecondClosingBracket = filter.indexOf(
+          "]",
+          indexOfFirstClosingBracket + 1
+        );
+        let fieldValue = filter.substring(
+          indexOfFirstOpeningBracket + 1,
+          indexOfFirstClosingBracket
+        );
+        let operatorValue = filter.substring(
+          indexOfSecondOpeningBracket + 1,
+          indexOfSecondClosingBracket
+        );
+        return (
+          <Tag
+            key={filter}
+            onRemove={() => {
+              const temp = Object.keys(filtersToPass).reduce((object, key) => {
+                if (key !== filter) {
+                  object[key] = filtersToPass[key];
                 }
-                else if(object==="price" || object==="quantity")
-                {
-                  disabledArr=disableFiltersHandler(temp,object);
-                  if(!disabledArr.includes("price")&&!disabledArr.includes("quantity"))
-                  {
-                    tempObj["listing_id"]["disabled"]=false;
+                return object;
+              }, {});
+              let tempObj = { ...filters };
+              let disabledArr = [];
+              Object.keys(tempObj).forEach((object) => {
+                if (object === fieldValue) {
+                  if (object === "listing_id") {
+                    tempObj["price"]["disabled"] = false;
+                    tempObj["quantity"]["disabled"] = false;
+                  } else if (object === "price" || object === "quantity") {
+                    disabledArr = disableFiltersHandler(temp, object);
+                    if (
+                      !disabledArr.includes("price") &&
+                      !disabledArr.includes("quantity")
+                    ) {
+                      tempObj["listing_id"]["disabled"] = false;
+                    }
                   }
+                  tempObj[object]["value"] = "";
                 }
-                tempObj[object]["value"] = "";
-              }
-            });
-            // setFilterTitleORsku("");
-            ["title", "sku"].includes(fieldValue) && setFilterTitleORsku("");
-            setFilters(tempObj);
-            setFiltersToPass(temp);
-            setSelected({ ...selected, [fieldValue]: [] });
-          }}
-        >
-          {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-          {filtersToPass[filter]}
-        </Tag>
-      );
+              });
+              // setFilterTitleORsku("");
+              ["title", "sku"].includes(fieldValue) && setFilterTitleORsku("");
+              setFilters(tempObj);
+              setFiltersToPass(temp);
+              setSelected({ ...selected, [fieldValue]: [] });
+            }}
+          >
+            {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
+            {filtersToPass[filter]}
+          </Tag>
+        );
+      }
     });
   };
 
@@ -1202,9 +1215,17 @@ const disableFiltersHandler=(temp,object)=>{
       }
       ghost={true}
       extra={[
-        <CsvBulkMenu profileList={profileList} isCsvBulkMenuOpen={isCsvBulkMenuOpen} setCallbackCsvFunction={setCallbackCsvFunction}/>,
+        <CsvBulkMenu
+          profileList={profileList}
+          isCsvBulkMenuOpen={isCsvBulkMenuOpen}
+          setCallbackCsvFunction={setCallbackCsvFunction}
+        />,
         // <ProductMassMenu selectedRows={selectedRows} />,
-        <ProductBulkMenu profileList={profileList} isProductBulkMenuOpen={isProductBulkMenuOpen} setCallbackProductBulkFunction={setCallbackProductBulkFunction}/>,
+        <ProductBulkMenu
+          profileList={profileList}
+          isProductBulkMenuOpen={isProductBulkMenuOpen}
+          setCallbackProductBulkFunction={setCallbackProductBulkFunction}
+        />,
       ]}
     >
       <Card sectioned>
@@ -1230,17 +1251,18 @@ const disableFiltersHandler=(temp,object)=>{
           >
             <Col className="gutter-row" span={6}>
               {/* <OutsideAlerterMassMenu isOpen={isOpen} setIsOpen={setIsOpen}> */}
-                <ProductMassMenu
-                  selectedRows={selectedRows}
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                />
+              <ProductMassMenu
+                selectedRows={selectedRows}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
               {/* </OutsideAlerterMassMenu> */}
             </Col>
             <Col className="gutter-row" span={18}>
               <Stack distribution="trailing">
                 <PaginationComponent
                   totalCount={totalProductsCount}
+                  hitGetProductsAPI={hitGetProductsAPI}
                   pageSizeOptions={pageSizeOptions}
                   activePage={activePage}
                   setActivePage={setActivePage}

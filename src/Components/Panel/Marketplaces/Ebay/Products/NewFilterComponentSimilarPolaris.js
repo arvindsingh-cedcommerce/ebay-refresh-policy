@@ -74,7 +74,7 @@ const NewFilterComponentSimilarPolaris = ({
               });
               gatherAllFilters();
               setFiltersDrawerVisible(false);
-              setFiltersToPass("");
+              setFiltersToPass({filtersPresent:false});
               setFilterTitleORsku("");
               setSelected({
                 profile_name: [],
