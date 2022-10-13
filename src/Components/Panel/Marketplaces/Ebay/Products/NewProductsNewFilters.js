@@ -543,13 +543,15 @@ function NewProductsNewFilters(props) {
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
+      if (key !== "filtersPresent") {
       if (key === "filter[country][1]") {
         let matchedAccoount = connectedAccountsArray.find(
           (connectedAccount) =>
             connectedAccount["value"] === filtersToPass["filter[country][1]"]
         );
         filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
-      } else {
+      } 
+    }else {
         filterPostData[key] = filtersToPass[key];
       }
     }
