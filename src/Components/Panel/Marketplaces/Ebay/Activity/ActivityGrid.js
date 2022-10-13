@@ -386,39 +386,47 @@ const ActivityGrid = (props) => {
               <Stack vertical>
                 {queuedTasks.map((task) => {
                   return task["progressBar"] ? (
-                    <Stack key={task["id"]}>
-                      <Progress
-                        type="circle"
-                        percent={Math.floor(task["progress"])}
-                        width={50}
-                      />
-                      <Stack.Item fill>
-                        <Stack vertical spacing="extraTight">
-                          <>{task["message"]}</>
-                          <Progress percent={Math.floor(task["progress"])} />
-                        </Stack>
-                      </Stack.Item>
-                    </Stack>
+                    // <Alert message={task["message"]} type="info">
+                    <Card.Section title={task["message"]}>
+                      <Stack key={task["id"]} alignment="center">
+                        <Progress
+                          type="circle"
+                          percent={Math.floor(task["progress"])}
+                          width={50}
+                        />
+                        <Stack.Item fill>
+                          <Stack vertical spacing="extraTight">
+                            {/* <>{task["message"]}</> */}
+                            <Progress percent={Math.floor(task["progress"])} />
+                          </Stack>
+                        </Stack.Item>
+                      </Stack>
+                    </Card.Section>
                   ) : (
+                    // {/* </Alert> */}
                     // <img
                     //   width={"100%"}
                     //   style={{borderRadius: '10px'}}
                     //   src={LoaderImage}
                     //   alt=""
                     // />
-                    <Banner title={task["message"]} status="info">
-                      {/* <p>{task["created_at"]}</p> */}
-                      <p>
-                        Processes will keep running in background. It may take
-                        some time.
-                      </p>
-                      <img
-                      width={"100%"}
-                      style={{borderRadius: '10px'}}
-                      src={LoaderImage}
-                      alt=""
-                    />
-                    </Banner>
+                    // <Banner title={task["message"]} status="info">
+                    <Card.Section title={task["message"]}>
+                      <Stack vertical spacing="extraTight">
+                        {/* <p>{task["created_at"]}</p> */}
+                        <div>
+                          Processes will keep running in background. It may take
+                          some time.
+                        </div>
+                        <img
+                          width={"100%"}
+                          style={{ borderRadius: "15px" }}
+                          src={LoaderImage}
+                          alt=""
+                        />
+                        {/* </Banner> */}
+                      </Stack>
+                    </Card.Section>
                   );
                 })}
               </Stack>

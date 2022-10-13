@@ -11,7 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 
 const { Panel } = Collapse;
 const { Text } = Typography;
@@ -21,6 +21,7 @@ const NewFilterComponentSimilarPolaris = ({
   filtersDrawerVisible,
   filters,
   setFilters,
+  initialMoreFiltersObj,
   // operatorOptions,
   gatherAllFilters,
   numberOperatorOptions,
@@ -29,7 +30,66 @@ const NewFilterComponentSimilarPolaris = ({
   setFilterTitleORsku,
   setSelected,
 }) => {
+const getInitialOperatorValue=(currentFilter)=>{
+  let filterObj="";
+  let arr;
+  arr=Object.keys(initialMoreFiltersObj)?.filter((moreFilterObj,index)=>{
+   let indexOfFirstOpeningBracket = moreFilterObj.indexOf("[");
+   let indexOfFirstClosingBracket = moreFilterObj.indexOf("]");
+   let indexOfSecondOpeningBracket = moreFilterObj.indexOf(
+     "[",
+     indexOfFirstOpeningBracket + 1
+   );
+   let indexOfSecondClosingBracket = moreFilterObj.indexOf(
+     "]",
+     indexOfFirstClosingBracket + 1
+   );
+   let mainItem = moreFilterObj.substring(
+     indexOfFirstOpeningBracket + 1,
+     indexOfFirstClosingBracket
+   );
+   let operatorValue = moreFilterObj.substring(
+     indexOfSecondOpeningBracket + 1,
+     indexOfSecondClosingBracket
+   );
+   if(mainItem===currentFilter)
+   {
+         filterObj= {
+           "filter":moreFilterObj,
+           "operatorValue":operatorValue
+         };
+       return moreFilterObj;
+   }
+  });
+  return filterObj;
+}
+useEffect(()=>{
+  const obj={...filters};
+  Object.keys(filters).map((filter, index) => {
+          let initialFilterOperatorValue=getInitialOperatorValue(filter);
 
+         let initialFilterMainValue=getInitialOperatorValue(filter);
+         if(initialFilterOperatorValue && initialFilterMainValue)
+         {
+         obj[filter].operator=initialFilterOperatorValue?.operatorValue;
+         obj[filter].value=initialMoreFiltersObj[`${initialFilterMainValue?.filter}`];
+         }
+
+          // if(initialFilterOperatorValue)
+          // {
+           
+          //   initialFilterOperatorValue=initialFilterOperatorValue?.operatorValue;
+          // }
+         
+    //      if(initialFilterMainValue)
+    //      {
+    //  console.log("valuess",initialMoreFiltersObj);     
+    //  console.log("valuess 1",`${initialFilterMainValue?.filter}`);
+    //       initialFilterMainValue=initialMoreFiltersObj[`${initialFilterMainValue?.filter}`];
+    //      }
+});
+setFilters({...obj});
+},[]);
   const handleDisabled=(currentValue,currentFilter)=>{
      const filterObj={...filters};
     if(currentFilter==="listing_id")
@@ -53,7 +113,7 @@ const NewFilterComponentSimilarPolaris = ({
       filterObj["listing_id"]["disabled"]=false;
      }
   };
-
+   
   return (
     <Drawer
       title="Filters"
@@ -113,7 +173,7 @@ const NewFilterComponentSimilarPolaris = ({
         expandIconPosition={"right"}
       >
         {Object.keys(filters).map((filter, index) => {
-          return (
+         return (
             <Panel
               header={
                 filters[filter]["label"] === "Inventory" ? (

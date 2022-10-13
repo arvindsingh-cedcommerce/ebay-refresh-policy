@@ -162,6 +162,33 @@ function NewProductsNewFilters(props) {
   const reduxState = useSelector(
     (state) => state.productFilterReducer.reduxFilters
   );
+  const checkValueHandler=(arr,filterName)=>{
+    let countryValue="";
+    Object.keys(arr).filter((item,index)=>{
+      let indexOfFirstOpeningBracket = item.indexOf("[");
+      let indexOfFirstClosingBracket = item.indexOf("]");
+      const mainItem=item.substring(
+        indexOfFirstOpeningBracket + 1,
+        indexOfFirstClosingBracket
+      );
+      if(mainItem===filterName)
+      {
+          countryValue= item;
+          return ;
+      }
+    })
+    return countryValue;
+  }
+  const initialCountryValue=reduxState[checkValueHandler(reduxState,"country")];
+  const initialStatusValue=reduxState[checkValueHandler(reduxState,"status")];
+  const initialProfileValue=reduxState[checkValueHandler(reduxState,"profile_name")];
+  const moreFilters=["listing_id","product_type","brand","tags","price","quantity"];
+  let initialMoreFiltersObj={};
+  moreFilters.map((moreFilter,index)=>{
+    let filterItem=checkValueHandler(reduxState,moreFilter);
+    if(filterItem)
+    initialMoreFiltersObj[filterItem]=reduxState[filterItem];
+  });
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -868,6 +895,9 @@ function NewProductsNewFilters(props) {
   };
 
   const renderOtherFilters = () => {
+    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
+    const initialStatusObj=status?.filter((statusItem,index)=> statusItem.value===initialStatusValue);
+    const initialProfileObj=profileListForFilters?.filter((profileItem,index)=> profileItem.value===initialProfileValue);
     return (
       <Stack wrap>
         <ButtonGroup segmented>
@@ -879,7 +909,7 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={connectedAccountsArray}
-                selected={selected["country"]}
+                selected={initialCountryObj[0]?initialCountryObj[0].value:selected["country"]}
                 onChange={(value) => handleChange(value, "country")}
               />
             </div>
@@ -892,7 +922,7 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={status}
-                selected={selected["status"]}
+                selected={initialStatusObj[0]?initialStatusObj[0].value:selected["status"]}
                 onChange={(value) => handleChange(value, "status")}
               />
             </div>
@@ -905,7 +935,7 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={profileListForFilters}
-                selected={selected["profile_name"]}
+                selected={initialProfileObj[0]? initialProfileObj[0].value:selected["profile_name"]}
                 onChange={(value) => handleChange(value, "profile_name")}
               />
             </div>
@@ -1054,7 +1084,7 @@ function NewProductsNewFilters(props) {
   useEffect(() => {
     getAccounts();
     hitDashoboardAPI();
-  }, []);
+ }, []);
 
   const getFieldValue = (field) => {
     switch (field) {
@@ -1347,6 +1377,7 @@ function NewProductsNewFilters(props) {
         filtersDrawerVisible={filtersDrawerVisible}
         filters={filters}
         stringOperatorOptions={stringOperatorOptions}
+        initialMoreFiltersObj={initialMoreFiltersObj}
         numberOperatorOptions={numberOperatorOptions}
         setFilters={setFilters}
         gatherAllFilters={gatherAllFilters}
