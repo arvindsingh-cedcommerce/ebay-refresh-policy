@@ -100,8 +100,8 @@ const InventoryTemplateGrid = (props) => {
     (state) => state.inventoryGridFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
-
-  const { cbFuncInventory } = props;
+ const inventoryTypeValue= reduxState[props.checkValueHandler(reduxState,"customiseInventoryType")];
+ const { cbFuncInventory } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
     siteID: "",
@@ -407,6 +407,7 @@ const InventoryTemplateGrid = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const renderOtherFilters = () => {
+     const initialInventoryTypeObj=customiseInventoryOptions?.filter((connectedAccount,index)=> connectedAccount.value===inventoryTypeValue);
     return (
       <ButtonGroup segmented>
         <Popover
@@ -417,7 +418,7 @@ const InventoryTemplateGrid = (props) => {
           <div style={{ margin: "10px" }}>
             <ChoiceList
               choices={customiseInventoryOptions}
-              selected={selected["customiseInventoryType"]}
+              selected={initialInventoryTypeObj[0]?[initialInventoryTypeObj[0].value]:selected["customiseInventoryType"]}
               onChange={(value) =>
                 handleChange(value, "customiseInventoryType")
               }

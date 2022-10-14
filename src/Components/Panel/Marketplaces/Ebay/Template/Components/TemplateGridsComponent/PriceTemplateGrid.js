@@ -66,7 +66,8 @@ const PriceTemplateGrid = (props) => {
     (state) => state.priceGridFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
-
+   const listingTypeValue= reduxState[props.checkValueHandler(reduxState,"listingType")];
+ 
   const { cbFuncPrice } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
@@ -346,6 +347,8 @@ const PriceTemplateGrid = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const renderOtherFilters = () => {
+    const initialListingTypeObj=listingTypeOptions?.filter((connectedAccount,index)=> connectedAccount.value===listingTypeValue);
+    
     return (
       <ButtonGroup segmented>
         <Popover
@@ -356,7 +359,7 @@ const PriceTemplateGrid = (props) => {
           <div style={{ margin: "10px" }}>
             <ChoiceList
               choices={listingTypeOptions}
-              selected={selected["listingType"]}
+              selected={initialListingTypeObj[0]?[initialListingTypeObj[0].value]:selected["listingType"]}
               onChange={(value) => handleChange(value, "listingType")}
             />
           </div>

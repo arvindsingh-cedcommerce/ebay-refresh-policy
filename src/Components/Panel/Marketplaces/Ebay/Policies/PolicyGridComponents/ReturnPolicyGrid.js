@@ -64,6 +64,8 @@ const ReturnPolicyGrid = (props) => {
     (state) => state.returnPolicyGridFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
+  const countryTypeValue= reduxState[props.checkValueHandler(reduxState,"country")];
+ 
   const { cbFuncCategory, refreshSuccessStatus, setRefreshSuccessStatus } =
     props;
 
@@ -334,6 +336,8 @@ const ReturnPolicyGrid = (props) => {
   );
 
   const renderOtherFilters = () => {
+    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===countryTypeValue);
+   
     return (
       <Popover
         active={popOverStatus["country"]}
@@ -343,7 +347,7 @@ const ReturnPolicyGrid = (props) => {
         <div style={{ margin: "10px", width: "200px" }}>
           <ChoiceList
             choices={connectedAccountsArray}
-            selected={selected["country"]}
+            selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
             onChange={(value) => handleChange(value, "country")}
           />
         </div>

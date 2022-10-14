@@ -70,8 +70,9 @@ const TitleTemplateGrid = (props) => {
     (state) => state.titleGridFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
-
-  const { cbFuncTitle } = props;
+  const titleMappingTypeValue= reduxState[props.checkValueHandler(reduxState,"titleMapping")];
+   const descriptionMappingTypeValue=reduxState[props.checkValueHandler(reduxState,"descriptionMapping")];
+   const { cbFuncTitle } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
     siteID: "",
@@ -375,6 +376,8 @@ const TitleTemplateGrid = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const renderOtherFilters = () => {
+    const titleMappingTypeObj=AttributeMapoptions?.filter((connectedAccount,index)=> connectedAccount.value===titleMappingTypeValue);
+    const descriptionMappingTypeObj=AttributeMapoptions?.filter((connectedAccount,index)=> connectedAccount.value===descriptionMappingTypeValue);
     return (
       <ButtonGroup segmented>
         <Popover
@@ -385,7 +388,7 @@ const TitleTemplateGrid = (props) => {
           <div style={{ margin: "10px" }}>
             <ChoiceList
               choices={AttributeMapoptions}
-              selected={selected["titleMapping"]}
+              selected={titleMappingTypeObj[0]?[titleMappingTypeObj[0].value]:selected["titleMapping"]}
               onChange={(value) => handleChange(value, "titleMapping")}
             />
           </div>
@@ -398,7 +401,7 @@ const TitleTemplateGrid = (props) => {
           <div style={{ margin: "10px" }}>
             <ChoiceList
               choices={AttributeMapoptions}
-              selected={selected["descriptionMapping"]}
+              selected={descriptionMappingTypeObj[0]?[descriptionMappingTypeObj[0].value]:selected["descriptionMapping"]}
               onChange={(value) => handleChange(value, "descriptionMapping")}
             />
           </div>
