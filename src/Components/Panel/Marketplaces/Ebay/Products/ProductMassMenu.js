@@ -52,7 +52,7 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
         overlayClassName="massMenu"
         key="massAction"
         overlayStyle={{
-          maxHeight: "40rem",
+          maxHeight: "25rem",
           overflowY: "scroll",
           zIndex: 50,
           borderRadius: "10px !important",
