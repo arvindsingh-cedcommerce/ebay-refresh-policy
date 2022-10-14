@@ -33,6 +33,8 @@ const NewFilterComponentSimilarPolaris = ({
 const getInitialOperatorValue=(currentFilter)=>{
   let filterObj="";
   let arr;
+  if(initialMoreFiltersObj)
+  {
   arr=Object.keys(initialMoreFiltersObj)?.filter((moreFilterObj,index)=>{
    let indexOfFirstOpeningBracket = moreFilterObj.indexOf("[");
    let indexOfFirstClosingBracket = moreFilterObj.indexOf("]");
@@ -61,6 +63,7 @@ const getInitialOperatorValue=(currentFilter)=>{
        return moreFilterObj;
    }
   });
+}
   return filterObj;
 }
 useEffect(()=>{
@@ -69,7 +72,7 @@ useEffect(()=>{
           let initialFilterOperatorValue=getInitialOperatorValue(filter);
    
          let initialFilterMainValue=getInitialOperatorValue(filter);
-         if(initialFilterOperatorValue && initialFilterMainValue)
+         if(initialFilterOperatorValue && initialFilterMainValue && initialMoreFiltersObj)
          {
          obj[filter].operator=initialFilterOperatorValue?.operatorValue;
          obj[filter].value=initialMoreFiltersObj[`${initialFilterMainValue?.filter}`];
