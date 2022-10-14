@@ -541,6 +541,7 @@ const ShippingPolicyGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalShippingPolicyCount}
+              hitGetProductsAPI={()=>{}}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}
