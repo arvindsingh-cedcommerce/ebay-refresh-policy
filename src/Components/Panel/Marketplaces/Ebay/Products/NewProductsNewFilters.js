@@ -898,6 +898,12 @@ function NewProductsNewFilters(props) {
     const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
     const initialStatusObj=status?.filter((statusItem,index)=> statusItem.value===initialStatusValue);
     const initialProfileObj=profileListForFilters?.filter((profileItem,index)=> profileItem.value===initialProfileValue);
+    console.log("initial object 1",initialCountryObj);
+    console.log("initial object 2",initialStatusObj);
+    console.log("initial object 3",initialProfileObj);
+    console.log("initial object 4",selected["country"]);
+    console.log("initial object 5",selected["status"]);
+    console.log("initial object 6",selected["profile_name"]);
     return (
       <Stack wrap>
         <ButtonGroup segmented>
@@ -909,7 +915,7 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={connectedAccountsArray}
-                selected={initialCountryObj[0]?initialCountryObj[0].value:selected["country"]}
+                selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
                 onChange={(value) => handleChange(value, "country")}
               />
             </div>
@@ -922,7 +928,7 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={status}
-                selected={initialStatusObj[0]?initialStatusObj[0].value:selected["status"]}
+                selected={initialStatusObj[0]?[initialStatusObj[0].value]:selected["status"]}
                 onChange={(value) => handleChange(value, "status")}
               />
             </div>
@@ -935,7 +941,7 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={profileListForFilters}
-                selected={initialProfileObj[0]? initialProfileObj[0].value:selected["profile_name"]}
+                selected={initialProfileObj[0]? [initialProfileObj[0].value]:selected["profile_name"]}
                 onChange={(value) => handleChange(value, "profile_name")}
               />
             </div>
