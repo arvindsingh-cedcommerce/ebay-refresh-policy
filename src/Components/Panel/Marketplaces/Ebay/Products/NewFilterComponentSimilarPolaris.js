@@ -11,7 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 
 const { Panel } = Collapse;
 const { Text } = Typography;
@@ -21,6 +21,7 @@ const NewFilterComponentSimilarPolaris = ({
   filtersDrawerVisible,
   filters,
   setFilters,
+  initialMoreFiltersObj,
   // operatorOptions,
   gatherAllFilters,
   numberOperatorOptions,
@@ -29,9 +30,69 @@ const NewFilterComponentSimilarPolaris = ({
   setFilterTitleORsku,
   setSelected,
 }) => {
+const getInitialOperatorValue=(currentFilter)=>{
+  let filterObj="";
+  let arr;
+  arr=Object.keys(initialMoreFiltersObj)?.filter((moreFilterObj,index)=>{
+   let indexOfFirstOpeningBracket = moreFilterObj.indexOf("[");
+   let indexOfFirstClosingBracket = moreFilterObj.indexOf("]");
+   let indexOfSecondOpeningBracket = moreFilterObj.indexOf(
+     "[",
+     indexOfFirstOpeningBracket + 1
+   );
+   let indexOfSecondClosingBracket = moreFilterObj.indexOf(
+     "]",
+     indexOfFirstClosingBracket + 1
+   );
+   let mainItem = moreFilterObj.substring(
+     indexOfFirstOpeningBracket + 1,
+     indexOfFirstClosingBracket
+   );
+   let operatorValue = moreFilterObj.substring(
+     indexOfSecondOpeningBracket + 1,
+     indexOfSecondClosingBracket
+   );
+   if(mainItem===currentFilter)
+   {
+         filterObj= {
+           "filter":moreFilterObj,
+           "operatorValue":operatorValue
+         };
+       return moreFilterObj;
+   }
+  });
+  return filterObj;
+}
+useEffect(()=>{
+  const obj={...filters};
+  Object.keys(filters).map((filter, index) => {
+          let initialFilterOperatorValue=getInitialOperatorValue(filter);
+   
+         let initialFilterMainValue=getInitialOperatorValue(filter);
+         if(initialFilterOperatorValue && initialFilterMainValue)
+         {
+         obj[filter].operator=initialFilterOperatorValue?.operatorValue;
+         obj[filter].value=initialMoreFiltersObj[`${initialFilterMainValue?.filter}`];
+         handleDisabled(obj,obj[filter].value,filter); 
+        }
 
-  const handleDisabled=(currentValue,currentFilter)=>{
-     const filterObj={...filters};
+          // if(initialFilterOperatorValue)
+          // {
+           
+          //   initialFilterOperatorValue=initialFilterOperatorValue?.operatorValue;
+          // }
+         
+    //      if(initialFilterMainValue)
+    //      {
+    //  console.log("valuess",initialMoreFiltersObj);     
+    //  console.log("valuess 1",`${initialFilterMainValue?.filter}`);
+    //       initialFilterMainValue=initialMoreFiltersObj[`${initialFilterMainValue?.filter}`];
+    //      }
+});
+setFilters({...obj});
+},[]);
+  const handleDisabled=(filterObj,currentValue,currentFilter)=>{
+    
     if(currentFilter==="listing_id")
      {
       if(currentValue)
@@ -52,8 +113,9 @@ const NewFilterComponentSimilarPolaris = ({
       else
       filterObj["listing_id"]["disabled"]=false;
      }
+     return {...filterObj};
   };
-
+   
   return (
     <Drawer
       title="Filters"
@@ -113,7 +175,7 @@ const NewFilterComponentSimilarPolaris = ({
         expandIconPosition={"right"}
       >
         {Object.keys(filters).map((filter, index) => {
-          return (
+         return (
             <Panel
               header={
                 filters[filter]["label"] === "Inventory" ? (
@@ -157,10 +219,9 @@ const NewFilterComponentSimilarPolaris = ({
                     value={filters[filter]["value"]}
                     disabled={filters[filter]["disabled"]}
                     onChange={(e) => {
-                      handleDisabled(e,filter);
-                      let cloneObj = { ...filters };
-                      cloneObj[filter]["value"] = e;
-                      setFilters(cloneObj);
+                     const moreFilterObj= handleDisabled({...filters},e,filter);       
+                     moreFilterObj[filter]["value"] = e;
+                      setFilters(moreFilterObj);
                     }}
                     showSearch
                   />
@@ -176,10 +237,9 @@ const NewFilterComponentSimilarPolaris = ({
                     placeholder={filters[filter]["placeholder"]}
                     disabled={filters[filter]["disabled"]}
                     onChange={(e) => {
-                      handleDisabled(e.target.value,filter);
-                      let cloneObj = { ...filters };
-                      cloneObj[filter]["value"] = e.target.value;
-                      setFilters(cloneObj);
+                      const moreFilterObj=handleDisabled({...filters},e.target.value,filter);
+                      moreFilterObj[filter]["value"] = e.target.value;
+                      setFilters(moreFilterObj);
                     }}
                     type={
                       filters[filter]["dataType"] === "number"

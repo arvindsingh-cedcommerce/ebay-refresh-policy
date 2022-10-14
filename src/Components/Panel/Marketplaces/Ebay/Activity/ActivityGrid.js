@@ -21,15 +21,7 @@ import {
   CircleTickOutlineMinor,
   ImportMinor,
 } from "@shopify/polaris-icons";
-import {
-  Alert,
-  Badge,
-  Col,
-  Image,
-  PageHeader,
-  Progress,
-  Row,
-} from "antd";
+import { Alert, Badge, Col, Image, PageHeader, Progress, Row } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { getAllNotifications } from "../../../../../APIrequests/ActivitiesAPI";
 import { notify } from "../../../../../services/notify";
