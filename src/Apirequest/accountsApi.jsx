@@ -13,13 +13,13 @@ export async function viewUserDetailsEbay(data){
 }
 
 export async function uploadPic(data) {
-    return await requests.postRequest('ebay/saveprofile/userProfilePhoto', data);
+    return await requests.postRequest('ebay/userprofile/userProfilePhoto', data);
 }
 
 export async function uploadCustomData(data) {
-    return await requests.postRequest('ebay/saveprofile/userProfileData', data);
+    return await requests.postRequest('ebay/userprofile/userProfileData', data);
 }
 
 export async function getProfileImage(){
-    return await requests.getRequest('ebay/saveprofile/getUserPhoto');
+    return await requests.getRequest('ebay/userprofile/getUserPhoto');
 }
