@@ -67,13 +67,14 @@ useEffect(()=>{
   const obj={...filters};
   Object.keys(filters).map((filter, index) => {
           let initialFilterOperatorValue=getInitialOperatorValue(filter);
-
+   
          let initialFilterMainValue=getInitialOperatorValue(filter);
          if(initialFilterOperatorValue && initialFilterMainValue)
          {
          obj[filter].operator=initialFilterOperatorValue?.operatorValue;
          obj[filter].value=initialMoreFiltersObj[`${initialFilterMainValue?.filter}`];
-         }
+         handleDisabled(obj,obj[filter].value,filter); 
+        }
 
           // if(initialFilterOperatorValue)
           // {
@@ -90,8 +91,8 @@ useEffect(()=>{
 });
 setFilters({...obj});
 },[]);
-  const handleDisabled=(currentValue,currentFilter)=>{
-     const filterObj={...filters};
+  const handleDisabled=(filterObj,currentValue,currentFilter)=>{
+    
     if(currentFilter==="listing_id")
      {
       if(currentValue)
@@ -112,6 +113,7 @@ setFilters({...obj});
       else
       filterObj["listing_id"]["disabled"]=false;
      }
+     return {...filterObj};
   };
    
   return (
@@ -217,10 +219,9 @@ setFilters({...obj});
                     value={filters[filter]["value"]}
                     disabled={filters[filter]["disabled"]}
                     onChange={(e) => {
-                      handleDisabled(e,filter);
-                      let cloneObj = { ...filters };
-                      cloneObj[filter]["value"] = e;
-                      setFilters(cloneObj);
+                     const moreFilterObj= handleDisabled({...filters},e,filter);       
+                     moreFilterObj[filter]["value"] = e;
+                      setFilters(moreFilterObj);
                     }}
                     showSearch
                   />
@@ -236,10 +237,9 @@ setFilters({...obj});
                     placeholder={filters[filter]["placeholder"]}
                     disabled={filters[filter]["disabled"]}
                     onChange={(e) => {
-                      handleDisabled(e.target.value,filter);
-                      let cloneObj = { ...filters };
-                      cloneObj[filter]["value"] = e.target.value;
-                      setFilters(cloneObj);
+                      const moreFilterObj=handleDisabled({...filters},e.target.value,filter);
+                      moreFilterObj[filter]["value"] = e.target.value;
+                      setFilters(moreFilterObj);
                     }}
                     type={
                       filters[filter]["dataType"] === "number"
