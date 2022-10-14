@@ -168,7 +168,7 @@ const CategoryTemplateGrid = (props) => {
   const [filterTitleORCategoryMapping, setFilterTitleORCategoryMapping] =
     useState("");
 
-  const getTemplatesList = async (ebayAccountsObj) => {
+  const getTemplatesList = async (activePageNumber, activePageSize) => {
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
@@ -188,8 +188,8 @@ const CategoryTemplateGrid = (props) => {
     }
     const postData = {
       "filter[type][1]": "category",
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       ...filterPostData,
     };
     // if (Object.keys(filterPostData).length) {
@@ -337,18 +337,18 @@ const CategoryTemplateGrid = (props) => {
 
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      getTemplatesList();
+      getTemplatesList(activePage, pageSize);
     }
-  }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
+  }, [ filtersToPass, connectedAccountsArray]);
 
   useEffect(() => {
     getAllConnectedAccounts();
   }, []);
-  useEffect(() => {
-    if (connectedAccountsArray.length) {
-      getTemplatesList();
-    }
-  }, [connectedAccountsArray]);
+  // useEffect(() => {
+  //   if (connectedAccountsArray.length) {
+  //     getTemplatesList();
+  //   }
+  // }, [connectedAccountsArray]);
 
   const verify = useCallback(
     debounce((value) => {
@@ -362,15 +362,15 @@ const CategoryTemplateGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       } else if (
         filtersToPass.hasOwnProperty("filter[primaryCategoryMappingName][3]")
       ) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[primaryCategoryMappingName][3]"];
         setFiltersToPass(temp);
       }
@@ -580,7 +580,8 @@ const CategoryTemplateGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false})
     }
   };
 
@@ -616,7 +617,7 @@ const CategoryTemplateGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalCategoryTemplateCount}
-              hitGetProductsAPI={()=>{}}
+              hitGetProductsAPI={getTemplatesList}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}

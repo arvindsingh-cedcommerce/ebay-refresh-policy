@@ -145,12 +145,12 @@ const TitleTemplateGrid = (props) => {
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
 
-  const getTemplatesList = async (ebayAccountsObj) => {
+  const getTemplatesList = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
     const postData = {
       "filter[type][1]": "title",
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       ...filtersToPass,
     };
     // if (Object.keys(filtersToPass).length) {
@@ -235,8 +235,9 @@ const TitleTemplateGrid = (props) => {
   };
 
   useEffect(() => {
-    getTemplatesList();
-  }, [activePage, pageSize, filtersToPass]);
+    if(filtersToPass)
+    getTemplatesList(activePage, pageSize);
+  }, [ filtersToPass]);
 
   const verify = useCallback(
     debounce((value) => {
@@ -245,9 +246,9 @@ const TitleTemplateGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
@@ -441,7 +442,8 @@ const TitleTemplateGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false})
     }
   };
 
@@ -473,7 +475,7 @@ const TitleTemplateGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalCategoryTemplateCount}
-              hitGetProductsAPI={()=>{}}
+              hitGetProductsAPI={getTemplatesList}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}

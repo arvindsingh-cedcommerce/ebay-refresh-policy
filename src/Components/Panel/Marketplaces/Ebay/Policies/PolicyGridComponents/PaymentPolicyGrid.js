@@ -186,7 +186,7 @@ const PaymentPolicyGrid = (props) => {
     }
   };
 
-  const getAllPolicies = async (refresh = false) => {
+  const getAllPolicies = async (activePageNumber, activePageSize,refresh = false) => {
     setRefreshSuccessStatus(false);
     setGridLoader(true);
     let filterPostData = {};
@@ -203,8 +203,8 @@ const PaymentPolicyGrid = (props) => {
     }
 
     let requestData = {
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       "filter[type][1]": "payment",
       ...filterPostData,
     };
@@ -299,9 +299,9 @@ const PaymentPolicyGrid = (props) => {
 
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      getAllPolicies();
+      getAllPolicies(activePage, pageSize);
     }
-  }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
+  }, [ filtersToPass, connectedAccountsArray]);
 
   useEffect(() => {
     if (refreshSuccessStatus) {
@@ -391,7 +391,8 @@ const PaymentPolicyGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false});
     }
   };
 
@@ -402,9 +403,9 @@ const PaymentPolicyGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
@@ -524,7 +525,7 @@ const PaymentPolicyGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalShippingPolicyCount}
-              hitGetProductsAPI={()=>{}}
+              hitGetProductsAPI={getAllPolicies}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}

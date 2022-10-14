@@ -182,7 +182,7 @@ const ReturnPolicyGrid = (props) => {
     }
   };
 
-  const getAllPolicies = async (refresh = false) => {
+  const getAllPolicies = async (activePageNumber,activePageSize,refresh = false) => {
     setRefreshSuccessStatus(false);
     setGridLoader(true);
     let filterPostData = {};
@@ -199,8 +199,8 @@ const ReturnPolicyGrid = (props) => {
     }
 
     let requestData = {
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       "filter[type][1]": "return",
       ...filterPostData,
     };
@@ -294,9 +294,9 @@ const ReturnPolicyGrid = (props) => {
 
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      getAllPolicies();
+      getAllPolicies(activePage, pageSize);
     }
-  }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
+  }, [ filtersToPass,connectedAccountsArray]);
 
   useEffect(() => {
     if (refreshSuccessStatus) {
@@ -386,7 +386,8 @@ const ReturnPolicyGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      // notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent: false})
     }
   };
 
@@ -397,9 +398,9 @@ const ReturnPolicyGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
@@ -491,6 +492,14 @@ const ReturnPolicyGrid = (props) => {
       dispatch({ type: "returnPolicyGridFilter", payload: filtersToPass });
     }
   }, [filtersToPass]);
+  // useEffect(() => {
+  //   // if (connectedAccountsArray.length) {
+  //   //   hitGetProductsAPI();
+  //   // }
+  //   if (reduxState && connectedAccountsArray.length) {
+  //     setFiltersToPass(reduxState);
+  //   }
+  // }, [connectedAccountsArray]);
   useEffect(() => {
     if (reduxState) setFiltersToPass(reduxState);
   }, []);
@@ -518,7 +527,7 @@ const ReturnPolicyGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalShippingPolicyCount}
-              hitGetProductsAPI={()=>{}}
+              hitGetProductsAPI={getAllPolicies}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}

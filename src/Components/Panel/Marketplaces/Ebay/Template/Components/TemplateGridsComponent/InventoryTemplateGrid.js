@@ -172,7 +172,7 @@ const InventoryTemplateGrid = (props) => {
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
 
-  const getTemplatesList = async (ebayAccountsObj) => {
+  const getTemplatesList = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
     const filterParsedData = {};
     for (const key in filtersToPass) {
@@ -183,8 +183,8 @@ const InventoryTemplateGrid = (props) => {
     }
     const postData = {
       "filter[type][1]": "inventory",
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       // ...filtersToPass,
       ...filterParsedData,
     };
@@ -340,15 +340,16 @@ const InventoryTemplateGrid = (props) => {
   };
 
   useEffect(() => {
-    getTemplatesList();
-  }, [activePage, pageSize, filtersToPass]);
+    if(filtersToPass)
+    getTemplatesList(activePage,pageSize);
+  }, [ filtersToPass]);
 
   useEffect(() => {
     getAllConnectedAccounts();
   }, []);
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      getTemplatesList();
+      getTemplatesList(activePage,pageSize);
     }
   }, [connectedAccountsArray]);
 
@@ -359,9 +360,9 @@ const InventoryTemplateGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
@@ -536,7 +537,8 @@ const InventoryTemplateGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false});
     }
   };
 
@@ -568,7 +570,7 @@ const InventoryTemplateGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalCategoryTemplateCount}
-              hitGetProductsAPI={()=>{}}
+              hitGetProductsAPI={getTemplatesList}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}
