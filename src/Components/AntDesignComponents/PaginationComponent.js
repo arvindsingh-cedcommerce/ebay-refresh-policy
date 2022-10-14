@@ -7,6 +7,7 @@ const PaginationComponent = ({
   pageSizeOptions,
   activePage,
   setActivePage,
+  setPrevPage,
   pageSize,
   setPageSize,
   size,
@@ -24,8 +25,10 @@ const PaginationComponent = ({
       current={activePage}
       defaultPageSize={pageSizeOptions[0]}
       onChange={(page, pageSize) => {
+       
         setActivePage(page);
         setPageSize(pageSize);
+        setPrevPage(activePage);
         hitGetProductsAPI(page,pageSize);
       }}
       pageSizeOptions={pageSizeOptions}

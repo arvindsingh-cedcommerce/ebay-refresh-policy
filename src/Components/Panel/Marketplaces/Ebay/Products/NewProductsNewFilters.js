@@ -1,5 +1,5 @@
 import { Image, PageHeader, Alert, Row, Col, Typography } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import NoProductImage from "../../../../../assets/notfound.png";
@@ -381,12 +381,21 @@ function NewProductsNewFilters(props) {
     available: "",
     total: "",
   });
-
+  const [prevPage,setPrevPage]=useState(1);
+ 
   useEffect(() => {
     if (filtersToPass) {
+      console.log()
       hitGetProductsAPI(activePage, pageSize);
     }
   }, [filtersToPass]);
+  useEffect(()=>{
+
+if(activePage>1 && activePage!==prevPage)
+{
+  setActivePage(1);
+}
+  },[filtersToPass]);
 
   const getBadge = (test) => {
     if (test?.ended && test?.Errors) {
@@ -1302,6 +1311,7 @@ function NewProductsNewFilters(props) {
                   pageSizeOptions={pageSizeOptions}
                   activePage={activePage}
                   setActivePage={setActivePage}
+                  setPrevPage={setPrevPage}
                   pageSize={pageSize}
                   setPageSize={setPageSize}
                   size={"default"}
