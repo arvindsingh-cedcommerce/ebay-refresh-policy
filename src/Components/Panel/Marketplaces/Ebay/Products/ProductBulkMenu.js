@@ -106,7 +106,7 @@ const ProductBulkMenu = (props) => {
         key="bulkAction"
         overlayClassName="bulkMenu123"
         overlayStyle={{
-          maxHeight: "40rem",
+          maxHeight: "25rem",
           overflowY: "scroll",
           zIndex: 50,
           borderRadius: "10px !important",
