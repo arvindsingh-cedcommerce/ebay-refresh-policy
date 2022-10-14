@@ -300,7 +300,33 @@ const NewOrdersGrid = (props) => {
     available: "",
     total: "",
   });
-
+  const checkValueHandler=(arr,filterName)=>{
+    let countryValue="";
+    Object.keys(arr).filter((item,index)=>{
+      let indexOfFirstOpeningBracket = item.indexOf("[");
+      let indexOfFirstClosingBracket = item.indexOf("]");
+      const mainItem=item.substring(
+        indexOfFirstOpeningBracket + 1,
+        indexOfFirstClosingBracket
+      );
+      if(mainItem===filterName)
+      {
+          countryValue= item;
+          return ;
+      }
+    })
+    return countryValue;
+  }
+  
+  const initialCountryValue=reduxState[checkValueHandler(reduxState,"country")];
+  const initialStatusValue=reduxState[checkValueHandler(reduxState,"status")];
+   const moreFilters=["shopify_order_name","target_order_id"];
+  let initialMoreFiltersObj={};
+  moreFilters.map((moreFilter,index)=>{
+    let filterItem=checkValueHandler(reduxState,moreFilter);
+    if(filterItem)
+    initialMoreFiltersObj[filterItem]=reduxState[filterItem];
+  });
   const getAllOrders = (ordersData) => {
     let tempOrderData = [];
     tempOrderData = ordersData["rows"].map((order, index) => {
@@ -465,10 +491,11 @@ const NewOrdersGrid = (props) => {
     setOrderData(tempOrderData);
   };
 
-  const hitGetOrdersAPI = async () => {
+  const hitGetOrdersAPI = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
+      if (key !== "filtersPresent") {
       if (key === "filter[country][1]") {
         let matchedAccoount = connectedAccountsArray.find(
           (connectedAccount) =>
@@ -482,17 +509,18 @@ const NewOrdersGrid = (props) => {
         filterPostData[key] = filtersToPass[key];
       }
     }
+    }
     let postData = {
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       markteplace: "ebay",
       // ...filters,
       // ...filtersToPass,
       ...filterPostData,
     };
-    if (filtersToPass && Object.keys(filtersToPass).length) {
-      postData["activePage"] = 1;
-    }
+    // if (filtersToPass && Object.keys(filtersToPass).length) {
+    //   postData["activePage"] = 1;
+    // }
     let { success: ordersDataSuccess, data: ordersData } = await getOrders(
       getOrdersURL,
       postData
@@ -505,8 +533,10 @@ const NewOrdersGrid = (props) => {
   };
 
   useEffect(() => {
-    hitGetOrdersAPI();
-  }, [activePage, pageSize, filtersToPass]);
+    if (filtersToPass) {
+      hitGetOrdersAPI(activePage, pageSize);
+    }
+  }, [filtersToPass]);
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -548,6 +578,11 @@ const NewOrdersGrid = (props) => {
     getAllConnectedAccounts();
     hitDashoboardAPI();
   }, []);
+  useEffect(() => {
+    if (reduxState && connectedAccountsArray.length) {
+      setFiltersToPass(reduxState);
+    }
+  }, [connectedAccountsArray]);
 
   const getAllConnectedAccounts = async () => {
     let {
@@ -621,7 +656,8 @@ const NewOrdersGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false});
+      //notify.warn("No filters applied");
     }
   };
 
@@ -772,6 +808,10 @@ const NewOrdersGrid = (props) => {
   };
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
+      if (
+        !filter.includes("filtersPresent") ||
+        (filter.includes("filtersPresent") && filter["filtersPresent"])
+      ) {
       let indexOfFirstOpeningBracket = filter.indexOf("[");
       let indexOfFirstClosingBracket = filter.indexOf("]");
       let indexOfSecondOpeningBracket = filter.indexOf(
@@ -818,7 +858,7 @@ const NewOrdersGrid = (props) => {
           {filtersToPass[filter]}
         </PolarisTag>
       );
-    });
+  }});
   };
 
   const verify = useCallback(
@@ -832,9 +872,9 @@ const NewOrdersGrid = (props) => {
       let ebayOrderIdFilterObj = {};
       ebayOrderIdFilterObj[type] = value;
       if (ebayOrderIdFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...ebayOrderIdFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...ebayOrderIdFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[source_order_id][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[source_order_id][3]"];
         setFiltersToPass(temp);
       }
@@ -874,6 +914,7 @@ const NewOrdersGrid = (props) => {
     </ShopifyButton>
   );
   const handleChange = (value, selectedType) => {
+    console.log("handler change",value);
     let type = `filter[${selectedType}][1]`;
     let filterObj = {};
     filterObj[type] = value[0];
@@ -881,6 +922,8 @@ const NewOrdersGrid = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const renderOtherFilters = () => {
+    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
+    const initialStatusObj=status?.filter((statusItem,index)=> statusItem.value===initialStatusValue);
     return (
       <Stack wrap>
         <ButtonGroup segmented>
@@ -892,7 +935,7 @@ const NewOrdersGrid = (props) => {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={connectedAccountsArray}
-                selected={selected["country"]}
+                selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
                 onChange={(value) => handleChange(value, "country")}
               />
             </div>
@@ -905,7 +948,7 @@ const NewOrdersGrid = (props) => {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={status}
-                selected={selected["status"]}
+                selected={initialStatusObj[0]?[initialStatusObj[0].value]:selected["status"]}
                 onChange={(value) => handleChange(value, "status")}
               />
             </div>
@@ -933,11 +976,6 @@ const NewOrdersGrid = (props) => {
       dispatch({ type: "orderFilter", payload: filtersToPass });
     }
   }, [filtersToPass]);
-  useEffect(() => {
-    if (reduxState && connectedAccountsArray.length) {
-      setFiltersToPass(reduxState);
-    }
-  }, [connectedAccountsArray]);
   return (
     <PageHeader
       className="site-page-header-responsive"
@@ -1031,6 +1069,7 @@ const NewOrdersGrid = (props) => {
               <Stack distribution="trailing">
                 <PaginationComponent
                   totalCount={totalOrdersCount}
+                  hitGetProductsAPI={hitGetOrdersAPI}
                   pageSizeOptions={pageSizeOptions}
                   activePage={activePage}
                   setActivePage={setActivePage}
@@ -1064,6 +1103,7 @@ const NewOrdersGrid = (props) => {
         filtersDrawerVisible={filtersDrawerVisible}
         filters={filters}
         stringOperatorOptions={stringOperatorOptions}
+        initialMoreFiltersObj={initialMoreFiltersObj}
         // numberOperatorOptions={numberOperatorOptions}
         setFilters={setFilters}
         gatherAllFilters={gatherAllFilters}

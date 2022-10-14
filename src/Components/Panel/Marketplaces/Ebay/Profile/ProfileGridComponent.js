@@ -76,7 +76,26 @@ const ProfileGridComponent = (props) => {
     (state) => state.profileFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
-
+  let initialMoreFiltersObj={};
+  const checkValueHandler=(arr,filterName)=>{
+    let countryValue="";
+    Object.keys(arr).filter((item,index)=>{
+      let indexOfFirstOpeningBracket = item.indexOf("[");
+      let indexOfFirstClosingBracket = item.indexOf("]");
+      const mainItem=item.substring(
+        indexOfFirstOpeningBracket + 1,
+        indexOfFirstClosingBracket
+      );
+      if(mainItem===filterName)
+      {
+          countryValue= item;
+          return ;
+      }
+    })
+    return countryValue;
+  }
+   const initialCountryValue=reduxState[checkValueHandler(reduxState,"country")];
+  
   const profileGridColumns = [
     {
       title: <center>Name</center>,
@@ -514,7 +533,9 @@ const ProfileGridComponent = (props) => {
     setFiltersToPass({ ...filtersToPass, ...filterObj });
     setSelected({ ...selected, [selectedType]: value });
   };
-  const renderChoiceListForProfilenameCountry = () => (
+  const renderChoiceListForProfilenameCountry = () => {
+    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
+    return (
     <Popover
       active={popOverStatus["country"]}
       activator={countryActivator}
@@ -523,12 +544,13 @@ const ProfileGridComponent = (props) => {
       <div style={{ margin: "10px", width: "200px" }}>
         <ChoiceList
           choices={connectedAccountsArray}
-          selected={selected["country"]}
+          selected={initialCountryObj[0]?[initialCountryObj[0]?.value]:selected["country"]}
           onChange={(value) => handleChange(value, "country")}
         />
       </div>
     </Popover>
-  );
+
+  )};
 
   useEffect(() => {
     verify(filterProfileNameORQuery);
@@ -705,6 +727,7 @@ const ProfileGridComponent = (props) => {
         filtersDrawerVisible={filtersDrawerVisible}
         filters={filters}
         stringOperatorOptions={stringOperatorOptions}
+        initialMoreFiltersObj={initialMoreFiltersObj}
         numberOperatorOptions={numberOperatorOptions}
         setFilters={setFilters}
         gatherAllFilters={gatherAllFilters}
