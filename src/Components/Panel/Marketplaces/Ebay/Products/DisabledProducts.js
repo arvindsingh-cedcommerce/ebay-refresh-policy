@@ -50,9 +50,11 @@ import {
 import { withRouter } from "react-router-dom";
 import NewFilterComponentSimilarPolaris from "./NewFilterComponentSimilarPolaris";
 import { getVariantsCountDetails } from "./helperFunctions/commonHelper";
+import { useDispatch, useSelector } from "react-redux";
 
 const DisabledProducts = (props) => {
   const [gridLoader, setGridLoader] = useState(false);
+  const dispatch = useDispatch();
   let [productColumns, setProductColumns] = useState([
     {
       title: (
@@ -225,6 +227,36 @@ const DisabledProducts = (props) => {
 
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
+  const reduxState = useSelector(
+    (state) => state.disabledProductFilterReducer.reduxFilters
+  );
+  const checkValueHandler=(arr,filterName)=>{
+    let countryValue="";
+    Object.keys(arr).filter((item,index)=>{
+      let indexOfFirstOpeningBracket = item.indexOf("[");
+      let indexOfFirstClosingBracket = item.indexOf("]");
+      const mainItem=item.substring(
+        indexOfFirstOpeningBracket + 1,
+        indexOfFirstClosingBracket
+      );
+      if(mainItem===filterName)
+      {
+          countryValue= item;
+          return ;
+      }
+    })
+    return countryValue;
+  }
+  const initialCountryValue=reduxState[checkValueHandler(reduxState,"country")];
+  const initialStatusValue=reduxState[checkValueHandler(reduxState,"status")];
+  const initialProfileValue=reduxState[checkValueHandler(reduxState,"profile_name")];
+  const moreFilters=["listing_id","product_type","brand","tags","price","quantity"];
+  let initialMoreFiltersObj={};
+  moreFilters.map((moreFilter,index)=>{
+    let filterItem=checkValueHandler(reduxState,moreFilter);
+    if(filterItem)
+    initialMoreFiltersObj[filterItem]=reduxState[filterItem];
+  });
 
   function trimTitle(title = "") {
     return title.length > 29 ? `${title.substring(0, 25)}...` : title;
@@ -240,12 +272,12 @@ const DisabledProducts = (props) => {
   });
   const [btnLoader, setBtnLoader] = useState(false);
 
-  const hitGetProductsAPI = async () => {
+  const hitGetProductsAPI = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
     let postData = {
       productOnly: true,
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       // grid: true,
       status: "disabled",
       ...filtersToPass,
@@ -391,8 +423,10 @@ const DisabledProducts = (props) => {
   };
 
   useEffect(() => {
-    hitGetProductsAPI();
-  }, [activePage, pageSize, filtersToPass]);
+    if (filtersToPass) {
+      hitGetProductsAPI(activePage, pageSize);
+    }
+  }, [filtersToPass]);
 
   const verify = useCallback(
     debounce((value) => {
@@ -406,13 +440,13 @@ const DisabledProducts = (props) => {
       titleFilterObj[type] = value;
       // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       } else if (filtersToPass.hasOwnProperty("filter[sku][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[sku][3]"];
         setFiltersToPass(temp);
       }
@@ -523,7 +557,8 @@ const DisabledProducts = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false});
+      //notify.warn("No filters applied");
     }
     // setFiltersToPass({ ...temp });
   };
@@ -537,6 +572,10 @@ const DisabledProducts = (props) => {
   };
 
   const renderOtherFilters = () => {
+    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
+    const initialStatusObj=status?.filter((statusItem,index)=> statusItem.value===initialStatusValue);
+    const initialProfileObj=profileList?.filter((profileItem,index)=> profileItem.value===initialProfileValue);
+   
     return (
       <Stack wrap>
         <ButtonGroup segmented>
@@ -549,7 +588,7 @@ const DisabledProducts = (props) => {
               <ChoiceList
                 // allowMultiple
                 choices={connectedAccountsArray}
-                selected={selected["country"]}
+                selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
                 onChange={(value) => handleChange(value, "country")}
               />
             </div>
@@ -562,7 +601,7 @@ const DisabledProducts = (props) => {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={status}
-                selected={selected["status"]}
+                selected={initialStatusObj[0]?[initialStatusObj[0].value]:selected["status"]}
                 onChange={(value) => handleChange(value, "status")}
               />
             </div>
@@ -575,7 +614,7 @@ const DisabledProducts = (props) => {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={profileList}
-                selected={selected["profile_name"]}
+                selected={initialProfileObj[0]? [initialProfileObj[0].value]:selected["profile_name"]}
                 onChange={(value) => handleChange(value, "profile_name")}
               />
             </div>
@@ -686,7 +725,14 @@ const DisabledProducts = (props) => {
       getProfilesProducttypeVendor();
     }
   };
-
+  useEffect(() => {
+    // if (connectedAccountsArray.length) {
+    //   hitGetProductsAPI();
+    // }
+    if (reduxState && connectedAccountsArray.length) {
+      setFiltersToPass(reduxState);
+    }
+  }, [connectedAccountsArray]);
   useEffect(() => {
     getAccounts();
   }, []);
@@ -733,6 +779,10 @@ const DisabledProducts = (props) => {
 
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
+      if (
+        !filter.includes("filtersPresent") ||
+        (filter.includes("filtersPresent") && filter["filtersPresent"])
+      ) {
       let indexOfFirstOpeningBracket = filter.indexOf("[");
       let indexOfFirstClosingBracket = filter.indexOf("]");
       let indexOfSecondOpeningBracket = filter.indexOf(
@@ -777,9 +827,13 @@ const DisabledProducts = (props) => {
           {filtersToPass[filter]}
         </Tag>
       );
-    });
+    }});
   };
-
+  useEffect(() => {
+    if (filtersToPass) {
+      dispatch({ type: "disabledProductFilter", payload: filtersToPass });
+    }
+  }, [filtersToPass]);
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedRowKeys(selectedRowKeys);
@@ -844,6 +898,7 @@ const DisabledProducts = (props) => {
             <Col className="gutter-row" span={18}>
               <PaginationComponent
                 totalCount={totalProductsCount}
+                hitGetProductsAPI={hitGetProductsAPI}
                 pageSizeOptions={pageSizeOptions}
                 activePage={activePage}
                 setActivePage={setActivePage}
@@ -873,6 +928,7 @@ const DisabledProducts = (props) => {
         filtersDrawerVisible={filtersDrawerVisible}
         filters={filters}
         // operatorOptions={operatorOptions}
+        initialMoreFiltersObj={initialMoreFiltersObj}
         stringOperatorOptions={stringOperatorOptions}
         numberOperatorOptions={numberOperatorOptions}
         setFilters={setFilters}

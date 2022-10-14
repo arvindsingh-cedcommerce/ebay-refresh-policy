@@ -173,11 +173,12 @@ const ProfileGridComponent = (props) => {
   });
 
   useEffect(() => {
-    if (connectedAccountsArray.length) {
+    if (filtersToPass) {
       getAllProfiles();
     }
-  }, [filtersToPass, connectedAccountsArray]);
-
+    
+  }, [filtersToPass]);
+  
   const filterData = (componentFilters) => {
     let temp = { ...filtersProps };
     temp["filters"] = [...componentFilters];
@@ -366,9 +367,9 @@ const ProfileGridComponent = (props) => {
       ...filterPostData,
       marketplace: "ebay",
     };
-    if (Object.keys(filterPostData).length) {
-      dataToPost["activePage"] = 1;
-    }
+    // if (Object.keys(filterPostData).length) {
+    //   dataToPost["activePage"] = 1;
+    // }
     let { success, data, message } = await getProfiles(getProfilesURLFilter, {
       ...dataToPost,
       ...filterPostData,
@@ -423,6 +424,10 @@ const ProfileGridComponent = (props) => {
 
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
+      if (
+        !filter.includes("filtersPresent") ||
+        (filter.includes("filtersPresent") && filter["filtersPresent"])
+      ) {
       let indexOfFirstOpeningBracket = filter.indexOf("[");
       let indexOfFirstClosingBracket = filter.indexOf("]");
       let indexOfSecondOpeningBracket = filter.indexOf(
@@ -469,7 +474,7 @@ const ProfileGridComponent = (props) => {
           {filtersToPass[filter]}
         </Tag>
       );
-    });
+  }});
   };
 
   const verify = useCallback(
@@ -483,13 +488,13 @@ const ProfileGridComponent = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[name][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[name][3]"];
         setFiltersToPass(temp);
       } else if (filtersToPass.hasOwnProperty("filter[querySentence][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[querySentence][3]"];
         setFiltersToPass(temp);
       }
@@ -627,7 +632,8 @@ const ProfileGridComponent = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false})
     }
   };
 

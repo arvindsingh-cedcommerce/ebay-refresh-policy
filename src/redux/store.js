@@ -10,10 +10,11 @@ import categoryGridFilterReducer from "./reducers/categoryGridFilterReducer";
 import inventoryGridFilterReducer from "./reducers/inventoryGridFilterReducer";
 import priceGridFilterReducer from "./reducers/priceGridFilterReducer";
 import titleGridFilterReducer from "./reducers/titleGridFilterReducer";
-
+import disabledProductFilterReducer from "./reducers/disabledProductFilterReducer";
 // const store = createStore(productFilterReducer);
 const rootReducer = combineReducers({
   productFilterReducer,
+  disabledProductFilterReducer,
   orderFilterReducer,
   profileFilterReducer,
   paymentPolicyGridFilterReducer,
