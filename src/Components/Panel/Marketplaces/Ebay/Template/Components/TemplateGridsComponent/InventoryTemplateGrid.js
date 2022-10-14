@@ -188,9 +188,9 @@ const InventoryTemplateGrid = (props) => {
       // ...filtersToPass,
       ...filterParsedData,
     };
-    if (Object.keys(filtersToPass).length) {
-      postData["activePage"] = 1;
-    }
+    // if (Object.keys(filtersToPass).length) {
+    //   postData["activePage"] = 1;
+    // }
     const {
       success,
       data: fetchedTemplatesArray,

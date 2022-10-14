@@ -207,9 +207,9 @@ const ReturnPolicyGrid = (props) => {
     if (refresh) {
       requestData["refresh"] = refresh;
     }
-    if (Object.keys(filterPostData).length) {
-      requestData["activePage"] = 1;
-    }
+    // if (Object.keys(filterPostData).length) {
+    //   requestData["activePage"] = 1;
+    // }
     let {
       success,
       data: fetchedPoliciesArray,

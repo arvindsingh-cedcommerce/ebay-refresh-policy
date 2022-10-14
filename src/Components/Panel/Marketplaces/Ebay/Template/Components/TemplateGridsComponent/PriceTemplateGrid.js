@@ -147,9 +147,9 @@ const PriceTemplateGrid = (props) => {
       activePage: activePage,
       ...filtersToPass,
     };
-    if (Object.keys(filtersToPass).length) {
-      postData["activePage"] = 1;
-    }
+    // if (Object.keys(filtersToPass).length) {
+    //   postData["activePage"] = 1;
+    // }
     const {
       success,
       data: fetchedTemplatesArray,

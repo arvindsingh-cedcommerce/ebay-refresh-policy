@@ -192,9 +192,9 @@ const CategoryTemplateGrid = (props) => {
       activePage: activePage,
       ...filterPostData,
     };
-    if (Object.keys(filterPostData).length) {
-      postData["activePage"] = 1;
-    }
+    // if (Object.keys(filterPostData).length) {
+    //   postData["activePage"] = 1;
+    // }
     const {
       success,
       data: fetchedTemplatesArray,
