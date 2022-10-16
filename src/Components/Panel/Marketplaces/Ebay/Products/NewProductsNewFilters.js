@@ -385,12 +385,10 @@ function NewProductsNewFilters(props) {
  
   useEffect(() => {
     if (filtersToPass) {
-      console.log()
       hitGetProductsAPI(activePage, pageSize);
     }
   }, [filtersToPass]);
   useEffect(()=>{
-
 if(activePage>1 && activePage!==prevPage)
 {
   setActivePage(1);
@@ -760,8 +758,8 @@ if(activePage>1 && activePage!==prevPage)
   };
 
   const rowSelection = {
+    selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(selectedRows);
       setSelectedRowKeys(selectedRowKeys);
       setSelectedRows(selectedRows);
     },
@@ -1218,8 +1216,10 @@ if(activePage>1 && activePage!==prevPage)
   };
 
   useEffect(() => {
-    if (filtersToPass) {
+ if (filtersToPass) {
       dispatch({ type: "productFilter", payload: filtersToPass });
+     setSelectedRows([]);
+    setSelectedRowKeys([]);
     }
   }, [filtersToPass]);
   // useEffect(() => {
@@ -1328,6 +1328,7 @@ if(activePage>1 && activePage!==prevPage)
             pagination={false}
             columns={productColumns}
             dataSource={productData}
+            selectedRowKeys={selectedRowKeys}
             rowSelection={{
               type: selectionType,
               ...rowSelection,
