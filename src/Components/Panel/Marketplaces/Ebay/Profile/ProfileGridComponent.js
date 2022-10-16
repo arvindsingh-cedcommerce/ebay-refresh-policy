@@ -22,10 +22,10 @@ import { getProfiles } from "../../../../../APIrequests/ProfilesAPI";
 import { getpaginationInfo } from "../../../../../services/helperFunction";
 import { notify } from "../../../../../services/notify";
 import { prepareChoiceoption } from "../../../../../Subcomponents/Aggrid/gridHelper";
-import PaginationComponent from "../../../../../Subcomponents/Aggrid/paginationComponent";
 import { showingGridRange } from "../../../../../Subcomponents/Aggrid/showgridrange";
 import { getProfilesURLFilter } from "../../../../../URLs/ProfilesURL";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
+import PaginationComponent from "../../../../AntDesignComponents/PaginationComponent";
 import { mappingShopIDwithCountry } from "../Orders/SampleOrderData";
 import NewFilterComponentSimilarPolaris from "../Products/NewFilterComponentSimilarPolaris";
 import {
@@ -142,13 +142,13 @@ const ProfileGridComponent = (props) => {
     filters: [],
     filterCondition: filterConditions,
   });
-  const [paginationProps, setPaginationProps] = useState({
-    pageSizeOptions: pageSizeOptionProfile,
-    activePage: 1,
-    pageSize: pageSizeOptionProfile[0],
-    pages: 0,
-    totalrecords: 0,
-  });
+  // const [paginationProps, setPaginationProps] = useState({
+  //   pageSizeOptions: pageSizeOptionProfile,
+  //   activePage: 1,
+  //   pageSize: pageSizeOptionProfile[0],
+  //   pages: 0,
+  //   totalrecords: 0,
+  // });
 
   const [gridLoader, setGridLoader] = useState(false);
 
@@ -172,9 +172,19 @@ const ProfileGridComponent = (props) => {
     country: [],
   });
 
+  // pagination
+  const [activePage, setActivePage] = useState(1);
+   const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
+ // const [pageSizeOptions, setPageSizeOptions] = useState([1,2]);
+  // const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(1);
+
+  const [prevPage,setPrevPage]=useState(0);
+  const [totalShippingPolicyCount, setTotalShippingPolicyCount] = useState(0);
+
   useEffect(() => {
     if (filtersToPass) {
-      getAllProfiles();
+      getAllProfiles(activePage,pageSize);
     }
     
   }, [filtersToPass]);
@@ -248,11 +258,11 @@ const ProfileGridComponent = (props) => {
   const callAfterAPI = (success, data, message, count) => {
     if (success) {
       let { rows, count: totalRecords } = data;
-      let paginationInformation = getpaginationInfo(totalRecords, count);
-      let tempPaginationProps = {
-        ...paginationProps,
-        ...paginationInformation,
-      };
+      // let paginationInformation = getpaginationInfo(totalRecords, count);
+      // let tempPaginationProps = {
+      //   ...paginationProps,
+      //   ...paginationInformation,
+      // };
 
       let tempProfilesArray = [];
       if (rows.length) {
@@ -322,15 +332,15 @@ const ProfileGridComponent = (props) => {
         });
       }
       setAllProfiles(tempProfilesArray);
-      setPaginationProps(tempPaginationProps);
+      //setPaginationProps(tempPaginationProps);
     } else {
       notify.error(message);
     }
   };
-  const getAllProfiles = async () => {
+  const getAllProfiles = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
     let { filters } = filtersProps;
-    let { pageSize: count, activePage } = paginationProps;
+    //let { pageSize: count, activePage } = paginationProps;
     let filterPostData = {};
     // for (const key in filtersToPass) {
     //   if (key === "filter[country][1]") {
@@ -362,19 +372,22 @@ const ProfileGridComponent = (props) => {
     }
 
     let dataToPost = {
-      count: count,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       ...filterPostData,
       marketplace: "ebay",
     };
     // if (Object.keys(filterPostData).length) {
     //   dataToPost["activePage"] = 1;
     // }
-    let { success, data, message } = await getProfiles(getProfilesURLFilter, {
+    let { success, data, message,count } = await getProfiles(getProfilesURLFilter, {
       ...dataToPost,
       ...filterPostData,
     });
-    callAfterAPI(success, data, message, count);
+    if (data.count) {
+      setTotalShippingPolicyCount(data.count);
+    }
+    callAfterAPI(success, data, message, activePageSize);
     setGridLoader(false);
   };
 
@@ -384,9 +397,9 @@ const ProfileGridComponent = (props) => {
     getAccounts();
   }, []);
 
-  const onPaginationChange = (paginationProps) => {
-    setPaginationProps(paginationProps);
-  };
+  // const onPaginationChange = (paginationProps) => {
+  //   setPaginationProps(paginationProps);
+  // };
 
   const prepareFilters = () => {
     filtersProps["attributeoptions"] = [
@@ -705,16 +718,24 @@ const ProfileGridComponent = (props) => {
           <Row justify="space-between">
             <Col>
               <p style={{ paddingTop: 5, fontWeight: "bold" }}>
-                {showingGridRange(paginationProps, "Profile(s)")}
+                {/* {showingGridRange(paginationProps, "Profile(s)")} */}
               </p>
             </Col>
             <Col>
               <Row gutter={[16, 0]}>
                 <Col>
-                  <PaginationComponent
-                    paginationProps={paginationProps}
-                    paginationChanged={onPaginationChange}
-                  />
+                <PaginationComponent
+              totalCount={totalShippingPolicyCount}
+              hitGetProductsAPI={getAllProfiles}
+              pageSizeOptions={pageSizeOptions}
+              activePage={activePage}
+              setActivePage={setActivePage}
+              setPrevPage={setPrevPage}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              size={"default"}
+              simple={false}
+            />
                 </Col>
               </Row>
             </Col>
