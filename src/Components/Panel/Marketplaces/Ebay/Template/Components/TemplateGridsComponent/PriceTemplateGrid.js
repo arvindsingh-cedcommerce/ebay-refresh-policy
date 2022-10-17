@@ -66,7 +66,8 @@ const PriceTemplateGrid = (props) => {
     (state) => state.priceGridFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
-
+   const listingTypeValue= reduxState[props.checkValueHandler(reduxState,"listingType")];
+ 
   const { cbFuncPrice } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
@@ -138,17 +139,17 @@ const PriceTemplateGrid = (props) => {
     { label: "Auction-style", value: "auction_style" },
   ]);
 
-  const getTemplatesList = async (ebayAccountsObj) => {
+  const getTemplatesList = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
     const postData = {
       "filter[type][1]": "price",
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       ...filtersToPass,
     };
-    if (Object.keys(filtersToPass).length) {
-      postData["activePage"] = 1;
-    }
+    // if (Object.keys(filtersToPass).length) {
+    //   postData["activePage"] = 1;
+    // }
     const {
       success,
       data: fetchedTemplatesArray,
@@ -216,8 +217,9 @@ const PriceTemplateGrid = (props) => {
   };
 
   useEffect(() => {
-    getTemplatesList();
-  }, [activePage, pageSize, filtersToPass]);
+    if(filtersToPass)
+    getTemplatesList(activePage,pageSize);
+  }, [filtersToPass]);
 
   const verify = useCallback(
     debounce((value) => {
@@ -226,9 +228,9 @@ const PriceTemplateGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
@@ -346,6 +348,8 @@ const PriceTemplateGrid = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const renderOtherFilters = () => {
+    const initialListingTypeObj=listingTypeOptions?.filter((connectedAccount,index)=> connectedAccount.value===listingTypeValue);
+    
     return (
       <ButtonGroup segmented>
         <Popover
@@ -356,7 +360,7 @@ const PriceTemplateGrid = (props) => {
           <div style={{ margin: "10px" }}>
             <ChoiceList
               choices={listingTypeOptions}
-              selected={selected["listingType"]}
+              selected={initialListingTypeObj[0]?[initialListingTypeObj[0].value]:selected["listingType"]}
               onChange={(value) => handleChange(value, "listingType")}
             />
           </div>
@@ -397,7 +401,8 @@ const PriceTemplateGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false})
     }
   };
 
@@ -429,6 +434,7 @@ const PriceTemplateGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalCategoryTemplateCount}
+              hitGetProductsAPI={getTemplatesList}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}

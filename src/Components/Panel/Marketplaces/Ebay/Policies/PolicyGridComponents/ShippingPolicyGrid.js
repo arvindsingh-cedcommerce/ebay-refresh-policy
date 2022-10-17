@@ -64,7 +64,8 @@ const ShippingPolicyGrid = (props) => {
     (state) => state.shippingPolicyGridFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
-
+  const countryTypeValue= reduxState[props.checkValueHandler(reduxState,"country")];
+ 
   const {
     refreshPolicyBtnClicked,
     cbFuncCategory,
@@ -204,7 +205,7 @@ const ShippingPolicyGrid = (props) => {
     }
   };
 
-  const getAllPolicies = async (refresh = false) => {
+  const getAllPolicies = async (activePageNumber,activePageSize,refresh = false) => {
     setRefreshSuccessStatus(false);
     setGridLoader(true);
     let filterPostData = {};
@@ -221,17 +222,17 @@ const ShippingPolicyGrid = (props) => {
     }
 
     let requestData = {
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       "filter[type][1]": "shipping",
       ...filterPostData,
     };
     if (refresh) {
       requestData["refresh"] = refresh;
     }
-    if (Object.keys(filterPostData).length) {
-      requestData["activePage"] = 1;
-    }
+    // if (Object.keys(filterPostData).length) {
+    //   requestData["activePage"] = 1;
+    // }
     let {
       success,
       data: fetchedPoliciesArray,
@@ -317,9 +318,9 @@ const ShippingPolicyGrid = (props) => {
 
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      getAllPolicies();
+      getAllPolicies(activePage,pageSize);
     }
-  }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
+  }, [ filtersToPass,connectedAccountsArray]);
 
   useEffect(() => {
     if (refreshSuccessStatus) {
@@ -359,6 +360,8 @@ const ShippingPolicyGrid = (props) => {
   );
 
   const renderOtherFilters = () => {
+    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===countryTypeValue);
+   
     return (
       // <Stack wrap>
       <Popover
@@ -369,7 +372,7 @@ const ShippingPolicyGrid = (props) => {
         <div style={{ margin: "10px", width: "200px" }}>
           <ChoiceList
             choices={connectedAccountsArray}
-            selected={selected["country"]}
+            selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
             onChange={(value) => handleChange(value, "country")}
           />
         </div>
@@ -407,7 +410,8 @@ const ShippingPolicyGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent: false});
     }
   };
 
@@ -418,9 +422,9 @@ const ShippingPolicyGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true  };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
@@ -538,6 +542,7 @@ const ShippingPolicyGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalShippingPolicyCount}
+              hitGetProductsAPI={getAllPolicies}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}

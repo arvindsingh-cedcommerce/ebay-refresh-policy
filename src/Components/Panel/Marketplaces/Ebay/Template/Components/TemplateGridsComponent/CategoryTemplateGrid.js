@@ -90,6 +90,8 @@ const CategoryTemplateGrid = (props) => {
   );
   const dispatch = useDispatch();
 
+  const initialCountryValue=reduxState[props.checkValueHandler(reduxState,"country")];
+ 
   const { cbFuncCategory } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
@@ -166,7 +168,7 @@ const CategoryTemplateGrid = (props) => {
   const [filterTitleORCategoryMapping, setFilterTitleORCategoryMapping] =
     useState("");
 
-  const getTemplatesList = async (ebayAccountsObj) => {
+  const getTemplatesList = async (activePageNumber, activePageSize) => {
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
@@ -186,13 +188,13 @@ const CategoryTemplateGrid = (props) => {
     }
     const postData = {
       "filter[type][1]": "category",
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       ...filterPostData,
     };
-    if (Object.keys(filterPostData).length) {
-      postData["activePage"] = 1;
-    }
+    // if (Object.keys(filterPostData).length) {
+    //   postData["activePage"] = 1;
+    // }
     const {
       success,
       data: fetchedTemplatesArray,
@@ -335,18 +337,18 @@ const CategoryTemplateGrid = (props) => {
 
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      getTemplatesList();
+      getTemplatesList(activePage, pageSize);
     }
-  }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
+  }, [ filtersToPass, connectedAccountsArray]);
 
   useEffect(() => {
     getAllConnectedAccounts();
   }, []);
-  useEffect(() => {
-    if (connectedAccountsArray.length) {
-      getTemplatesList();
-    }
-  }, [connectedAccountsArray]);
+  // useEffect(() => {
+  //   if (connectedAccountsArray.length) {
+  //     getTemplatesList();
+  //   }
+  // }, [connectedAccountsArray]);
 
   const verify = useCallback(
     debounce((value) => {
@@ -360,15 +362,15 @@ const CategoryTemplateGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       } else if (
         filtersToPass.hasOwnProperty("filter[primaryCategoryMappingName][3]")
       ) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[primaryCategoryMappingName][3]"];
         setFiltersToPass(temp);
       }
@@ -528,6 +530,8 @@ const CategoryTemplateGrid = (props) => {
     );
   };
   const renderOtherFilters = () => {
+    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
+   
     return (
       <Popover
         active={popOverStatus["country"]}
@@ -537,7 +541,7 @@ const CategoryTemplateGrid = (props) => {
         <div style={{ margin: "10px", width: "200px" }}>
           <ChoiceList
             choices={filters.country.options}
-            selected={selected["country"]}
+            selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
             onChange={(value) => handleChange(value, "country")}
           />
         </div>
@@ -576,7 +580,8 @@ const CategoryTemplateGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false})
     }
   };
 
@@ -612,6 +617,7 @@ const CategoryTemplateGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalCategoryTemplateCount}
+              hitGetProductsAPI={getTemplatesList}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}

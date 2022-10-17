@@ -115,16 +115,33 @@ const FinalTemplateGridComponent = (props) => {
     (selectedTabIndex) => setSelectedTabId(selectedTabIndex),
     []
   );
+  const checkValueHandler=(arr,filterName)=>{
+    let countryValue="";
+    Object.keys(arr).filter((item,index)=>{
+      let indexOfFirstOpeningBracket = item.indexOf("[");
+      let indexOfFirstClosingBracket = item.indexOf("]");
+      const mainItem=item.substring(
+        indexOfFirstOpeningBracket + 1,
+        indexOfFirstClosingBracket
+      );
+      if(mainItem===filterName)
+      {
+          countryValue= item;
+          return ;
+      }
+    })
+    return countryValue;
+  }
   const getTabContent = () => {
     switch (selectedTabId) {
       case 0:
-        return <CategoryTemplateGrid cbFuncCategory={cbFuncCategory} />;
+        return <CategoryTemplateGrid cbFuncCategory={cbFuncCategory} checkValueHandler={checkValueHandler}/>;
       case 1:
-        return <InventoryTemplateGrid cbFuncInventory={cbFuncInventory} />;
+        return <InventoryTemplateGrid cbFuncInventory={cbFuncInventory} checkValueHandler={checkValueHandler}/>;
       case 2:
-        return <PriceTemplateGrid cbFuncPrice={cbFuncPrice} />;
+        return <PriceTemplateGrid cbFuncPrice={cbFuncPrice} checkValueHandler={checkValueHandler}/>;
       case 3:
-        return <TitleTemplateGrid cbFuncTitle={cbFuncTitle} />;
+        return <TitleTemplateGrid cbFuncTitle={cbFuncTitle} checkValueHandler={checkValueHandler}/>;
       default:
         break;
     }

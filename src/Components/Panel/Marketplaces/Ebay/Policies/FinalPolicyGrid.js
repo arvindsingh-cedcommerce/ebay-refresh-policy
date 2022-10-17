@@ -129,6 +129,23 @@ const FinalPolicyGrid = (props) => {
   const cbFuncReturn = () => {
     getReturnPolicyCount();
   };
+  const checkValueHandler=(arr,filterName)=>{
+    let countryValue="";
+    Object.keys(arr).filter((item,index)=>{
+      let indexOfFirstOpeningBracket = item.indexOf("[");
+      let indexOfFirstClosingBracket = item.indexOf("]");
+      const mainItem=item.substring(
+        indexOfFirstOpeningBracket + 1,
+        indexOfFirstClosingBracket
+      );
+      if(mainItem===filterName)
+      {
+          countryValue= item;
+          return ;
+      }
+    })
+    return countryValue;
+  }
   const getTabContent = () => {
     switch (selectedTabId) {
       case 0:
@@ -138,6 +155,7 @@ const FinalPolicyGrid = (props) => {
             cbFuncCategory={cbFuncShipping}
             refreshSuccessStatus={refreshSuccessStatus}
             setRefreshSuccessStatus={setRefreshSuccessStatus}
+            checkValueHandler={checkValueHandler}
           />
         );
       case 1:
@@ -147,6 +165,7 @@ const FinalPolicyGrid = (props) => {
             cbFuncCategory={cbFuncPayment}
             refreshSuccessStatus={refreshSuccessStatus}
             setRefreshSuccessStatus={setRefreshSuccessStatus}
+            checkValueHandler={checkValueHandler}
           />
         );
       case 2:
@@ -156,6 +175,7 @@ const FinalPolicyGrid = (props) => {
             cbFuncCategory={cbFuncReturn}
             refreshSuccessStatus={refreshSuccessStatus}
             setRefreshSuccessStatus={setRefreshSuccessStatus}
+            checkValueHandler={checkValueHandler}
           />
         );
       default:

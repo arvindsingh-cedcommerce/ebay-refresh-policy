@@ -70,8 +70,9 @@ const TitleTemplateGrid = (props) => {
     (state) => state.titleGridFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
-
-  const { cbFuncTitle } = props;
+  const titleMappingTypeValue= reduxState[props.checkValueHandler(reduxState,"titleMapping")];
+   const descriptionMappingTypeValue=reduxState[props.checkValueHandler(reduxState,"descriptionMapping")];
+   const { cbFuncTitle } = props;
   const [accountSelectionModal, setaccountSelectionModal] = useState({
     active: false,
     siteID: "",
@@ -144,17 +145,17 @@ const TitleTemplateGrid = (props) => {
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
 
-  const getTemplatesList = async (ebayAccountsObj) => {
+  const getTemplatesList = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
     const postData = {
       "filter[type][1]": "title",
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       ...filtersToPass,
     };
-    if (Object.keys(filtersToPass).length) {
-      postData["activePage"] = 1;
-    }
+    // if (Object.keys(filtersToPass).length) {
+    //   postData["activePage"] = 1;
+    // }
     const {
       success,
       data: fetchedTemplatesArray,
@@ -234,8 +235,9 @@ const TitleTemplateGrid = (props) => {
   };
 
   useEffect(() => {
-    getTemplatesList();
-  }, [activePage, pageSize, filtersToPass]);
+    if(filtersToPass)
+    getTemplatesList(activePage, pageSize);
+  }, [ filtersToPass]);
 
   const verify = useCallback(
     debounce((value) => {
@@ -244,9 +246,9 @@ const TitleTemplateGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
@@ -375,6 +377,8 @@ const TitleTemplateGrid = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const renderOtherFilters = () => {
+    const titleMappingTypeObj=AttributeMapoptions?.filter((connectedAccount,index)=> connectedAccount.value===titleMappingTypeValue);
+    const descriptionMappingTypeObj=AttributeMapoptions?.filter((connectedAccount,index)=> connectedAccount.value===descriptionMappingTypeValue);
     return (
       <ButtonGroup segmented>
         <Popover
@@ -385,7 +389,7 @@ const TitleTemplateGrid = (props) => {
           <div style={{ margin: "10px" }}>
             <ChoiceList
               choices={AttributeMapoptions}
-              selected={selected["titleMapping"]}
+              selected={titleMappingTypeObj[0]?[titleMappingTypeObj[0].value]:selected["titleMapping"]}
               onChange={(value) => handleChange(value, "titleMapping")}
             />
           </div>
@@ -398,7 +402,7 @@ const TitleTemplateGrid = (props) => {
           <div style={{ margin: "10px" }}>
             <ChoiceList
               choices={AttributeMapoptions}
-              selected={selected["descriptionMapping"]}
+              selected={descriptionMappingTypeObj[0]?[descriptionMappingTypeObj[0].value]:selected["descriptionMapping"]}
               onChange={(value) => handleChange(value, "descriptionMapping")}
             />
           </div>
@@ -438,7 +442,8 @@ const TitleTemplateGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false})
     }
   };
 
@@ -470,6 +475,7 @@ const TitleTemplateGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalCategoryTemplateCount}
+              hitGetProductsAPI={getTemplatesList}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}

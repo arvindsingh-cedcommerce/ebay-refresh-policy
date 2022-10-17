@@ -64,6 +64,8 @@ const PaymentPolicyGrid = (props) => {
     (state) => state.paymentPolicyGridFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
+  const countryTypeValue= reduxState[props.checkValueHandler(reduxState,"country")];
+ 
   const {
     refreshPolicyBtnClicked,
     cbFuncCategory,
@@ -184,7 +186,7 @@ const PaymentPolicyGrid = (props) => {
     }
   };
 
-  const getAllPolicies = async (refresh = false) => {
+  const getAllPolicies = async (activePageNumber, activePageSize,refresh = false) => {
     setRefreshSuccessStatus(false);
     setGridLoader(true);
     let filterPostData = {};
@@ -201,17 +203,17 @@ const PaymentPolicyGrid = (props) => {
     }
 
     let requestData = {
-      count: pageSize,
-      activePage: activePage,
+      count: activePageSize,
+      activePage: activePageNumber,
       "filter[type][1]": "payment",
       ...filterPostData,
     };
     if (refresh) {
       requestData["refresh"] = refresh;
     }
-    if (Object.keys(filterPostData).length) {
-      requestData["activePage"] = 1;
-    }
+    // if (Object.keys(filterPostData).length) {
+    //   requestData["activePage"] = 1;
+    // }
     let {
       success,
       data: fetchedPoliciesArray,
@@ -297,9 +299,9 @@ const PaymentPolicyGrid = (props) => {
 
   useEffect(() => {
     if (connectedAccountsArray.length) {
-      getAllPolicies();
+      getAllPolicies(activePage, pageSize);
     }
-  }, [activePage, pageSize, filtersToPass, connectedAccountsArray]);
+  }, [ filtersToPass, connectedAccountsArray]);
 
   useEffect(() => {
     if (refreshSuccessStatus) {
@@ -339,6 +341,8 @@ const PaymentPolicyGrid = (props) => {
   );
 
   const renderOtherFilters = () => {
+    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===countryTypeValue);
+   
     return (
       <Popover
         active={popOverStatus["country"]}
@@ -348,7 +352,7 @@ const PaymentPolicyGrid = (props) => {
         <div style={{ margin: "10px", width: "200px" }}>
           <ChoiceList
             choices={connectedAccountsArray}
-            selected={selected["country"]}
+            selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
             onChange={(value) => handleChange(value, "country")}
           />
         </div>
@@ -387,7 +391,8 @@ const PaymentPolicyGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      notify.warn("No filters applied");
+      //notify.warn("No filters applied");
+      setFiltersToPass({filtersPresent:false});
     }
   };
 
@@ -398,9 +403,9 @@ const PaymentPolicyGrid = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
+        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass };
+        let temp = { ...filtersToPass,filtersPresent:true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       }
@@ -520,6 +525,7 @@ const PaymentPolicyGrid = (props) => {
           <Col className="gutter-row" span={18}>
             <PaginationComponent
               totalCount={totalShippingPolicyCount}
+              hitGetProductsAPI={getAllPolicies}
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}
