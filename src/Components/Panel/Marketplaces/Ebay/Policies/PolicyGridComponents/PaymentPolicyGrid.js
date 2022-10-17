@@ -446,6 +446,10 @@ const PaymentPolicyGrid = (props) => {
 
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
+      if (
+        !filter.includes("filtersPresent") ||
+        (filter.includes("filtersPresent") && filter["filtersPresent"])
+      ) {
       let indexOfFirstOpeningBracket = filter.indexOf("[");
       let indexOfFirstClosingBracket = filter.indexOf("]");
       let indexOfSecondOpeningBracket = filter.indexOf(
@@ -490,7 +494,7 @@ const PaymentPolicyGrid = (props) => {
           {filtersToPass[filter]}
         </Tag>
       );
-    });
+   } });
   };
 
   useEffect(() => {

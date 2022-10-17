@@ -281,6 +281,10 @@ const PriceTemplateGrid = (props) => {
 
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
+      if (
+        !filter.includes("filtersPresent") ||
+        (filter.includes("filtersPresent") && filter["filtersPresent"])
+      ) {
       let indexOfFirstOpeningBracket = filter.indexOf("[");
       let indexOfFirstClosingBracket = filter.indexOf("]");
       let indexOfSecondOpeningBracket = filter.indexOf(
@@ -326,7 +330,7 @@ const PriceTemplateGrid = (props) => {
           {filtersToPass[filter]}
         </Tag>
       );
-    });
+  }});
   };
 
   const countryActivator = (
@@ -416,6 +420,7 @@ const PriceTemplateGrid = (props) => {
   }, []);
   return (
     <Card.Section>
+      {console.log("filtersToPass",filtersToPass)}
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Stack wrap>

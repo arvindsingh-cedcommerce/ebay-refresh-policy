@@ -384,16 +384,15 @@ function NewProductsNewFilters(props) {
   const [prevPage,setPrevPage]=useState(1);
  
   useEffect(() => {
-    if (filtersToPass) {
-      hitGetProductsAPI(activePage, pageSize);
+    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+      hitGetProductsAPI(1, pageSize);
+      setActivePage(1);
+    }
+    else if(filtersToPass)
+    {
+      hitGetProductsAPI(activePage,pageSize);
     }
   }, [filtersToPass]);
-  useEffect(()=>{
-if(activePage>1 && activePage!==prevPage)
-{
-  setActivePage(1);
-}
-  },[filtersToPass]);
 
   const getBadge = (test) => {
     if (test?.ended && test?.Errors) {
@@ -763,6 +762,13 @@ if(activePage>1 && activePage!==prevPage)
       setSelectedRowKeys(selectedRowKeys);
       setSelectedRows(selectedRows);
     },
+    // onSelectAll: selected=> {
+    //   console.log("selected",selected);
+    //   if(selected)
+    //       { setSelectedRowKeys([0,2]);
+    //        setSelectedRows([]);
+    //       }
+    // }
   };
   const verify = useCallback(
     debounce((value) => {
