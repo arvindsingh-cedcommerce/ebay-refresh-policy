@@ -50,7 +50,11 @@ const EbayMessagesComponent = () => {
   // get msg modal
   const [getMsgModalStatus, setGetMsgModalStatus] = useState(false);
 
+  // loader
+  const [loader, setLoader] = useState(false)
+
   const hitGetAllMessages = async () => {
+    setLoader(true)
     let postData = {
       page: activePage,
       pageSize: pageSize,
@@ -58,6 +62,7 @@ const EbayMessagesComponent = () => {
       end_time: time["endTime"],
     };
     let {} = await getAllMessages(getAllMessagesURL, postData);
+    setLoader(false)
   };
 
   useEffect(() => {
@@ -92,6 +97,7 @@ const EbayMessagesComponent = () => {
         dataSource={msgData}
         scroll={{ x: 1000 }}
         bordered={true}
+        loading={loader}
       />
       <Modal
         open={getMsgModalStatus}
