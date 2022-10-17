@@ -809,7 +809,7 @@ const NewFilterProductsTab = ({
                   setOverriceCheckboxStatus(!overriceCheckboxStatus)
                 }
               /> */}
-              <div>{`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other template. Do
+              <div>{`Total ${alreadyProfiledProductsCount} product(s) are filtered under applied condition out of which ${totalProductsCount} product(s) are already assigned to some other profile. Do
               you want to override their previous template ?`}</div>
               <Stack>
                 <Button onClick={() => setOverrideProductsModalActive(false)}>
