@@ -1250,7 +1250,7 @@ const NewOrdersGrid = (props) => {
                     }
                     setSyncBtnLoader(false);
                     setImportEbayOrdersModal(false);
-                    hitGetOrdersAPI();
+                    hitGetOrdersAPI(activePage,pageSize);
                   }}
                   disabled={getDisabledSync()}
                   loading={syncBtnLoader}
