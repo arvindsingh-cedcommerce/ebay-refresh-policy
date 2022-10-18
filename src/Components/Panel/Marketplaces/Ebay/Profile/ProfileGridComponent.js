@@ -251,6 +251,7 @@ const ProfileGridComponent = (props) => {
                 )}
               </center>
             );
+            tempProfilesObj["productCountValue"] = row["product_count"];
             tempProfilesObj["accountStatus"] = extractShopIDs(row.target);
             tempProfilesObj["profileName"] = (
               <center>
