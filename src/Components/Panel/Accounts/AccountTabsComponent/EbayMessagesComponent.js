@@ -92,6 +92,7 @@ const EbayMessagesComponent = () => {
           </div>
         </Col>
       </Row>
+      <br />
       <NestedTableComponent
         columns={messageColumns}
         dataSource={msgData}
