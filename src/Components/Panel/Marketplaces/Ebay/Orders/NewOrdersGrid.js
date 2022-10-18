@@ -1,5 +1,6 @@
 import { SyncOutlined, UploadOutlined } from "@ant-design/icons";
 import {
+  Button,
   Checkbox,
   Col,
   Form,
@@ -696,7 +697,7 @@ const NewOrdersGrid = (props) => {
             <Col span={12}>
               <>To</>
               <Input
-                placeholder="End Date"
+                placeholder="End Date"             
                 type={"date"}
                 value={orderCreatedAtEndDate}
                 onChange={(e) => {
@@ -724,7 +725,7 @@ const NewOrdersGrid = (props) => {
             <Col span={12}>
               <>To</>
               <Input
-                placeholder="End Date"
+                placeholder="End Date"    
                 type={"date"}
                 value={orderModifiedAtEndDate}
                 onChange={(e) => {
@@ -1223,11 +1224,11 @@ const NewOrdersGrid = (props) => {
                     >
                       {getFormElement()}
                     </Form.Item>
-                  )}
-              </Form>
+                  )}       
               <Stack distribution="center">
-                <ShopifyButton
-                  primary
+                <Button
+                type="primary"
+                htmlType="submit"
                   // key="back"
                   onClick={async () => {
                     setSyncBtnLoader(true);
@@ -1253,6 +1254,8 @@ const NewOrdersGrid = (props) => {
                           break;
                       }
                     }
+                    if(postData["order_ids"] || (postData["create_time_from"] && postData["create_time_to"]) || (postData["mod_time_from"] && postData["mod_time_to"]))
+                    {
                     let { success, message } = await importOrders(
                       importOrdersURL,
                       postData
@@ -1262,16 +1265,19 @@ const NewOrdersGrid = (props) => {
                     } else {
                       notify.error(message);
                     }
-                    setSyncBtnLoader(false);
+                   
                     setImportEbayOrdersModal(false);
                     hitGetOrdersAPI(activePage,pageSize);
+                  }
+                  setSyncBtnLoader(false);
                   }}
                   disabled={getDisabledSync()}
                   loading={syncBtnLoader}
                 >
                   Import
-                </ShopifyButton>
+                </Button>
               </Stack>
+              </Form>
             </Stack>
           </>
         }

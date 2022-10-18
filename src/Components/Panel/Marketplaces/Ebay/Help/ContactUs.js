@@ -232,21 +232,13 @@ const ContactUs = () => {
           >
             <Stack vertical>
               <div>
-                <div>
-                  Accounts <TextStyle variation="negative">*</TextStyle>
-                </div>
-                {issueFormValidationErrors.account ? (
-                  <TextStyle variation="negative">
-                    Select atleast one account
-                  </TextStyle>
-                ) : (
-                  ""
-                )}
-                <Stack distribution="fillEvenly" spacing="extraTight">
+                <div>Accounts</div>
+                <Row>
                   {connectedAccountsArray.map((connectedAccount, index) => {
                     return (
-                      <Checkbox
-                        label={connectedAccount.label}
+                      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                      <Checkbox                    
+                      label={connectedAccount.label}
                         checked={connectedAccount.checked}
                         onChange={() => {
                           let checkAccountValidation = true;
@@ -269,9 +261,10 @@ const ContactUs = () => {
                           setconnectedAccountsArray(temp);
                         }}
                       />
+                      </Col>
                     );
                   })}
-                </Stack>
+                </Row>
               </div>
               {/* <Select
               onChange={(accountValue) => {
