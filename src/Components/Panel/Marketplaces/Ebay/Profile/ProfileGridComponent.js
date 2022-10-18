@@ -177,7 +177,7 @@ const ProfileGridComponent = (props) => {
    const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
  // const [pageSizeOptions, setPageSizeOptions] = useState([1,2]);
   // const [pageSize, setPageSize] = useState(5);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
   const [prevPage,setPrevPage]=useState(0);
   const [totalShippingPolicyCount, setTotalShippingPolicyCount] = useState(0);
