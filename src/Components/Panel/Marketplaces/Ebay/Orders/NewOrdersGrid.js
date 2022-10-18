@@ -976,10 +976,17 @@ const NewOrdersGrid = (props) => {
         <List type="bullet">
           <List.Item>
             By Default, we fetched only paid and non-shipped eBay orders. for
-            fetching other types of orders please contact us.
+            fetching other types of orders please{" "}
+            <span
+              style={{ color: "blue", cursor: "pointer" }}
+              onClick={() => props.history.push("/panel/ebay/contactUs")}
+            >
+              contact us
+            </span>
+            .
           </List.Item>
           <List.Item>
-            It is recommended that sellers should fulfil orders after 1 hour of
+            It is recommended that sellers should fulfill orders after 1 hour of
             their purchase because buyer are eligible for cancelling the order
             with in 1 hour of their purchase.
             <Link

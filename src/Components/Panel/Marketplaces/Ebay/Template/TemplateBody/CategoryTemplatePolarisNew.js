@@ -1687,7 +1687,7 @@ const CategoryTemplatePolarisNew = (props) => {
               1
             )} Category Mapping`}
             description={
-              "Select the secondary category for eBay Listng. It is optional and chargable on eBay. Also it should be related to primary category because attributes/ item specifics will be shared."
+              "Select the secondary category for eBay listng. It is optional and chargable on eBay. Also it should be related to primary category because attributes/ item specifics will be shared."
             }
           >
             <Card sectioned title="Category Mapping">
