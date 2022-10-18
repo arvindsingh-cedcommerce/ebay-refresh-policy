@@ -179,14 +179,19 @@ const ProfileGridComponent = (props) => {
   // const [pageSize, setPageSize] = useState(5);
   const [pageSize, setPageSize] = useState(5);
 
-  const [prevPage,setPrevPage]=useState(0);
+  const [prevPage,setPrevPage]=useState(1);
   const [totalShippingPolicyCount, setTotalShippingPolicyCount] = useState(0);
 
+ 
   useEffect(() => {
-    if (filtersToPass) {
+    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+      getAllProfiles(1, pageSize);
+      setActivePage(1);
+    }
+    else if(filtersToPass)
+    {
       getAllProfiles(activePage,pageSize);
     }
-    
   }, [filtersToPass]);
   
   const filterData = (componentFilters) => {

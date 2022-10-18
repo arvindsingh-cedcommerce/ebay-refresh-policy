@@ -238,7 +238,8 @@ const DisabledProducts = (props) => {
     product_type: [],
     brand: [],
   });
-
+  const [prevPage,setPrevPage]=useState(1);
+ 
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const reduxState = useSelector(
@@ -576,8 +577,13 @@ const DisabledProducts = (props) => {
   };
 
   useEffect(() => {
-    if (filtersToPass) {
-      hitGetProductsAPI(activePage, pageSize);
+    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+      hitGetProductsAPI(1, pageSize);
+      setActivePage(1);
+    }
+    else if(filtersToPass)
+    {
+      hitGetProductsAPI(activePage,pageSize);
     }
   }, [filtersToPass]);
 
@@ -1055,6 +1061,7 @@ const DisabledProducts = (props) => {
                 pageSizeOptions={pageSizeOptions}
                 activePage={activePage}
                 setActivePage={setActivePage}
+                setPrevPage={setPrevPage}
                 pageSize={pageSize}
                 setPageSize={setPageSize}
                 size={"default"}
