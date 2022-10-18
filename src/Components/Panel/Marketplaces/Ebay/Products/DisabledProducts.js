@@ -877,6 +877,8 @@ const DisabledProducts = (props) => {
             account["warehouses"][0]["site_id"]
           ),
           username: account["warehouses"][0]["user_id"],
+          active:
+            account["warehouses"][0]["status"] === "active" ? true : false,
         };
         return accountName;
       });
