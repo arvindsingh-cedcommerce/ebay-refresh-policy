@@ -124,7 +124,8 @@ const ReturnPolicyGrid = (props) => {
   const [popOverStatus, setPopOverStatus] = useState({
     country: false,
   });
-
+  const [prevPage,setPrevPage]=useState(1);
+ 
   const hitRequiredFuncs = () => {
     getAllPolicies();
     getAllConnectedAccounts();
@@ -291,12 +292,21 @@ const ReturnPolicyGrid = (props) => {
   useEffect(() => {
     getAllConnectedAccounts();
   }, []);
-
+  useEffect(() => {
+    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+      getAllPolicies(1, pageSize);
+      setActivePage(1);
+    }
+    else if(filtersToPass)
+    {
+      getAllPolicies(activePage,pageSize);
+    }
+  }, [filtersToPass]);
   useEffect(() => {
     if (connectedAccountsArray.length) {
       getAllPolicies(activePage, pageSize);
     }
-  }, [ filtersToPass,connectedAccountsArray]);
+  }, [connectedAccountsArray]);
 
   useEffect(() => {
     if (refreshSuccessStatus) {
@@ -535,6 +545,7 @@ const ReturnPolicyGrid = (props) => {
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}
+              setPrevPage={setPrevPage}
               pageSize={pageSize}
               setPageSize={setPageSize}
               size={"default"}

@@ -167,7 +167,8 @@ const CategoryTemplateGrid = (props) => {
   const [searchWithTitle, setSearchWithTitle] = useState(true);
   const [filterTitleORCategoryMapping, setFilterTitleORCategoryMapping] =
     useState("");
-
+    const [prevPage,setPrevPage]=useState(1);
+ 
   const getTemplatesList = async (activePageNumber, activePageSize) => {
     setGridLoader(true);
     let filterPostData = {};
@@ -334,12 +335,21 @@ const CategoryTemplateGrid = (props) => {
     }
     return ebayAccountsObj;
   };
-
+  useEffect(() => {
+    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+      getTemplatesList(1, pageSize);
+      setActivePage(1);
+    }
+    else if(filtersToPass)
+    {
+      getTemplatesList(activePage,pageSize);
+    }
+  }, [filtersToPass]);
   useEffect(() => {
     if (connectedAccountsArray.length) {
       getTemplatesList(activePage, pageSize);
     }
-  }, [ filtersToPass, connectedAccountsArray]);
+  }, [ connectedAccountsArray]);
 
   useEffect(() => {
     getAllConnectedAccounts();
@@ -625,6 +635,7 @@ const CategoryTemplateGrid = (props) => {
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}
+              setPrevPage={setPrevPage}
               pageSize={pageSize}
               setPageSize={setPageSize}
               size={"default"}

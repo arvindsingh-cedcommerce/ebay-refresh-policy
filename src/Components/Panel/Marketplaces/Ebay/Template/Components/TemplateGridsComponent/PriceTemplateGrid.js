@@ -130,7 +130,8 @@ const PriceTemplateGrid = (props) => {
   const [pageSize, setPageSize] = useState(25);
   const [totalCategoryTemplateCount, setTotalCategoryTemplateCount] =
     useState(0);
-
+    const [prevPage,setPrevPage]=useState(1);
+ 
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
 
@@ -217,8 +218,14 @@ const PriceTemplateGrid = (props) => {
   };
 
   useEffect(() => {
-    if(filtersToPass)
-    getTemplatesList(activePage,pageSize);
+    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+      getTemplatesList(1, pageSize);
+      setActivePage(1);
+    }
+    else if(filtersToPass)
+    {
+      getTemplatesList(activePage,pageSize);
+    }
   }, [filtersToPass]);
 
   const verify = useCallback(
@@ -443,6 +450,7 @@ const PriceTemplateGrid = (props) => {
               pageSizeOptions={pageSizeOptions}
               activePage={activePage}
               setActivePage={setActivePage}
+              setPrevPage={setPrevPage}
               pageSize={pageSize}
               setPageSize={setPageSize}
               size={"default"}

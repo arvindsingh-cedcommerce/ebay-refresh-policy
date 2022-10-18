@@ -10,6 +10,7 @@ import {
   Button,
   Modal,
   Banner,
+  Badge,
 } from "@shopify/polaris";
 import { Col, Image, PageHeader, Row } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
@@ -38,7 +39,7 @@ import {
   stringOperatorOptions,
 } from "./NewProductsNewFilters";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
-import { FilterMajorMonotone } from "@shopify/polaris-icons";
+import { AlertMinor, FilterMajorMonotone } from "@shopify/polaris-icons";
 import { getProfiles } from "../../../../../APIrequests/ProfilesAPI";
 import { getProfilesURL } from "../../../../../URLs/ProfilesURL";
 import { getImportAttribute } from "../../../../../Apirequest/registrationApi";
@@ -51,6 +52,7 @@ import { withRouter } from "react-router-dom";
 import NewFilterComponentSimilarPolaris from "./NewFilterComponentSimilarPolaris";
 import { getVariantsCountDetails } from "./helperFunctions/commonHelper";
 import { useDispatch, useSelector } from "react-redux";
+import PopoverProduct from "./PopoverProduct";
 
 const DisabledProducts = (props) => {
   const [gridLoader, setGridLoader] = useState(false);
@@ -88,6 +90,18 @@ const DisabledProducts = (props) => {
       onCell: () => {},
       width: 250,
       fixed: window.innerWidth <= 768 ? false : "left",
+    },
+    {
+      title: <center>Status</center>,
+      dataIndex: "productStatus",
+      key: "productStatus",
+      className: "show",
+      label: "Status",
+      value: "status",
+      checked: true,
+      editable: true,
+      onCell: () => {},
+      width: 250,
     },
     {
       title: (
@@ -224,7 +238,8 @@ const DisabledProducts = (props) => {
     product_type: [],
     brand: [],
   });
-
+  const [prevPage,setPrevPage]=useState(1);
+ 
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const reduxState = useSelector(
@@ -270,17 +285,37 @@ const DisabledProducts = (props) => {
     actionPayload: {},
     api: "",
   });
+   // status popup
+   const [errorPopup, setErrorPopup] = useState({
+    active: false,
+    content: [],
+  });
   const [btnLoader, setBtnLoader] = useState(false);
 
   const hitGetProductsAPI = async (activePageNumber,activePageSize) => {
     setGridLoader(true);
+    let filterPostData = {};
+    for (const key in filtersToPass) {
+      if (key !== "filtersPresent") {
+        if (key === "filter[country][1]") {
+          let matchedAccoount = connectedAccountsArray.find(
+            (connectedAccount) =>
+              connectedAccount["value"] === filtersToPass["filter[country][1]"]
+          );
+          filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
+        }
+      else {
+        filterPostData[key] = filtersToPass[key];
+      }
+    }
+    }
     let postData = {
       productOnly: true,
       count: activePageSize,
       activePage: activePageNumber,
       // grid: true,
       status: "disabled",
-      ...filtersToPass,
+      ...filterPostData,
     };
     let {
       success: productsDataSuccess,
@@ -321,6 +356,7 @@ const DisabledProducts = (props) => {
               profile_name,
               source_product_id,
               edited,
+              ebay_response,
               quantity,
             } = row;
             let tempObject = {};
@@ -359,6 +395,11 @@ const DisabledProducts = (props) => {
                     text: title,
                   }}
                 />
+              </Stack>
+            );
+            tempObject["productStatus"] = (
+              <Stack alignment="center" distribution="center">
+                {getProductStatusEbayResponse(ebay_response)}
               </Stack>
             );
             tempObject["productType"] = (
@@ -417,14 +458,132 @@ const DisabledProducts = (props) => {
       }
     }
   };
-
+  const getBadge = (test) => {
+    if (test?.ended && test?.Errors) {
+      return (
+        <Badge status="warning">
+          <div
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={(e) => {
+              setErrorPopup({
+                active: true,
+                content: [...test.Errors],
+              });
+            }}
+          >
+            <Stack spacing="extraTight" alignment="center">
+              <Icon source={AlertMinor} color={"red"} />
+              <>Ended</>
+            </Stack>
+          </div>
+        </Badge>
+      );
+    } else if (test?.ended) {
+      return <Badge status="warning">Ended</Badge>;
+    } else if (test?.ItemId && test?.Errors) {
+      return (
+        <Badge status="success" progress="complete">
+          <div
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={(e) => {
+              setErrorPopup({
+                active: true,
+                content: [...test.Errors],
+              });
+            }}
+          >
+            <Stack spacing="extraTight" alignment="center">
+              <Icon source={AlertMinor} color={"red"} />
+              <>Uploaded</>
+            </Stack>
+          </div>
+        </Badge>
+      );
+    } else if (test?.ItemId) {
+      return (
+        <Badge status="success" progress="complete">
+          Uploaded
+        </Badge>
+      );
+    } else if (test?.Errors) {
+      return (
+        <Badge status="critical">
+          <div
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={(e) => {
+              setErrorPopup({
+                ...errorPopup,
+                active: true,
+                content: [...test.Errors],
+              });
+            }}
+          >
+            Errors
+          </div>
+        </Badge>
+      );
+    }
+    // else {
+    //   return <Badge status="attention">Not Uploaded</Badge>;
+    // }
+  };
+  const getProductStatusEbayResponse = (response) => {
+    let statusStructures = [];
+    if (response && Object.keys(response).length) {
+      for (const shopId in response) {
+        let matchedAccount = connectedAccountsArray.find(
+          (connectedAccount) => connectedAccount["shopId"] == shopId
+        );
+        let test = {
+          ...matchedAccount,
+          ...response[shopId],
+        };
+        // console.log(test);
+        const structStatus = test.active
+          ? (test.ItemId || test.Errors) && (
+              <Stack>
+                {test?.image}
+                <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
+                {test?.image && getBadge(test)}
+              </Stack>
+            )
+          : (test.ItemId || test.Errors) && (
+              <div
+                style={{
+                  pointerEvents: "none",
+                  opacity: 0.4,
+                }}
+              >
+                <Stack>
+                  {test?.image}
+                  <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
+                  {test?.image && getBadge(test)}
+                </Stack>
+              </div>
+            );
+        statusStructures.push(structStatus);
+      }
+      return <PopoverProduct>{statusStructures}</PopoverProduct>;
+    } else {
+      return (
+        // <Text>N/A</Text>
+        <Badge>Not Uploaded</Badge>
+      );
+    }
+  };
+  
   const redirect = (url) => {
     props.history.push(url);
   };
 
   useEffect(() => {
-    if (filtersToPass) {
-      hitGetProductsAPI(activePage, pageSize);
+    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+      hitGetProductsAPI(1, pageSize);
+      setActivePage(1);
+    }
+    else if(filtersToPass)
+    {
+      hitGetProductsAPI(activePage,pageSize);
     }
   }, [filtersToPass]);
 
@@ -902,6 +1061,7 @@ const DisabledProducts = (props) => {
                 pageSizeOptions={pageSizeOptions}
                 activePage={activePage}
                 setActivePage={setActivePage}
+                setPrevPage={setPrevPage}
                 pageSize={pageSize}
                 setPageSize={setPageSize}
                 size={"default"}

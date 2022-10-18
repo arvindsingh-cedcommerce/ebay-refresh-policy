@@ -284,7 +284,8 @@ const NewOrdersGrid = (props) => {
     { label: "Cancelled", value: "cancelled" },
   ]);
   const [filterTitleORsku, setFilterTitleORsku] = useState("");
-
+  const [prevPage,setPrevPage]=useState(1);
+ 
   // loader
   const [syncBtnLoader, setSyncBtnLoader] = useState(false);
 
@@ -533,8 +534,13 @@ const NewOrdersGrid = (props) => {
   };
 
   useEffect(() => {
-    if (filtersToPass) {
-      hitGetOrdersAPI(activePage, pageSize);
+    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+      hitGetOrdersAPI(1, pageSize);
+      setActivePage(1);
+    }
+    else if(filtersToPass)
+    {
+      hitGetOrdersAPI(activePage,pageSize);
     }
   }, [filtersToPass]);
 
@@ -1080,6 +1086,7 @@ const NewOrdersGrid = (props) => {
                   pageSizeOptions={pageSizeOptions}
                   activePage={activePage}
                   setActivePage={setActivePage}
+                  setPrevPage={setPrevPage}
                   pageSize={pageSize}
                   setPageSize={setPageSize}
                   size={"default"}
