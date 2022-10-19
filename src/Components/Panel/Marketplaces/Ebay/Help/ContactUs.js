@@ -22,6 +22,9 @@ import {
   TextField,
   Checkbox,
   Link,
+  SkeletonBodyText,
+  TextContainer,
+  SkeletonDisplayText,
 } from "@shopify/polaris";
 import { submitIssue } from "../../../../../APIrequests/ContactUSAPI";
 import {
@@ -59,7 +62,7 @@ const ContactUs = () => {
     issue: false,
     demo: false,
   });
-
+  const [accountLoader,setAccountLoader]=useState(false);
   // skype, whatsapp, email
   const [socialMediaLinks, setSocialMediaLinks] = useState({
     skype: "https://join.skype.com/GbdPBTuVsNgN",
@@ -68,6 +71,7 @@ const ContactUs = () => {
   });
 
   const getAllConnectedAccounts = async () => {
+    setAccountLoader(true);
     let { success: accountConnectedSuccess, data: connectedAccountData } =
       await getConnectedAccounts();
     if (accountConnectedSuccess) {
@@ -129,6 +133,7 @@ const ContactUs = () => {
       ];
       setconnectedAccountsArray(tempArr);
       setSelectedAccount(tempArr[0]["label"]);
+      setAccountLoader(false);
     }
   };
 
@@ -195,7 +200,16 @@ const ContactUs = () => {
               <div>
                 <div>Accounts</div>
                 <Row gutter={[48,12]}>
-                  {connectedAccountsArray.map((connectedAccount, index) => {
+                 
+                  {accountLoader? <Col span={24}>
+                            <Card sectioned>
+                            <TextContainer>
+                              <SkeletonDisplayText size="small" />
+                              <SkeletonBodyText />
+                            </TextContainer>
+                          </Card>
+                          </Col>
+                        : connectedAccountsArray.map((connectedAccount, index) => {
                     return (
                       <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
                       <Checkbox       
