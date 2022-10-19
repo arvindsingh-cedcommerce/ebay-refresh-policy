@@ -1,6 +1,7 @@
 import { SyncOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   Button,
+  Alert,
   Checkbox,
   Col,
   Form,
@@ -12,6 +13,7 @@ import {
   Row,
   Select,
   Typography,
+  List as AntList,
 } from "antd";
 import React, { useState, useEffect, useCallback } from "react";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
@@ -329,6 +331,33 @@ const NewOrdersGrid = (props) => {
     if(filterItem)
     initialMoreFiltersObj[filterItem]=reduxState[filterItem];
   });
+
+  const [orderAlertListData, setOrderAlertListData] = useState([
+    // 'Racing car sprays burning fuel into crowd.',
+    <div>
+      By Default, we fetched only paid and non-shipped eBay orders. for fetching
+      other types of orders please{" "}
+      <span
+        style={{ color: "blue", cursor: "pointer" }}
+        onClick={() => props.history.push("/panel/ebay/contactUs")}
+      >
+        contact us
+      </span>
+      .
+    </div>,
+    <div>
+      It is recommended that sellers should fulfill orders after 1 hour of their
+      purchase because buyer are eligible for cancelling the order with in 1
+      hour of their purchase.
+      <Link
+        url="https://community.ebay.com/t5/Selling/1-Hour-Order-Cancellation-Time-Frame/td-p/31178605"
+        external
+        // removeUnderline
+      >
+        Read More
+      </Link>
+    </div>,
+  ]);
   const getAllOrders = (ordersData) => {
     let tempOrderData = [];
     tempOrderData = ordersData["rows"].map((order, index) => {
@@ -1065,7 +1094,23 @@ const NewOrdersGrid = (props) => {
         </ShopifyButton>,
       ]}
     >
-      <Banner status={"info"}>
+      <Alert
+        style={{ borderRadius: "7px" }}
+        message={
+          <AntList
+            size="small"
+            dataSource={orderAlertListData}
+            renderItem={(item) => (
+              <AntList.Item style={{ paddingTop: "0px", paddingBottom: "0px" }}>
+                {item}
+              </AntList.Item>
+            )}
+          />
+        }
+        type="info"
+        showIcon
+      />
+      {/* <Banner status={"info"}>
         <List type="bullet">
           <List.Item>
             By Default, we fetched only paid and non-shipped eBay orders. for
@@ -1091,7 +1136,7 @@ const NewOrdersGrid = (props) => {
             </Link>
           </List.Item>
         </List>
-      </Banner>
+      </Banner> */}
       <br />
       <Card sectioned>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
