@@ -351,14 +351,14 @@ const PlansComponentAnt = ({
                       .map((plan, index) => {
                         return (
                           
-                          <Col span={4} style={{padding:'0'}}>
+                          <Col span={4} xs={24} sm={12} md={12} lg={6} xxl={4} style={{padding:'0'}}>
                          
                             <Card
                               title={<Title level={5}> {plan["title"]}</Title>}
                               size="small"
                               className={plan["title"] === 'Silver' ? 'plansCard active' : 'plansCard'}
                               onMouseOver={onMouseHoverCard}
-                              style={{ borderRadius: "8px" }}
+                              style={{ borderRadius: "8px",margin:"1rem 0.5rem" }}
                             >
                               <Row align="middle">
                                 <Col>
@@ -413,7 +413,7 @@ const PlansComponentAnt = ({
                                   );
                                 }}
                               />
-                              <Row justify="end" style={{marginTop:'20px'}}>
+                              <Row justify="center" style={{marginTop:'20px'}}>
                                 <ShopifyButton
                                   primary
                                   size="slim"

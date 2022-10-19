@@ -155,7 +155,7 @@ const ContactUs = () => {
   return (
     <PageHeader title="Contact Us" ghost={true}>
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-        <Col span={12}>
+        <Col span={12} xs={24} sm={12} md={12} lg={12} xxl={12}>
           <Card sectioned>
             <Stack distribution="equalSpacing" alignment="center">
               <Text strong>Feel free to reach out to us</Text>
@@ -237,30 +237,30 @@ const ContactUs = () => {
                   {connectedAccountsArray.map((connectedAccount, index) => {
                     return (
                       <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                      <Checkbox                    
-                      label={connectedAccount.label}
-                        checked={connectedAccount.checked}
-                        onChange={() => {
-                          let checkAccountValidation = true;
-                          let temp = [...connectedAccountsArray];
-                          temp[index]["checked"] = !connectedAccount.checked;
-                          for (let i = 0; i < temp.length; i++) {
-                            if (temp[i]["checked"]) {
-                              checkAccountValidation = false;
-                              break;
+                        <Checkbox
+                          label={connectedAccount.label}
+                          checked={connectedAccount.checked}
+                          onChange={() => {
+                            let checkAccountValidation = true;
+                            let temp = [...connectedAccountsArray];
+                            temp[index]["checked"] = !connectedAccount.checked;
+                            for (let i = 0; i < temp.length; i++) {
+                              if (temp[i]["checked"]) {
+                                checkAccountValidation = false;
+                                break;
+                              }
                             }
-                          }
-                          if (
-                            !checkAccountValidation &&
-                            issueFormValidationErrors.account
-                          ) {
-                            const errorObj = { ...issueFormValidationErrors };
-                            errorObj.account = false;
-                            setIssueFormValidationErrors({ ...errorObj });
-                          }
-                          setconnectedAccountsArray(temp);
-                        }}
-                      />
+                            if (
+                              !checkAccountValidation &&
+                              issueFormValidationErrors.account
+                            ) {
+                              const errorObj = { ...issueFormValidationErrors };
+                              errorObj.account = false;
+                              setIssueFormValidationErrors({ ...errorObj });
+                            }
+                            setconnectedAccountsArray(temp);
+                          }}
+                        />
                       </Col>
                     );
                   })}
@@ -324,7 +324,15 @@ const ContactUs = () => {
             </Stack>
           </Card>
         </Col>
-        <Col span={12} className="contactus-form-box">
+        <Col
+          span={12}
+          xs={24}
+          sm={12}
+          md={12}
+          lg={12}
+          xxl={12}
+          className="contactus-form-box"
+        >
           <Card
             title="Schedule Demo"
             sectioned
