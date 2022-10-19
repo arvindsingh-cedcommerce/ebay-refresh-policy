@@ -10,6 +10,16 @@ const StackedBarAnt = ({
 }) => {
   if (orderAnalyticsYearlyMonthlyWeekly === "yearly") {
     const { orderYearlyData, hasOrderYearlyData } = orderAnalyticsDataAllTypes;
+    if (orderYearlyData) {
+      var tempOrderYearlyData = orderYearlyData.map((order) => {
+        let correctValues = {};
+        correctValues["name"] = order["name"];
+        if (order["orderCount"] > 0)
+          correctValues["orderCount"] = order["orderCount"];
+        correctValues["year"] = order["year"];
+        return correctValues;
+      });
+    }
     if (!hasOrderYearlyData) {
       return (
         <Stack distribution="center">
@@ -17,12 +27,12 @@ const StackedBarAnt = ({
         </Stack>
       );
     } else if (
-      orderYearlyData &&
-      Array.isArray(orderYearlyData) &&
-      orderYearlyData.length
+      tempOrderYearlyData &&
+      Array.isArray(tempOrderYearlyData) &&
+      tempOrderYearlyData.length
     ) {
       const configStackedBar = {
-        data: orderYearlyData,
+        data: tempOrderYearlyData,
         isStack: true,
         xField: "year",
         yField: "orderCount",
@@ -57,6 +67,16 @@ const StackedBarAnt = ({
   } else if (orderAnalyticsYearlyMonthlyWeekly === "monthly") {
     const { orderMonthlyData, hasOrderMonthlyData } =
       orderAnalyticsDataAllTypes;
+    if (orderMonthlyData) {
+      var tempOrderMonthlyData = orderMonthlyData.map((order) => {
+        let correctValues = {};
+        correctValues["name"] = order["name"];
+        if (order["orderCount"] > 0)
+          correctValues["orderCount"] = order["orderCount"];
+        correctValues["month"] = order["month"];
+        return correctValues;
+      });
+    }
     if (!hasOrderMonthlyData) {
       return (
         <Stack distribution="center">
@@ -64,13 +84,12 @@ const StackedBarAnt = ({
         </Stack>
       );
     } else if (
-      orderMonthlyData &&
-      Array.isArray(orderMonthlyData) &&
-      orderMonthlyData.length
+      tempOrderMonthlyData &&
+      Array.isArray(tempOrderMonthlyData) &&
+      tempOrderMonthlyData.length
     ) {
-      // console.log(orderMonthlyData);
       const configStackedBar = {
-        data: orderMonthlyData,
+        data: tempOrderMonthlyData,
         isStack: true,
         xField: "month",
         yField: "orderCount",
@@ -100,6 +119,16 @@ const StackedBarAnt = ({
     return <>Loading</>;
   } else if (orderAnalyticsYearlyMonthlyWeekly === "weekly") {
     const { orderWeeklyData, hasOrderWeeklyData } = orderAnalyticsDataAllTypes;
+    if (orderWeeklyData) {
+      var tempOrderWeeklyData = orderWeeklyData.map((order) => {
+        let correctValues = {};
+        correctValues["name"] = order["name"];
+        if (order["orderCount"] > 0)
+          correctValues["orderCount"] = order["orderCount"];
+        correctValues["week"] = order["week"];
+        return correctValues;
+      });
+    }
     if (!hasOrderWeeklyData) {
       return (
         <Stack distribution="center">
@@ -107,12 +136,12 @@ const StackedBarAnt = ({
         </Stack>
       );
     } else if (
-      orderWeeklyData &&
-      Array.isArray(orderWeeklyData) &&
-      orderWeeklyData.length
+      tempOrderWeeklyData &&
+      Array.isArray(tempOrderWeeklyData) &&
+      tempOrderWeeklyData.length
     ) {
       const configStackedBar = {
-        data: orderWeeklyData,
+        data: tempOrderWeeklyData,
         isStack: true,
         xField: "week",
         yField: "orderCount",
