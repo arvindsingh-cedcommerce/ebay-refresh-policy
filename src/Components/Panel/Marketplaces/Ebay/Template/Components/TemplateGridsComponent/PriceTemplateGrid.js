@@ -285,7 +285,17 @@ const PriceTemplateGrid = (props) => {
     }
     return value;
   };
-
+  const formatFilterValue=(filterName,filterValue)=>{
+      if(filterName==="listingType")
+      {
+           const listingTypeItem=sellingFormatOptions?.filter(item=>item.value===filterValue);
+            return listingTypeItem[0]?.label;
+      }
+      else
+      {
+        return filterValue;
+      }
+     }
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
       if (
@@ -334,7 +344,7 @@ const PriceTemplateGrid = (props) => {
           }}
         >
           {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-          {filtersToPass[filter]}
+          {formatFilterValue(fieldValue,filtersToPass[filter])}
         </Tag>
       );
   }});
