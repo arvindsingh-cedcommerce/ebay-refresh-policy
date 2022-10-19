@@ -1,4 +1,13 @@
-import { Col, Image, PageHeader, Row, Typography, Modal, Steps } from "antd";
+import {
+  Col,
+  Image,
+  PageHeader,
+  Row,
+  Typography,
+  Modal,
+  Steps,
+  Alert,
+} from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { blogData, newsData } from "./DashboardData";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
@@ -21,7 +30,7 @@ import {
   SkeletonBodyText,
   SkeletonDisplayText,
   Tooltip,
-  Scrollable
+  Scrollable,
 } from "@shopify/polaris";
 import { Button as AntButton } from "antd";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
@@ -54,7 +63,7 @@ const { Title, Text } = Typography;
 const { Step } = Steps;
 
 const FinalDashboard = (props) => {
-  const { queuedTasks, refresh } = props;
+  const { queuedTasks, refresh, marqueeData, setMarqueeData } = props;
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [activeAccounts, setActiveAccounts] = useState(0);
 
@@ -172,6 +181,9 @@ const FinalDashboard = (props) => {
 
   // skeleton
   const [dashboardSkeleton, setDashboardSkeleton] = useState(true);
+
+  // note
+  const [note, setNote] = useState("");
 
   useEffect(() => {
     // document.title =
@@ -536,6 +548,11 @@ const FinalDashboard = (props) => {
 
     return day + "-" + month + "-" + year;
   };
+  useEffect(() => {
+    if (note) {
+      setMarqueeData([...marqueeData, { Note: note }]);
+    }
+  }, [note]);
   const hitDashoboardAPI = async (refresh, msg = true) => {
     setDashboardSkeleton(true);
     let postData = {};
@@ -560,11 +577,15 @@ const FinalDashboard = (props) => {
         requirements,
         notProfiledProduct,
         planDetails,
+        note: recievedNote,
       } = data;
       const { totalRevenue, percentageDiff: diff } = revenueByTimeLine;
       if (diff) {
         setPercentageDiff(diff);
         setShowPercentDiff(true);
+      }
+      if (recievedNote) {
+        setNote(recievedNote);
       }
       if (planDetails) {
         const {
@@ -628,7 +649,8 @@ const FinalDashboard = (props) => {
         }
       }
       if (totalRevenue) {
-        setLifetimeRevenue(totalRevenue);
+        // setLifetimeRevenue(totalRevenue);
+        setLifetimeRevenue(totalRevenue.toFixed(2));
       }
 
       checkRequiredStep(requirements);
@@ -787,7 +809,7 @@ const FinalDashboard = (props) => {
         )}
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16} className='welcome-box' >
+            <Col span={16} className="welcome-box">
               <Card sectioned>
                 <Card.Section>
                   {dashboardSkeleton ? (
@@ -969,17 +991,19 @@ const FinalDashboard = (props) => {
                 </Card.Section>
               </Card>
             </Col>
-            <Col span={8} className='carousel-box'>
-            {dashboardSkeleton ? (
-              <SkeletonBodyText lines={11} />
-            ) : (
-            <CarouselComponent
-                reqiuredCurrentStep={reqiuredCurrentStep}
-                notProfiledProductCount={notProfiledProductCount}
-                orderManagementDisabledCount={orderManagementDisabledCount}
-                productManagementDisabledCount={productManagementDisabledCount}
-              />
-            )}
+            <Col span={8} className="carousel-box">
+              {dashboardSkeleton ? (
+                <SkeletonBodyText lines={11} />
+              ) : (
+                <CarouselComponent
+                  reqiuredCurrentStep={reqiuredCurrentStep}
+                  notProfiledProductCount={notProfiledProductCount}
+                  orderManagementDisabledCount={orderManagementDisabledCount}
+                  productManagementDisabledCount={
+                    productManagementDisabledCount
+                  }
+                />
+              )}
             </Col>
           </Row>
         </Col>
@@ -1129,18 +1153,17 @@ const FinalDashboard = (props) => {
                     <SkeletonBodyText lines={3} />
                   </div>
                 ) : (
-                  <Scrollable shadow style={{height: '126px'}} focusable>
-
-                  <Stack vertical spacing="extraTight">
-                    {Object.keys(currentPlanDetails).map((planDetail) => {
-                      return (
-                        <Stack distribution="equalSpacing">
-                          <Text>{planDetail}</Text>
-                          <Text strong>{currentPlanDetails[planDetail]}</Text>
-                        </Stack>
-                      );
-                    })}
-                  </Stack>
+                  <Scrollable shadow style={{ height: "126px" }} focusable>
+                    <Stack vertical spacing="extraTight">
+                      {Object.keys(currentPlanDetails).map((planDetail) => {
+                        return (
+                          <Stack distribution="equalSpacing">
+                            <Text>{planDetail}</Text>
+                            <Text strong>{currentPlanDetails[planDetail]}</Text>
+                          </Stack>
+                        );
+                      })}
+                    </Stack>
                   </Scrollable>
                 )}
               </Card>
@@ -1149,7 +1172,7 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={12} className='analytics-box'>
+            <Col span={12} className="analytics-box">
               <Card
                 sectioned
                 size="small"
@@ -1211,7 +1234,7 @@ const FinalDashboard = (props) => {
                 </div>
               </Card>
             </Col>
-            <Col span={12} className='analytics-box'>
+            <Col span={12} className="analytics-box">
               <Card
                 sectioned
                 size="small"
@@ -1282,7 +1305,7 @@ const FinalDashboard = (props) => {
         </Col>
         <Col span={24}>
           <Row gutter={[16, 8]}>
-            <Col span={16} className='order-static-box'>
+            <Col span={16} className="order-static-box">
               <Card
                 sectioned
                 title={
@@ -1378,23 +1401,23 @@ const FinalDashboard = (props) => {
                   onAction: () => props.history.push("help"),
                 }}
               >
-              <Scrollable shadow style={{height: '217px'}} focusable>
-                <ResourceList
-                  items={faqsData}
-                  renderItem={(item) => {
-                    const { title } = item;
-                    return (
-                      <ResourceList.Item
-                        onClick={(e) => props.history.push("help")}
-                        accessibilityLabel={`View details for ${title}`}
-                      >
-                        <h3>
-                          <TextStyle variation="strong">{title}</TextStyle>
-                        </h3>
-                      </ResourceList.Item>
-                    );
-                  }}
-                />
+                <Scrollable shadow style={{ height: "217px" }} focusable>
+                  <ResourceList
+                    items={faqsData}
+                    renderItem={(item) => {
+                      const { title } = item;
+                      return (
+                        <ResourceList.Item
+                          onClick={(e) => props.history.push("help")}
+                          accessibilityLabel={`View details for ${title}`}
+                        >
+                          <h3>
+                            <TextStyle variation="strong">{title}</TextStyle>
+                          </h3>
+                        </ResourceList.Item>
+                      );
+                    }}
+                  />
                 </Scrollable>
               </Card>
             </Col>
@@ -1409,34 +1432,34 @@ const FinalDashboard = (props) => {
                 size="small"
                 style={{ borderRadius: "8px" }}
               >
-              <Scrollable shadow style={{height: '280px'}} focusable>
-                <ResourceList
-                  items={news}
-                  renderItem={(item) => {
-                    const { content_link, title, description, image_url } =
-                      item;
+                <Scrollable shadow style={{ height: "280px" }} focusable>
+                  <ResourceList
+                    items={news}
+                    renderItem={(item) => {
+                      const { content_link, title, description, image_url } =
+                        item;
 
-                    return (
-                      <a
-                        href={content_link}
-                        target="_blank"
-                        style={{ textDecoration: "none", color: "#000" }}
-                      >
-                        <ResourceList.Item
-                          media={
-                            <Thumbnail source={image_url} alt="News Logo" />
-                          }
-                          accessibilityLabel={`View details for ${title}`}
+                      return (
+                        <a
+                          href={content_link}
+                          target="_blank"
+                          style={{ textDecoration: "none", color: "#000" }}
                         >
-                          <h3>
-                            <TextStyle variation="strong">{title}</TextStyle>
-                          </h3>
-                          <label>{description}</label>
-                        </ResourceList.Item>
-                      </a>
-                    );
-                  }}
-                />
+                          <ResourceList.Item
+                            media={
+                              <Thumbnail source={image_url} alt="News Logo" />
+                            }
+                            accessibilityLabel={`View details for ${title}`}
+                          >
+                            <h3>
+                              <TextStyle variation="strong">{title}</TextStyle>
+                            </h3>
+                            <label>{description}</label>
+                          </ResourceList.Item>
+                        </a>
+                      );
+                    }}
+                  />
                 </Scrollable>
               </Card>
             </Col>
@@ -1454,34 +1477,34 @@ const FinalDashboard = (props) => {
                   },
                 ]}
               >
-              <Scrollable shadow style={{height: '280px'}} focusable>
-                <ResourceList
-                  items={blogs}
-                  renderItem={(item) => {
-                    const { content_link, title, image_url, description } =
-                      item;
+                <Scrollable shadow style={{ height: "280px" }} focusable>
+                  <ResourceList
+                    items={blogs}
+                    renderItem={(item) => {
+                      const { content_link, title, image_url, description } =
+                        item;
 
-                    return (
-                      <a
-                        href={content_link}
-                        target="_blank"
-                        style={{ textDecoration: "none", color: "#000" }}
-                      >
-                        <ResourceList.Item
-                          media={
-                            <Thumbnail source={image_url} alt="News Logo" />
-                          }
-                          accessibilityLabel={`View details for ${title}`}
+                      return (
+                        <a
+                          href={content_link}
+                          target="_blank"
+                          style={{ textDecoration: "none", color: "#000" }}
                         >
-                          <h3>
-                            <TextStyle variation="strong">{title}</TextStyle>
-                          </h3>
-                          <label>{description}</label>
-                        </ResourceList.Item>
-                      </a>
-                    );
-                  }}
-                />
+                          <ResourceList.Item
+                            media={
+                              <Thumbnail source={image_url} alt="News Logo" />
+                            }
+                            accessibilityLabel={`View details for ${title}`}
+                          >
+                            <h3>
+                              <TextStyle variation="strong">{title}</TextStyle>
+                            </h3>
+                            <label>{description}</label>
+                          </ResourceList.Item>
+                        </a>
+                      );
+                    }}
+                  />
                 </Scrollable>
               </Card>
             </Col>
@@ -1497,68 +1520,68 @@ const FinalDashboard = (props) => {
                   },
                 ]}
               >
-              <Scrollable shadow style={{height: '280px'}} focusable>
-                <ResourceList
-                  items={[
-                    {
-                      url: "https://apps.shopify.com/amazon-by-cedcommerce",
-                      name: "Amazon by CedCommerce",
-                      description:
-                        "Selling on Amazon becomes easy with the Amazon sales channel",
-                      media: (
-                        <Thumbnail
-                          source="https://cdn.shopify.com/app-store/listing_images/0632f97b04f3464ee3d9148e7b84c9a9/icon/CMP07ajunPQCEAE=.png?height=50&width=50"
-                          alt="Amazon by CedCommerce logo"
-                        />
-                      ),
-                    },
-                    {
-                      url: "https://apps.shopify.com/etsy-marketplace-integration",
-                      name: "Etsy Marketplace Integration",
-                      description:
-                        "Easily manage listings, inventory, orders & more on Etsy.com",
-                      media: (
-                        <Thumbnail
-                          source="https://cdn.shopify.com/app-store/listing_images/2fa150931ca28a5ed6a17dc69c40477b/icon/CNLtvLz0lu8CEAE=.png?height=50&amp;width=50"
-                          alt="Etsy Marketplace Integration logo"
-                        />
-                      ),
-                    },
-                    {
-                      url: "https://apps.shopify.com/facebook-marketplace-connector",
-                      name: "Facebook & Instagram Shopping",
-                      description:
-                        "Sell on Facebook & Instagram, list products and manage orders.",
-                      media: (
-                        <Thumbnail
-                          source="https://cdn.shopify.com/app-store/listing_images/8e58c700f1ecc2539682f6a04a8852c7/icon/CNyDx+T0lu8CEAE=.png?height=50&width=50"
-                          alt="facebook marketplace connector"
-                        />
-                      ),
-                    },
-                  ]}
-                  renderItem={(item) => {
-                    const { url, name, media, description } = item;
+                <Scrollable shadow style={{ height: "280px" }} focusable>
+                  <ResourceList
+                    items={[
+                      {
+                        url: "https://apps.shopify.com/amazon-by-cedcommerce",
+                        name: "Amazon by CedCommerce",
+                        description:
+                          "Selling on Amazon becomes easy with the Amazon sales channel",
+                        media: (
+                          <Thumbnail
+                            source="https://cdn.shopify.com/app-store/listing_images/0632f97b04f3464ee3d9148e7b84c9a9/icon/CMP07ajunPQCEAE=.png?height=50&width=50"
+                            alt="Amazon by CedCommerce logo"
+                          />
+                        ),
+                      },
+                      {
+                        url: "https://apps.shopify.com/etsy-marketplace-integration",
+                        name: "Etsy Marketplace Integration",
+                        description:
+                          "Easily manage listings, inventory, orders & more on Etsy.com",
+                        media: (
+                          <Thumbnail
+                            source="https://cdn.shopify.com/app-store/listing_images/2fa150931ca28a5ed6a17dc69c40477b/icon/CNLtvLz0lu8CEAE=.png?height=50&amp;width=50"
+                            alt="Etsy Marketplace Integration logo"
+                          />
+                        ),
+                      },
+                      {
+                        url: "https://apps.shopify.com/facebook-marketplace-connector",
+                        name: "Facebook & Instagram Shopping",
+                        description:
+                          "Sell on Facebook & Instagram, list products and manage orders.",
+                        media: (
+                          <Thumbnail
+                            source="https://cdn.shopify.com/app-store/listing_images/8e58c700f1ecc2539682f6a04a8852c7/icon/CNyDx+T0lu8CEAE=.png?height=50&width=50"
+                            alt="facebook marketplace connector"
+                          />
+                        ),
+                      },
+                    ]}
+                    renderItem={(item) => {
+                      const { url, name, media, description } = item;
 
-                    return (
-                      <a
-                        href={url}
-                        target="_blank"
-                        style={{ textDecoration: "none", color: "#000" }}
-                      >
-                        <ResourceList.Item
-                          media={media}
-                          accessibilityLabel={`View details for ${name}`}
+                      return (
+                        <a
+                          href={url}
+                          target="_blank"
+                          style={{ textDecoration: "none", color: "#000" }}
                         >
-                          <h3>
-                            <TextStyle variation="strong">{name}</TextStyle>
-                          </h3>
-                          <Label>{description}</Label>
-                        </ResourceList.Item>
-                      </a>
-                    );
-                  }}
-                />
+                          <ResourceList.Item
+                            media={media}
+                            accessibilityLabel={`View details for ${name}`}
+                          >
+                            <h3>
+                              <TextStyle variation="strong">{name}</TextStyle>
+                            </h3>
+                            <Label>{description}</Label>
+                          </ResourceList.Item>
+                        </a>
+                      );
+                    }}
+                  />
                 </Scrollable>
               </Card>
             </Col>
