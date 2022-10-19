@@ -140,8 +140,8 @@ const ContactUs = () => {
 
   return (
     <PageHeader title="Contact Us" ghost={true}>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-        <Col span={12} xs={24} sm={12} md={12} lg={12} xxl={12}>
+      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} >
+        <Col span={12} xs={24} sm={24} md={24} lg={24} xxl={12}>
           <Card sectioned>
             <Stack distribution="equalSpacing" alignment="center">
               <Text strong>Feel free to reach out to us</Text>
@@ -194,11 +194,12 @@ const ContactUs = () => {
             <Stack vertical>
               <div>
                 <div>Accounts</div>
-                <Row>
+                <Row gutter={[48,12]}>
                   {connectedAccountsArray.map((connectedAccount, index) => {
                     return (
-                      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                      <Checkbox                    
+                      <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
+                      <Checkbox       
+                                 
                       label={connectedAccount.label}
                         checked={connectedAccount.checked}
                         onChange={() => {
@@ -251,7 +252,7 @@ const ContactUs = () => {
             </Stack>
           </Card>
         </Col>
-        <Col span={12} xs={24} sm={12} md={12} lg={12} xxl={12}>
+        <Col span={12} xs={24} sm={24} md={24} lg={24} xxl={12}>
           <Card
             title="Schedule Demo"
             sectioned
