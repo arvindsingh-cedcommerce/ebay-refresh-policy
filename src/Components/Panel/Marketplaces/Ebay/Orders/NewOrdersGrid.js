@@ -673,11 +673,18 @@ const NewOrdersGrid = (props) => {
     switch (selectedImportedOrderFilter) {
       case "orderIds":
         returnFormElement = (
+          <Form.Item
+          name={getLabelForFilter()}
+          rules={[
+            { required: true, message: "Please enter order IDs" },
+          ]}
+        >
           <Input
             value={multipleOrderIds}
             onChange={(e) => setMultipleOrderIds(e.target.value)}
             placeholder="multiple order IDs allow in ,(comma) separated form"
           />
+          </Form.Item>
         );
         break;
       case "orderCreatedAt":
@@ -685,6 +692,12 @@ const NewOrdersGrid = (props) => {
           <Row gutter={16}>
             <Col span={12}>
               <>From</>
+              <Form.Item
+                      name={getLabelForFilter()}
+                      rules={[
+                        { required: true, message: "Please select any created start date" },
+                      ]}
+                    >
               <Input
                 placeholder="Start Date"
                 type={"date"}
@@ -693,9 +706,16 @@ const NewOrdersGrid = (props) => {
                   setOrderCreatedAtStartDate(e.target.value);
                 }}
               />
+              </Form.Item>
             </Col>
             <Col span={12}>
               <>To</>
+              <Form.Item
+                     name="end_date"
+                      rules={[
+                        { required: true, message: "Please select any created end date" },
+                      ]}
+                    >
               <Input
                 placeholder="End Date"             
                 type={"date"}
@@ -704,6 +724,7 @@ const NewOrdersGrid = (props) => {
                   setOrderCreatedAtEndDate(e.target.value);
                 }}
               />
+              </Form.Item>
             </Col>
           </Row>
         );
@@ -713,6 +734,12 @@ const NewOrdersGrid = (props) => {
           <Row gutter={16}>
             <Col span={12}>
               <>From</>
+              <Form.Item
+                      name={getLabelForFilter()}
+                      rules={[
+                        { required: true, message: "Please select any order modified start date" },
+                      ]}
+                    >
               <Input
                 placeholder="Start Date"
                 type={"date"}
@@ -721,9 +748,16 @@ const NewOrdersGrid = (props) => {
                   setOrderModifiedAtStartDate(e.target.value);
                 }}
               />
+              </Form.Item>
             </Col>
             <Col span={12}>
               <>To</>
+              <Form.Item
+                      name="order_end_date"
+                      rules={[
+                        { required: true, message: "Please select any order modified end date" },
+                      ]}
+                    >
               <Input
                 placeholder="End Date"    
                 type={"date"}
@@ -732,6 +766,7 @@ const NewOrdersGrid = (props) => {
                   setOrderModifiedAtEndDate(e.target.value);
                 }}
               />
+              </Form.Item>
             </Col>
           </Row>
         );
@@ -1228,15 +1263,9 @@ const NewOrdersGrid = (props) => {
                 {selectedAccount &&
                   filtersChecked &&
                   selectedImportedOrderFilter && (
-                    <Form.Item
-                      label={getLabelForFilter()}
-                      name={getLabelForFilter()}
-                      rules={[
-                        { required: true, message: "Please select any option" },
-                      ]}
-                    >
-                      {getFormElement()}
-                    </Form.Item>
+                  
+                      getFormElement()
+                 
                   )}       
               <Stack distribution="center">
                 <Button
@@ -1267,7 +1296,7 @@ const NewOrdersGrid = (props) => {
                           break;
                       }
                     }
-                    if(postData["order_ids"] || (postData["create_time_from"] && postData["create_time_to"]) || (postData["mod_time_from"] && postData["mod_time_to"]))
+                    if(!filtersChecked || (postData["order_ids"] || (postData["create_time_from"] && postData["create_time_to"]) || (postData["mod_time_from"] && postData["mod_time_to"])))
                     {
                     let { success, message } = await importOrders(
                       importOrdersURL,
