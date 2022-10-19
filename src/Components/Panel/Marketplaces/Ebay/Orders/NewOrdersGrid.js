@@ -813,6 +813,19 @@ const NewOrdersGrid = (props) => {
       "label"
     ];
   };
+  const formatFilterValue=(filterName,filterValue)=>{
+  
+    if(filterName==="status")
+    {
+         const statusItem=status?.filter(item=>item.value===filterValue);
+         console.log("filter name",statusItem);
+         return statusItem[0]?.label;
+    }
+    else
+    {
+      return filterValue;
+    }
+   }
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
       if (
@@ -862,7 +875,7 @@ const NewOrdersGrid = (props) => {
           }}
         >
           {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-          {filtersToPass[filter]}
+          {formatFilterValue(fieldValue,filtersToPass[filter])}
         </PolarisTag>
       );
   }});
