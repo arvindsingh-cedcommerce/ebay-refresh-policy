@@ -14,7 +14,7 @@ import {
   Button,
 } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
-import { Col, Image, PageHeader, Row, Typography } from "antd";
+import { Alert, Col, Image, List, PageHeader, Row, Typography } from "antd";
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
@@ -650,9 +650,15 @@ const ProfileGridComponent = (props) => {
         </ShopifyButton>,
       ]}
     >
-      <Banner status="info">
+      <Alert
+        style={{ borderRadius: "7px" }}
+        message={<>For creating listings on eBay, profile is mandatory</>}
+        type="info"
+        showIcon
+      />
+      {/* <Banner status="info">
         <>For creating listings on eBay, profile is mandatory</>
-      </Banner>
+      </Banner> */}
       <br />
       <Card sectioned>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
