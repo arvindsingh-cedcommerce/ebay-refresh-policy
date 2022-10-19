@@ -336,7 +336,7 @@ const PlansComponentAnt = ({
               <Row justify="center" gutter={8} style={{marginBottom:'30px'}}>
                 {showSkeleton
                   ? [1, 2, 3, 4, 5].map((e) => (
-                      <Col span={4}>
+                      <Col span={4} xs={24} sm={16} md={12} lg={8} xl={4} xxl={4}>
                         <Card title={<SkeletonDisplayText size="small" />}>
                           <SkeletonBodyText />
                         </Card>
