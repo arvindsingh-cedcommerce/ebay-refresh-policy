@@ -141,7 +141,7 @@ const ContactUs = () => {
   return (
     <PageHeader title="Contact Us" ghost={true}>
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-        <Col span={12}>
+        <Col span={12} xs={24} sm={12} md={12} lg={12} xxl={12}>
           <Card sectioned>
             <Stack distribution="equalSpacing" alignment="center">
               <Text strong>Feel free to reach out to us</Text>
@@ -251,7 +251,7 @@ const ContactUs = () => {
             </Stack>
           </Card>
         </Col>
-        <Col span={12}>
+        <Col span={12} xs={24} sm={12} md={12} lg={12} xxl={12}>
           <Card
             title="Schedule Demo"
             sectioned
