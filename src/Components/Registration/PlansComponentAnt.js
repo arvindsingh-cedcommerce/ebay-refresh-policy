@@ -336,7 +336,7 @@ const PlansComponentAnt = ({
               <Row justify="center" gutter={8} style={{marginBottom:'30px'}}>
                 {showSkeleton
                   ? [1, 2, 3, 4, 5].map((e) => (
-                      <Col span={4}>
+                      <Col span={4} xs={24} sm={16} md={12} lg={8} xl={4} xxl={4}>
                         <Card title={<SkeletonDisplayText size="small" />}>
                           <SkeletonBodyText />
                         </Card>
@@ -351,14 +351,14 @@ const PlansComponentAnt = ({
                       .map((plan, index) => {
                         return (
                           
-                          <Col span={4} xs={24} sm={12} md={12} lg={6} xxl={4} style={{padding:'0'}}>
+                          <Col span={4} xs={24} sm={16} md={12} lg={8} xl={4} xxl={4} style={{padding:'0'}}>
                          
                             <Card
                               title={<Title level={5}> {plan["title"]}</Title>}
                               size="small"
                               className={plan["title"] === 'Silver' ? 'plansCard active' : 'plansCard'}
                               onMouseOver={onMouseHoverCard}
-                              style={{ borderRadius: "8px",margin:"1rem 0.5rem" }}
+                              style={{ borderRadius: "8px" }}
                             >
                               <Row align="middle">
                                 <Col>
@@ -436,6 +436,7 @@ const PlansComponentAnt = ({
                                   //     },
                                   //   })
                                   // }
+                                
                                 >
                                   Choose Plan
                                  </ShopifyButton>
