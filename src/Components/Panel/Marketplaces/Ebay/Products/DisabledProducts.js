@@ -12,7 +12,7 @@ import {
   Banner,
   Badge,
 } from "@shopify/polaris";
-import { Col, Image, PageHeader, Row } from "antd";
+import { Alert, Col, Image, PageHeader, Row } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
@@ -1042,12 +1042,23 @@ const DisabledProducts = (props) => {
         </Button>,
       ]}
     >
-      <Banner status="info">
+      {/* <Banner status="info">
         <>
           These product(s) will not participate in any process managed by the
           app including order and product management
         </>
-      </Banner>
+      </Banner> */}
+      <Alert
+        style={{ borderRadius: "7px" }}
+        message={
+          <>
+            These product(s) will not participate in any process managed by the
+            app including order and product management.
+          </>
+        }
+        type="info"
+        showIcon
+      />
       <br />
       <Card sectioned>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
