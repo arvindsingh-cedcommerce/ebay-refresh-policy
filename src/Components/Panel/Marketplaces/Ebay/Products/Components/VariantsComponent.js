@@ -4,6 +4,7 @@ import NestedTableComponent from "../../../../../AntDesignComponents/NestedTable
 import NoProductImage from "../../../../../../assets/notfound.png";
 import {
   Badge,
+  Card,
   Icon,
   Select,
   Stack,
@@ -560,6 +561,7 @@ const VariantsComponent = ({
 
   return (
     <>
+    <Card>
       <Stack distribution="center">
         <React.Fragment style={switchShopifyCustom ? { opacity: "0.5" } : {}}>
           Shopify
@@ -584,6 +586,7 @@ const VariantsComponent = ({
           columns={variantColumns}
           dataSource={tempVariantData}
           bordered={true}
+          scroll={{ x: 1500 }}
           // style={{
           //   maxHeight: "500px",
           //   overflowY: "scroll",
@@ -596,13 +599,16 @@ const VariantsComponent = ({
           columns={customVariantColumns}
           dataSource={customTempVariantData}
           bordered={true}
+          scroll={{ x: 1500 }}
           // style={{
           //   maxHeight: "500px",
           //   overflowY: "scroll",
           // }}
           pagination={false}
         />
+        
       )}
+      </Card>
     </>
   );
 };
