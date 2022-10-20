@@ -117,7 +117,7 @@ const ProductBulkMenu = (props) => {
           <Menu
           //  className={scroll ? "bulk-dropdown-hide" : "bulk-dropdown-show"}
           >
-            <Menu.ItemGroup key="g3" title="eBay Actions">
+            {/* <Menu.ItemGroup key="g3" title="eBay Actions">
               <Menu.Item
                 key="Match from eBay"
                 onClick={() =>
@@ -201,7 +201,7 @@ const ProductBulkMenu = (props) => {
               >
                 <UploadOutlined /> Upload Products
               </Menu.Item>
-            </Menu.ItemGroup>
+            </Menu.ItemGroup> */}
 
 
 
