@@ -14,8 +14,7 @@ const StackedLineAnt = ({
       var tempRevenueYearlyData = revenueYearlyData.map((order) => {
         let correctValues = {};
         correctValues["name"] = order["name"];
-        if (order["revenueCount"] > 0)
-          correctValues["revenueCount"] = order["revenueCount"];
+        correctValues["revenueCount"] = +order["revenueCount"];
         correctValues["year"] = order["year"];
         return correctValues;
       });
@@ -32,7 +31,7 @@ const StackedLineAnt = ({
       tempRevenueYearlyData.length
     ) {
       const config = {
-        data: revenueYearlyData,
+        data: tempRevenueYearlyData,
         xField: "year",
         yField: "revenueCount",
         seriesField: "name",
@@ -67,8 +66,7 @@ const StackedLineAnt = ({
       var tempRevenueMonthlyData = revenueMonthlyData.map((order) => {
         let correctValues = {};
         correctValues["name"] = order["name"];
-        if (order["revenueCount"] > 0)
-          correctValues["revenueCount"] = order["revenueCount"];
+        correctValues["revenueCount"] = +order["revenueCount"];
         correctValues["month"] = order["month"];
         return correctValues;
       });
@@ -85,7 +83,7 @@ const StackedLineAnt = ({
       tempRevenueMonthlyData.length
     ) {
       const config = {
-        data: revenueMonthlyData,
+        data: tempRevenueMonthlyData,
         xField: "month",
         yField: "revenueCount",
         seriesField: "name",
@@ -117,8 +115,7 @@ const StackedLineAnt = ({
       var tempRevenueWeeklyData = revenueWeeklyData.map((order) => {
         let correctValues = {};
         correctValues["name"] = order["name"];
-        if (order["revenueCount"] > 0)
-          correctValues["revenueCount"] = order["revenueCount"];
+        correctValues["revenueCount"] = +order["revenueCount"];
         correctValues["week"] = order["week"];
         return correctValues;
       });
@@ -135,7 +132,7 @@ const StackedLineAnt = ({
       tempRevenueWeeklyData.length
     ) {
       const config = {
-        data: revenueWeeklyData,
+        data: tempRevenueWeeklyData,
         xField: "week",
         yField: "revenueCount",
         seriesField: "name",
