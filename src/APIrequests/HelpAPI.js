@@ -1,0 +1,1 @@
+export const faqAPI = 'ebay/request/getContent'
