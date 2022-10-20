@@ -112,7 +112,7 @@ import {
         </div>
       </Button>)}
         autofocusTarget="first-node"
-        onClose={()=>{props.setCallbackCsvFunction(false)}}
+        onClose={()=>{props.setCallbackEbayActionFunction(false)}}
       >
         <ActionList
           actionRole="menuitem"

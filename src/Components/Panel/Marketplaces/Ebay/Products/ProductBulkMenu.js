@@ -111,7 +111,7 @@ const ProductBulkMenu = (props) => {
         </div>
       </Button>)}
         autofocusTarget="first-node"
-        onClose={()=>{props.setCallbackCsvFunction(false)}}
+        onClose={()=>{props.setCallbackProductBulkFunction(false)}}
       >
         <ActionList
           actionRole="menuitem"
