@@ -32,7 +32,7 @@ const StackedLineAnt = ({
       tempRevenueYearlyData.length
     ) {
       const config = {
-        data: tempRevenueYearlyData,
+        data: revenueYearlyData,
         xField: "year",
         yField: "revenueCount",
         seriesField: "name",
@@ -85,7 +85,7 @@ const StackedLineAnt = ({
       tempRevenueMonthlyData.length
     ) {
       const config = {
-        data: tempRevenueMonthlyData,
+        data: revenueMonthlyData,
         xField: "month",
         yField: "revenueCount",
         seriesField: "name",
@@ -135,7 +135,7 @@ const StackedLineAnt = ({
       tempRevenueWeeklyData.length
     ) {
       const config = {
-        data: tempRevenueWeeklyData,
+        data: revenueWeeklyData,
         xField: "week",
         yField: "revenueCount",
         seriesField: "name",
