@@ -209,7 +209,7 @@ import {
         >
           <Button onClick={() => props.setCallbackEbayActionFunction(!props.isEbayActionBulkMenuOpen)}>
             <div>
-              eBay Bulk Actions <DownOutlined />
+              eBay Actions <DownOutlined />
             </div>
           </Button>
         </Dropdown>

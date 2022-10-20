@@ -236,7 +236,7 @@ const ProductBulkMenu = (props) => {
 
 
             <Menu.Divider />
-            <Menu.ItemGroup key="g2" title="Shopify Actions">
+            <Menu.ItemGroup key="g2" title="">
               <Menu.Item
                 key="Import Products"
                 onClick={() =>
@@ -370,7 +370,7 @@ const ProductBulkMenu = (props) => {
       >
         <Button onClick={() => props.setCallbackProductBulkFunction(!props.isProductBulkMenuOpen)}>
           <div>
-            Bulk Actions <DownOutlined />
+            Shopify Actions <DownOutlined />
           </div>
         </Button>
       </Dropdown>
