@@ -1,4 +1,13 @@
-import { Col, Image, PageHeader, Row, Typography, Modal, Steps } from "antd";
+import {
+  Col,
+  Image,
+  PageHeader,
+  Row,
+  Typography,
+  Modal,
+  Steps,
+  Alert,
+} from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { blogData, newsData } from "./DashboardData";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
@@ -54,7 +63,7 @@ const { Title, Text } = Typography;
 const { Step } = Steps;
 
 const FinalDashboard = (props) => {
-  const { queuedTasks, refresh } = props;
+  const { queuedTasks, refresh, marqueeData, setMarqueeData } = props;
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [activeAccounts, setActiveAccounts] = useState(0);
 
@@ -172,6 +181,9 @@ const FinalDashboard = (props) => {
 
   // skeleton
   const [dashboardSkeleton, setDashboardSkeleton] = useState(true);
+
+  // note
+  const [note, setNote] = useState("");
 
   useEffect(() => {
     // document.title =
@@ -536,6 +548,11 @@ const FinalDashboard = (props) => {
 
     return day + "-" + month + "-" + year;
   };
+  useEffect(() => {
+    if (note) {
+      setMarqueeData([...marqueeData, { Note: note }]);
+    }
+  }, [note]);
   const hitDashoboardAPI = async (refresh, msg = true) => {
     setDashboardSkeleton(true);
     let postData = {};
@@ -560,11 +577,15 @@ const FinalDashboard = (props) => {
         requirements,
         notProfiledProduct,
         planDetails,
+        note: recievedNote,
       } = data;
       const { totalRevenue, percentageDiff: diff } = revenueByTimeLine;
       if (diff) {
         setPercentageDiff(diff);
         setShowPercentDiff(true);
+      }
+      if (recievedNote) {
+        setNote(recievedNote);
       }
       if (planDetails) {
         const {
@@ -628,7 +649,8 @@ const FinalDashboard = (props) => {
         }
       }
       if (totalRevenue) {
-        setLifetimeRevenue(totalRevenue);
+        // setLifetimeRevenue(totalRevenue);
+        setLifetimeRevenue(totalRevenue.toFixed(2));
       }
 
       checkRequiredStep(requirements);

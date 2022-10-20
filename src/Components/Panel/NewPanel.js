@@ -7,6 +7,8 @@ import CollapsedLogo from "../../assets/cedcommercelogoCollapsed.png";
 import {
   MobileHamburgerMajor, MobileHamburgerMajorMonotone
 } from '@shopify/polaris-icons';
+import Marquee from "react-fast-marquee";
+
 import {
   UserOutlined,
   BarChartOutlined,
@@ -76,6 +78,9 @@ const NewPanel = (props) => {
   const [shopURL, setShopURL] = useState("");
   // shopifyAccountData
   const [shopifyAccountData, setShopifyAccountData] = useState({});
+
+  // marquee data
+  const [marqueeData, setMarqueeData] = useState([]);
 
   const handleClick = (menu) => {
     props.history.push(`/panel/ebay/${menu["key"]}`);
@@ -559,7 +564,7 @@ const NewPanel = (props) => {
                 </div>:""}
                
               </Stack.Item>
-              <div style={{ marginBottom: "-8px" }}>
+              {/* <div style={{ marginBottom: "-8px" }}>
                 <ShopifyPopover
                   active={bellClicked}
                   activator={activator}
@@ -582,26 +587,50 @@ const NewPanel = (props) => {
                       items={allNotifications}
                     />
                   </ShopifyPopover>
-                </div>
+                </div> */}
+                {/* <Stack distribution="trailing" alignment="center"> */}
                 <div
-                  onClick={() => props.history.push("/panel/ebay/appaccount")}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginRight: "-20px",
+                    alignItems: "center",
+                  }}
                 >
-                  <Stack distribution="trailing" alignment="center">
-                    <Avatar
-                      style={{
-                        color: "#084e8a",
-                        backgroundColor: "rgb(206 224 237 / 1)",
-                      }}
+                  <div style={{ marginBottom: "-8px", marginRight: "10px" }}>
+                    <ShopifyPopover
+                      active={bellClicked}
+                      activator={activator}
+                      onClose={(e) => setBellClicked(!bellClicked)}
                     >
-                      {shopURL?.[0]?.toUpperCase()}
-                    </Avatar>
-                    <div style={{ color: "#fff" }}>
-                      {shopURL?.split(".")?.[0]}
-                    </div>
-                  </Stack>
+                      <ActionList
+                        actionRole="menuitem"
+                        items={allNotifications}
+                      />
+                    </ShopifyPopover>
+                  </div>
+                  <div
+                    onClick={() => props.history.push("/panel/ebay/appaccount")}
+                  >
+                    <Stack distribution="trailing" alignment="center">
+                      <Avatar
+                        style={{
+                          color: "#084e8a",
+                          backgroundColor: "rgb(206 224 237 / 1)",
+                        }}
+                      >
+                        {shopURL?.[0]?.toUpperCase()}
+                      </Avatar>
+                      <div style={{ color: "#fff" }}>
+                        {shopURL?.split(".")?.[0]}
+                      </div>
+                    </Stack>
+                  </div>
                 </div>
-              </Stack>
-            </div>
+                </Stack>
+              </div>
+              {/* </Stack> */}
+            {/* </div> */}
           </Header>
           <Content
             // style={{ marginTop: "64px" }}
@@ -637,6 +666,8 @@ const NewPanel = (props) => {
                     <FinalDashboard
                       queuedTasks={queuedTasks}
                       refresh={refresh}
+                      marqueeData={marqueeData}
+                      setMarqueeData={setMarqueeData}
                       {...props}
                     />
                   );
