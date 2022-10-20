@@ -888,7 +888,7 @@ const FinalDashboard = (props) => {
                               <Text strong>{notProfiledProductCount}</Text>
                               <Text>
                                 {" "}
-                                not profiled on app. please{" "}
+                                product(s) not profiled on app. Please{" "}
                                 <Link
                                   onClick={() => props.history.push("profiles")}
                                 >
