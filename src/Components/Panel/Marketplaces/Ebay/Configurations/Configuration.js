@@ -9,6 +9,7 @@ import FinalOrderSettings from "./Components/OrderSettingsNew/FinalOrderSettings
 import FinalProductSettings from "./Components/ProductSettingsNew/FinalProductSettings";
 import FinalOrderSettingsNew from "./Components/OrderSettingsNew/FinalOrderSettingsNew";
 import FinalProductSettingsNewNew from "./Components/ProductSettingsNewNew/components/FinalProductSettingsNewNew";
+import { Col, Row } from "antd";
 
 const configurationTabs = [
   "Product Settings",
@@ -110,9 +111,13 @@ const Configuration = (props) => {
   };
 
   return (
+    <Row justify="center">
+      <Col xs={22} md={24} lg={24} xl={24} xxl={24}>
     <Page fullWidth title="Configuration">
       <TabsComponent totalTabs={6} tabContents={getTabContent()} />
     </Page>
+    </Col>
+    </Row>
   );
 };
 
