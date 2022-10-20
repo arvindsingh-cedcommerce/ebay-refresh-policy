@@ -11,10 +11,12 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import {
+  ActionList,
   Banner,
   Button,
   FormLayout,
   Modal,
+  Popover,
   Select,
   Stack,
   Tag,
@@ -101,176 +103,51 @@ const ProductBulkMenu = (props) => {
 
   return (
     <>
-      <Dropdown
-        key="bulkAction"
-        overlayClassName="bulkMenu123"
-        overlayStyle={{
-          maxHeight: "25rem",
-          overflowY: "scroll",
-          zIndex: 50,
-          borderRadius: "10px !important",
-          border: "1px solid #e2d8d8",
-        }}
-        visible={props.isProductBulkMenuOpen}
-        // arrow={true}
-        overlay={
-          <Menu
-          //  className={scroll ? "bulk-dropdown-hide" : "bulk-dropdown-show"}
+<Popover
+        active={props.isProductBulkMenuOpen}
+        activator={ (<Button onClick={() => props.setCallbackProductBulkFunction(!props.isProductBulkMenuOpen)}>
+        <div>
+          Shopify Actions <DownOutlined />
+        </div>
+      </Button>)}
+        autofocusTarget="first-node"
+        onClose={()=>{props.setCallbackCsvFunction(false)}}
+      >
+        <ActionList
+          actionRole="menuitem"
+          items={[{content: <div
+            key="Import Products"
+            onClick={() =>
+              setModal({
+                ...modal,
+                active: true,
+                content: "Import Products",
+                actionName: getrequest,
+                actionPayload: {},
+                api: importProductURL,
+              })
+            }
           >
-            {/* <Menu.ItemGroup key="g3" title="eBay Actions">
-              <Menu.Item
-                key="Match from eBay"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Match From eBay",
-                    actionName: getrequest,
-                    actionPayload: {},
-                    api: matchFromEbayURL,
-                  })
-                }
-              >
-                <ShrinkOutlined /> Match from eBay
-              </Menu.Item>
-              <Menu.Item
-                key="Upload and Revise"
-                onClick={() => {
-                  let temp = { ...uploadAndReviseOnEbay };
-                  temp["modal"]["active"] = true;
-                  temp["modal"]["actionName"] = postActionOnProductById;
-                  temp["modal"]["actionPayloadByAll"] = {
-                    action: "upload_and_revise",
-                  };
-                  temp["modal"]["actionPayloadById"] = {};
-                  temp["modal"]["apiByAll"] = uploadProductByIdURL;
-                  temp["modal"]["apiById"] = uploadProductByProfileURL;
-                  setUploadAndReviseOnEbay(temp);
-                }}
-              >
-                <RedoOutlined /> Upload and Revise
-              </Menu.Item>
-              <Menu.Item
-                key="Sync Inventory"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Sync Inventory",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      sync: ["inventory"],
-                      action: "app_to_marketplace",
-                    },
-                    api: syncInventoryPrice,
-                  })
-                }
-              >
-                <FileTextOutlined /> Sync Inventory
-              </Menu.Item>
-              <Menu.Item
-                key="Sync Price"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Sync Price",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      sync: ["price"],
-                      action: "app_to_marketplace",
-                    },
-                    api: syncInventoryPrice,
-                  })
-                }
-              >
-                <DollarOutlined /> Sync Price
-              </Menu.Item>
-              <Menu.Item
-                key="Upload Products"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Upload Products",
-                    actionName: postActionOnProductById,
-                    actionPayload: { action: "upload" },
-                    api: uploadProductByIdURL,
-                  })
-                }
-              >
-                <UploadOutlined /> Upload Products
-              </Menu.Item>
-            </Menu.ItemGroup> */}
-
-
-
-
-            {/* <Menu.ItemGroup key="g1" title="CSV Actions">
-              <Menu.Item
-                key="Export"
-                onClick={() => {
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Export Products",
-                    actionName: fetchProductById,
-                    actionPayload: {},
-                    api: exportProductItemURL,
-                  });
-                }}
-              >
-                <ExportOutlined /> Export Products
-              </Menu.Item>
-              <Menu.Item
-                key="Import"
-                onClick={() => {
-                  props.history.push("/panel/ebay/products/bulkupdate");
-                }}
-              >
-                <ImportOutlined /> Bulk Update
-              </Menu.Item>
-            </Menu.ItemGroup> */}
-
-
-
-
-            <Menu.Divider />
-            <Menu.ItemGroup key="g2" title="">
-              <Menu.Item
-                key="Import Products"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Import Products",
-                    actionName: getrequest,
-                    actionPayload: {},
-                    api: importProductURL,
-                  })
-                }
-              >
-                <DownloadOutlined /> Import Products
-              </Menu.Item>
-              <Menu.Item
-                key="Sync Inventory Shopify"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Sync Inventory",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      sync: ["inventory"],
-                      action: "shopify_to_app",
-                    },
-                    api: syncInventoryPrice,
-                  })
-                }
-              >
-                <FileTextOutlined /> Sync Inventory
-              </Menu.Item>
-              <Menu.Item
+            <DownloadOutlined /> Import Products
+          </div>  
+         }, {content: <div
+          key="Sync Inventory Shopify"
+          onClick={() =>
+            setModal({
+              ...modal,
+              active: true,
+              content: "Sync Inventory",
+              actionName: postActionOnProductById,
+              actionPayload: {
+                sync: ["inventory"],
+                action: "shopify_to_app",
+              },
+              api: syncInventoryPrice,
+            })
+          }
+        >
+          <FileTextOutlined /> Sync Inventory
+        </div> },{content:  <div
                 key="Sync Price Shopify"
                 onClick={() =>
                   setModal({
@@ -287,8 +164,8 @@ const ProductBulkMenu = (props) => {
                 }
               >
                 <DollarOutlined /> Sync Price
-              </Menu.Item>
-              <Menu.Item
+              </div> },{content:
+              <div
                 key="Sync Details"
                 onClick={() =>
                   setModal({
@@ -302,8 +179,8 @@ const ProductBulkMenu = (props) => {
                 }
               >
                 <SyncOutlined /> Sync Details
-              </Menu.Item>
-              <Menu.Item
+              </div>},{ content:
+              <div
                 key="Import Collection Products"
                 onClick={() =>
                   setModal({
@@ -317,8 +194,8 @@ const ProductBulkMenu = (props) => {
                 }
               >
                 <DownloadOutlined /> Import Collection Products
-              </Menu.Item>
-              <Menu.Item
+              </div>},{content:
+              <div
                 key="Import metafileds of products"
                 onClick={() =>
                   setModal({
@@ -332,8 +209,8 @@ const ProductBulkMenu = (props) => {
                 }
               >
                 <DownloadOutlined /> Import metafields of products
-              </Menu.Item>
-              <Menu.Item
+              </div>},{content:
+              <div
                 key="Import product by Id"
                 onClick={
                   () => {
@@ -361,19 +238,12 @@ const ProductBulkMenu = (props) => {
                 }
               >
                 <DownloadOutlined /> Import product by Id
-              </Menu.Item>
-            </Menu.ItemGroup>
-            <Menu.Divider />
-          </Menu>
-        }
-        trigger={["click"]}
-      >
-        <Button onClick={() => props.setCallbackProductBulkFunction(!props.isProductBulkMenuOpen)}>
-          <div>
-            Shopify Actions <DownOutlined />
-          </div>
-        </Button>
-      </Dropdown>
+              </div>}]}
+        />
+      </Popover>
+
+
+      
       <Modal
         open={uploadAndReviseOnEbay.modal.active}
         onClose={() => {

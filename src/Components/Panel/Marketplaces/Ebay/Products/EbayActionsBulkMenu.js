@@ -11,10 +11,12 @@ import {
     UploadOutlined,
   } from "@ant-design/icons";
   import {
+    ActionList,
     Banner,
     Button,
     FormLayout,
     Modal,
+    Popover,
     Select,
     Stack,
     Tag,
@@ -94,14 +96,115 @@ import {
     // const [scroll, setScroll] = useState(false)
     useEffect(() => {
       window.addEventListener("scroll", () => {
-        props.setCallbackCsvFunction(false);
+        props.setCallbackEbayActionFunction(false);
         // setScroll(window.scrollY >= 10)
       });
     }, []);
   
     return (
       <>
-        <Dropdown
+
+<Popover
+        active={props.isEbayActionBulkMenuOpen}
+        activator={ (<Button onClick={() => props.setCallbackEbayActionFunction(!props.isEbayActionBulkMenuOpen)}>
+        <div>
+          eBay Actions <DownOutlined />
+        </div>
+      </Button>)}
+        autofocusTarget="first-node"
+        onClose={()=>{props.setCallbackCsvFunction(false)}}
+      >
+        <ActionList
+          actionRole="menuitem"
+          items={[{content:               <div
+            key="Match from eBay"
+            onClick={() =>
+              setModal({
+                ...modal,
+                active: true,
+                content: "Match From eBay",
+                actionName: getrequest,
+                actionPayload: {},
+                api: matchFromEbayURL,
+              })
+            }
+          >
+            <ShrinkOutlined /> Match from eBay
+          </div> 
+         }, {content:   <div
+          key="Upload and Revise"
+          onClick={() => {
+            let temp = { ...uploadAndReviseOnEbay };
+            temp["modal"]["active"] = true;
+            temp["modal"]["actionName"] = postActionOnProductById;
+            temp["modal"]["actionPayloadByAll"] = {
+              action: "upload_and_revise",
+            };
+            temp["modal"]["actionPayloadById"] = {};
+            temp["modal"]["apiByAll"] = uploadProductByIdURL;
+            temp["modal"]["apiById"] = uploadProductByProfileURL;
+            setUploadAndReviseOnEbay(temp);
+          }}
+        >
+          <RedoOutlined /> Upload and Revise
+        </div> },{
+          content:  <div
+          key="Sync Inventory"
+          onClick={() =>
+            setModal({
+              ...modal,
+              active: true,
+              content: "Sync Inventory",
+              actionName: postActionOnProductById,
+              actionPayload: {
+                sync: ["inventory"],
+                action: "app_to_marketplace",
+              },
+              api: syncInventoryPrice,
+            })
+          }
+        >
+          <FileTextOutlined /> Sync Inventory
+        </div>
+        },{ content: <div
+          key="Sync Price"
+          onClick={() =>
+            setModal({
+              ...modal,
+              active: true,
+              content: "Sync Price",
+              actionName: postActionOnProductById,
+              actionPayload: {
+                sync: ["price"],
+                action: "app_to_marketplace",
+              },
+              api: syncInventoryPrice,
+            })
+          }
+        >
+          <DollarOutlined /> Sync Price
+        </div>},{
+          content:    <div
+          key="Upload Products"
+          onClick={() =>
+            setModal({
+              ...modal,
+              active: true,
+              content: "Upload Products",
+              actionName: postActionOnProductById,
+              actionPayload: { action: "upload" },
+              api: uploadProductByIdURL,
+            })
+          }
+        >
+          <UploadOutlined /> Upload Products
+        </div>
+        }]}
+        />
+      </Popover>
+
+
+        {/* <Dropdown
           key="eBaybulkAction"
           overlayStyle={{
             maxHeight: "40rem",
@@ -212,7 +315,7 @@ import {
               eBay Actions <DownOutlined />
             </div>
           </Button>
-        </Dropdown>
+        </Dropdown> */}
 
         <Modal
           open={modal.active}

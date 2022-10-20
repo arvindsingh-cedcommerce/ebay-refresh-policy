@@ -11,10 +11,12 @@ import {
     UploadOutlined,
   } from "@ant-design/icons";
   import {
+    ActionList,
     Banner,
     Button,
     FormLayout,
     Modal,
+    Popover,
     Select,
     Stack,
     Tag,
@@ -101,7 +103,48 @@ import {
   
     return (
       <>
-        <Dropdown
+<Popover
+        active={props.isCsvBulkMenuOpen}
+        activator={ (<Button onClick={() => props.setCallbackCsvFunction(!props.isCsvBulkMenuOpen)}>
+        <div>
+          CSV Actions <DownOutlined />
+        </div>
+      </Button>)}
+        autofocusTarget="first-node"
+        onClose={()=>{props.setCallbackCsvFunction(false)}}
+      >
+        <ActionList
+          actionRole="menuitem"
+          items={[{content:   <div
+            key="Export"
+            onClick={() => {
+              setModal({
+                ...modal,
+                active: true,
+                content: "Export Products",
+                actionName: fetchProductById,
+                actionPayload: {},
+                api: exportProductItemURL,
+              });
+            }}
+          >
+            <ExportOutlined /> Export Products
+          </div>
+         }, {content:  <div
+          key="Import"
+          onClick={() => {
+            props.history.push("/panel/ebay/products/bulkupdate");
+          }}
+        >
+          <ImportOutlined /> Bulk Update
+        </div>}]}
+        />
+      </Popover>
+
+
+
+
+        {/* <Dropdown
           key="csvbulkAction"
           overlayStyle={{
             maxHeight: "40rem",
@@ -151,7 +194,11 @@ import {
               CSV Actions <DownOutlined />
             </div>
           </Button>
-        </Dropdown>
+        </Dropdown> */}
+
+
+
+
 
         <Modal
           open={modal.active}
