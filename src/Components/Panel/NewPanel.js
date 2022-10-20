@@ -552,7 +552,7 @@ const NewPanel = (props) => {
               <Stack.Item fill>
                  {window.innerWidth <= 768?   
                 <div style={{paddingLeft:0,cursor:"pointer"}}>
-                    <Button style={{backgroundColor:"#001529",border:"0"}} onClick={()=>{setdrawerVisible(!drawerVisible)}}> <Icon source={MobileHamburgerMajorMonotone} color={"success"} /></Button>
+                    <Button style={{backgroundColor:"#001529",color:"white",border:"0"}} onClick={()=>{setdrawerVisible(!drawerVisible)}}> <Icon source={MobileHamburgerMajorMonotone} color={"subdued"} /></Button>
                  
                 </div>:""}
                
