@@ -77,27 +77,29 @@ const ActionPopoverProfileGrid = (props) => {
             <>Edit</>
           </Stack>
         </Button>
-        <Button
-          type="text"
-          onClick={async () => {
-            const { profile_id } = record;
-            let postData = {
-              profile_id: profile_id,
-            };
-            setModal({
-              ...modal,
-              active: true,
-              content: "upload this product",
-              actionName: uploadProductByProfileId,
-              actionPayload: { ...postData },
-            });
-          }}
-        >
-          <Stack>
-            <UploadOutlined />
-            <>Upload & Revise</>
-          </Stack>
-        </Button>
+        {record.productCountValue != 0 && (
+          <Button
+            type="text"
+            onClick={async () => {
+              const { profile_id } = record;
+              let postData = {
+                profile_id: profile_id,
+              };
+              setModal({
+                ...modal,
+                active: true,
+                content: "upload this product",
+                actionName: uploadProductByProfileId,
+                actionPayload: { ...postData },
+              });
+            }}
+          >
+            <Stack>
+              <UploadOutlined />
+              <>Upload & Revise</>
+            </Stack>
+          </Button>
+        )}
         <Button
           type="text"
           danger
@@ -169,7 +171,7 @@ const ActionPopoverProfileGrid = (props) => {
                   }
                   setBtnLoader(false);
                 }}
-                disabled={record?.accountStatus === "inactive" ? true : false}
+                // disabled={record?.accountStatus === "inactive" ? true : false}
               >
                 OK
               </ShopifyButton>

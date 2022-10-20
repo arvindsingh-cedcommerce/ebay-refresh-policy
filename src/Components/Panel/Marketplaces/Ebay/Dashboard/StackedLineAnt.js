@@ -7,10 +7,18 @@ const StackedLineAnt = ({
   revenueAnalyticsDataAllTypes,
   orderAnalyticsYearlyMonthlyWeekly,
 }) => {
-  console.log(revenueAnalyticsDataAllTypes);
   if (orderAnalyticsYearlyMonthlyWeekly === "yearly") {
     const { revenueYearlyData, hasRevenueYearlyData } =
       revenueAnalyticsDataAllTypes;
+    if (revenueYearlyData) {
+      var tempRevenueYearlyData = revenueYearlyData.map((order) => {
+        let correctValues = {};
+        correctValues["name"] = order["name"];
+        correctValues["revenueCount"] = +order["revenueCount"];
+        correctValues["year"] = order["year"];
+        return correctValues;
+      });
+    }
     if (!hasRevenueYearlyData) {
       return (
         <Stack distribution="center">
@@ -18,12 +26,12 @@ const StackedLineAnt = ({
         </Stack>
       );
     } else if (
-      revenueYearlyData &&
-      Array.isArray(revenueYearlyData) &&
-      revenueYearlyData.length
+      tempRevenueYearlyData &&
+      Array.isArray(tempRevenueYearlyData) &&
+      tempRevenueYearlyData.length
     ) {
       const config = {
-        data: revenueYearlyData,
+        data: tempRevenueYearlyData,
         xField: "year",
         yField: "revenueCount",
         seriesField: "name",
@@ -54,6 +62,15 @@ const StackedLineAnt = ({
   } else if (orderAnalyticsYearlyMonthlyWeekly === "monthly") {
     const { revenueMonthlyData, hasRevenueMonthlyData } =
       revenueAnalyticsDataAllTypes;
+    if (revenueMonthlyData) {
+      var tempRevenueMonthlyData = revenueMonthlyData.map((order) => {
+        let correctValues = {};
+        correctValues["name"] = order["name"];
+        correctValues["revenueCount"] = +order["revenueCount"];
+        correctValues["month"] = order["month"];
+        return correctValues;
+      });
+    }
     if (!hasRevenueMonthlyData) {
       return (
         <Stack distribution="center">
@@ -61,12 +78,12 @@ const StackedLineAnt = ({
         </Stack>
       );
     } else if (
-      revenueMonthlyData &&
-      Array.isArray(revenueMonthlyData) &&
-      revenueMonthlyData.length
+      tempRevenueMonthlyData &&
+      Array.isArray(tempRevenueMonthlyData) &&
+      tempRevenueMonthlyData.length
     ) {
       const config = {
-        data: revenueMonthlyData,
+        data: tempRevenueMonthlyData,
         xField: "month",
         yField: "revenueCount",
         seriesField: "name",
@@ -94,6 +111,15 @@ const StackedLineAnt = ({
   } else if (orderAnalyticsYearlyMonthlyWeekly === "weekly") {
     const { revenueWeeklyData, hasRevenueWeeklyData } =
       revenueAnalyticsDataAllTypes;
+    if (revenueWeeklyData) {
+      var tempRevenueWeeklyData = revenueWeeklyData.map((order) => {
+        let correctValues = {};
+        correctValues["name"] = order["name"];
+        correctValues["revenueCount"] = +order["revenueCount"];
+        correctValues["week"] = order["week"];
+        return correctValues;
+      });
+    }
     if (!hasRevenueWeeklyData) {
       return (
         <Stack distribution="center">
@@ -101,12 +127,12 @@ const StackedLineAnt = ({
         </Stack>
       );
     } else if (
-      revenueWeeklyData &&
-      Array.isArray(revenueWeeklyData) &&
-      revenueWeeklyData.length
+      tempRevenueWeeklyData &&
+      Array.isArray(tempRevenueWeeklyData) &&
+      tempRevenueWeeklyData.length
     ) {
       const config = {
-        data: revenueWeeklyData,
+        data: tempRevenueWeeklyData,
         xField: "week",
         yField: "revenueCount",
         seriesField: "name",

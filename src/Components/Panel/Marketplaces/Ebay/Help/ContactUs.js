@@ -244,7 +244,7 @@ const ContactUs = () => {
               <Select
                 value={issueSelected}
                 onChange={(e) => setIssueSelected(e)}
-                placeholder="Select the section in which you are facing issue"
+                placeholder="Select the section in which you are facing an issue"
                 options={[
                   { label: "Products", value: "products" },
                   { label: "Orders", value: "orders" },
