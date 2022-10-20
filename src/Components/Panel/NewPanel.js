@@ -57,6 +57,7 @@ import ProfileComponent from "./Marketplaces/Ebay/Profile/ProfileComponent";
 import PolicyComponent from "./Marketplaces/Ebay/Policies/PolicyComponent";
 import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsComponent";
 import DisbaledProductsWrapper from "./Marketplaces/Ebay/Products/DisbaledProductsWrapper";
+import { TextLoop } from "react-text-loop-next";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -176,7 +177,6 @@ const NewPanel = (props) => {
     hitGetNotifications();
     return window.removeEventListener("scroll", () => {});
   }, []);
-
   const activator = (
     <BellOutlined
       className="floating-right-bottom-btn"
@@ -535,17 +535,16 @@ const NewPanel = (props) => {
               <div style={{ display: "flex", justifyContent: "space-evenly" }}>
                 {/* <div style={{ display: "flex", justifyContent: 'flex-end' }}> */}
                 <div style={{width: '70%'}}>
-                {marqueeData.map((data) => (
-                    <Marquee
-                      pauseOnHover
-                      gradient={false}
-                      style={{ color: "#fff" }}
-                      speed={100}
-                    >
-                      {data.Note && <div>Note: {data["Note"]}</div>}
-                      {/* {data['Currently Running Activity'] && <div>Currently Running Activity: {data['Currently Running Activity']}</div>} */}
-                    </Marquee>
-                ))}
+                <Stack>
+                {queuedTasks.length>0 &&<h6 style={{color:"white",fontWeight:"bold",fontSize:"1.5rem"}}>Currently Running Activities:</h6>}
+                <TextLoop interval={3000}>
+               <p style={{color:"white"}}>{queuedTasks[0]?.message}</p>
+                <p style={{color:"white"}}>{queuedTasks[1]?.message}</p>
+               <p style={{color:"white"}}>{queuedTasks[2]?.message}</p>
+             
+                   </TextLoop>
+              </Stack>
+              
                 </div>
                 {/* <Stack distribution="trailing" alignment="center"> */}
                 <div
