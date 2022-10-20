@@ -64,6 +64,7 @@ import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
 import CsvBulkMenu from "./CsvBulkMenu";
 import OutsideAlerter from "./OutsideAlerter";
 import OutsideAlerterMassMenu from "./OutsideAlerterMassMenu";
+import EbayActionsBulkMenu from "./EbayActionsBulkMenu";
 
 const { Text } = Typography;
 
@@ -194,14 +195,22 @@ function NewProductsNewFilters(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isProductBulkMenuOpen, setIsProductBulkMenuOpen] = useState(false);
   const [isCsvBulkMenuOpen, setIsCsvBulkMenuOpen] = useState(false);
+  const [isEbayActionBulkMenuOpen,setIsEbayActionBulkMenuOpen]=useState(false);
   const [productData, setProductData] = useState([]);
   const setCallbackCsvFunction = (openState) => {
     setIsCsvBulkMenuOpen(openState);
     setIsProductBulkMenuOpen(false);
+    setIsEbayActionBulkMenuOpen(false);
   };
+  const setCallbackEbayActionFunction= (openState)=>{
+    setIsEbayActionBulkMenuOpen(openState);
+    setIsProductBulkMenuOpen(false);
+    setIsCsvBulkMenuOpen(false);
+  }
   const setCallbackProductBulkFunction = (openState) => {
     setIsProductBulkMenuOpen(openState);
     setIsCsvBulkMenuOpen(false);
+    setIsEbayActionBulkMenuOpen(false);
   };
   const [productColumns, setProductColumns] = useState([
     {
@@ -1282,6 +1291,11 @@ function NewProductsNewFilters(props) {
           profileList={profileList}
           isCsvBulkMenuOpen={isCsvBulkMenuOpen}
           setCallbackCsvFunction={setCallbackCsvFunction}
+        />,
+        <EbayActionsBulkMenu 
+        profileList={profileList}
+        isEbayActionBulkMenuOpen={isEbayActionBulkMenuOpen}
+        setCallbackEbayActionFunction={setCallbackEbayActionFunction}
         />,
         // <ProductMassMenu selectedRows={selectedRows} />,
         <ProductBulkMenu
