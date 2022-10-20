@@ -59,6 +59,7 @@ import ProfileComponent from "./Marketplaces/Ebay/Profile/ProfileComponent";
 import PolicyComponent from "./Marketplaces/Ebay/Policies/PolicyComponent";
 import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsComponent";
 import DisbaledProductsWrapper from "./Marketplaces/Ebay/Products/DisbaledProductsWrapper";
+import { TextLoop } from "react-text-loop-next";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -178,7 +179,6 @@ const NewPanel = (props) => {
     hitGetNotifications();
     return window.removeEventListener("scroll", () => {});
   }, []);
-
   const activator = (
     <BellOutlined
       className="floating-right-bottom-btn"
@@ -555,40 +555,21 @@ const NewPanel = (props) => {
               >
                 More Filters
               </Button> */}
-             <Stack>    
-              <Stack.Item fill>
-                 {window.innerWidth <= 768?   
-                <div style={{paddingLeft:0,cursor:"pointer"}}>
-                    <Button style={{backgroundColor:"#001529",color:"white",border:"0"}} onClick={()=>{setdrawerVisible(!drawerVisible)}}> <Icon source={MobileHamburgerMajorMonotone} color={"subdued"} /></Button>
-                 
-                </div>:""}
-               
-              </Stack.Item>
-              {/* <div style={{ marginBottom: "-8px" }}>
-                <ShopifyPopover
-                  active={bellClicked}
-                  activator={activator}
-                  onClose={(e) => setBellClicked(!bellClicked)}
-                  preferredAlignment="left"
-                
-                  >
-                    {allNotifications.length>0?<div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
-                    <p style={{fontWeight:"bold",color:"#000000", fontSize:"1.8rem"}}>Recent Activities</p>
-                    <p style={{fontWeight:"bold",color:"#2c6ecb", fontSize:"1.3rem",cursor:"pointer"}} onClick={(e) => {
-                      setBellClicked(!bellClicked);
-                  return props.history.push(
-                    `/panel/ebay/activity`
-                  );
-                }}>View All</p></div>:<div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
-                   <p style={{fontWeight:"bold",color:"#000000", fontSize:"1.8rem"}}>No Recent Activity</p>
-                 </div>}
-                    <ActionList
-                      actionRole="menuitem"
-                      items={allNotifications}
-                    />
-                  </ShopifyPopover>
-                </div> */}
-                {/* <Stack distribution="trailing" alignment="center"> */}
+              <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+                {/* <div style={{ display: "flex", justifyContent: 'flex-end' }}> */}
+                <div style={{width: '70%'}}>
+                <Stack>
+                {queuedTasks.length>0 &&<h6 style={{color:"white",fontWeight:"bold",fontSize:"1.5rem"}}>Currently Running Activities:</h6>}
+                <TextLoop interval={3000}>
+               <p style={{color:"white"}}>{queuedTasks[0]?.message}</p>
+                <p style={{color:"white"}}>{queuedTasks[1]?.message}</p>
+               <p style={{color:"white"}}>{queuedTasks[2]?.message}</p>
+             
+                   </TextLoop>
+              </Stack>
+              
+                </div>
+                <Stack distribution="trailing" alignment="center">
                 <div
                   style={{
                     display: "flex",
@@ -640,7 +621,7 @@ const NewPanel = (props) => {
                 </Stack>
               </div>
               {/* </Stack> */}
-            {/* </div> */}
+            </div>
           </Header>
           <Content
             // style={{ marginTop: "64px" }}

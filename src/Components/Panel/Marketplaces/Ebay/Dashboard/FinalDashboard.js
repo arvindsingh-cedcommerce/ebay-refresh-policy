@@ -793,11 +793,11 @@ const FinalDashboard = (props) => {
       ]}
     >
       <Row gutter={[0, 24]}>
-        {queuedTasks.length > 0 && (
+        {/* {queuedTasks.length > 0 && (
           <Col span={24}>
             <Banner status="warning">
-              <Stack>
-                <Text strong>Currently Running Activities:</Text>
+             <Stack>
+                < Text strong>Currently Running Activities:</Text>
                 <TextLoop interval={3000}>
                   {queuedTasks[0] && <span>{queuedTasks[0]?.message}</span>}
                   {queuedTasks[1] && <span>{queuedTasks[1]?.message}</span>}
@@ -806,7 +806,7 @@ const FinalDashboard = (props) => {
               </Stack>
             </Banner>
           </Col>
-        )}
+        )} */}
         <Col span={24}>
           <Row gutter={[16, 8]}>
             <Col
