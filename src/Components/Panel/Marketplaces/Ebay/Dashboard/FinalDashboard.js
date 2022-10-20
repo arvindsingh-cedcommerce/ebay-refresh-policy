@@ -15,6 +15,7 @@ import {
   dashboardAnalyticsURL,
   newsBlogsURL,
 } from "../../../../../URLs/DashboardURL";
+import { TextLoop } from "react-text-loop-next";
 import {
   Select,
   Card,
@@ -53,7 +54,6 @@ import MyResponsiveChildOrders from "./MyResponsiveChildOrders";
 import { ArrowDownMinor, ArrowUpMinor } from "@shopify/polaris-icons";
 import { SyncOutlined } from "@ant-design/icons";
 import { faqs } from "../Products/SampleProductData";
-import { TextLoop } from "react-text-loop-next";
 import { getParsedProductAnalyticsDataAntD } from "./ProductCountAnalyticsHelper";
 import WhatsApp from "../../../../../assets/whatsapp.png";
 import Skype from "../../../../../assets/skype.png";
@@ -798,7 +798,7 @@ const FinalDashboard = (props) => {
             <Banner status="warning">
               <Stack>
                 <Text strong>Currently Running Activities:</Text>
-                <TextLoop interval={10000}>
+                <TextLoop interval={3000}>
                   {queuedTasks[0] && <span>{queuedTasks[0]?.message}</span>}
                   {queuedTasks[1] && <span>{queuedTasks[1]?.message}</span>}
                   {queuedTasks[2] && <span>{queuedTasks[2]?.message}</span>}
