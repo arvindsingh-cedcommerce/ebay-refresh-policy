@@ -5,7 +5,7 @@ import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import NoProductImage from "../../../../../assets/notfound.png";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import VariantComponentData from "./VariantComponentData";
-import {
+import {    
   getProductsURL,
   getProductsCountURL,
   getVariantsURL,

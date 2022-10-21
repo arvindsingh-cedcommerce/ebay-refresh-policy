@@ -17,8 +17,8 @@ const NewProductsComponent = (props) => {
     <Switch>
       <Route
         path="/panel/ebay/products/grid"
-        component={() => (
-          <NewProductsNewFilters hitGetNotifications={hitGetNotifications} />
+        component={(props) => (
+          <NewProductsNewFilters hitGetNotifications={hitGetNotifications} {...props}/>
         )}
       />
       <Route
