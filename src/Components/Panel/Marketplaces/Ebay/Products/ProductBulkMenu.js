@@ -321,6 +321,7 @@ const ProductBulkMenu = (props) => {
                       setUploadAndReviseOnEbay(temp);
                     }
                   }
+                  props.hitGetNotifications();
                   setBtnLoader(false);
                 }}
               >
@@ -456,6 +457,7 @@ const ProductBulkMenu = (props) => {
                     ...importProductById,
                     btnLoader: false,
                   });
+                  props.hitGetNotifications();
                 }}
               >
                 OK
@@ -495,6 +497,7 @@ const ProductBulkMenu = (props) => {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });
                   }
+                  props.hitGetNotifications();
                   setBtnLoader(false);
                 }}
               >

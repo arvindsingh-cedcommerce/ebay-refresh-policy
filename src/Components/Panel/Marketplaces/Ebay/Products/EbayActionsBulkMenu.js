@@ -558,6 +558,7 @@ const EbayActionsBulkMenu = (props) => {
                     ...importProductById,
                     btnLoader: false,
                   });
+                  props.hitGetNotifications();
                 }}
               >
                 OK
@@ -597,6 +598,7 @@ const EbayActionsBulkMenu = (props) => {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });
                   }
+                  props.hitGetNotifications();
                   setBtnLoader(false);
                 }}
               >

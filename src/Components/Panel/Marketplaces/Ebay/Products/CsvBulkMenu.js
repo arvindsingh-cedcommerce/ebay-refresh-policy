@@ -235,13 +235,13 @@ const CsvBulkMenu = (props) => {
                     modal.actionPayload
                   );
                   if (success) {
-                    notify.success(message ? message : data);
-                    props.hitGetNotifications();
+                    notify.success(message ? message : data);    
                     props.history.push("/panel/ebay/activity");
                   } else {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });
                   }
+                  props.hitGetNotifications();
                   setBtnLoader(false);
                 }}
               >
