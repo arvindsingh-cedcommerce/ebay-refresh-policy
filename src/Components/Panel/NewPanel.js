@@ -721,9 +721,10 @@ const NewPanel = (props) => {
               />
               <Route
                 path="/panel/ebay/products"
-                component={() => (
+                component={(props) => (
                   <NewProductsComponent
                     hitGetNotifications={hitGetNotifications}
+                    {...props}
                   />
                 )}
               />
