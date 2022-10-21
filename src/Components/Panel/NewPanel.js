@@ -79,7 +79,7 @@ const NewPanel = (props) => {
   const [shopURL, setShopURL] = useState("");
   // shopifyAccountData
   const [shopifyAccountData, setShopifyAccountData] = useState({});
- //const [note,setNote]= useState("some dummy note");
+  //const [note,setNote]= useState("some dummy note");
   // marquee data
   const [marqueeData, setMarqueeData] = useState([]);
 
@@ -561,16 +561,18 @@ const NewPanel = (props) => {
                 <div style={{ width: "70%" }}>
                   {queuedTasks.length > 0 && (
                     <TextLoop interval={3000}>
-                      {queuedTasks.map((task,index)=>  task?.message && <p style={{ color: "white", height: "5rem" }}>
-                        <span style={{ fontWeight: "bold" }}>
-                          Currently Running Activity :{" "}
-                        </span>
-                        <span>{task?.message}</span>
-                      </p>
-)}
-                 
+                      {queuedTasks.map(
+                        (task, index) =>
+                          task?.message && (
+                            <p style={{ color: "white", height: "5rem" }}>
+                              <span style={{ fontWeight: "bold" }}>
+                                Currently Running Activity :{" "}
+                              </span>
+                              <span>{task?.message}</span>
+                            </p>
+                          )
+                      )}
                     </TextLoop>
-                    
                   )}
                 </div>
                 <Stack distribution="trailing" alignment="center">
@@ -719,7 +721,11 @@ const NewPanel = (props) => {
               />
               <Route
                 path="/panel/ebay/products"
-                component={NewProductsComponent}
+                component={() => (
+                  <NewProductsComponent
+                    hitGetNotifications={hitGetNotifications}
+                  />
+                )}
               />
               <Route path="/panel/ebay/accounts" component={NewAccountGrid} />
               <Route

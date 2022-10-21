@@ -163,50 +163,59 @@ function NewProductsNewFilters(props) {
   const reduxState = useSelector(
     (state) => state.productFilterReducer.reduxFilters
   );
-  const checkValueHandler=(arr,filterName)=>{
-    let countryValue="";
-    Object.keys(arr).filter((item,index)=>{
+  const checkValueHandler = (arr, filterName) => {
+    let countryValue = "";
+    Object.keys(arr).filter((item, index) => {
       let indexOfFirstOpeningBracket = item.indexOf("[");
       let indexOfFirstClosingBracket = item.indexOf("]");
-      const mainItem=item.substring(
+      const mainItem = item.substring(
         indexOfFirstOpeningBracket + 1,
         indexOfFirstClosingBracket
       );
-      if(mainItem===filterName)
-      {
-          countryValue= item;
-          return ;
+      if (mainItem === filterName) {
+        countryValue = item;
+        return;
       }
-    })
+    });
     return countryValue;
-  }
-  const initialCountryValue=reduxState[checkValueHandler(reduxState,"country")];
-  const initialStatusValue=reduxState[checkValueHandler(reduxState,"status")];
-  const initialProfileValue=reduxState[checkValueHandler(reduxState,"profile_name")];
-  const moreFilters=["listing_id","product_type","brand","tags","price","quantity"];
-  let initialMoreFiltersObj={};
-  moreFilters.map((moreFilter,index)=>{
-    let filterItem=checkValueHandler(reduxState,moreFilter);
-    if(filterItem)
-    initialMoreFiltersObj[filterItem]=reduxState[filterItem];
+  };
+  const initialCountryValue =
+    reduxState[checkValueHandler(reduxState, "country")];
+  const initialStatusValue =
+    reduxState[checkValueHandler(reduxState, "status")];
+  const initialProfileValue =
+    reduxState[checkValueHandler(reduxState, "profile_name")];
+  const moreFilters = [
+    "listing_id",
+    "product_type",
+    "brand",
+    "tags",
+    "price",
+    "quantity",
+  ];
+  let initialMoreFiltersObj = {};
+  moreFilters.map((moreFilter, index) => {
+    let filterItem = checkValueHandler(reduxState, moreFilter);
+    if (filterItem) initialMoreFiltersObj[filterItem] = reduxState[filterItem];
   });
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isProductBulkMenuOpen, setIsProductBulkMenuOpen] = useState(false);
   const [isCsvBulkMenuOpen, setIsCsvBulkMenuOpen] = useState(false);
-  const [isEbayActionBulkMenuOpen,setIsEbayActionBulkMenuOpen]=useState(false);
+  const [isEbayActionBulkMenuOpen, setIsEbayActionBulkMenuOpen] =
+    useState(false);
   const [productData, setProductData] = useState([]);
   const setCallbackCsvFunction = (openState) => {
     setIsCsvBulkMenuOpen(openState);
     setIsProductBulkMenuOpen(false);
     setIsEbayActionBulkMenuOpen(false);
   };
-  const setCallbackEbayActionFunction= (openState)=>{
+  const setCallbackEbayActionFunction = (openState) => {
     setIsEbayActionBulkMenuOpen(openState);
     setIsProductBulkMenuOpen(false);
     setIsCsvBulkMenuOpen(false);
-  }
+  };
   const setCallbackProductBulkFunction = (openState) => {
     setIsProductBulkMenuOpen(openState);
     setIsCsvBulkMenuOpen(false);
@@ -390,16 +399,14 @@ function NewProductsNewFilters(props) {
     available: "",
     total: "",
   });
-  const [prevPage,setPrevPage]=useState(1);
- 
+  const [prevPage, setPrevPage] = useState(1);
+
   useEffect(() => {
-    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+    if (filtersToPass && activePage > 1 && activePage !== prevPage) {
       hitGetProductsAPI(1, pageSize);
       setActivePage(1);
-    }
-    else if(filtersToPass)
-    {
-      hitGetProductsAPI(activePage,pageSize);
+    } else if (filtersToPass) {
+      hitGetProductsAPI(activePage, pageSize);
     }
   }, [filtersToPass]);
 
@@ -591,11 +598,10 @@ function NewProductsNewFilters(props) {
               connectedAccount["value"] === filtersToPass["filter[country][1]"]
           );
           filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
+        } else {
+          filterPostData[key] = filtersToPass[key];
         }
-      else {
-        filterPostData[key] = filtersToPass[key];
       }
-    }
     }
     // filterPostData  = {...filterPostData, ...reduxState}
     // console.log('filterPostData', filterPostData);
@@ -917,15 +923,22 @@ function NewProductsNewFilters(props) {
   };
 
   const renderOtherFilters = () => {
-    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
-    const initialStatusObj=status?.filter((statusItem,index)=> statusItem.value===initialStatusValue);
-    const initialProfileObj=profileListForFilters?.filter((profileItem,index)=> profileItem.value===initialProfileValue);
-    console.log("initial object 1",initialCountryObj);
-    console.log("initial object 2",initialStatusObj);
-    console.log("initial object 3",initialProfileObj);
-    console.log("initial object 4",selected["country"]);
-    console.log("initial object 5",selected["status"]);
-    console.log("initial object 6",selected["profile_name"]);
+    const initialCountryObj = connectedAccountsArray?.filter(
+      (connectedAccount, index) =>
+        connectedAccount.value === initialCountryValue
+    );
+    const initialStatusObj = status?.filter(
+      (statusItem, index) => statusItem.value === initialStatusValue
+    );
+    const initialProfileObj = profileListForFilters?.filter(
+      (profileItem, index) => profileItem.value === initialProfileValue
+    );
+    console.log("initial object 1", initialCountryObj);
+    console.log("initial object 2", initialStatusObj);
+    console.log("initial object 3", initialProfileObj);
+    console.log("initial object 4", selected["country"]);
+    console.log("initial object 5", selected["status"]);
+    console.log("initial object 6", selected["profile_name"]);
     return (
       <Stack wrap>
         <ButtonGroup segmented>
@@ -937,7 +950,11 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={connectedAccountsArray}
-                selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
+                selected={
+                  initialCountryObj[0]
+                    ? [initialCountryObj[0].value]
+                    : selected["country"]
+                }
                 onChange={(value) => handleChange(value, "country")}
               />
             </div>
@@ -950,7 +967,11 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={status}
-                selected={initialStatusObj[0]?[initialStatusObj[0].value]:selected["status"]}
+                selected={
+                  initialStatusObj[0]
+                    ? [initialStatusObj[0].value]
+                    : selected["status"]
+                }
                 onChange={(value) => handleChange(value, "status")}
               />
             </div>
@@ -963,7 +984,11 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={profileListForFilters}
-                selected={initialProfileObj[0]? [initialProfileObj[0].value]:selected["profile_name"]}
+                selected={
+                  initialProfileObj[0]
+                    ? [initialProfileObj[0].value]
+                    : selected["profile_name"]
+                }
                 onChange={(value) => handleChange(value, "profile_name")}
               />
             </div>
@@ -1112,7 +1137,7 @@ function NewProductsNewFilters(props) {
   useEffect(() => {
     getAccounts();
     hitDashoboardAPI();
- }, []);
+  }, []);
 
   const getFieldValue = (field) => {
     switch (field) {
@@ -1159,19 +1184,15 @@ function NewProductsNewFilters(props) {
     });
     return arr;
   };
-  const formatFilterValue=(filterName,filterValue)=>{
-  
-    if(filterName==="status")
-    {
-         const statusItem=status?.filter(item=>item.value===filterValue);
-         console.log("filter name",statusItem);
-         return statusItem[0]?.label;
-    }
-    else
-    {
+  const formatFilterValue = (filterName, filterValue) => {
+    if (filterName === "status") {
+      const statusItem = status?.filter((item) => item.value === filterValue);
+      console.log("filter name", statusItem);
+      return statusItem[0]?.label;
+    } else {
       return filterValue;
     }
-   }
+  };
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
       // if (key !== "filtersPresent") {
@@ -1235,7 +1256,7 @@ function NewProductsNewFilters(props) {
             }}
           >
             {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-            {formatFilterValue(fieldValue,filtersToPass[filter])}
+            {formatFilterValue(fieldValue, filtersToPass[filter])}
           </Tag>
         );
       }
@@ -1243,10 +1264,10 @@ function NewProductsNewFilters(props) {
   };
 
   useEffect(() => {
- if (filtersToPass) {
+    if (filtersToPass) {
       dispatch({ type: "productFilter", payload: filtersToPass });
-     setSelectedRows([]);
-    setSelectedRowKeys([]);
+      setSelectedRows([]);
+      setSelectedRowKeys([]);
     }
   }, [filtersToPass]);
   // useEffect(() => {
@@ -1291,17 +1312,20 @@ function NewProductsNewFilters(props) {
           profileList={profileList}
           isCsvBulkMenuOpen={isCsvBulkMenuOpen}
           setCallbackCsvFunction={setCallbackCsvFunction}
+          hitGetNotifications={props.hitGetNotifications}
         />,
-        <EbayActionsBulkMenu 
-        profileList={profileList}
-        isEbayActionBulkMenuOpen={isEbayActionBulkMenuOpen}
-        setCallbackEbayActionFunction={setCallbackEbayActionFunction}
+        <EbayActionsBulkMenu
+          profileList={profileList}
+          isEbayActionBulkMenuOpen={isEbayActionBulkMenuOpen}
+          setCallbackEbayActionFunction={setCallbackEbayActionFunction}
+          hitGetNotifications={props.hitGetNotifications}
         />,
         // <ProductMassMenu selectedRows={selectedRows} />,
         <ProductBulkMenu
           profileList={profileList}
           isProductBulkMenuOpen={isProductBulkMenuOpen}
           setCallbackProductBulkFunction={setCallbackProductBulkFunction}
+          hitGetNotifications={props.hitGetNotifications}
         />,
       ]}
     >
@@ -1322,11 +1346,20 @@ function NewProductsNewFilters(props) {
             </Stack>
           </div>
           <Row
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            gutter={{ xs: [8, 32], sm: [16, 32], md: 24, lg: 32 }}
             justify="space-between"
             style={{ marginBottom: 10 }}
           >
-            <Col className="gutter-row" span={6}>
+            <Col
+              className="gutter-row"
+              span={6}
+              xs={24}
+              sm={24}
+              md={6}
+              lg={6}
+              xl={6}
+              xxl={6}
+            >
               {/* <OutsideAlerterMassMenu isOpen={isOpen} setIsOpen={setIsOpen}> */}
               <ProductMassMenu
                 selectedRows={selectedRows}
@@ -1335,7 +1368,16 @@ function NewProductsNewFilters(props) {
               />
               {/* </OutsideAlerterMassMenu> */}
             </Col>
-            <Col className="gutter-row" span={18}>
+            <Col
+              className="gutter-row"
+              span={18}
+              xs={24}
+              sm={24}
+              md={18}
+              lg={18}
+              xl={18}
+              xxl={18}
+            >
               <Stack distribution="trailing">
                 <PaginationComponent
                   totalCount={totalProductsCount}
