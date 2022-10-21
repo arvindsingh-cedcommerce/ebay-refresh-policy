@@ -63,7 +63,13 @@ const { Title, Text } = Typography;
 const { Step } = Steps;
 
 const FinalDashboard = (props) => {
-  const { queuedTasks, refresh, marqueeData, setMarqueeData } = props;
+  const {
+    queuedTasks,
+    refresh,
+    marqueeData,
+    setMarqueeData,
+    hitGetNotifications,
+  } = props;
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [activeAccounts, setActiveAccounts] = useState(0);
 
