@@ -77,7 +77,7 @@ const NewPanel = (props) => {
   const [shopURL, setShopURL] = useState("");
   // shopifyAccountData
   const [shopifyAccountData, setShopifyAccountData] = useState({});
-
+ //const [note,setNote]= useState("some dummy note");
   // marquee data
   const [marqueeData, setMarqueeData] = useState([]);
 
@@ -130,12 +130,12 @@ const NewPanel = (props) => {
         let testObj = {};
         if (row.hasOwnProperty("message") && row["message"] !== null) {
           testObj["content"] = (
-            <div style={{display:"flex",marginBottom:"-1rem"}}>
-             
-              <div style={{justifySelf:"flex-start"}}>{getSeverityIcon(row["severity"])}</div>
-              <div style={{justifySelf:"flex-start"}}>{row["message"]}</div>
+            <div style={{ display: "flex", marginBottom: "-1rem" }}>
+              <div style={{ justifySelf: "flex-start" }}>
+                {getSeverityIcon(row["severity"])}
+              </div>
+              <div style={{ justifySelf: "flex-start" }}>{row["message"]}</div>
             </div>
-          
           );
         }
         return testObj;
@@ -534,17 +534,20 @@ const NewPanel = (props) => {
               </Button> */}
               <div style={{ display: "flex", justifyContent: "space-evenly" }}>
                 {/* <div style={{ display: "flex", justifyContent: 'flex-end' }}> */}
-                <div style={{width: '70%'}}>
-                <Stack>
-                {queuedTasks.length>0 &&<h6 style={{color:"white",fontWeight:"bold",fontSize:"1.5rem"}}>Currently Running Activities:</h6>}
-                <TextLoop interval={3000}>
-               <p style={{color:"white"}}>{queuedTasks[0]?.message}</p>
-                <p style={{color:"white"}}>{queuedTasks[1]?.message}</p>
-               <p style={{color:"white"}}>{queuedTasks[2]?.message}</p>
-             
-                   </TextLoop>
-              </Stack>
-              
+                <div style={{ width: "70%" }}>
+                  {queuedTasks.length > 0 && (
+                    <TextLoop interval={3000}>
+                      {queuedTasks.map((task,index)=>  task?.message && <p style={{ color: "white", height: "5rem" }}>
+                        <span style={{ fontWeight: "bold" }}>
+                          Currently Running Activity :{" "}
+                        </span>
+                        <span>{task?.message}</span>
+                      </p>
+)}
+                 
+                    </TextLoop>
+                    
+                  )}
                 </div>
                 {/* <Stack distribution="trailing" alignment="center"> */}
                 <div
@@ -561,16 +564,65 @@ const NewPanel = (props) => {
                       activator={activator}
                       onClose={(e) => setBellClicked(!bellClicked)}
                     >
-                        {allNotifications.length>0?<div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
-                    <p style={{fontWeight:"bold",color:"#000000", fontSize:"1.8rem"}}>Recent Activities</p>
-                    <p style={{fontWeight:"bold",color:"#2c6ecb", fontSize:"1.5rem",cursor:"pointer"}} onClick={(e) => {
-                      setBellClicked(!bellClicked);
-                  return props.history.push(
-                    `/panel/ebay/activity`
-                  );
-                }}>View All</p></div>:<div style={{display:"flex",padding:"2rem 2rem 0 0",paddingLeft:"2rem",paddingRight:"2rem",width:"inherit",alignItems:"center",justifyContent:"space-between"}}>
-                   <p style={{fontWeight:"bold",color:"#000000", fontSize:"1.8rem"}}>No Recent Activity</p>
-                 </div>}
+                      {allNotifications.length > 0 ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            padding: "2rem 2rem 0 0",
+                            paddingLeft: "2rem",
+                            paddingRight: "2rem",
+                            width: "inherit",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontWeight: "bold",
+                              color: "#000000",
+                              fontSize: "1.8rem",
+                            }}
+                          >
+                            Recent Activities
+                          </p>
+                          <p
+                            style={{
+                              fontWeight: "bold",
+                              color: "#2c6ecb",
+                              fontSize: "1.5rem",
+                              cursor: "pointer",
+                            }}
+                            onClick={(e) => {
+                              setBellClicked(!bellClicked);
+                              return props.history.push(`/panel/ebay/activity`);
+                            }}
+                          >
+                            View All
+                          </p>
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            display: "flex",
+                            padding: "2rem 2rem 0 0",
+                            paddingLeft: "2rem",
+                            paddingRight: "2rem",
+                            width: "inherit",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontWeight: "bold",
+                              color: "#000000",
+                              fontSize: "1.8rem",
+                            }}
+                          >
+                            No Recent Activity
+                          </p>
+                        </div>
+                      )}
                       <ActionList
                         actionRole="menuitem"
                         items={allNotifications}
