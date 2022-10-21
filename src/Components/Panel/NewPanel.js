@@ -536,7 +536,7 @@ const NewPanel = (props) => {
                 {/* <div style={{ display: "flex", justifyContent: 'flex-end' }}> */}
                 <div style={{ width: "70%" }}>
                   {queuedTasks.length > 0 && (
-                    <TextLoop interval={3000}>
+                    <TextLoop interval={6000}>
                       {queuedTasks.map(
                         (task, index) =>
                           task?.message && (
