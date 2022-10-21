@@ -1,7 +1,7 @@
 import { Tabs } from "antd";
 import React from "react";
 
-const TabsComponent = ({ tabContents, type }) => {
+const TabsComponent = ({ tabContents, type, tabPosition }) => {
   const { TabPane } = Tabs;
 
   function callback(key) {
@@ -9,7 +9,7 @@ const TabsComponent = ({ tabContents, type }) => {
   }
 
   return (
-    <Tabs defaultActiveKey="1" onChange={callback} type={type}>
+    <Tabs defaultActiveKey="1" onChange={callback} type={type} tabPosition={tabPosition}>
       {Object.keys(tabContents).map((tabContent) => {
         return (
           <TabPane tab={tabContent} key={tabContent}>
