@@ -225,6 +225,7 @@ import {
                     );
                     if (success) {
                       notify.success(message ? message : data);
+                    props.hitGetNotifications();
                       props.history.push("/panel/ebay/activity");
                     } else {
                       notify.error(message ? message : data);

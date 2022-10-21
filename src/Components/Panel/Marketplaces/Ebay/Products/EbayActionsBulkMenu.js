@@ -393,6 +393,7 @@ import {
                       setUploadAndReviseOnEbay(temp);
                     }
                   }
+                  props.hitGetNotifications();
                   setBtnLoader(false);
                 }}
               >

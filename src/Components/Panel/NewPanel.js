@@ -537,7 +537,7 @@ const NewPanel = (props) => {
                 <div style={{ width: "70%" }}>
                   {queuedTasks.length > 0 && (
                     <TextLoop interval={3000}>
-                      {queuedTasks.map((task,index)=>  task?.message && <p style={{ color: "white", height: "5rem" }}>
+                     {queuedTasks.map((task,index)=>  task?.message && <p style={{ color: "white", height: "5rem" }}>
                         <span style={{ fontWeight: "bold" }}>
                           Currently Running Activity :{" "}
                         </span>
@@ -695,7 +695,7 @@ const NewPanel = (props) => {
               />
               <Route
                 path="/panel/ebay/products"
-                component={NewProductsComponent}
+                component={()=>(<NewProductsComponent hitGetNotifications={hitGetNotifications}/>)}
               />
               <Route path="/panel/ebay/accounts" component={NewAccountGrid} />
               <Route

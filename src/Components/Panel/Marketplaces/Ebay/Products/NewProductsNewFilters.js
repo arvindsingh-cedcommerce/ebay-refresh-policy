@@ -1291,17 +1291,20 @@ function NewProductsNewFilters(props) {
           profileList={profileList}
           isCsvBulkMenuOpen={isCsvBulkMenuOpen}
           setCallbackCsvFunction={setCallbackCsvFunction}
+          hitGetNotifications={props.hitGetNotifications}
         />,
         <EbayActionsBulkMenu 
         profileList={profileList}
         isEbayActionBulkMenuOpen={isEbayActionBulkMenuOpen}
         setCallbackEbayActionFunction={setCallbackEbayActionFunction}
+        hitGetNotifications={props.hitGetNotifications}
         />,
         // <ProductMassMenu selectedRows={selectedRows} />,
         <ProductBulkMenu
           profileList={profileList}
           isProductBulkMenuOpen={isProductBulkMenuOpen}
           setCallbackProductBulkFunction={setCallbackProductBulkFunction}
+          hitGetNotifications={props.hitGetNotifications}
         />,
       ]}
     >
@@ -1322,11 +1325,11 @@ function NewProductsNewFilters(props) {
             </Stack>
           </div>
           <Row
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            gutter={{ xs: [8,32], sm: [16,32], md: 24, lg: 32 }}
             justify="space-between"
             style={{ marginBottom: 10 }}
           >
-            <Col className="gutter-row" span={6}>
+            <Col className="gutter-row" span={6} xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
               {/* <OutsideAlerterMassMenu isOpen={isOpen} setIsOpen={setIsOpen}> */}
               <ProductMassMenu
                 selectedRows={selectedRows}
@@ -1335,7 +1338,7 @@ function NewProductsNewFilters(props) {
               />
               {/* </OutsideAlerterMassMenu> */}
             </Col>
-            <Col className="gutter-row" span={18}>
+            <Col className="gutter-row" span={18} xs={24} sm={24} md={18} lg={18} xl={18} xxl={18}>
               <Stack distribution="trailing">
                 <PaginationComponent
                   totalCount={totalProductsCount}
