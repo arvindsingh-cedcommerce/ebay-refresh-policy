@@ -76,13 +76,18 @@ const ContactUs = () => {
     issue: false,
     demo: false,
   });
-  const [accountLoader,setAccountLoader]=useState(false);
+  const [accountLoader, setAccountLoader] = useState(false);
   // skype, whatsapp, email
-  const [socialMediaLinks, setSocialMediaLinks] = useState({
-    skype: "https://join.skype.com/GbdPBTuVsNgN",
-    whatsApp: "https://chat.whatsapp.com/HPbJm00yENw6QhWfskNWLa",
-    email: "mailto:ebay_support@cedcommerce.com",
-  });
+  // const [socialMediaLinks, setSocialMediaLinks] = useState({
+  //   skype: "https://join.skype.com/GbdPBTuVsNgN",
+  //   whatsApp: "https://chat.whatsapp.com/HPbJm00yENw6QhWfskNWLa",
+  //   email: "mailto:ebay_support@cedcommerce.com",
+  // });
+  const [skype, setSkype] = useState("https://join.skype.com/GbdPBTuVsNgN");
+  const [whatsApp, setWhatsApp] = useState(
+    "https://chat.whatsapp.com/HPbJm00yENw6QhWfskNWLa"
+  );
+  const [email, setEmail] = useState("mailto:ebay_support@cedcommerce.com");
 
   const getAllConnectedAccounts = async () => {
     setAccountLoader(true);
@@ -95,11 +100,24 @@ const ContactUs = () => {
       if (shopifyAccount?.userCustomData?.userData) {
         const { skypeLink, whatsAppLink, email } =
           shopifyAccount?.userCustomData?.userData;
-        setSocialMediaLinks({
-          skype: skypeLink,
-          whatsApp: whatsAppLink,
-          email: email,
-        });
+        if (skypeLink) {
+          // tempLinks["skype"] = skypeLink;
+          setSkype(skypeLink);
+        }
+        if (whatsAppLink) {
+          // tempLinks["whatsApp"] = whatsAppLink;
+          setWhatsApp(whatsAppLink);
+        }
+        if (email) {
+          // tempLinks["email"] = email;
+          setEmail(email);
+        }
+        // console.log("tempLinks", tempLinks);
+        // setSocialMediaLinks({
+        //   skype: skypeLink,
+        //   whatsApp: whatsAppLink,
+        //   email: email,
+        // });
       }
       let ebayAccounts = connectedAccountData.filter(
         (account) => account["marketplace"] === "ebay"
@@ -159,22 +177,19 @@ const ContactUs = () => {
 
   return (
     <PageHeader title="Contact Us" ghost={true}>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} >
+      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col span={12} xs={24} sm={24} md={24} lg={12} xxl={12}>
           <Card sectioned>
             <Stack distribution="equalSpacing" alignment="center">
               <Text strong>Feel free to reach out to us</Text>
               <Stack>
-                <Link url={socialMediaLinks.whatsApp} external>
+                <Link url={whatsApp} external>
                   <Image src={WhatsApp} width={50} preview={false} />
                 </Link>
-                <Link url={socialMediaLinks.skype} external>
+                <Link url={skype} external>
                   <Image src={Skype} width={50} preview={false} />
                 </Link>
-                <a
-                  style={{ color: "black" }}
-                  href={"mailto:ebay_support@cedcommerce.com"}
-                >
+                <a style={{ color: "black" }} href={email}>
                   <Image src={Mail} width={50} preview={false} />
                 </a>
               </Stack>
@@ -238,32 +253,34 @@ const ContactUs = () => {
             <Stack vertical>
               <div>
                 <div>Accounts</div>
-                <Row gutter={[48,12]}>
-                 
-                  {accountLoader? <Col span={24}>
-                            <Card sectioned>
-                            <TextContainer>
-                              <SkeletonDisplayText size="small" />
-                              <SkeletonBodyText />
-                            </TextContainer>
-                          </Card>
-                          </Col>
-                        : connectedAccountsArray.map((connectedAccount, index) => {
-                    return (
-                      <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-                      <Checkbox       
-                                 
-                      label={connectedAccount.label}
-                        checked={connectedAccount.checked}
-                        onChange={() => {
-                          let temp = [...connectedAccountsArray];
-                          temp[index]["checked"] = !connectedAccount.checked;
-                          setconnectedAccountsArray(temp);
-                        }}
-                      />
-                      </Col>
-                    );
-                  })}
+                <Row gutter={[48, 12]}>
+                  {accountLoader ? (
+                    <Col span={24}>
+                      <Card sectioned>
+                        <TextContainer>
+                          <SkeletonDisplayText size="small" />
+                          <SkeletonBodyText />
+                        </TextContainer>
+                      </Card>
+                    </Col>
+                  ) : (
+                    connectedAccountsArray.map((connectedAccount, index) => {
+                      return (
+                        <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
+                          <Checkbox
+                            label={connectedAccount.label}
+                            checked={connectedAccount.checked}
+                            onChange={() => {
+                              let temp = [...connectedAccountsArray];
+                              temp[index]["checked"] =
+                                !connectedAccount.checked;
+                              setconnectedAccountsArray(temp);
+                            }}
+                          />
+                        </Col>
+                      );
+                    })
+                  )}
                 </Row>
               </div>
               {/* <Select
