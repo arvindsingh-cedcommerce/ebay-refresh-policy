@@ -135,6 +135,15 @@ const ShopifyAccount = (props) => {
     }
   };
 
+  const disableLoading = () => {
+    let isDisable = true
+    for(const key in customDetails) {
+      if(key !== 'selectedEmailNotifications' && customDetails[key]) isDisable = false
+      else if(key === 'selectedEmailNotifications' && customDetails[key].length > 0) isDisable = false
+    }
+    return isDisable
+  }
+
   return (
     <Page fullWidth={false} title="User Profile">
       <Layout>
@@ -148,6 +157,7 @@ const ShopifyAccount = (props) => {
             primaryFooterAction={{
               content: "Submit",
               onAction: saveCustomDetails,
+              disabled: disableLoading()
             }}
             title="Contact Details"
           >
