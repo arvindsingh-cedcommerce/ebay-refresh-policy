@@ -7,7 +7,7 @@ import { getParseFaqData } from "../Products/helperFunctions/commonHelper";
 import { videos } from "../Products/SampleProductData";
 import GroupFAQComponent from "./GroupFAQComponent";
 import YoutubeEmbed from "./YoutubeEmbed";
-import { Card as ShopifyCard } from "@shopify/polaris";
+import { Card as ShopifyCard, SkeletonBodyText, SkeletonDisplayText, TextContainer } from "@shopify/polaris";
 
 const { Meta } = Card;
 
@@ -50,7 +50,15 @@ const EbayHelpComponent = () => {
           totalTabs={2}
           tabContents={{
             "FAQ(s)": (
-              <GroupFAQComponent faqs={faqData} setFaqData={setFaqData} />
+              <>
+              {Object.keys(faqData).length===0?  ( <Card sectioned>
+               <TextContainer>
+              <SkeletonDisplayText size="small" />
+              <SkeletonBodyText />
+            </TextContainer>
+          </Card>):
+              (<GroupFAQComponent faqs={faqData} setFaqData={setFaqData} />)}
+              </>
             ),
             "Video(s)": (
               <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
