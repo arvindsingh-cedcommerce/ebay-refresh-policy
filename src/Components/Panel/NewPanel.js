@@ -561,7 +561,7 @@ const NewPanel = (props) => {
                   }}
                 >
                   <div style={{ marginBottom: "-8px", marginRight: "10px" }}>
-                    <ShopifyPopover
+                  {allNotifications.length > 0 &&  <ShopifyPopover
                       active={bellClicked}
                       activator={activator}
                       onClose={(e) => setBellClicked(!bellClicked)}
@@ -630,6 +630,7 @@ const NewPanel = (props) => {
                         items={allNotifications}
                       />
                     </ShopifyPopover>
+}
                   </div>
                   <div
                     onClick={() => props.history.push("/panel/ebay/appaccount")}
