@@ -68,8 +68,8 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                   let postData = [];
                   selectedRows.forEach((selectedRow) => {
                     let { source_product_id, container_id } = selectedRow;
-                    // postData.push(source_product_id);
-                    postData.push(container_id);
+                    postData.push(source_product_id);
+                    // postData.push(container_id);
                   });
                   setModal({
                     ...modal,
@@ -159,7 +159,8 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                   let postData = [];
                   selectedRows.forEach((selectedRow) => {
                     let { source_product_id, container_id } = selectedRow;
-                    postData.push(container_id);
+                    // postData.push(container_id);
+                    postData.push(source_product_id);
                   });
                   setModal({
                     ...modal,
