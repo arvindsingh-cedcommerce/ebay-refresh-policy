@@ -5,10 +5,10 @@ import { Layout, Menu, Image, Avatar, Drawer, Button } from "antd";
 import Logo from "../../assets/ced-ebay-logo.png";
 import CollapsedLogo from "../../assets/cedcommercelogoCollapsed.png";
 import {
-  MobileHamburgerMajor, MobileHamburgerMajorMonotone
-} from '@shopify/polaris-icons';
+  MobileHamburgerMajor,
+  MobileHamburgerMajorMonotone,
+} from "@shopify/polaris-icons";
 import Marquee from "react-fast-marquee";
-
 import {
   UserOutlined,
   BarChartOutlined,
@@ -133,12 +133,10 @@ const NewPanel = (props) => {
         let testObj = {};
         if (row.hasOwnProperty("message") && row["message"] !== null) {
           testObj["content"] = (
-            <div style={{ display: "flex", marginBottom: "-1rem" }}>
-              <div style={{ justifySelf: "flex-start" }}>
-                {getSeverityIcon(row["severity"])}
-              </div>
-              <div style={{ justifySelf: "flex-start" }}>{row["message"]}</div>
-            </div>
+            <Stack alignment="center" spacing="extraTight" wrap={false}>
+              <>{getSeverityIcon(row["severity"])}</>
+              <>{row["message"]}</>
+            </Stack>
           );
         }
         return testObj;
@@ -229,148 +227,171 @@ const NewPanel = (props) => {
             >
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  margin: "16px 0px",
+                  overflow: "auto",
+                  height: "100vh",
+                  position: "fixed",
+                  left: 0,
+                  width: "200px",
+                  top: 0,
+                  bottom: 0,
+                  zIndex: "100",
+                  justifyContent: "space-between",
                 }}
               >
-                <Image
-                  src={menuCollapsed ? CollapsedLogo : Logo}
-                  preview={false}
-                  width={menuCollapsed ? "30px" : "140px"}
-                  style={
-                    menuCollapsed
-                      ? {
-                          height: "30px",
-                        }
-                      : {
-                          height: "32px",
-                        }
-                  }
-                />
-              </div>
-              <Menu
-                mode="inline"
-                defaultSelectedKeys={["0"]}
-                onClick={handleClick}
-                theme="dark"
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    margin: "16px 0px",
+                  }}
+                >
+                  <Image
+                    src={menuCollapsed ? CollapsedLogo : Logo}
+                    preview={false}
+                    width={menuCollapsed ? "30px" : "140px"}
+                    style={
+                      menuCollapsed
+                        ? {
+                            height: "30px",
+                          }
+                        : {
+                            height: "32px",
+                          }
+                    }
+                  />
+                </div>
+                <Menu
+                  mode="inline"
+                  defaultSelectedKeys={["0"]}
+                  onClick={handleClick}
+                  theme="dark"
+                >
+                  <Menu.Item
+                    key="dashboard"
+                    icon={<BarChartOutlined style={{ fontSize: "22px" }} />}
+                    style={{ margin: "0px" }}
+                  >
+                    Dashboard
+                  </Menu.Item>
+                  <SubMenu
+                    key="sub1"
+                    icon={<TagOutlined style={{ fontSize: "22px" }} />}
+                    title="Products"
+                  >
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="products"
+                      icon={<DropboxOutlined style={{ fontSize: "16px" }} />}
+                    >
+                      Manage Products
+                    </Menu.Item>
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="profiles"
+                      icon={<GroupOutlined style={{ fontSize: "16px" }} />}
+                    >
+                      Profiles
+                    </Menu.Item>
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="policy"
+                      icon={<FileTextOutlined style={{ fontSize: "16px" }} />}
+                    >
+                      Business Policy
+                    </Menu.Item>
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="templates"
+                      icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
+                    >
+                      Templates
+                    </Menu.Item>
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="disabledproducts"
+                      icon={
+                        <EyeInvisibleOutlined style={{ fontSize: "16px" }} />
+                      }
+                    >
+                      Disabled Products
+                    </Menu.Item>
+                  </SubMenu>
+                  <Menu.Item
+                    style={{ margin: "0px" }}
+                    key="orders"
+                    icon={<PieChartOutlined style={{ fontSize: "22px" }} />}
+                  >
+                    Orders
+                  </Menu.Item>
+                  <Menu.Item
+                    style={{ margin: "0px" }}
+                    key="configurations"
+                    icon={<SettingOutlined style={{ fontSize: "22px" }} />}
+                  >
+                    Configuration
+                  </Menu.Item>
+                  <Menu.Item
+                    style={{ margin: "0px" }}
+                    key="activity"
+                    icon={<BellOutlined style={{ fontSize: "22px" }} />}
+                  >
+                    Activities
+                  </Menu.Item>
+                  <Menu.Item
+                    style={{ margin: "0px" }}
+                    key="help"
+                    icon={
+                      <QuestionCircleOutlined style={{ fontSize: "22px" }} />
+                    }
+                  >
+                    Help
+                  </Menu.Item>
+                  <Menu.Item
+                    style={{ margin: "0px" }}
+                    key="pricing"
+                    icon={<DollarOutlined style={{ fontSize: "22px" }} />}
+                  >
+                    Plans
+                  </Menu.Item>
+                  <Menu.Item
+                    style={{ margin: "0px" }}
+                    key="contactUs"
+                    icon={<ContactsOutlined style={{ fontSize: "22px" }} />}
+                  >
+                    Contact Us
+                  </Menu.Item>
+                  <Menu.Item
+                    style={{ margin: "0px" }}
+                    key="accounts"
+                    icon={<UserOutlined style={{ fontSize: "22px" }} />}
+                  >
+                    eBay Accounts
+                  </Menu.Item>
+                  <Menu.Item
+                    style={{ margin: "0px", pointerEvents: "none" }}
+                    key="forSider"
+                  ></Menu.Item>
+                </Menu>
+                </div>
+              </Sider>
+              <div
+                style={{
+                  overflow: "auto",
+                  height: "10vh",
+                  color: "white",
+                  position: "fixed",
+                  left: 210,
+                  width: "5rem",
+                  top: 15,
+                  bottom: 0,
+                  zIndex: "100",
+                  justifyContent: "space-between",
+                }}
+                onClick={() => setdrawerVisible(false)}
               >
-                <Menu.Item
-                  key="dashboard"
-                  icon={<BarChartOutlined style={{ fontSize: "22px" }} />}
-                  style={{ margin: "0px" }}
-                >
-                  Dashboard
-                </Menu.Item>
-                <SubMenu
-                  key="sub1"
-                  icon={<TagOutlined style={{ fontSize: "22px" }} />}
-                  title="Products"
-                >
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="products"
-                    icon={<DropboxOutlined style={{ fontSize: "16px" }} />}
-                  >
-                    Manage Products
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="profiles"
-                    icon={<GroupOutlined style={{ fontSize: "16px" }} />}
-                  >
-                    Profiles
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="policy"
-                    icon={<FileTextOutlined style={{ fontSize: "16px" }} />}
-                  >
-                    Business Policy
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="templates"
-                    icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
-                  >
-                    Templates
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="disabledproducts"
-                    icon={<EyeInvisibleOutlined style={{ fontSize: "16px" }} />}
-                  >
-                    Disabled Products
-                  </Menu.Item>
-                </SubMenu>
-                <Menu.Item
-                  style={{ margin: "0px" }}
-                  key="orders"
-                  icon={<PieChartOutlined style={{ fontSize: "22px" }} />}
-                >
-                  Orders
-                </Menu.Item>
-                <Menu.Item
-                  style={{ margin: "0px" }}
-                  key="configurations"
-                  icon={<SettingOutlined style={{ fontSize: "22px" }} />}
-                >
-                  Configuration
-                </Menu.Item>
-                <Menu.Item
-                  style={{ margin: "0px" }}
-                  key="activity"
-                  icon={<BellOutlined style={{ fontSize: "22px" }} />}
-                >
-                  Activities
-                </Menu.Item>
-                <Menu.Item
-                  style={{ margin: "0px" }}
-                  key="help"
-                  icon={<QuestionCircleOutlined style={{ fontSize: "22px" }} />}
-                >
-                  Help
-                </Menu.Item>
-                <Menu.Item
-                  style={{ margin: "0px" }}
-                  key="pricing"
-                  icon={<DollarOutlined style={{ fontSize: "22px" }} />}
-                >
-                  Plans
-                </Menu.Item>
-                <Menu.Item
-                  style={{ margin: "0px" }}
-                  key="contactUs"
-                  icon={<ContactsOutlined style={{ fontSize: "22px" }} />}
-                >
-                  Contact Us
-                </Menu.Item>
-                <Menu.Item
-                  style={{ margin: "0px" }}
-                  key="accounts"
-                  icon={<UserOutlined style={{ fontSize: "22px" }} />}
-                >
-                  eBay Accounts
-                </Menu.Item>
-                <Menu.Item
-                  style={{ margin: "0px", pointerEvents: "none" }}
-                  key="forSider"
-                ></Menu.Item>
-              </Menu>
-            </Sider> 
-            <div style={{   overflow: "auto",
-                height: "10vh",
-                color:"white",
-                position: "fixed",
-                left: 210,
-                width: "5rem",
-                top: 15,
-                bottom: 0,
-                zIndex: "100",
-                justifyContent:"space-between"}} onClick={() => setdrawerVisible(false)}>
-              <CloseOutlined style={{fontSize:"2rem"}} />
+                <CloseOutlined style={{ fontSize: "2rem" }} />
+              </div>
             </div>
-            </div>           
           </Drawer>
         ) : (
           <Sider
@@ -545,10 +566,8 @@ const NewPanel = (props) => {
                   }
             }
           >
-             
-            
             <div style={{ paddingRight: 40, cursor: "pointer" }}>
-             {/* <Button
+              {/* <Button
                 icon={<Icon source={FilterMajorMonotone} color="base" />}
                 // onClick={() => {
                 //   setFiltersDrawerVisible(true);
@@ -556,10 +575,34 @@ const NewPanel = (props) => {
               >
                 More Filters
               </Button> */}
-              <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-                {/* <div style={{ display: "flex", justifyContent: 'flex-end' }}> */}
-                <div style={{ width: "70%" }}>
-                  {queuedTasks.length > 0 && (
+              <Stack>
+                {window.innerWidth <= 768 ? (
+                  <Stack.Item fill>
+                    <div style={{ paddingLeft: 0, cursor: "pointer" }}>
+                      <Button
+                        style={{
+                          backgroundColor: "#001529",
+                          color: "white",
+                          border: "0",
+                        }}
+                        onClick={() => {
+                          setdrawerVisible(!drawerVisible);
+                        }}
+                      >
+                        {" "}
+                        <Icon
+                          source={MobileHamburgerMajorMonotone}
+                          color={"subdued"}
+                        />
+                      </Button>
+                    </div>{" "}
+                  </Stack.Item>
+                ) : (
+                  ""
+                )}
+
+                {window.innerWidth > 1024 && queuedTasks.length > 0 && (
+                  <Stack.Item fill={window.innerWidth >= 1024 ? true : false}>
                     <TextLoop interval={6000}>
                       {queuedTasks.map(
                         (task, index) =>
@@ -573,19 +616,24 @@ const NewPanel = (props) => {
                           )
                       )}
                     </TextLoop>
-                  )}
-                </div>
-                <Stack distribution="trailing" alignment="center">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginRight: "-20px",
-                    alignItems: "center",
-                  }}
+                  </Stack.Item>
+                )}
+
+                <Stack.Item>
+                  {/* <div style={{ marginBottom: "-8px" }}>
+                <ShopifyPopover
+                  active={bellClicked}
+                  activator={activator}
+                  onClose={(e) => setBellClicked(!bellClicked)}
                 >
-                  <div style={{ marginBottom: "-8px", marginRight: "10px" }}>
-                  {allNotifications.length > 0 &&  <ShopifyPopover
+                  <ActionList
+                    actionRole="menuitem"
+                    items={allNotifications}
+                  />
+                </ShopifyPopover>
+              </div> */}
+                  {allNotifications.length > 0 && (
+                    <ShopifyPopover
                       active={bellClicked}
                       activator={activator}
                       onClose={(e) => setBellClicked(!bellClicked)}
@@ -649,13 +697,16 @@ const NewPanel = (props) => {
                           </p>
                         </div>
                       )}
-                      <ActionList
-                        actionRole="menuitem"
-                        items={allNotifications}
-                      />
+                      <div style={{ overflow: "auto" }}>
+                        <ActionList
+                          actionRole="menuitem"
+                          items={allNotifications}
+                        />
+                      </div>
                     </ShopifyPopover>
-}
-                  </div>
+                  )}
+                </Stack.Item>
+                <Stack.Item>
                   <div
                     onClick={() => props.history.push("/panel/ebay/appaccount")}
                   >
@@ -673,10 +724,8 @@ const NewPanel = (props) => {
                       </div>
                     </Stack>
                   </div>
-                </div>
-                </Stack>
-              </div>
-              {/* </Stack> */}
+                </Stack.Item>
+              </Stack>
             </div>
           </Header>
           <Content
