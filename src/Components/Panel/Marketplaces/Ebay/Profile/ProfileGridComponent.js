@@ -759,6 +759,10 @@ const ProfileGridComponent = (props) => {
           size={"small"}
           loading={gridLoader}
           pagination={false}
+          scroll={{
+            x:1500,
+            y:500
+          }}
         />
       </Card>
       <NewFilterComponentSimilarPolaris
