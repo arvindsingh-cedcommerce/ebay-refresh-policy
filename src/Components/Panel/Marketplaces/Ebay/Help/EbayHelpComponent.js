@@ -7,7 +7,8 @@ import { getParseFaqData } from "../Products/helperFunctions/commonHelper";
 import { videos } from "../Products/SampleProductData";
 import GroupFAQComponent from "./GroupFAQComponent";
 import YoutubeEmbed from "./YoutubeEmbed";
-import { Card as ShopifyCard, SkeletonBodyText, SkeletonDisplayText, TextContainer } from "@shopify/polaris";
+import { Card as ShopifyCard, Icon, SkeletonBodyText, SkeletonDisplayText, TextContainer, TextField } from "@shopify/polaris";
+import { SearchMinor } from "@shopify/polaris-icons";
 
 const { Meta } = Card;
 
@@ -57,7 +58,18 @@ const EbayHelpComponent = () => {
               <SkeletonBodyText />
             </TextContainer>
           </Card>):
-              (<GroupFAQComponent faqs={faqData} setFaqData={setFaqData} />)}
+              (<>  <TextField
+                value={""}
+                onChange={(e) => {
+                }}
+                placeholder={"Search your query"
+                }
+                prefix={(<Icon
+                  source={SearchMinor}
+
+                  color="base"
+                />)}
+              /><br/><GroupFAQComponent faqs={faqData} setFaqData={setFaqData} /></>)}
               </>
             ),
             "Video(s)": (

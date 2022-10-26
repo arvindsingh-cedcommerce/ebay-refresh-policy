@@ -68,7 +68,7 @@ const GroupFAQComponent = ({ faqs, setFaqData }) => {
   };
   return (
     <TabsComponent
-      tabPosition={"left"}
+      tabPosition={window.innerWidth<=768?"top":"left"}
       totalTabs={Object.keys(faqs).length}
       tabContents={getTabStructure()}
     />
