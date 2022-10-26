@@ -1,4 +1,4 @@
-import { FilterOutlined } from "@ant-design/icons";
+import { FilterOutlined, SyncOutlined } from "@ant-design/icons";
 import {
   Banner,
   Button,
@@ -21,10 +21,11 @@ import {
   CircleTickOutlineMinor,
   ImportMinor,
 } from "@shopify/polaris-icons";
-import { Alert, Badge, Col, Image, PageHeader, Progress, Row } from "antd";
+import { Alert, Badge, Col, Image, PageHeader, Progress, Row, Typography } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { getAllNotifications } from "../../../../../APIrequests/ActivitiesAPI";
 import { notify } from "../../../../../services/notify";
+import { Button as AntButton } from "antd";
 import {
   allNotificationsURL,
   clearActivitiesURL,
@@ -39,7 +40,7 @@ import {
 import { queuedActivities } from "../Products/SampleProductData";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
 import LoaderImage from "../../../../../assets/loader/bannerActivityLoader.gif";
-
+const { Title, Text } = Typography;
 const filtersFields = [
   {
     label: "Account",
@@ -379,19 +380,20 @@ const ActivityGrid = (props) => {
           actions={[
             {
               content: (
-                <Button
-                  key="1"
-                  // type="primary"
-                  primary
-                  onClick={() => {
-                    // hitGetActivitiesAPI();
-                    hitRefresh();
-                  }}
-                  loading={refreshBtnLoader}
-                >
-                  {" "}
-                  Refresh
-                </Button>
+
+                <AntButton
+                type="text"
+                key="1"
+                icon={<SyncOutlined style={{ color: "rgb(0 0 0 / 45%)" }} />}
+                onClick={() => {
+                  // hitGetActivitiesAPI();
+                  hitRefresh();
+                }}
+                loading={refreshBtnLoader}
+              >
+                <Text type="secondary">Refresh</Text>
+              </AntButton>
+               
               ),
             },
           ]}
