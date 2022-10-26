@@ -65,6 +65,7 @@ import CsvBulkMenu from "./CsvBulkMenu";
 import OutsideAlerter from "./OutsideAlerter";
 import OutsideAlerterMassMenu from "./OutsideAlerterMassMenu";
 import EbayActionsBulkMenu from "./EbayActionsBulkMenu";
+import ResponsiveBulkMenu from "./ResponsiveBulkMenu";
 
 const { Text } = Typography;
 
@@ -205,6 +206,7 @@ function NewProductsNewFilters(props) {
   const [isCsvBulkMenuOpen, setIsCsvBulkMenuOpen] = useState(false);
   const [isEbayActionBulkMenuOpen, setIsEbayActionBulkMenuOpen] =
     useState(false);
+    const [isOpenBulk,setIsOpenBulk]= useState(false);
   const [productData, setProductData] = useState([]);
   const setCallbackCsvFunction = (openState) => {
     setIsCsvBulkMenuOpen(openState);
@@ -1307,7 +1309,12 @@ function NewProductsNewFilters(props) {
         )
       }
       ghost={true}
-      extra={[
+      extra={window.innerWidth<768?[
+        <ResponsiveBulkMenu
+          profileList={profileList}
+          isOpenBulk={isOpenBulk}
+          setIsOpenBulk={setIsOpenBulk}
+        />,]:[
         <CsvBulkMenu
           profileList={profileList}
           isCsvBulkMenuOpen={isCsvBulkMenuOpen}
