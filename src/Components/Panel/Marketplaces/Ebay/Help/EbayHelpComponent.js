@@ -22,10 +22,38 @@ const site = {
 
 const EbayHelpComponent = () => {
   const [faqData, setFaqData] = useState({});
-
+  const [searchQuery,setSearchQuery]=useState("");
+  const [searchFaqData,setSearchFaqData]= useState({});
+  const [faqArray,setFaqArray]=useState([]);
+  const [searchFaqArray,setSearchFaqArray]=useState([]);
   // faqloader
   const [faqLoader, setFaqLoader] = useState(false)
+  useEffect(()=>{
+  let finalFaqArray=[...faqArray];
+  if(searchQuery)
+  {
+  let updatedFaqArray=[];
 
+  finalFaqArray.forEach((faqKey,index)=>{
+      let questionArray=[];
+      let faqObj={...faqKey};
+      let initialQuestionArray=[...faqKey["qas"]];
+      initialQuestionArray.forEach((questionKey)=>{
+  if(questionKey["question"].toLowerCase().includes(searchQuery.toLowerCase()))
+  {
+    questionArray.push(questionKey);
+  }
+      })
+      faqObj["qas"]=[...questionArray];
+      updatedFaqArray.push(faqObj);
+     });
+      setSearchFaqArray([...updatedFaqArray]);
+    }
+    else
+    {
+      setSearchFaqArray([...finalFaqArray]);
+    }
+  },[searchQuery])
   const getAllFAQs = async () => {
     setFaqLoader(true)
     let { success, data } = await getMethod(faqAPI, {
@@ -33,7 +61,23 @@ const EbayHelpComponent = () => {
     });
     if (success) {
       let parsedData = getParseFaqData(data);
-      setFaqData(parsedData);
+      let parsedValues=Object.values(parsedData);
+      let finalFaqArray=[];
+      parsedValues.map((parsedValue,index)=>{
+        let questionsList=[];
+        
+        finalFaqArray[index]={...parsedValue};
+        questionsList=Object.keys(parsedValue["qas"]);
+        let currentArr=[];
+        questionsList.map((question,i)=>{
+          let questionObj={...parsedValue["qas"][question]};
+          questionObj["question"]=question;
+          currentArr.push(questionObj);
+        })
+        finalFaqArray[index]["qas"]=currentArr;
+      });
+      setFaqArray([...finalFaqArray]);
+      setSearchFaqArray([...finalFaqArray]);
     }
     setFaqLoader(false)
   };
@@ -52,15 +96,16 @@ const EbayHelpComponent = () => {
           tabContents={{
             "FAQ(s)": (
               <>
-              {Object.keys(faqData).length===0?  ( <Card sectioned>
+              {searchFaqArray.length===0?  ( <Card sectioned>
                <TextContainer>
               <SkeletonDisplayText size="small" />
               <SkeletonBodyText />
             </TextContainer>
           </Card>):
               (<>  <TextField
-                value={""}
+                value={searchQuery}
                 onChange={(e) => {
+                  setSearchQuery(e);
                 }}
                 placeholder={"Search your query"
                 }
@@ -69,7 +114,7 @@ const EbayHelpComponent = () => {
 
                   color="base"
                 />)}
-              /><br/><GroupFAQComponent faqs={faqData} setFaqData={setFaqData} /></>)}
+              /><br/><GroupFAQComponent faqs={searchFaqArray} setSearchFaqArray={setSearchFaqArray} /></>)}
               </>
             ),
             "Video(s)": (

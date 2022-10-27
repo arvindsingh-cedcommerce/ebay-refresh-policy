@@ -1,4 +1,4 @@
-import { Image, PageHeader, Alert, Row, Col, Typography } from "antd";
+import { Image, PageHeader, Alert, Row, Col, Typography, Input, InputNumber, Select } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
@@ -66,6 +66,7 @@ import OutsideAlerter from "./OutsideAlerter";
 import OutsideAlerterMassMenu from "./OutsideAlerterMassMenu";
 import EbayActionsBulkMenu from "./EbayActionsBulkMenu";
 import ResponsiveBulkMenu from "./ResponsiveBulkMenu";
+import BasicPaginationComponent from "../../../../AntDesignComponents/BasicPaginationComponent";
 
 const { Text } = Typography;
 
@@ -207,6 +208,7 @@ function NewProductsNewFilters(props) {
   const [isEbayActionBulkMenuOpen, setIsEbayActionBulkMenuOpen] =
     useState(false);
     const [isOpenBulk,setIsOpenBulk]= useState(false);
+    const [jumpToActivePage,setJumpToActivePage]=useState(0);
   const [productData, setProductData] = useState([]);
   const setCallbackCsvFunction = (openState) => {
     setIsCsvBulkMenuOpen(openState);
@@ -347,7 +349,7 @@ function NewProductsNewFilters(props) {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-  const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([{label:" 25 / page ",value:25},{label:" 50 / page ",value:50},{label:" 100 / page ",value:100}]);
   const [pageSize, setPageSize] = useState(25);
   const [totalProductsCount, setTotalProductsCount] = useState(0);
 
@@ -402,7 +404,7 @@ function NewProductsNewFilters(props) {
     total: "",
   });
   const [prevPage, setPrevPage] = useState(1);
-
+  const { Option } = Select;
   useEffect(() => {
     if (filtersToPass && activePage > 1 && activePage !== prevPage) {
       hitGetProductsAPI(1, pageSize);
@@ -1007,7 +1009,33 @@ function NewProductsNewFilters(props) {
       </Stack>
     );
   };
-
+const showTotal=(total, range) => {
+        if(range[0] > range[1]) {
+          range[0] = 1
+        }
+        if(range[1]>totalProductsCount)
+        {
+          range[1]=totalProductsCount;
+        }
+        if (totalProductsCount)
+          return <div style={{display:"flex",justifyContent:"end",fontWeight:"bold"}}>{`Showing ${range[0]}-${range[1]} of ${total} Product(s)`}</div>;
+      };
+const showJumpToPage=()=>{
+ return (<Input style={{width:"6rem"}} value={jumpToActivePage?jumpToActivePage:""} onChange={(e)=>{setJumpToActivePage(Number(e.target.value))}} onPressEnter={(e)=>{
+  let numOfPages=totalProductsCount/pageSize;
+  if(totalProductsCount%pageSize>0)
+  {
+    numOfPages+=1;
+  }
+  if(jumpToActivePage>0 && jumpToActivePage<=numOfPages)
+  {
+  setActivePage(jumpToActivePage);
+  setPrevPage(activePage);
+  hitGetProductsAPI(jumpToActivePage,pageSize);
+  }
+ }}/>);
+ 
+}
   const prepareProfileList = (profiles) => {
     const profileList = profiles.map((profile) => {
       return {
@@ -1278,7 +1306,9 @@ function NewProductsNewFilters(props) {
   //     setFiltersToPass(reduxState);
   //   }
   // }, [connectedAccountsArray]);
-
+  const handleSelectChange = useCallback((value) => {setPageSize(value);
+  
+    hitGetProductsAPI(activePage,value);}, []);
   function handleScroll(e) {
     if (
       e.currentTarget.querySelector(".ant-table-wrapper").className ===
@@ -1385,8 +1415,12 @@ function NewProductsNewFilters(props) {
               xl={18}
               xxl={18}
             >
-              <Stack distribution="trailing">
-                <PaginationComponent
+
+              <Row gutter={[10,8]} justify="space-evenly">
+                <Col span={6} xs={20} sm={13} md={6} lg={8} xl={6} xxl={6} style={{margin:"auto"}}>
+       {showTotal(totalProductsCount,[(activePage-1)*pageSize+1,activePage*pageSize])}
+                </Col>
+                {/* <PaginationComponent
                   totalCount={totalProductsCount}
                   hitGetProductsAPI={hitGetProductsAPI}
                   pageSizeOptions={pageSizeOptions}
@@ -1397,8 +1431,44 @@ function NewProductsNewFilters(props) {
                   setPageSize={setPageSize}
                   size={"default"}
                   simple={false}
+                /> */}
+                <Col span={10} xs={24} sm={24} md={18} lg={16} xl={9} xxl={9} style={{display:"flex",justifyContent:"end"}}>
+                <BasicPaginationComponent
+    totalCount={totalProductsCount}
+    hitGetProductsAPI={hitGetProductsAPI}
+    pageSizeOptions={pageSizeOptions}
+    activePage={activePage}
+    setActivePage={setActivePage}
+    setPrevPage={setPrevPage}
+    pageSize={pageSize}
+    setPageSize={setPageSize}
+    size={"default"}
+    simple={false}
                 />
-              </Stack>
+                </Col>
+                <Col span={4} xs={12} sm={12} md={12} lg={12} xl={4} xxl={4} style={{display:"flex",justifyContent:"end"}}>
+                {/* <Select
+      label=""
+      options={pageSizeOptions}
+      onChange={handleSelectChange}
+      value={pageSize}
+    
+    /> */}
+       <Select
+      defaultValue="25 / page"
+      style={{
+        width:"11rem"
+      }}
+      onChange={handleSelectChange}
+    >
+    {pageSizeOptions.map((pageSizeOption,index)=>
+<Option value={Number(pageSizeOption.value)}>{pageSizeOption.label}</Option>
+    )}</Select>
+                </Col>
+                <Col span={5} xs={12} sm={12} md={12} lg={12} xl={5} xxl={5}  style={{display:"flex", justifyContent:"end"}}>
+                  <div>Go To {showJumpToPage()} Page</div>
+                 </Col>
+              </Row>
             </Col>
           </Row>
         </div>

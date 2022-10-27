@@ -11,28 +11,28 @@ import { Collapse, Divider, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 
-const GroupFAQComponent = ({ faqs, setFaqData }) => {
+const GroupFAQComponent = ({ faqs, setSearchFaqArray }) => {
   const getTabStructure = () => {
     let returnStructure = {};
-    Object.keys(faqs).forEach((faq) => {
-      returnStructure[faqs[faq]["category"]] = Object.keys(
-        faqs[faq]["qas"]
-      ).map((faqKey) => (
+    faqs.forEach((faq,i) => {
+      if(faq["qas"] && faq["qas"].length>0) {
+      returnStructure[faq["category"]] =faq["qas"]
+      .map((faqKey,index) => (
         <>
           <div
             style={{ cursor: "pointer" }}
             onClick={() => {
-              let temp = { ...faqs };
-              temp[faq]["qas"][faqKey]["isOpen"] =
-                !faqs[faq]["qas"][faqKey]["isOpen"];
-              setFaqData(temp);
+              let temp = [...faqs ];
+              temp[i]["qas"][index]["isOpen"] =
+                !faq["qas"][index]["isOpen"];
+                setSearchFaqArray(temp);
             }}
-            ariaExpanded={faqs[faq]["qas"][faqKey]["isOpen"]}
+            ariaExpanded={faq["qas"][index]["isOpen"]}
           >
             <Card>
               <Card.Section>
                 <Stack distribution={"equalSpacing"}>
-                  <b>{faqKey}</b>
+                  <b>{faqKey["question"]}</b>
                   <Button
                     plain
                     icon={
@@ -50,11 +50,11 @@ const GroupFAQComponent = ({ faqs, setFaqData }) => {
                   duration: "500ms",
                   timingFunction: "ease-in-out",
                 }}
-                open={faqs[faq]["qas"][faqKey]["isOpen"]}
+                open={faq["qas"][index]["isOpen"]}
               >
                 <Card>
                   <Card.Section>
-                    {faqs[faq]["qas"][faqKey]["value"]}
+                    {faq["qas"][index]["value"]}
                   </Card.Section>
                 </Card>
               </Collapsible>
@@ -63,13 +63,14 @@ const GroupFAQComponent = ({ faqs, setFaqData }) => {
           <br />
         </>
       ));
-    });
+    }  });
+  
     return returnStructure;
   };
   return (
     <TabsComponent
       tabPosition={window.innerWidth<=768?"top":"left"}
-      totalTabs={Object.keys(faqs).length}
+      totalTabs={faqs.length}
       tabContents={getTabStructure()}
     />
   );
