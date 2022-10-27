@@ -84,12 +84,23 @@ const FinalProductSettingsNewNew = () => {
     }
   };
 
+  const parsedData = (data) => {
+    let tempObj = {};
+    for (const key in data) {
+      if (key === "autoDeleteProduct") {
+        tempObj["autoProductDelete"] = data[key];
+      } else tempObj[key] = data[key];
+    }
+    setShopifyToAppData(tempObj);
+  };
+
   const getSavedData = async () => {
     let { data, success, message } = await configurationAPI(getAppSettingsURL);
     if (success) {
       setflag(false);
       if (data?.data?.product_settings?.shopify_to_app) {
-        setShopifyToAppData(data?.data?.product_settings?.shopify_to_app);
+        parsedData(data?.data?.product_settings?.shopify_to_app);
+        // setShopifyToAppData(data?.data?.product_settings?.shopify_to_app);
       }
       if (data?.marketplace?.ebay?.shop) {
         getAppToEbaySavedData(
