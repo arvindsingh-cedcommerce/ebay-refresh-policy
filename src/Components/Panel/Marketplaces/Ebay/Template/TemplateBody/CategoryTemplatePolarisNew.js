@@ -7,6 +7,7 @@ import {
   FormLayout,
   Layout,
   Select,
+  SkeletonBodyText,
   Stack,
   TextField,
 } from "@shopify/polaris";
@@ -2185,16 +2186,20 @@ function to check final validation
                     No
                   </Button>
                 </ButtonGroup>
-                {enableSecondaryCategory && (
-                  <>
-                    {renderSecondaryCategorySearchPrediction()}
-                    {renderCategoryMapping(
-                      secondaryCategoryMapping,
-                      setSecondaryCategoryMapping,
-                      "secondaryCategory"
-                    )}
-                  </>
-                )}
+                {id &&
+                  enableSecondaryCategory &&
+                  secondaryCategoryMapping.length == 0 && <SkeletonBodyText />}
+                {enableSecondaryCategory &&
+                  secondaryCategoryMapping.length > 0 && (
+                    <>
+                      {renderSecondaryCategorySearchPrediction()}
+                      {renderCategoryMapping(
+                        secondaryCategoryMapping,
+                        setSecondaryCategoryMapping,
+                        "secondaryCategory"
+                      )}
+                    </>
+                  )}
               </Stack>
             </Card>
           </Layout.AnnotatedSection>
@@ -2213,16 +2218,35 @@ function to check final validation
             }
           >
             <Card sectioned title="Category Mapping">
-              <Stack vertical spacing="tight">
-                {renderCategorySearchPrediction()}
-                {renderCategoryMapping(
-                  primaryCategoryMapping,
-                  setPrimaryCategoryMapping,
-                  "primaryCategory"
-                )}
-              </Stack>
+              {primaryCategoryMapping.length ? (
+                <Stack vertical spacing="tight">
+                  {renderCategorySearchPrediction()}
+                  {renderCategoryMapping(
+                    primaryCategoryMapping,
+                    setPrimaryCategoryMapping,
+                    "primaryCategory"
+                  )}
+                </Stack>
+              ) : (
+                <SkeletonBodyText />
+              )}
             </Card>
           </Layout.AnnotatedSection>
+          {id &&
+            primaryCategoryMapping.length > 0 &&
+            barcodeOptions.length == 0 && (
+              <Layout.AnnotatedSection
+                id="additionalInformation"
+                title="Additional Information"
+                description={
+                  "Checked options are available for this selected category"
+                }
+              >
+                <Card sectioned>
+                  <SkeletonBodyText />
+                </Card>
+              </Layout.AnnotatedSection>
+            )}
           {barcodeOptions.length > 0 && (
             <Layout.AnnotatedSection
               id="additionalInformation"
@@ -2249,7 +2273,22 @@ function to check final validation
           ) : (
             <Spin tip="Fetching Attributes" size="large" />
           )} */}
-          {requiredAttributesMapping?.options?.length > 0 && (
+          {id &&
+            primaryCategoryMapping.length > 0 &&
+            requiredAttributesMapping?.options?.length == 0 && (
+              <Layout.AnnotatedSection
+                id="requiredAttributeMapping"
+                title="Required Attributes (Item Specifics)"
+                description={
+                  "These attributes are required for product listing on eBay."
+                }
+              >
+                <Card sectioned>
+                  <SkeletonBodyText />
+                </Card>
+              </Layout.AnnotatedSection>
+            )}
+          {requiredAttributesMapping?.options?.length > 1 && (
             <Layout.AnnotatedSection
               id="requiredAttributeMapping"
               title="Required Attributes (Item Specifics)"
@@ -2334,6 +2373,21 @@ function to check final validation
               <Card sectioned>{renderRequiredAttributeMappingStructure()}</Card>
             </Layout.AnnotatedSection>
           )}
+          {id &&
+            primaryCategoryMapping.length > 0 &&
+            optionalAttributesMapping?.options?.length == 0 && (
+              <Layout.AnnotatedSection
+                id="optionalAttributeMapping"
+                title="Optional Attributes (Item Specifics)"
+                description={
+                  "These attributes are optional and can be used for enhancing the product's specification on eBay."
+                }
+              >
+                <Card sectioned>
+                  <SkeletonBodyText />
+                </Card>
+              </Layout.AnnotatedSection>
+            )}
           {optionalAttributesMapping?.options?.length > 0 && (
             <Layout.AnnotatedSection
               id="optionalAttributeMapping"
@@ -2359,6 +2413,21 @@ function to check final validation
               </Card>
             </Layout.AnnotatedSection>
           )}
+          {id &&
+            primaryCategoryMapping.length > 0 &&
+            optionalAttributesMapping?.options?.length == 0 && (
+              <Layout.AnnotatedSection
+                id="customAttributeMapping"
+                title="Custom Attributes (Item Specifics)"
+                description={
+                  "Apart from eBay attributes you can set your own attributes/ item specifics for eBay listing."
+                }
+              >
+                <Card sectioned>
+                  <SkeletonBodyText />
+                </Card>
+              </Layout.AnnotatedSection>
+            )}
           {optionalAttributesMapping?.options?.length > 0 && (
             // showAttributeMapping &&
             <Layout.AnnotatedSection
@@ -2381,6 +2450,21 @@ function to check final validation
               </Card>
             </Layout.AnnotatedSection>
           )}
+          {id &&
+            primaryCategoryMapping.length > 0 &&
+            categoryFeatureOptions.length == 0 && (
+              <Layout.AnnotatedSection
+                id="productCondition"
+                title="Product condition"
+                description={
+                  "Most eBay listing categories require an item condition. It ensures the product's condition."
+                }
+              >
+                <Card sectioned>
+                  <SkeletonBodyText />
+                </Card>
+              </Layout.AnnotatedSection>
+            )}
           {categoryFeatureOptions.length > 0 && (
             <Layout.AnnotatedSection
               id="productCondition"
@@ -2500,7 +2584,38 @@ function to check final validation
       </Stack>
     );
   };
-  return (
+  return id ? (
+    <div
+      style={
+        accountStatus === "inactive"
+          ? {
+              pointerEvents: "none",
+              opacity: 0.8,
+            }
+          : {}
+      }
+    >
+      <Card
+        title="Category template"
+        sectioned
+        primaryFooterAction={{
+          content: "Save",
+          onAction: saveFormdata,
+          loading: saveBtnLoader,
+        }}
+      >
+        <Banner status="info">
+          <p>
+            Set category related components for eBay listing. Here you can set
+            primary category and it's attributes. You can set product condition,
+            store front category and secondary category also.
+          </p>
+        </Banner>
+        <Card.Section>{getCategoryStructure("primary")}</Card.Section>
+        <Card.Section>{getCategoryStructure("secondary")}</Card.Section>
+      </Card>
+    </div>
+  ) : (
     <LoadingOverlay
       active={loaderOverlayActive}
       spinner
