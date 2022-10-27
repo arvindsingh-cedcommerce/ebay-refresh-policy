@@ -600,9 +600,9 @@ const NewPanel = (props) => {
                 ) : (
                   ""
                 )}
-
+<Stack.Item fill>
                 {window.innerWidth > 1024 ? queuedTasks.length > 0 && (
-                  <Stack.Item fill={window.innerWidth >= 1024 ? true : false}>
+                  
                     <TextLoop interval={6000}>
                       {queuedTasks.map(
                         (task, index) =>
@@ -616,8 +616,9 @@ const NewPanel = (props) => {
                           )
                       )}
                     </TextLoop>
-                  </Stack.Item>
-                ):<Stack.Item fill></Stack.Item>}
+                ):<></>}
+
+</Stack.Item>
 
                 <Stack.Item>
                   {/* <div style={{ marginBottom: "-8px" }}>
