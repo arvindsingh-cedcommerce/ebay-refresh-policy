@@ -599,9 +599,11 @@ const NewPanel = (props) => {
                 ) : (
                   ""
                 )}
-                <Stack.Item fill>
+                <Stack.Item fill>        
                   {window.innerWidth > 1024 ? (
                     queuedTasks.length > 0 && (
+
+                <div style={{display:"flex",justifyContent:"center"}}>
                       <TextLoop interval={6000}>
                         {queuedTasks.map(
                           (task, index) =>
@@ -615,12 +617,13 @@ const NewPanel = (props) => {
                             )
                         )}
                       </TextLoop>
+                      </div>
                     )
                   ) : (
                     <></>
                   )}
                 </Stack.Item>
-
+              
                 <Stack.Item>
                   {/* <div style={{ marginBottom: "-8px" }}>
                 <ShopifyPopover
