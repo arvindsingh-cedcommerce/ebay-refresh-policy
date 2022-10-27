@@ -335,6 +335,8 @@ const FinalPolicyGrid = (props) => {
         >
           Refresh Policies
         </Button>,
+        <>
+        {window.innerWidth>=350?
         <Select
           key="addPolicies"
           value={addTemplateValue}
@@ -353,14 +355,47 @@ const FinalPolicyGrid = (props) => {
             }
           }}
         >
+         
           {addPolicyOptions.map((option) => (
             <Option key={option["value"]} value={option["value"]}>
               {option["label"]}
             </Option>
           ))}
-        </Select>,
+        </Select>
+        :<>
+        </>}
+        </>,
       ]}
     >
+        {window.innerWidth<350?
+        <Select
+          key="addPolicies"
+          style={{marginBottom:"0.7rem"}}
+          value={addTemplateValue}
+          placeholder={<Text strong>Create Policy</Text>}
+          onChange={(selectedPolicyValue) => {
+            if (connectedAccountsArray.length === 1) {
+              const { domainName } = connectedAccountsArray[0];
+              const url = `https://www.bizpolicy.ebay${domainName}/businesspolicy/${selectedPolicyValue}`;
+              window.open(url, "_blank");
+            } else {
+              setaccountSelectionModal({
+                ...accountSelectionModal,
+                active: true,
+                selectedPolicyValue: selectedPolicyValue,
+              });
+            }
+          }}
+        >
+         
+          {addPolicyOptions.map((option) => (
+            <Option key={option["value"]} value={option["value"]}>
+              {option["label"]}
+            </Option>
+          ))}
+        </Select>
+        :<>
+        </>}
       <Card>
         <Tabs
           tabs={tabsData}
