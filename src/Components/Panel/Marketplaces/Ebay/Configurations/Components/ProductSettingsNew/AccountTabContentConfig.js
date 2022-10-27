@@ -793,7 +793,7 @@ const AccountTabContentConfig = ({
                                           >
                                             <Select
                                               placeholder={"Select..."}
-                                              label={`Ebay attribute`}
+                                              label={`eBay attribute`}
                                               options={matchfromEbayOptions}
                                               onChange={(e) => {
                                                 let test = {
