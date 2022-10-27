@@ -1516,7 +1516,7 @@ const FinalDashboard = (props) => {
                       const { title } = item;
                       return (
                         <ResourceList.Item
-                          onClick={(e) => props.history.push("help")}
+                          onClick={(e) => props.history.push(`help?question=${title}`)}
                           accessibilityLabel={`View details for ${title}`}
                         >
                           <h3>

@@ -9,6 +9,7 @@ import GroupFAQComponent from "./GroupFAQComponent";
 import YoutubeEmbed from "./YoutubeEmbed";
 import { Card as ShopifyCard, Icon, SkeletonBodyText, SkeletonDisplayText, TextContainer, TextField } from "@shopify/polaris";
 import { SearchMinor } from "@shopify/polaris-icons";
+import { parseQueryString } from "../../../../../services/helperFunction";
 
 const { Meta } = Card;
 
@@ -20,14 +21,18 @@ const site = {
   borderRadius: "2px",
 };
 
-const EbayHelpComponent = () => {
+const EbayHelpComponent = (props) => {
+ 
+  let { question } = parseQueryString(props.location.search);
+  const questionValue=question.trim();
   const [faqData, setFaqData] = useState({});
   const [searchQuery,setSearchQuery]=useState("");
   const [searchFaqData,setSearchFaqData]= useState({});
   const [faqArray,setFaqArray]=useState([]);
   const [searchFaqArray,setSearchFaqArray]=useState([]);
   // faqloader
-  const [faqLoader, setFaqLoader] = useState(false)
+  const [faqLoader, setFaqLoader] = useState(false);
+  
   useEffect(()=>{
   let finalFaqArray=[...faqArray];
   if(searchQuery)
@@ -53,7 +58,11 @@ const EbayHelpComponent = () => {
     {
       setSearchFaqArray([...finalFaqArray]);
     }
-  },[searchQuery])
+  },[searchQuery]);
+  useEffect(()=>{
+    if(questionValue && faqArray.length>0)
+    setSearchQuery(questionValue);
+  },[faqArray]);
   const getAllFAQs = async () => {
     setFaqLoader(true)
     let { success, data } = await getMethod(faqAPI, {
