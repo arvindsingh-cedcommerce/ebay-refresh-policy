@@ -133,14 +133,35 @@ const PlansComponentAnt = ({
     }
   };
 
+  // const onMouseHoverCard = () => {
+  //   var plansCard = document.getElementsByClassName("plansCard");
+  //   for (var i = 0; i < plansCard.length; i++) {
+  //     plansCard[i].addEventListener("mouseover", function () {
+  //       var current = document.getElementsByClassName("active");
+  //       current[0].className = current[0].className.replace(" active", "");
+  //       this.className += " active";
+  //     });
+  //   }
+  // };
+  
   const onMouseHoverCard = () => {
     var plansCard = document.getElementsByClassName("plansCard");
     for (var i = 0; i < plansCard.length; i++) {
-      plansCard[i].addEventListener("mouseover", function () {
-        var current = document.getElementsByClassName("active");
-        current[0].className = current[0].className.replace(" active", "");
-        this.className += " active";
-      });
+      if (window.innerWidth >= 767) {
+        plansCard[i].addEventListener("mouseover", function () {
+          var current = document.getElementsByClassName("active");
+          current[0].className = current[0].className.replace(" active", "");
+          this.className += " active";
+        });
+      }
+      else {
+        plansCard[i].addEventListener("click", function () {
+          var current = document.getElementsByClassName("active");
+          current[0].className = current[0].className.replace(" active", "");
+          this.className += " active";
+        });
+      }
+
     }
   };
 
