@@ -255,11 +255,23 @@ const FinalDashboard = (props) => {
         if (shopifyAccount?.userCustomData?.userData) {
           const { skypeLink, whatsAppLink, email } =
             shopifyAccount?.userCustomData?.userData;
-          setSocialMediaLinks({
-            skype: skypeLink,
-            whatsApp: whatsAppLink,
-            email: email,
-          });
+          if (skypeLink) {
+            setSocialMediaLinks({ ...socialMediaLinks, skype: skypeLink });
+          }
+          if (whatsAppLink) {
+            setSocialMediaLinks({
+              ...socialMediaLinks,
+              whatsApp: whatsAppLink,
+            });
+          }
+          if (email) {
+            setSocialMediaLinks({ ...socialMediaLinks, email: email });
+          }
+          // setSocialMediaLinks({
+          //   skype: skypeLink,
+          //   whatsApp: whatsAppLink,
+          //   email: email,
+          // });
         }
         if (shopifyAccount?.shop_details?.currency) {
           setShopifyCurrencyName(shopifyAccount.shop_details.currency);
