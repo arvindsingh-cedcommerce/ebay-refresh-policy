@@ -733,9 +733,10 @@ const NewPanel = (props) => {
                       >
                         {shopURL?.[0]?.toUpperCase()}
                       </Avatar>
+                      {window.innerWidth>345?
                       <div style={{ color: "#fff" }}>
                         {shopURL?.split(".")?.[0]}
-                      </div>
+                      </div>:<></>}
                     </Stack>
                   </div>
                 </Stack.Item>
