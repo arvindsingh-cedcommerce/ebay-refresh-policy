@@ -266,7 +266,7 @@ const ContactUs = () => {
             </Stack>
           </Card>
         </Col>
-        <Col span={12} xs={24} sm={24} md={24} lg={12} xxl={12}>
+        <Col span={12} xs={24} sm={24} md={24} lg={12} xxl={12} style={window.innerWidth<=991?{margin:"0.8rem 0"}:{}}>
           <Card
             title="Schedule Demo"
             sectioned
