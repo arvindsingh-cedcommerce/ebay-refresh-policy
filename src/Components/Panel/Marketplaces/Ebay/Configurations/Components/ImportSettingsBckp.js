@@ -967,7 +967,7 @@ const ImportSettingsBckp = () => {
                           <Stack vertical={false} distribution={"fillEvenly"}>
                             <Select
                               placeholder={"Select..."}
-                              label={`Ebay attribute`}
+                              label={`eBay attribute`}
                               options={matchfromEbayOptions}
                               onChange={(e) => {
                                 let test = { ...importProductFilters };

@@ -117,7 +117,7 @@ export const newsData = [
   },
   {
     _id: "5e884f346f102",
-    title: "Ebay cooperates with Shopify",
+    title: "eBay cooperates with Shopify",
     description: "",
     image_url: "https://ebay.sellernext.com/marketplace-logos/1.png",
     content_link: "https://ecommercenews.eu/ebay-cooperates-with-shopify/",

@@ -863,7 +863,7 @@ const NewOrdersGrid = (props) => {
       case "country":
         return "Account";
       case "source_order_id":
-        return "Ebay Order Id";
+        return "eBay Order Id";
       case "status":
         return "Order Status";
       default:
