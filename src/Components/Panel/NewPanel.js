@@ -604,7 +604,7 @@ const NewPanel = (props) => {
                   ""
                 )}
                 <Stack.Item fill>        
-                  {window.innerWidth > 1024 ? (
+                  {window.innerWidth > 1116 ? (
                     queuedTasks.length > 0 && (
 
                 <div style={{display:"flex",justifyContent:"center"}}>
@@ -629,7 +629,7 @@ const NewPanel = (props) => {
                 </Stack.Item>
     
 <Modal
-        activator={window.innerWidth<=1024? <Stack.Item><div style={{margin:"2rem 0"}} onClick={()=>{setShowQueuedTasks(!showQueuedTasks)}}><Icon
+        activator={window.innerWidth<=1116? <Stack.Item><div style={{margin:"2rem 0"}} onClick={()=>{setShowQueuedTasks(!showQueuedTasks)}}><Icon
         source={NoteMajorMonotone}
         color="base"
       />    </div>  </Stack.Item> :<></>}
