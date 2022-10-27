@@ -54,7 +54,7 @@ import { getAllNotifications } from "../../APIrequests/ActivitiesAPI";
 import { allNotificationsURL } from "../../URLs/ActivitiesURL";
 import FinalDashboard from "./Marketplaces/Ebay/Dashboard/FinalDashboard";
 import { notify } from "../../services/notify";
-import { getConnectedAccounts } from "../../Apirequest/accountsApi";
+import { getConnectedAccounts, getProfileImage } from "../../Apirequest/accountsApi";
 import ProfileComponent from "./Marketplaces/Ebay/Profile/ProfileComponent";
 import PolicyComponent from "./Marketplaces/Ebay/Policies/PolicyComponent";
 import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsComponent";
@@ -74,7 +74,11 @@ const NewPanel = (props) => {
 
   // currently running activities
   const [queuedTasks, setQueuedTasks] = useState([]);
-
+  const [personProfile, setPersonProfile] = useState({
+    file: "",
+    imagePreviewUrl: "",
+    active: "edit",
+  });
   // shopUrl
   const [shopURL, setShopURL] = useState("");
   // shopifyAccountData
@@ -166,9 +170,18 @@ const NewPanel = (props) => {
       props.history.push("/auth/login");
     }
   };
-
+  const getImage = async () => {
+    let { success, message } = await getProfileImage();
+    if (success) {
+      setPersonProfile({ ...personProfile, imagePreviewUrl: message });
+    } else {
+      // setPerson({...person, imagePreviewUrl: message})
+    }
+  };
   useEffect(() => {
+    
     getAllConnectedAccounts();
+    getImage();
   }, []);
 
   useEffect(() => {
