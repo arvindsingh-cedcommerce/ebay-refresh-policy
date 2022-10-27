@@ -980,6 +980,7 @@ function NewProductsNewFilters(props) {
               />
             </div>
           </Popover>
+        {window.innerWidth>360?
           <Popover
             active={popOverStatus["profile"]}
             activator={profileActivator}
@@ -996,8 +997,27 @@ function NewProductsNewFilters(props) {
                 onChange={(value) => handleChange(value, "profile_name")}
               />
             </div>
-          </Popover>
+          </Popover>:<></>}
+        
         </ButtonGroup>
+        {window.innerWidth<=360?
+          <Popover
+            active={popOverStatus["profile"]}
+            activator={profileActivator}
+            onClose={() => popOverHandler("profile")}
+          >
+            <div style={{ margin: "10px" }}>
+              <ChoiceList
+                choices={profileListForFilters}
+                selected={
+                  initialProfileObj[0]
+                    ? [initialProfileObj[0].value]
+                    : selected["profile_name"]
+                }
+                onChange={(value) => handleChange(value, "profile_name")}
+              />
+            </div>
+          </Popover>:<></>}
         <Button
           icon={<Icon source={FilterMajorMonotone} color="base" />}
           onClick={() => {
