@@ -12,6 +12,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import {
+  Badge,
   Banner,
   Button as ShopifyButton,
   Modal,
@@ -132,18 +133,16 @@ const PlansComponentAnt = ({
     }
   };
 
-
-  const onMouseHoverCard = () =>{
-  var plansCard =  document.getElementsByClassName('plansCard');
+  const onMouseHoverCard = () => {
+    var plansCard = document.getElementsByClassName("plansCard");
     for (var i = 0; i < plansCard.length; i++) {
-      plansCard[i].addEventListener("mouseover", function() {
-      var current = document.getElementsByClassName("active");
-      current[0].className = current[0].className.replace(" active", "");
-      this.className += " active";
+      plansCard[i].addEventListener("mouseover", function () {
+        var current = document.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        this.className += " active";
       });
-  }
-
-}
+    }
+  };
 
   return (
     <PageHeader
@@ -233,9 +232,11 @@ const PlansComponentAnt = ({
             <Col span={24}>
               {fromOnBoarding ? (
                 <React.Fragment>
-                  <Row justify="space-between"  style={{marginBottom:'20px'}}>
+                  <Row justify="space-between" style={{ marginBottom: "20px" }}>
                     <Col>
-                      <Title style={{marginRight:'20px'}} level={4}>Choose Plan</Title>
+                      <Title style={{ marginRight: "20px" }} level={4}>
+                        Choose Plan
+                      </Title>
                     </Col>
                     <Col>
                       <ShopifyButton
@@ -245,7 +246,7 @@ const PlansComponentAnt = ({
                           await saveCompletedStep(3);
                           let { success, data } = await checkStepCompleted();
                           if (success) {
-                            setCurrentStep(data);                          
+                            setCurrentStep(data);
                           }
                         }}
                       >
@@ -282,8 +283,20 @@ const PlansComponentAnt = ({
                     </Text>
                   </Col>
                   <Col span={24}>
-                    <div style={{ width: "50%", margin: "0 auto" }}>
-                      <Banner status="warning" icon={false}>
+                    <Badge status="warning">
+                      <Text strong>
+                        If you want a custom plan feel free to&nbsp;
+                        <span
+                          onClick={() => {
+                            props.history.push("/panel/ebay/contactUs");
+                          }}
+                        >
+                          <Link>contact Us</Link>
+                        </span>
+                      </Text>
+                    </Badge>
+                    {/* <div style={{ width: "50%", margin: "0 auto" }}> */}
+                    {/* <Banner status="warning" icon={false}>
                         <Text strong>
                           If you want a custom plan feel free to&nbsp;
                           <span
@@ -294,8 +307,8 @@ const PlansComponentAnt = ({
                             <Link>contact Us</Link>
                           </span>
                         </Text>
-                      </Banner>
-                      {/* <Alert
+                      </Banner> */}
+                    {/* <Alert
                         message={
                           <Text strong>
                             If you want a custom plan feel free to&nbsp;
@@ -306,7 +319,7 @@ const PlansComponentAnt = ({
                         }
                         type="warning"
                       /> */}
-                    </div>
+                    {/* </div> */}
                   </Col>
                 </Row>
               )}
@@ -333,7 +346,7 @@ const PlansComponentAnt = ({
               </Row>
             </Col>
             <Col span={24}>
-              <Row justify="center" gutter={8} style={{marginBottom:'30px'}}>
+              <Row justify="center" gutter={8} style={{ marginBottom: "30px" }}>
                 {showSkeleton
                   ? [1, 2, 3, 4, 5].map((e) => (
                       <Col span={4}>
@@ -350,13 +363,15 @@ const PlansComponentAnt = ({
                       )
                       .map((plan, index) => {
                         return (
-                          
-                          <Col span={4} style={{padding:'0'}}>
-                         
+                          <Col span={4} style={{ padding: "0" }}>
                             <Card
                               title={<Title level={5}> {plan["title"]}</Title>}
                               size="small"
-                              className={plan["title"] === 'Silver' ? 'plansCard active' : 'plansCard'}
+                              className={
+                                plan["title"] === "Silver"
+                                  ? "plansCard active"
+                                  : "plansCard"
+                              }
                               onMouseOver={onMouseHoverCard}
                               style={{ borderRadius: "8px" }}
                             >
@@ -413,7 +428,7 @@ const PlansComponentAnt = ({
                                   );
                                 }}
                               />
-                              <Row justify="end" style={{marginTop:'20px'}}>
+                              <Row justify="end" style={{ marginTop: "20px" }}>
                                 <ShopifyButton
                                   primary
                                   size="slim"
@@ -438,7 +453,7 @@ const PlansComponentAnt = ({
                                   // }
                                 >
                                   Choose Plan
-                                 </ShopifyButton>
+                                </ShopifyButton>
                               </Row>
                             </Card>
                           </Col>
