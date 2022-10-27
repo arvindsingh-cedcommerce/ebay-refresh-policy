@@ -159,7 +159,7 @@ const NewOrdersGrid = (props) => {
     {
       title: (
         <center>
-          <Text>Account Connected</Text>
+          <Text>Account</Text>
         </center>
       ),
       dataIndex: "accountConnected",

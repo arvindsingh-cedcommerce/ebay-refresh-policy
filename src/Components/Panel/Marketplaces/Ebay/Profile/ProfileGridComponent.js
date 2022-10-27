@@ -84,7 +84,7 @@ const ProfileGridComponent = (props) => {
       key: "name",
     },
     {
-      title: <center>Accounts Connected</center>,
+      title: <center>Account(s)</center>,
       dataIndex: "profileConnectedAccount",
       key: "account",
     },
