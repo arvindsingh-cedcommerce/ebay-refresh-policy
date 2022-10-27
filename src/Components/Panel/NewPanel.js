@@ -677,7 +677,7 @@ const NewPanel = (props) => {
                             padding: "2rem 2rem 0 0",
                             paddingLeft: "2rem",
                             paddingRight: "2rem",
-                            width: "inherit",
+                            minWidth: "29rem",
                             alignItems: "center",
                             justifyContent: "space-between",
                           }}
