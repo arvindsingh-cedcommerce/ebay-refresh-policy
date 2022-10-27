@@ -55,7 +55,10 @@ import { getAllNotifications } from "../../APIrequests/ActivitiesAPI";
 import { allNotificationsURL } from "../../URLs/ActivitiesURL";
 import FinalDashboard from "./Marketplaces/Ebay/Dashboard/FinalDashboard";
 import { notify } from "../../services/notify";
-import { getConnectedAccounts } from "../../Apirequest/accountsApi";
+import {
+  getConnectedAccounts,
+  getProfileImage,
+} from "../../Apirequest/accountsApi";
 import ProfileComponent from "./Marketplaces/Ebay/Profile/ProfileComponent";
 import PolicyComponent from "./Marketplaces/Ebay/Policies/PolicyComponent";
 import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsComponent";
@@ -83,7 +86,19 @@ const NewPanel = (props) => {
   //const [note,setNote]= useState("some dummy note");
   // marquee data
   const [marqueeData, setMarqueeData] = useState([]);
-
+  const [personProfile, setPersonProfile] = useState({
+    file: "",
+    imagePreviewUrl: "",
+    active: "edit",
+  });
+  const getImage = async () => {
+    let { success, message } = await getProfileImage();
+    if (success) {
+      setPersonProfile({ ...personProfile, imagePreviewUrl: message });
+    } else {
+      // setPerson({...person, imagePreviewUrl: message})
+    }
+  };
   const handleClick = (menu) => {
     props.history.push(`/panel/ebay/${menu["key"]}`);
   };
@@ -169,6 +184,7 @@ const NewPanel = (props) => {
 
   useEffect(() => {
     getAllConnectedAccounts();
+    getImage();
   }, []);
 
   useEffect(() => {
@@ -583,25 +599,27 @@ const NewPanel = (props) => {
                 ) : (
                   ""
                 )}
-<Stack.Item fill>
-                {window.innerWidth > 1024 ? queuedTasks.length > 0 && (
-                  
-                    <TextLoop interval={6000}>
-                      {queuedTasks.map(
-                        (task, index) =>
-                          task?.message && (
-                            <p style={{ color: "white", height: "5rem" }}>
-                              <span style={{ fontWeight: "bold" }}>
-                                Currently Running Activity :{" "}
-                              </span>
-                              <span>{task?.message}</span>
-                            </p>
-                          )
-                      )}
-                    </TextLoop>
-                ):<></>}
-
-</Stack.Item>
+                <Stack.Item fill>
+                  {window.innerWidth > 1024 ? (
+                    queuedTasks.length > 0 && (
+                      <TextLoop interval={6000}>
+                        {queuedTasks.map(
+                          (task, index) =>
+                            task?.message && (
+                              <p style={{ color: "white", height: "5rem" }}>
+                                <span style={{ fontWeight: "bold" }}>
+                                  Currently Running Activity :{" "}
+                                </span>
+                                <span>{task?.message}</span>
+                              </p>
+                            )
+                        )}
+                      </TextLoop>
+                    )
+                  ) : (
+                    <></>
+                  )}
+                </Stack.Item>
 
                 <Stack.Item>
                   {/* <div style={{ marginBottom: "-8px" }}>
@@ -695,18 +713,32 @@ const NewPanel = (props) => {
                     onClick={() => props.history.push("/panel/ebay/appaccount")}
                   >
                     <Stack distribution="trailing" alignment="center">
-                      <Avatar
-                        style={{
-                          color: "#084e8a",
-                          backgroundColor: "rgb(206 224 237 / 1)",
-                        }}
-                      >
-                        {shopURL?.[0]?.toUpperCase()}
-                      </Avatar>
-                      {window.innerWidth>345?
-                      <div style={{ color: "#fff" }}>
-                        {shopURL?.split(".")?.[0]}
-                      </div>:<></>}
+                      {personProfile.imagePreviewUrl ? (
+                        <img
+                          src={personProfile.imagePreviewUrl}
+                          style={{
+                            borderRadius: "50%",
+                            width: "3.2rem",
+                            height: "3.2rem",
+                          }}
+                        />
+                      ) : (
+                        <Avatar
+                          style={{
+                            color: "#084e8a",
+                            backgroundColor: "rgb(206 224 237 / 1)",
+                          }}
+                        >
+                          {shopURL?.[0]?.toUpperCase()}
+                        </Avatar>
+                      )}
+                      {window.innerWidth > 345 ? (
+                        <div style={{ color: "#fff" }}>
+                          {shopURL?.split(".")?.[0]}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                     </Stack>
                   </div>
                 </Stack.Item>
