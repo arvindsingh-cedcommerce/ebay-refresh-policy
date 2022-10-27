@@ -54,7 +54,10 @@ import { getAllNotifications } from "../../APIrequests/ActivitiesAPI";
 import { allNotificationsURL } from "../../URLs/ActivitiesURL";
 import FinalDashboard from "./Marketplaces/Ebay/Dashboard/FinalDashboard";
 import { notify } from "../../services/notify";
-import { getConnectedAccounts, getProfileImage } from "../../Apirequest/accountsApi";
+import {
+  getConnectedAccounts,
+  getProfileImage,
+} from "../../Apirequest/accountsApi";
 import ProfileComponent from "./Marketplaces/Ebay/Profile/ProfileComponent";
 import PolicyComponent from "./Marketplaces/Ebay/Policies/PolicyComponent";
 import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsComponent";
@@ -179,7 +182,6 @@ const NewPanel = (props) => {
     }
   };
   useEffect(() => {
-    
     getAllConnectedAccounts();
     getImage();
   }, []);
@@ -224,21 +226,8 @@ const NewPanel = (props) => {
             key={"left"}
             width={drawerVisible ? "80" : "200"}
           >
-            <div style={{display:"flex"}}>
-            <Sider
-              style={{
-                overflow: "auto",
-                height: "100vh",
-                position: "fixed",
-                left: 0,
-                width: "200px",
-                top: 0,
-                bottom: 0,
-                zIndex: "100",
-                justifyContent:"space-between"
-              }}
-            >
-              <div
+            <div style={{ display: "flex" }}>
+              <Sider
                 style={{
                   overflow: "auto",
                   height: "100vh",
@@ -253,138 +242,151 @@ const NewPanel = (props) => {
               >
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    margin: "16px 0px",
+                    overflow: "auto",
+                    height: "100vh",
+                    position: "fixed",
+                    left: 0,
+                    width: "200px",
+                    top: 0,
+                    bottom: 0,
+                    zIndex: "100",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <Image
-                    src={menuCollapsed ? CollapsedLogo : Logo}
-                    preview={false}
-                    width={menuCollapsed ? "30px" : "140px"}
-                    style={
-                      menuCollapsed
-                        ? {
-                            height: "30px",
-                          }
-                        : {
-                            height: "32px",
-                          }
-                    }
-                  />
-                </div>
-                <Menu
-                  mode="inline"
-                  defaultSelectedKeys={["0"]}
-                  onClick={handleClick}
-                  theme="dark"
-                >
-                  <Menu.Item
-                    key="dashboard"
-                    icon={<BarChartOutlined style={{ fontSize: "22px" }} />}
-                    style={{ margin: "0px" }}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      margin: "16px 0px",
+                    }}
                   >
-                    Dashboard
-                  </Menu.Item>
-                  <SubMenu
-                    key="sub1"
-                    icon={<TagOutlined style={{ fontSize: "22px" }} />}
-                    title="Products"
+                    <Image
+                      src={menuCollapsed ? CollapsedLogo : Logo}
+                      preview={false}
+                      width={menuCollapsed ? "30px" : "140px"}
+                      style={
+                        menuCollapsed
+                          ? {
+                              height: "30px",
+                            }
+                          : {
+                              height: "32px",
+                            }
+                      }
+                    />
+                  </div>
+                  <Menu
+                    mode="inline"
+                    defaultSelectedKeys={["0"]}
+                    onClick={handleClick}
+                    theme="dark"
                   >
                     <Menu.Item
+                      key="dashboard"
+                      icon={<BarChartOutlined style={{ fontSize: "22px" }} />}
                       style={{ margin: "0px" }}
-                      key="products"
-                      icon={<DropboxOutlined style={{ fontSize: "16px" }} />}
                     >
-                      Manage Products
+                      Dashboard
+                    </Menu.Item>
+                    <SubMenu
+                      key="sub1"
+                      icon={<TagOutlined style={{ fontSize: "22px" }} />}
+                      title="Products"
+                    >
+                      <Menu.Item
+                        style={{ margin: "0px" }}
+                        key="products"
+                        icon={<DropboxOutlined style={{ fontSize: "16px" }} />}
+                      >
+                        Manage Products
+                      </Menu.Item>
+                      <Menu.Item
+                        style={{ margin: "0px" }}
+                        key="profiles"
+                        icon={<GroupOutlined style={{ fontSize: "16px" }} />}
+                      >
+                        Profiles
+                      </Menu.Item>
+                      <Menu.Item
+                        style={{ margin: "0px" }}
+                        key="policy"
+                        icon={<FileTextOutlined style={{ fontSize: "16px" }} />}
+                      >
+                        Business Policy
+                      </Menu.Item>
+                      <Menu.Item
+                        style={{ margin: "0px" }}
+                        key="templates"
+                        icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
+                      >
+                        Templates
+                      </Menu.Item>
+                      <Menu.Item
+                        style={{ margin: "0px" }}
+                        key="disabledproducts"
+                        icon={
+                          <EyeInvisibleOutlined style={{ fontSize: "16px" }} />
+                        }
+                      >
+                        Disabled Products
+                      </Menu.Item>
+                    </SubMenu>
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="orders"
+                      icon={<PieChartOutlined style={{ fontSize: "22px" }} />}
+                    >
+                      Orders
                     </Menu.Item>
                     <Menu.Item
                       style={{ margin: "0px" }}
-                      key="profiles"
-                      icon={<GroupOutlined style={{ fontSize: "16px" }} />}
+                      key="configurations"
+                      icon={<SettingOutlined style={{ fontSize: "22px" }} />}
                     >
-                      Profiles
+                      Configuration
                     </Menu.Item>
                     <Menu.Item
                       style={{ margin: "0px" }}
-                      key="policy"
-                      icon={<FileTextOutlined style={{ fontSize: "16px" }} />}
+                      key="activity"
+                      icon={<BellOutlined style={{ fontSize: "22px" }} />}
                     >
-                      Business Policy
+                      Activities
                     </Menu.Item>
                     <Menu.Item
                       style={{ margin: "0px" }}
-                      key="templates"
-                      icon={<ProfileOutlined style={{ fontSize: "16px" }} />}
-                    >
-                      Templates
-                    </Menu.Item>
-                    <Menu.Item
-                      style={{ margin: "0px" }}
-                      key="disabledproducts"
+                      key="help"
                       icon={
-                        <EyeInvisibleOutlined style={{ fontSize: "16px" }} />
+                        <QuestionCircleOutlined style={{ fontSize: "22px" }} />
                       }
                     >
-                      Disabled Products
+                      Help
                     </Menu.Item>
-                  </SubMenu>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="orders"
-                    icon={<PieChartOutlined style={{ fontSize: "22px" }} />}
-                  >
-                    Orders
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="configurations"
-                    icon={<SettingOutlined style={{ fontSize: "22px" }} />}
-                  >
-                    Configuration
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="activity"
-                    icon={<BellOutlined style={{ fontSize: "22px" }} />}
-                  >
-                    Activities
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="help"
-                    icon={
-                      <QuestionCircleOutlined style={{ fontSize: "22px" }} />
-                    }
-                  >
-                    Help
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="pricing"
-                    icon={<DollarOutlined style={{ fontSize: "22px" }} />}
-                  >
-                    Plans
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="contactUs"
-                    icon={<ContactsOutlined style={{ fontSize: "22px" }} />}
-                  >
-                    Contact Us
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px" }}
-                    key="accounts"
-                    icon={<UserOutlined style={{ fontSize: "22px" }} />}
-                  >
-                    eBay Accounts
-                  </Menu.Item>
-                  <Menu.Item
-                    style={{ margin: "0px", pointerEvents: "none" }}
-                    key="forSider"
-                  ></Menu.Item>
-                </Menu>
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="pricing"
+                      icon={<DollarOutlined style={{ fontSize: "22px" }} />}
+                    >
+                      Plans
+                    </Menu.Item>
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="contactUs"
+                      icon={<ContactsOutlined style={{ fontSize: "22px" }} />}
+                    >
+                      Contact Us
+                    </Menu.Item>
+                    <Menu.Item
+                      style={{ margin: "0px" }}
+                      key="accounts"
+                      icon={<UserOutlined style={{ fontSize: "22px" }} />}
+                    >
+                      eBay Accounts
+                    </Menu.Item>
+                    <Menu.Item
+                      style={{ margin: "0px", pointerEvents: "none" }}
+                      key="forSider"
+                    ></Menu.Item>
+                  </Menu>
                 </div>
               </Sider>
               <div
@@ -613,25 +615,27 @@ const NewPanel = (props) => {
                 ) : (
                   ""
                 )}
-<Stack.Item fill>
-                {window.innerWidth > 1024 ? queuedTasks.length > 0 && (
-                  
-                    <TextLoop interval={6000}>
-                      {queuedTasks.map(
-                        (task, index) =>
-                          task?.message && (
-                            <p style={{ color: "white", height: "5rem" }}>
-                              <span style={{ fontWeight: "bold" }}>
-                                Currently Running Activity :{" "}
-                              </span>
-                              <span>{task?.message}</span>
-                            </p>
-                          )
-                      )}
-                    </TextLoop>
-                ):<></>}
-
-</Stack.Item>
+                <Stack.Item fill>
+                  {window.innerWidth > 1024 ? (
+                    queuedTasks.length > 0 && (
+                      <TextLoop interval={6000}>
+                        {queuedTasks.map(
+                          (task, index) =>
+                            task?.message && (
+                              <p style={{ color: "white", height: "5rem" }}>
+                                <span style={{ fontWeight: "bold" }}>
+                                  Currently Running Activity :{" "}
+                                </span>
+                                <span>{task?.message}</span>
+                              </p>
+                            )
+                        )}
+                      </TextLoop>
+                    )
+                  ) : (
+                    <></>
+                  )}
+                </Stack.Item>
 
                 <Stack.Item>
                   {/* <div style={{ marginBottom: "-8px" }}>
@@ -725,18 +729,40 @@ const NewPanel = (props) => {
                     onClick={() => props.history.push("/panel/ebay/appaccount")}
                   >
                     <Stack distribution="trailing" alignment="center">
-                      <Avatar
+                      {/* <Avatar
                         style={{
                           color: "#084e8a",
                           backgroundColor: "rgb(206 224 237 / 1)",
                         }}
                       >
                         {shopURL?.[0]?.toUpperCase()}
-                      </Avatar>
-                      {window.innerWidth>345?
-                      <div style={{ color: "#fff" }}>
-                        {shopURL?.split(".")?.[0]}
-                      </div>:<></>}
+                      </Avatar> */}
+                      {personProfile.imagePreviewUrl ? (
+                        <img
+                          src={personProfile.imagePreviewUrl}
+                          style={{
+                            borderRadius: "50%",
+                            width: "3.2rem",
+                            height: "3.2rem",
+                          }}
+                        />
+                      ) : (
+                        <Avatar
+                          style={{
+                            color: "#084e8a",
+                            backgroundColor: "rgb(206 224 237 / 1)",
+                          }}
+                        >
+                          {shopURL?.[0]?.toUpperCase()}
+                        </Avatar>
+                      )}
+                      {window.innerWidth > 345 ? (
+                        <div style={{ color: "#fff" }}>
+                          {shopURL?.split(".")?.[0]}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                     </Stack>
                   </div>
                 </Stack.Item>
@@ -769,9 +795,9 @@ const NewPanel = (props) => {
               <Route
                 path="/panel/ebay/dashboard"
                 render={(props) => {
-                  let refresh=false
-                  if(props.location.state) {
-                    refresh = props.location.state?.refresh
+                  let refresh = false;
+                  if (props.location.state) {
+                    refresh = props.location.state?.refresh;
                   }
                   return (
                     <FinalDashboard
