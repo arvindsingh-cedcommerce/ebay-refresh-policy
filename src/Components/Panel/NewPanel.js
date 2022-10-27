@@ -7,6 +7,7 @@ import CollapsedLogo from "../../assets/cedcommercelogoCollapsed.png";
 import {
   MobileHamburgerMajor,
   MobileHamburgerMajorMonotone,
+  NoteMajorMonotone,
 } from "@shopify/polaris-icons";
 import Marquee from "react-fast-marquee";
 import {
@@ -45,6 +46,8 @@ import {
   Stack,
   Popover as ShopifyPopover,
   ActionList,
+  Modal,
+  TextContainer,
 } from "@shopify/polaris";
 import {
   CircleCancelMinor,
@@ -86,6 +89,7 @@ const NewPanel = (props) => {
   //const [note,setNote]= useState("some dummy note");
   // marquee data
   const [marqueeData, setMarqueeData] = useState([]);
+  const [showQueuedTasks,setShowQueuedTasks]=useState(false);
   const [personProfile, setPersonProfile] = useState({
     file: "",
     imagePreviewUrl: "",
@@ -620,10 +624,33 @@ const NewPanel = (props) => {
                       </div>
                     )
                   ) : (
-                    <></>
+                   <></>
                   )}
                 </Stack.Item>
-              
+    
+<Modal
+        activator={window.innerWidth<=1024? <Stack.Item><div style={{margin:"2rem 0"}} onClick={()=>{setShowQueuedTasks(!showQueuedTasks)}}><Icon
+        source={NoteMajorMonotone}
+        color="base"
+      />    </div>  </Stack.Item> :<></>}
+        open={showQueuedTasks}
+        onClose={()=>{setShowQueuedTasks(false)}}
+        title={<div style={{fontWeight:"bold"}}>Currently Running Activities</div>}
+      >
+        <Modal.Section>
+          <TextContainer>
+          {queuedTasks.map(
+                          (task, index) =>
+                            task?.message && (
+                              <p style={{ height: "2rem" }}>
+                             
+                               {task?.message}
+                              </p>
+                            )
+                        )}
+          </TextContainer>
+        </Modal.Section>
+      </Modal>
                 <Stack.Item>
                   {/* <div style={{ marginBottom: "-8px" }}>
                 <ShopifyPopover
@@ -735,7 +762,7 @@ const NewPanel = (props) => {
                           {shopURL?.[0]?.toUpperCase()}
                         </Avatar>
                       )}
-                      {window.innerWidth > 345 ? (
+                      {window.innerWidth > 384 ? (
                         <div style={{ color: "#fff" }}>
                           {shopURL?.split(".")?.[0]}
                         </div>

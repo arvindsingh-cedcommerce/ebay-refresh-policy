@@ -19,7 +19,7 @@ const { Text, Title } = Typography;
 
 const yesNoButtonList = [
   "autoProductSync",
-  "autoDeleteProduct",
+  "autoProductDelete",
   "autoProductCreate",
 ];
 
@@ -86,7 +86,7 @@ const ShopifyToAppNewNew = ({ shopifyToAppData }) => {
         tags: true,
       },
     },
-    autoDeleteProduct: {
+    autoProductDelete: {
       label: "Auto Delete Product",
       value: true,
       description:

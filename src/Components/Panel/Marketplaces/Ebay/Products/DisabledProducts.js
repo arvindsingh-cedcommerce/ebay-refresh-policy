@@ -765,6 +765,7 @@ const DisabledProducts = (props) => {
               />
             </div>
           </Popover>
+          {window.innerWidth>360?
           <Popover
             active={popOverStatus["profile"]}
             activator={profileActivator}
@@ -777,8 +778,22 @@ const DisabledProducts = (props) => {
                 onChange={(value) => handleChange(value, "profile_name")}
               />
             </div>
-          </Popover>
+          </Popover>:<></>}
         </ButtonGroup>
+        {window.innerWidth<=360?
+          <Popover
+            active={popOverStatus["profile"]}
+            activator={profileActivator}
+            onClose={() => popOverHandler("profile")}
+          >
+            <div style={{ margin: "10px" }}>
+              <ChoiceList
+                choices={profileList}
+                selected={initialProfileObj[0]? [initialProfileObj[0].value]:selected["profile_name"]}
+                onChange={(value) => handleChange(value, "profile_name")}
+              />
+            </div>
+          </Popover>:<></>}
         <Button
           icon={<Icon source={FilterMajorMonotone} color="base" />}
           onClick={() => {

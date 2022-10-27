@@ -10,7 +10,10 @@ import {
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { blogData, newsData } from "./DashboardData";
-import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
+import {
+  getDashboardData,
+  getMethod,
+} from "../../../../../APIrequests/DashboardAPI";
 import {
   dashboardAnalyticsURL,
   newsBlogsURL,
@@ -58,6 +61,7 @@ import { getParsedProductAnalyticsDataAntD } from "./ProductCountAnalyticsHelper
 import WhatsApp from "../../../../../assets/whatsapp.png";
 import Skype from "../../../../../assets/skype.png";
 import Mail from "../../../../../assets/mail.png";
+import { faqAPI } from "../../../../../APIrequests/HelpAPI";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
@@ -191,6 +195,34 @@ const FinalDashboard = (props) => {
   // note
   const [note, setNote] = useState("");
 
+  // faqloader
+  const [faqLoader, setFaqLoader] = useState(false);
+
+  const getAllFAQs = async () => {
+    setFaqLoader(true);
+    let { success, data } = await getMethod(faqAPI, {
+      type: "FAQ",
+    });
+    if (success) {
+      let temp = data
+        .map((faq) => {
+          return faq.data;
+        })
+        .filter((faq) => faq.showInApp === "Dashboard")
+        .slice(0, 3)
+        .map((faq) => {
+          return {
+            title: faq.title,
+          };
+        });
+      // console.log(temp);
+      setFaqsData(temp)
+      // let parsedData = getParseFaqData(data);
+      // setFaqData(parsedData);
+    }
+    setFaqLoader(false);
+  };
+
   useEffect(() => {
     // document.title =
     //   "Sell on eBay with eBay Marketplace Integration App | CedCommerce";
@@ -199,6 +231,7 @@ const FinalDashboard = (props) => {
     document.description =
       "CedCommerce introduces the eBay Marketplace Integration App enabling the Shopify merchants to sell on eBay by helping them to manage their products & orders.";
     getAllConnectedAccounts();
+    getAllFAQs();
     // hitNews();
     // hitBlogs();
     // hitFAQs();
@@ -261,11 +294,23 @@ const FinalDashboard = (props) => {
         if (shopifyAccount?.userCustomData?.userData) {
           const { skypeLink, whatsAppLink, email } =
             shopifyAccount?.userCustomData?.userData;
-          setSocialMediaLinks({
-            skype: skypeLink,
-            whatsApp: whatsAppLink,
-            email: email,
-          });
+          if (skypeLink) {
+            setSocialMediaLinks({ ...socialMediaLinks, skype: skypeLink });
+          }
+          if (whatsAppLink) {
+            setSocialMediaLinks({
+              ...socialMediaLinks,
+              whatsApp: whatsAppLink,
+            });
+          }
+          if (email) {
+            setSocialMediaLinks({ ...socialMediaLinks, email: email });
+          }
+          // setSocialMediaLinks({
+          //   skype: skypeLink,
+          //   whatsApp: whatsAppLink,
+          //   email: email,
+          // });
         }
         if (shopifyAccount?.shop_details?.currency) {
           setShopifyCurrencyName(shopifyAccount.shop_details.currency);
@@ -705,7 +750,7 @@ const FinalDashboard = (props) => {
       refresh ? hitDashoboardAPI(refresh, false) : hitDashoboardAPI();
       hitNews();
       hitBlogs();
-      hitFAQs();
+      // hitFAQs();
     }
   }, [connectedAccountsArray]);
 
@@ -894,7 +939,7 @@ const FinalDashboard = (props) => {
                               <Text strong>{notProfiledProductCount}</Text>
                               <Text>
                                 {" "}
-                                product(s) not profiled on app. Please{" "}
+                                product(s) are not profiled on app. Please{" "}
                                 <Link
                                   onClick={() => props.history.push("profiles")}
                                 >
@@ -1406,7 +1451,11 @@ const FinalDashboard = (props) => {
                   content: "See All",
                   onAction: () => props.history.push("help"),
                 }}
+                sectioned={dashboardSkeleton}
               >
+                {/* <Scrollable shadow style={{ height: "200px" }} focusable> */}
+                {
+                  dashboardSkeleton ? <SkeletonBodyText lines={6} /> :
                 <Scrollable shadow style={{ height: "217px" }} focusable>
                   <ResourceList
                     items={faqsData}
@@ -1425,6 +1474,7 @@ const FinalDashboard = (props) => {
                     }}
                   />
                 </Scrollable>
+                }
               </Card>
             </Col>
           </Row>
