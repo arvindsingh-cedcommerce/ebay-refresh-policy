@@ -206,7 +206,7 @@ const ActivityGrid = (props) => {
       getQueuedActivities(queuedTask);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      // props.history.push("/auth/login");
     }
     setGridLoader(false);
   };

@@ -85,7 +85,7 @@ const PlansComponentAnt = ({
       // console.log(planData.rows[2], plans[0]);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      // props.history.push("/auth/login");
     }
   };
   useEffect(() => {

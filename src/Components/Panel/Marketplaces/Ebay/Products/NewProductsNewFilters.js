@@ -693,9 +693,9 @@ function NewProductsNewFilters(props) {
         setProductData(tempProductData);
       }
     } else {
-      if (code === "invalid_token" || code === "token_expired") {
-        props.history.push("/auth/login");
-      }
+      // if (code === "invalid_token" || code === "token_expired") {
+      //   props.history.push("/auth/login");
+      // }
     }
     setGridLoader(false);
   };
@@ -1159,11 +1159,11 @@ function NewProductsNewFilters(props) {
       extra={[
         // <ProductMassMenu selectedRows={selectedRows} />,
         // <OutsideAlerter isOpenBulk={isOpenBulk} setIsOpenBulk={setIsOpenBulk}>
-          <ProductBulkMenu
-            profileList={profileList}
-            isOpenBulk={isOpenBulk}
-            setIsOpenBulk={setIsOpenBulk}
-          />
+        <ProductBulkMenu
+          profileList={profileList}
+          isOpenBulk={isOpenBulk}
+          setIsOpenBulk={setIsOpenBulk}
+        />,
         // {/* </OutsideAlerter> */}
       ]}
     >
@@ -1190,11 +1190,11 @@ function NewProductsNewFilters(props) {
           >
             <Col className="gutter-row" span={6}>
               {/* <OutsideAlerterMassMenu isOpen={isOpen} setIsOpen={setIsOpen}> */}
-                <ProductMassMenu
-                  selectedRows={selectedRows}
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                />
+              <ProductMassMenu
+                selectedRows={selectedRows}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
               {/* </OutsideAlerterMassMenu> */}
             </Col>
             <Col className="gutter-row" span={18}>

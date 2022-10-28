@@ -328,7 +328,7 @@ const CategoryTemplateGrid = (props) => {
       setconnectedAccountsArray(ebayAccountsObj);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      // props.history.push("/auth/login");
     }
     return ebayAccountsObj;
   };
