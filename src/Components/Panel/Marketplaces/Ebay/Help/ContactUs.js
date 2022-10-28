@@ -45,7 +45,7 @@ export const getCountryName = (site_id) => {
   return countryName.length && countryName[0]["label"];
 };
 
-const ContactUs = () => {
+const ContactUs = (props) => {
   const [selectedAccount, setSelectedAccount] = useState("");
   const [selectedShopId, setSelectedShopId] = useState("");
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
@@ -91,7 +91,7 @@ const ContactUs = () => {
 
   const getAllConnectedAccounts = async () => {
     setAccountLoader(true);
-    let { success: accountConnectedSuccess, data: connectedAccountData } =
+    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
       await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let shopifyAccount = connectedAccountData.find(
@@ -166,6 +166,9 @@ const ContactUs = () => {
       setconnectedAccountsArray(tempArr);
       setSelectedAccount(tempArr[0]["label"]);
       setAccountLoader(false);
+    } else {
+      notify.error(message);
+      props.history.push("/auth/login");
     }
   };
 

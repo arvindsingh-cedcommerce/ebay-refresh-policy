@@ -58,7 +58,7 @@ const ShopifyAccount = (props) => {
   // }, []);
 
   const getAllConnectedAccounts = async () => {
-    let { success: accountConnectedSuccess, data: connectedAccountData } =
+    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
       await getConnectedAccounts();
     if (
       accountConnectedSuccess &&
@@ -92,6 +92,9 @@ const ShopifyAccount = (props) => {
       }
 
       setShopifyData(testObj);
+    } else {
+      notify.error(message);
+      props.history.push("/auth/login");
     }
   };
 
@@ -136,13 +139,18 @@ const ShopifyAccount = (props) => {
   };
 
   const disableLoading = () => {
-    let isDisable = true
-    for(const key in customDetails) {
-      if(key !== 'selectedEmailNotifications' && customDetails[key]) isDisable = false
-      else if(key === 'selectedEmailNotifications' && customDetails[key].length > 0) isDisable = false
+    let isDisable = true;
+    for (const key in customDetails) {
+      if (key !== "selectedEmailNotifications" && customDetails[key])
+        isDisable = false;
+      else if (
+        key === "selectedEmailNotifications" &&
+        customDetails[key].length > 0
+      )
+        isDisable = false;
     }
-    return isDisable
-  }
+    return isDisable;
+  };
 
   return (
     <Page fullWidth={false} title="User Profile">
@@ -157,7 +165,7 @@ const ShopifyAccount = (props) => {
             primaryFooterAction={{
               content: "Submit",
               onAction: saveCustomDetails,
-              disabled: disableLoading()
+              disabled: disableLoading(),
             }}
             title="Contact Details"
           >

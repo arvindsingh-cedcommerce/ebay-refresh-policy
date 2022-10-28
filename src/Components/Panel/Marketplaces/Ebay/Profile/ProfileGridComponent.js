@@ -265,7 +265,7 @@ const ProfileGridComponent = (props) => {
     );
   };
   const getAccounts = async () => {
-    let { success: accountConnectedSuccess, data: connectedAccountData } =
+    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
       await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
@@ -294,6 +294,9 @@ const ProfileGridComponent = (props) => {
       temp["country"]["options"] = tempArr;
       setFilters(temp);
       setconnectedAccountsArray(tempArr);
+    } else {
+      notify.error(message);
+      props.history.push("/auth/login");
     }
   };
 

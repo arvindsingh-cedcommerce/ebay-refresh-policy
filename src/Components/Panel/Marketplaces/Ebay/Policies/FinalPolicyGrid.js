@@ -229,6 +229,7 @@ const FinalPolicyGrid = (props) => {
       });
     } else {
       notify.error(message);
+      props.history.push("/auth/login");
     }
     return ebayAccountsObj;
   };

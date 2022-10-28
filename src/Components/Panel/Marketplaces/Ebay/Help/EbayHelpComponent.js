@@ -11,6 +11,7 @@ import { Card as ShopifyCard, Icon, SkeletonBodyText, SkeletonDisplayText, TextC
 import { SearchMinor } from "@shopify/polaris-icons";
 import { parseQueryString } from "../../../../../services/helperFunction";
 import GifComponent from "./GifComponent";
+import { notify } from "../../../../../services/notify";
 
 const { Meta } = Card;
 
@@ -68,7 +69,7 @@ const EbayHelpComponent = (props) => {
   },[faqArray]);
   const getAllFAQs = async () => {
     setFaqLoader(true);
-    let { success, data } = await getMethod(faqAPI, {
+    let { success, data, message } = await getMethod(faqAPI, {
       type: "FAQ",
     });
     if (success) {
