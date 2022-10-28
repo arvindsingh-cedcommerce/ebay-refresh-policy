@@ -866,7 +866,7 @@ const FinalDashboard = (props) => {
               sm={24}
               md={24}
               lg={16}
-              className="welcome-box"
+              className={window.innerWidth >= 768 ? "welcome-box" : "welcome-box-small"}
             >
               <Card sectioned>
                 <Card.Section>
@@ -1060,7 +1060,8 @@ const FinalDashboard = (props) => {
               <CarouselComponent */}
             <Col
               span={8}
-              className="carousel-box"
+              // className="carousel-box"
+              className={window.innerWidth >= 768 ? "carousel-box" : "carousel-box-small"}
               xs={24}
               sm={24}
               md={24}
