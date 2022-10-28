@@ -286,6 +286,7 @@ const ViewOrdersPolarisNew = (props) => {
     } else {
       notify.error(message);
       // redirect("/auth/login");
+      props.history.push("/auth/login");
     }
     setFlag(false);
   };

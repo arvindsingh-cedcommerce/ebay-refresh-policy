@@ -40,7 +40,7 @@ class TemplateHandlerComponent extends Component {
   getAllProfiles = async () => {
     let dataToPost = {
       marketplace: "ebay",
-      grid: true
+      grid: true,
     };
     let { success, data, message } = await getProfiles(
       getProfilesURLFilter,
@@ -51,6 +51,9 @@ class TemplateHandlerComponent extends Component {
         return { label: row.name, value: row.profile_id };
       });
       this.setState({ profilesList: [...temp] });
+    } else {
+      notify.error(message);
+      this.props.history.push("/auth/login");
     }
   };
   componentDidMount() {

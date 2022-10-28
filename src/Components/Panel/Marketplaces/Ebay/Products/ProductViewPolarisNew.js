@@ -843,6 +843,9 @@ const ProductViewPolarisNew = (props) => {
         return accountName;
       });
       setconnectedAccounts(tempArr);
+    } else {
+      notify.error(message);
+      props.history.push("/auth/login");
     }
   };
 
