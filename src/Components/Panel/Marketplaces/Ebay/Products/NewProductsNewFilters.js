@@ -768,9 +768,9 @@ function NewProductsNewFilters(props) {
         setProductData(tempProductData);
       }
     } else {
-      if (code === "invalid_token" || code === "token_expired") {
-        props.history.push("/auth/login");
-      }
+      // if (code === "invalid_token" || code === "token_expired") {
+      //   props.history.push("/auth/login");
+      // }
     }
     setGridLoader(false);
   };
