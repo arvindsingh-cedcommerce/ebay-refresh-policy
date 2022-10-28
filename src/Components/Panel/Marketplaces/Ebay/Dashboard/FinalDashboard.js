@@ -1060,8 +1060,7 @@ const FinalDashboard = (props) => {
               <CarouselComponent */}
             <Col
               span={8}
-              // className="carousel-box"
-              className={window.innerWidth >= 768 ? "carousel-box" : "carousel-box-small"}
+              className="carousel-box"
               xs={24}
               sm={24}
               md={24}

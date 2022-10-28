@@ -69,13 +69,13 @@ const CarouselComponent = ({
               reqiuredCurrentStep == 3
                 ? orderManagementDisabledCount == 0 ||
                   productManagementDisabledCount == 0
-                  ? "350px"
-                  : "350px"
+                  ? "240px"
+                  : "240px"
                 : reqiuredCurrentStep >= 2
                 ? notProfiledProductCount > 0
-                  ? "350px"
-                  : "350px"
-                : "350px"
+                  ? "240px"
+                  : "240px"
+                : "240px"
             }
             src={CarouselImage1}
             alt=""

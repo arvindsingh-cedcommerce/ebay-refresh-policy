@@ -195,10 +195,10 @@ code {
 .carousel-box {
   height: 240px;
 }
-.welcome-box-small .Polaris-Card,
+/* .welcome-box-small .Polaris-Card,
 .carousel-box-small{
   height: 350px;
-}
+} */
 .carousel-box img {
   border-radius: 0.8rem;
 }
