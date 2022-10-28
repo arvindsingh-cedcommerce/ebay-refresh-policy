@@ -5,8 +5,7 @@ import NewProductsNewFilters from "./NewProductsNewFilters";
 import ProductViewPolarisNew from "./ProductViewPolarisNew";
 
 const NewProductsComponent = (props) => {
-  const { hitGetNotifications } = { ...props };
-  useEffect(() => {
+   useEffect(() => {
     document.title =
       "Manage Shopify products on eBay Marketplace Integration App";
     document.description =
@@ -17,9 +16,7 @@ const NewProductsComponent = (props) => {
     <Switch>
       <Route
         path="/panel/ebay/products/grid"
-        component={(props) => (
-          <NewProductsNewFilters hitGetNotifications={hitGetNotifications} {...props}/>
-        )}
+        component={NewProductsNewFilters}
       />
       <Route
         path="/panel/ebay/products/viewproducts"

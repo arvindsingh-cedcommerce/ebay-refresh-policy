@@ -658,7 +658,7 @@ function NewProductsNewFilters(props) {
           } = row;
           let tempObject = {};
           tempObject["source_product_id"] = source_product_id;
-          tempObject["key"] = index;
+          tempObject["key"] = (activePageNumber-1)*pageSize+index;
           tempObject["image"] = (
             <center>
               {main_image ? (
@@ -776,10 +776,11 @@ function NewProductsNewFilters(props) {
   };
 
   const rowSelection = {
+    preserveSelectedRowKeys: true,
     selectedRowKeys,
-    onChange: (selectedRowKeys, selectedRows) => {
-      setSelectedRowKeys(selectedRowKeys);
-      setSelectedRows(selectedRows);
+    onChange: (currentSelectedRowKeys, currentSelectedRows) => {
+        setSelectedRowKeys(currentSelectedRowKeys);
+        setSelectedRows(currentSelectedRows);
     },
     // onSelectAll: selected=> {
     //   console.log("selected",selected);
@@ -1318,6 +1319,7 @@ const showJumpToPage=()=>{
       dispatch({ type: "productFilter", payload: filtersToPass });
       setSelectedRows([]);
       setSelectedRowKeys([]);
+      setIsOpen(false);
     }
   }, [filtersToPass]);
   // useEffect(() => {
@@ -1369,20 +1371,17 @@ const showJumpToPage=()=>{
           profileList={profileList}
           isCsvBulkMenuOpen={isCsvBulkMenuOpen}
           setCallbackCsvFunction={setCallbackCsvFunction}
-          hitGetNotifications={props.hitGetNotifications}
         />,
         <EbayActionsBulkMenu
           profileList={profileList}
           isEbayActionBulkMenuOpen={isEbayActionBulkMenuOpen}
           setCallbackEbayActionFunction={setCallbackEbayActionFunction}
-          hitGetNotifications={props.hitGetNotifications}
         />,
         // <ProductMassMenu selectedRows={selectedRows} />,
         <ProductBulkMenu
           profileList={profileList}
           isProductBulkMenuOpen={isProductBulkMenuOpen}
           setCallbackProductBulkFunction={setCallbackProductBulkFunction}
-          hitGetNotifications={props.hitGetNotifications}
         />,
       ]}
     >
