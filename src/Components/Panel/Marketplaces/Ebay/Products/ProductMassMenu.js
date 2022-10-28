@@ -12,7 +12,7 @@ import {
   ExportOutlined,
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
-import { Button, Modal, Stack } from "@shopify/polaris";
+import { ActionList, Button, Modal, Popover, Stack } from "@shopify/polaris";
 import { Dropdown, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
@@ -48,212 +48,194 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
 
   return (
     <>
-      <Dropdown
-        overlayClassName="massMenu"
-        key="massAction"
-        overlayStyle={{
-          maxHeight: "25rem",
-          overflowY: "scroll",
-          zIndex: 50,
-          borderRadius: "10px !important",
-          border: "1px solid #e2d8d8",
-        }}
-        visible={isOpen}
-        overlay={
-          <Menu>
-            <Menu.ItemGroup key="g3" title="eBay Actions">
-              <Menu.Item
-                key="Upload and Revise (All Products)"
-                onClick={() => {
-                  let postData = [];
-                  selectedRows.forEach((selectedRow) => {
-                    let { source_product_id, container_id } = selectedRow;
-                    postData.push(source_product_id);
-                    // postData.push(container_id);
-                  });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Upload and Revise on eBay",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      product_id: postData,
-                      action: "upload_and_revise",
-                    },
-                    api: uploadProductByIdURL,
-                  });
-                }}
-              >
-                <RedoOutlined /> Upload and Revise on eBay
-              </Menu.Item>
-              {/* <Menu.Item
-                key="Disable Product"
-                onClick={() => {
-                  let postData = [];
-                  selectedRows.forEach((selectedRow) => {
-                    let { container_id } = selectedRow;
-                    postData.push(container_id);
-                  });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Disable Product",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      product_id: postData,
-                      status: "Disable",
-                    },
-                    api: disableItemURL,
-                  });
-                }}
-              >
-                <SyncOutlined /> Disable Product
-              </Menu.Item> */}
-              <Menu.Item
-                key="Relist Item"
-                onClick={() => {
-                  let postData = [];
-                  selectedRows.forEach((selectedRow) => {
-                    let { source_product_id } = selectedRow;
-                    postData.push(source_product_id);
-                  });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Relist Item",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      product_id: postData,
-                    },
-                    api: relistItemURL,
-                  });
-                }}
-              >
-                <RollbackOutlined /> Relist Item
-              </Menu.Item>
-              <Menu.Item
-                key="End from eBay"
-                onClick={() => {
-                  let postData = [];
-                  selectedRows.forEach((selectedRow) => {
-                    let { source_product_id } = selectedRow;
-                    postData.push(source_product_id);
-                  });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "End from eBay",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      product_id: postData,
-                    },
-                    api: deleteItemURL,
-                  });
-                }}
-              >
-                <DeleteOutlined /> End from eBay
-              </Menu.Item>
-              <Menu.Item
-                key="Match from eBay"
-                onClick={() => {
-                  let postData = [];
-                  selectedRows.forEach((selectedRow) => {
-                    let { source_product_id, container_id } = selectedRow;
-                    // postData.push(container_id);
-                    postData.push(source_product_id);
-                  });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Match from eBay",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      product_id: postData,
-                    },
-                    api: matchFromEbayURL,
-                  });
-                }}
-              >
-                <ShrinkOutlined /> Match from eBay
-              </Menu.Item>
-              <Menu.Item
-                key="Sync Inventory eBay"
-                onClick={() => {
-                  let postData = {
-                    product_id: [],
-                    sync: ["inventory"],
-                    action: "app_to_marketplace",
-                  };
-                  selectedRows.forEach((selectedRow) => {
-                    let { source_product_id } = selectedRow;
-                    postData.product_id.push(source_product_id);
-                  });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Sync Inventory",
-                    actionName: postActionOnProductById,
-                    actionPayload: postData,
-                    api: syncInventoryPrice,
-                  });
-                }}
-              >
-                <FileTextOutlined /> Sync Inventory
-              </Menu.Item>
-              <Menu.Item
-                key="Sync Price eBay"
-                onClick={() => {
-                  let postData = {
-                    product_id: [],
-                    sync: ["price"],
-                    action: "app_to_marketplace",
-                  };
-                  selectedRows.forEach((selectedRow) => {
-                    let { source_product_id } = selectedRow;
-                    postData.product_id.push(source_product_id);
-                  });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Sync Price",
-                    actionName: postActionOnProductById,
-                    actionPayload: postData,
-                    api: syncInventoryPrice,
-                  });
-                }}
-              >
-                <DollarOutlined /> Sync Price
-              </Menu.Item>
-              {/* <Menu.Item key="Sync Images">
-                <SyncOutlined /> Sync Images
-              </Menu.Item> */}
-              <Menu.Item
-                key="Upload Products"
-                onClick={() => {
-                  let postData = [];
-                  selectedRows.forEach((selectedRow) => {
-                    let { source_product_id } = selectedRow;
-                    postData.push(source_product_id);
-                  });
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Upload Products",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      product_id: postData,
-                      action: "upload",
-                    },
-                    api: uploadProductByIdURL,
-                  });
-                }}
-              >
-                <UploadOutlined /> Upload Products
-              </Menu.Item>
-            </Menu.ItemGroup>
-            <Menu.Divider />
-            <Menu.ItemGroup key="g2" title="Shopify Actions">
-              <Menu.Item
+<Popover active={isOpen} activator={   <Button
+          primary={selectedRows.length}
+          onClick={() => setIsOpen(!isOpen)}
+        disabled={selectedRows.length > 0 ? false : true}
+        >
+          <div>
+            {selectedRows.length
+              ? `${selectedRows.length} product(s) selected`
+              : "No product(s) selected"}{" "}
+            <DownOutlined />
+          </div>
+        </Button>} autofocusTarget="fourth-node"
+          onClose={()=>{
+            setIsOpen(false);
+          }}>
+ <ActionList
+          actionRole="menuitem"
+          sections={[
+            {title:'eBay Actions',
+          items: [
+            {content:    <div
+              key="Upload and Revise (All Products)"
+              onClick={() => {
+                let postData = [];
+                selectedRows.forEach((selectedRow) => {
+                  let { source_product_id, container_id } = selectedRow;
+                  postData.push(source_product_id);
+                  // postData.push(container_id);
+                });
+                setModal({
+                  ...modal,
+                  active: true,
+                  content: "Upload and Revise on eBay",
+                  actionName: postActionOnProductById,
+                  actionPayload: {
+                    product_id: postData,
+                    action: "upload_and_revise",
+                  },
+                  api: uploadProductByIdURL,
+                });
+              }}
+            >
+              <RedoOutlined /> Upload and Revise on eBay
+            </div>},
+            {content:    <div
+              key="Relist Item"
+              onClick={() => {
+                let postData = [];
+                selectedRows.forEach((selectedRow) => {
+                  let { source_product_id } = selectedRow;
+                  postData.push(source_product_id);
+                });
+                setModal({
+                  ...modal,
+                  active: true,
+                  content: "Relist Item",
+                  actionName: postActionOnProductById,
+                  actionPayload: {
+                    product_id: postData,
+                  },
+                  api: relistItemURL,
+                });
+              }}
+            >
+              <RollbackOutlined /> Relist Item
+            </div>},
+            {content: <div
+              key="End from eBay"
+              onClick={() => {
+                let postData = [];
+                selectedRows.forEach((selectedRow) => {
+                  let { source_product_id } = selectedRow;
+                  postData.push(source_product_id);
+                });
+                setModal({
+                  ...modal,
+                  active: true,
+                  content: "End from eBay",
+                  actionName: postActionOnProductById,
+                  actionPayload: {
+                    product_id: postData,
+                  },
+                  api: deleteItemURL,
+                });
+              }}
+            >
+              <DeleteOutlined /> End from eBay
+            </div>},
+            {content:  <div
+              key="Match from eBay"
+              onClick={() => {
+                let postData = [];
+                selectedRows.forEach((selectedRow) => {
+                  let { source_product_id, container_id } = selectedRow;
+                  // postData.push(container_id);
+                  postData.push(source_product_id);
+                });
+                setModal({
+                  ...modal,
+                  active: true,
+                  content: "Match from eBay",
+                  actionName: postActionOnProductById,
+                  actionPayload: {
+                    product_id: postData,
+                  },
+                  api: matchFromEbayURL,
+                });
+              }}
+            >
+              <ShrinkOutlined /> Match from eBay
+            </div>},
+            {content:  <div
+              key="Sync Inventory eBay"
+              onClick={() => {
+                let postData = {
+                  product_id: [],
+                  sync: ["inventory"],
+                  action: "app_to_marketplace",
+                };
+                selectedRows.forEach((selectedRow) => {
+                  let { source_product_id } = selectedRow;
+                  postData.product_id.push(source_product_id);
+                });
+                setModal({
+                  ...modal,
+                  active: true,
+                  content: "Sync Inventory",
+                  actionName: postActionOnProductById,
+                  actionPayload: postData,
+                  api: syncInventoryPrice,
+                });
+              }}
+            >
+              <FileTextOutlined /> Sync Inventory
+            </div>},
+            {content:
+            <div
+              key="Sync Price eBay"
+              onClick={() => {
+                let postData = {
+                  product_id: [],
+                  sync: ["price"],
+                  action: "app_to_marketplace",
+                };
+                selectedRows.forEach((selectedRow) => {
+                  let { source_product_id } = selectedRow;
+                  postData.product_id.push(source_product_id);
+                });
+                setModal({
+                  ...modal,
+                  active: true,
+                  content: "Sync Price",
+                  actionName: postActionOnProductById,
+                  actionPayload: postData,
+                  api: syncInventoryPrice,
+                });
+              }}
+            >
+              <DollarOutlined /> Sync Price
+            </div>},
+            {content:  <div
+              key="Upload Products"
+              onClick={() => {
+                let postData = [];
+                selectedRows.forEach((selectedRow) => {
+                  let { source_product_id } = selectedRow;
+                  postData.push(source_product_id);
+                });
+                setModal({
+                  ...modal,
+                  active: true,
+                  content: "Upload Products",
+                  actionName: postActionOnProductById,
+                  actionPayload: {
+                    product_id: postData,
+                    action: "upload",
+                  },
+                  api: uploadProductByIdURL,
+                });
+              }}
+            >
+              <UploadOutlined /> Upload Products
+            </div>}
+          ]},
+          {
+            title: "Shopify Actions",
+            items: [
+              {content:   <div
                 key="Sync Details"
                 onClick={() => {
                   let postData = [];
@@ -274,8 +256,8 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                 }}
               >
                 <SyncOutlined /> Sync Details
-              </Menu.Item>
-              <Menu.Item
+              </div>},
+              {content:   <div
                 key="Sync Inventory eBay"
                 onClick={() => {
                   let postData = {
@@ -300,8 +282,8 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                 }}
               >
                 <FileTextOutlined /> Sync Inventory
-              </Menu.Item>
-              <Menu.Item
+              </div>},{content:
+              <div
                 key="Sync Price eBay"
                 onClick={() => {
                   let postData = {
@@ -326,8 +308,9 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                 }}
               >
                 <DollarOutlined /> Sync Price
-              </Menu.Item>
-              <Menu.Item
+              </div>},
+              {content:
+              <div
                 key="Import metafileds of products"
                 onClick={() => {
                   let postData = [];
@@ -348,10 +331,13 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                 }}
               >
                 <DownloadOutlined /> Import metafileds of products
-              </Menu.Item>
-            </Menu.ItemGroup>
-            <Menu.ItemGroup key="g3" title="Other Actions">
-              <Menu.Item
+              </div>}
+            ]
+          },
+          {
+            title: "Other Actions",
+            items:[
+              {content:  <div
                 key="Export"
                 onClick={() => {
                   let postData = [];
@@ -372,8 +358,8 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                 }}
               >
                 <ExportOutlined /> Export Products
-              </Menu.Item>
-              <Menu.Item
+              </div>},{ content:
+              <div
                 key="Disable"
                 onClick={() => {
                   let postData = [];
@@ -395,25 +381,11 @@ const ProductMassMenu = ({ selectedRows, isOpen, setIsOpen, ...props }) => {
                 }}
               >
                 <EyeInvisibleOutlined /> Disable Products
-              </Menu.Item>
-            </Menu.ItemGroup>
-          </Menu>
-        }
-        trigger={["click"]}
-        disabled={selectedRows.length > 0 ? false : true}
-      >
-        <Button
-          primary={selectedRows.length}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <div>
-            {selectedRows.length
-              ? `${selectedRows.length} product(s) selected`
-              : "No product(s) selected"}{" "}
-            <DownOutlined />
-          </div>
-        </Button>
-      </Dropdown>
+              </div>}
+            ]
+          }
+          ]}/>
+</Popover>
       <Modal
         open={modal.active}
         onClose={() => setModal({ ...modal, active: false })}

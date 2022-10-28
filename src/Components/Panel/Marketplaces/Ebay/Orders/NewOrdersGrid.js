@@ -402,8 +402,8 @@ const NewOrdersGrid = (props) => {
       </Link>
     </div>,
   ]);
-  const getAllOrders = (ordersData) => {
-    let tempOrderData = [];
+  const getAllOrders = (ordersData,activePageNumber) => {
+     let tempOrderData = [];
     tempOrderData = ordersData["rows"].map((order, index) => {
       let trackingNumberArray = [];
       let trackingURLArray = [];
@@ -446,7 +446,7 @@ const NewOrdersGrid = (props) => {
         (fulfillment) => fulfillment?.tracking_url
       );
       let tempObject = {};
-      tempObject["key"] = index;
+      tempObject["key"] =  (activePageNumber-1)*pageSize+index;
       tempObject["eBayOrderId"] = (
         <center>
           <Text
@@ -602,7 +602,7 @@ const NewOrdersGrid = (props) => {
     );
     if (ordersDataSuccess) {
       setTotalOrdersCount(ordersData.count);
-      getAllOrders(ordersData);
+      getAllOrders(ordersData,activePageNumber);
     }
     setGridLoader(false);
   };
@@ -617,6 +617,8 @@ const NewOrdersGrid = (props) => {
   }, [filtersToPass]);
 
   const rowSelection = {
+    preserveSelectedRowKeys: true,
+    selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
       // console.log(selectedRows)
       setSelectedRowKeys(selectedRowKeys);
@@ -1367,6 +1369,7 @@ const NewOrdersGrid = (props) => {
           pagination={false}
           columns={orderColumns}
           dataSource={orderData}
+          selectedRowKeys={selectedRowKeys}
           // rowSelection={{
           //   type: selectionType,
           //   ...rowSelection,

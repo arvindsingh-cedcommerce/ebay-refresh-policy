@@ -361,7 +361,7 @@ const DisabledProducts = (props) => {
             } = row;
             let tempObject = {};
             tempObject["source_product_id"] = source_product_id;
-            tempObject["key"] = index;
+            tempObject["key"] = (activePageNumber-1)*pageSize+index;
             tempObject["image"] = (
               <center>
                 {main_image ? (
@@ -1026,6 +1026,8 @@ const DisabledProducts = (props) => {
     }
   }, [filtersToPass]);
   const rowSelection = {
+    preserveSelectedRowKeys: true,
+    selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedRowKeys(selectedRowKeys);
       setSelectedRows(selectedRows);
@@ -1119,6 +1121,7 @@ const DisabledProducts = (props) => {
           pagination={false}
           columns={productColumns}
           dataSource={productData}
+          selectedRowKeys={selectedRowKeys}
           rowSelection={{
             type: selectionType,
             ...rowSelection,
