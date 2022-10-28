@@ -10,6 +10,7 @@ import YoutubeEmbed from "./YoutubeEmbed";
 import { Card as ShopifyCard, Icon, SkeletonBodyText, SkeletonDisplayText, TextContainer, TextField } from "@shopify/polaris";
 import { SearchMinor } from "@shopify/polaris-icons";
 import { parseQueryString } from "../../../../../services/helperFunction";
+import GifComponent from "./GifComponent";
 
 const { Meta } = Card;
 
@@ -66,7 +67,7 @@ const EbayHelpComponent = (props) => {
     setSearchQuery(questionValue);
   },[faqArray]);
   const getAllFAQs = async () => {
-    setFaqLoader(true)
+    setFaqLoader(true);
     let { success, data } = await getMethod(faqAPI, {
       type: "FAQ",
     });
@@ -90,7 +91,7 @@ const EbayHelpComponent = (props) => {
       setFaqArray([...finalFaqArray]);
       setSearchFaqArray([...finalFaqArray]);
     }
-    setFaqLoader(false)
+    setFaqLoader(false);
   };
 
   useEffect(() => {
@@ -128,28 +129,29 @@ const EbayHelpComponent = (props) => {
               /><br/><GroupFAQComponent faqs={searchFaqArray} setSearchFaqArray={setSearchFaqArray} /></>)}
               </>
             ),
-            "Video(s)": (
-              <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                {videos.map((video, index) => {
-                  return (
-                    <Col span={8}>
-                      <Card
-                        key={video["key"]}
-                        size="small"
-                        style={{ marginBottom: "10px" }}
-                        hoverable
-                        cover={<YoutubeEmbed embedId={video["url"]} />}
-                      >
-                        <Meta
-                          title={video["title"]}
-                          description={video["description"]}
-                        />
-                      </Card>
-                    </Col>
-                  );
-                })}
-              </Row>
-            ),
+            "GIF(s)": <GifComponent />,
+            // "Video(s)": (
+            //   <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            //     {videos.map((video, index) => {
+            //       return (
+            //         <Col span={8}>
+            //           <Card
+            //             key={video["key"]}
+            //             size="small"
+            //             style={{ marginBottom: "10px" }}
+            //             hoverable
+            //             cover={<YoutubeEmbed embedId={video["url"]} />}
+            //           >
+            //             <Meta
+            //               title={video["title"]}
+            //               description={video["description"]}
+            //             />
+            //           </Card>
+            //         </Col>
+            //       );
+            //     })}
+            //   </Row>
+            // ),
           }}
         />
       </ShopifyCard>

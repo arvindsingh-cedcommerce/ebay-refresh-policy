@@ -1,4 +1,4 @@
-import { Alert, Image, PageHeader, Select, Typography } from "antd";
+import { Alert, Image, List, PageHeader, Select, Typography } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { getTemplates } from "../../../../../../APIrequests/TemplatesAPI";
 import { json } from "../../../../../../globalConstant/static-json";
@@ -6,6 +6,7 @@ import { getTemplatesURL } from "../../../../../../URLs/TemplateURLS";
 import { addTemplatesOptions } from "../Helper/TemplateHelper";
 import { notify } from "../../../../../../services/notify";
 import {
+  Badge,
   Banner,
   Button,
   Card,
@@ -22,7 +23,8 @@ import PriceTemplateGrid from "./TemplateGridsComponent/PriceTemplateGrid";
 import TitleTemplateGrid from "./TemplateGridsComponent/TitleTemplateGrid";
 import { withRouter } from "react-router-dom";
 // import ModalVideo from "react-modal-video";
-// import CategoryTemplateGIF from "../../../../../../assets/gifs/categoryTemplate.gif";
+import CategoryTemplateGIF from "../../../../../../assets/gifs/categoryTemplate.gif";
+import TabsComponent from "../../../../../AntDesignComponents/TabsComponent";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -83,8 +85,10 @@ const FinalTemplateGridComponent = (props) => {
 
   // ebay accounts
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
-  //
-  // const [isOpenModalVideo, setIsOpenModalVideo] = useState(false);
+  // modal video
+  const [isOpenModalVideo, setIsOpenModalVideo] = useState(false);
+  // gif modal
+  const [isOpenGifModal, setIsOpenGifModal] = useState(false);
 
   useEffect(() => {
     if (categoryTemplateCount !== null) {
@@ -278,6 +282,14 @@ const FinalTemplateGridComponent = (props) => {
     <PageHeader
       className="site-page-header-responsive"
       title="Templates"
+      subTitle={
+        <div
+          onClick={() => setIsOpenModalVideo(true)}
+          style={{ cursor: "pointer" }}
+        >
+          <Badge status="info">Need Help?</Badge>
+        </div>
+      }
       // subTitle="Manage templates for choosing eBay category and customise your products details like price, inventory, title, description etc."
       ghost={true}
       extra={[
@@ -313,15 +325,6 @@ const FinalTemplateGridComponent = (props) => {
         </Select>,
       ]}
     >
-      {/* <button className="btn-primary" onClick={() => setIsOpenModalVideo(true)}>
-        VIEW DEMO
-      </button> */}
-      {/* <Banner status="info">
-        <>
-          Manage templates for choosing eBay category and customise your
-          products details like price, inventory, title, description etc.
-        </>
-      </Banner> */}
       <Alert
         style={{ borderRadius: "7px" }}
         message={
@@ -409,15 +412,35 @@ const FinalTemplateGridComponent = (props) => {
           </Stack>
         </Modal.Section>
       </Modal>
-      {/* <Modal
+      <Modal
         open={isOpenModalVideo}
         onClose={() => setIsOpenModalVideo(false)}
-        title="Reach more shoppers with Instagram product tags"
+        title="How Can I Help?"
+      >
+        <Modal.Section>
+          <Stack distribution="equalSpacing">
+            <>How to create Category Template?</>
+            <Button
+              plain
+              onClick={() => {
+                setIsOpenModalVideo(false);
+                setIsOpenGifModal(true);
+              }}
+            >
+              Watch
+            </Button>
+          </Stack>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={isOpenGifModal}
+        onClose={() => setIsOpenGifModal(false)}
+        title="How to create Category Template?"
       >
         <Modal.Section>
           <img src={CategoryTemplateGIF} style={{ width: "100%" }} />
         </Modal.Section>
-      </Modal> */}
+      </Modal>
       {/* <ModalVideo
         channel="custom"
         autoplay

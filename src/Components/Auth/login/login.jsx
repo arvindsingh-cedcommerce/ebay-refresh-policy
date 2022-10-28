@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, Page, Stack} from "@shopify/polaris";
+import {Card, DisplayText, Form, Page, Stack} from "@shopify/polaris";
 import {button, textField} from "../../../PolarisComponents/InputGroups";
 import {globalState, refreshSession} from "../../../services/globalstate";
 import {notify} from "../../../services/notify";
@@ -7,7 +7,8 @@ import {login} from "../../../Apirequest/authApi";
 import {parseQueryString} from "../../../services/helperFunction";
 import { getDashboardData } from '../../../APIrequests/DashboardAPI';
 import { dashboardAnalyticsURL } from '../../../URLs/DashboardURL';
-
+import { environment } from '../../../environment/environment';
+import Cancel from "../../../assets/warning.png";
 class Login extends Component {
 
     constructor(props){
@@ -69,10 +70,35 @@ class Login extends Component {
         this.props.history.push(url);
     }
 
+
+    renderExceptionBanner(){
+        return <Card>
+        <Card.Section>
+            <div style={{textAlign:'center',minHeight:'35rem',marginTop:'10rem'}}>
+                <Stack alignment={"center"} vertical={true}>
+                    <img src={Cancel} style={{height:'5rem',width:'5rem'}} />
+                    <DisplayText size={"extraLarge"}>
+                        Oops !!
+                    </DisplayText>
+                    <DisplayText size='small'>
+                        <b>Unauthorized access attempt</b>
+                    </DisplayText>
+                    <DisplayText size='small'>
+                        Kindly revisit the app from your shopify store's apps section
+                    </DisplayText>
+                </Stack>
+            </div>
+        </Card.Section>
+    </Card>
+    }
+
     render() {
         let { credentials, loader } = this.state;
         let { username, password} = credentials;
-        return (
+        return environment.isLive ? <Page
+        title=""
+    >{this.renderExceptionBanner()}
+    </Page> : (
             <Page title={'Login'}>
                 <Form onSubmit={this.onSubmit.bind(this)}>
                 <Stack distribution={"fillEvenly"} vertical={true}>

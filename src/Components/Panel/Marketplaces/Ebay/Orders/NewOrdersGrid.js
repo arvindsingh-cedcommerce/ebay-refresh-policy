@@ -157,7 +157,7 @@ const NewOrdersGrid = (props) => {
       ),
       dataIndex: "eBayOrderId",
       key: "eBayOrderId",
-      fixed: "left",
+      fixed: window.innerWidth <= 425 ? false : "left",
     },
     {
       title: (
@@ -703,7 +703,7 @@ const NewOrdersGrid = (props) => {
       setconnectedAccountsArray(tempArr);
     } else {
       notify.error(message);
-      // props.history.push("/auth/login");
+      props.history.push("/auth/login");
     }
   };
 
