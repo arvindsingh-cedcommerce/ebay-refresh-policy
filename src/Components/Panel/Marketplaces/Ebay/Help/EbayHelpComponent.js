@@ -9,6 +9,7 @@ import GroupFAQComponent from "./GroupFAQComponent";
 import YoutubeEmbed from "./YoutubeEmbed";
 import { Card as ShopifyCard } from "@shopify/polaris";
 import GifComponent from "./GifComponent";
+import { notify } from "../../../../../services/notify";
 
 const { Meta } = Card;
 
@@ -26,14 +27,17 @@ const EbayHelpComponent = () => {
   // faqloader
   const [faqLoader, setFaqLoader] = useState(false);
 
-  const getAllFAQs = async () => {
+  const getAllFAQs = async (props) => {
     setFaqLoader(true);
-    let { success, data } = await getMethod(faqAPI, {
+    let { success, data, message } = await getMethod(faqAPI, {
       type: "FAQ",
     });
     if (success) {
       let parsedData = getParseFaqData(data);
       setFaqData(parsedData);
+    } else {
+      notify.error(message);
+      props.history.push("/auth/login");
     }
     setFaqLoader(false);
   };

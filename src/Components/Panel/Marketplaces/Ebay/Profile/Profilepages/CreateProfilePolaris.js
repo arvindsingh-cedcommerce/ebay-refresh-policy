@@ -338,6 +338,7 @@ const CreateProfilePolaris = (props) => {
       setUpdatedConnectedAccountObject(true);
     } else {
       notify.error(message);
+      props.history.push("/auth/login");
     }
   };
 

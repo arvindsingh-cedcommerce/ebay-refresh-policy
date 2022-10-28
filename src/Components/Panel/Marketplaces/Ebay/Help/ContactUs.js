@@ -67,8 +67,8 @@ const ContactUs = () => {
     email: "mailto:ebay_support@cedcommerce.com",
   });
 
-  const getAllConnectedAccounts = async () => {
-    let { success: accountConnectedSuccess, data: connectedAccountData } =
+  const getAllConnectedAccounts = async (props) => {
+    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
       await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let shopifyAccount = connectedAccountData.find(
@@ -129,6 +129,9 @@ const ContactUs = () => {
       ];
       setconnectedAccountsArray(tempArr);
       setSelectedAccount(tempArr[0]["label"]);
+    } else {
+      notify.error(message);
+      props.history.push("/auth/login");
     }
   };
 
@@ -332,7 +335,7 @@ const ContactUs = () => {
                 multiline={
                   connectedAccountsArray.length <= 3
                     ? 3
-                    : connectedAccountsArray.length >=4 &&
+                    : connectedAccountsArray.length >= 4 &&
                       connectedAccountsArray.length <= 6
                     ? 5
                     : connectedAccountsArray.length >= 7 &&

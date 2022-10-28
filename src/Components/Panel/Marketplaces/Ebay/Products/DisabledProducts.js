@@ -654,7 +654,7 @@ const DisabledProducts = (props) => {
     }
   };
   const getAccounts = async () => {
-    let { success: accountConnectedSuccess, data: connectedAccountData } =
+    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
       await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
@@ -684,6 +684,9 @@ const DisabledProducts = (props) => {
       });
       setconnectedAccountsArray(tempArr);
       getProfilesProducttypeVendor();
+    } else {
+      notify.error(message);
+      props.history.push("/auth/login");
     }
   };
 
