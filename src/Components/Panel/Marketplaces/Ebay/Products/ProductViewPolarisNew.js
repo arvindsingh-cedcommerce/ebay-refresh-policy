@@ -1000,8 +1000,8 @@ const ProductViewPolarisNew = (props) => {
         key="upload"
         onClick={() => {
           let postData = {
-            // product_id: [apiCallMainProduct["source_product_id"]],
-            product_id: [apiCallMainProduct["container_id"]],
+            product_id: [apiCallMainProduct["source_product_id"]],
+            // product_id: [apiCallMainProduct["container_id"]],
             action: "upload_and_revise",
           };
           setModal({
