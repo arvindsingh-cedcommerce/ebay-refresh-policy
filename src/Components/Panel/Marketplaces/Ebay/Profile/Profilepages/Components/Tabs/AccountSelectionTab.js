@@ -39,7 +39,7 @@ const AccountSelectionTab = ({
             autoComplete="off"
             error={profileNameError && "Please fill profile name..."}
             helpText={
-              "Set profile name as per your convenience. It will use to identify this profile while listing creation on eBay."
+              "Set profile name as per your convenience. It will be used to identify this profile while creating listing on eBay."
             }
           />
         )}
