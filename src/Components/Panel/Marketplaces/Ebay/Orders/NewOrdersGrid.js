@@ -64,6 +64,7 @@ import NewFilterComponentSimilarPolarisOrders from "./NewFilterComponentSimilarP
 import { useDispatch, useSelector } from "react-redux";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
 import { dashboardAnalyticsURL } from "../../../../../URLs/DashboardURL";
+import BasicPaginationComponent from "../../../../AntDesignComponents/BasicPaginationComponent";
 
 const { Text } = Typography;
 let demo = {
@@ -146,6 +147,7 @@ const NewOrdersGrid = (props) => {
   const dispatch = useDispatch();
 
   const [tab, setTab] = useState("0");
+  const [jumpToActivePage, setJumpToActivePage] = useState(0);
   const [orderColumns, setOrderColumns] = useState([
     {
       title: (
@@ -253,8 +255,14 @@ const NewOrdersGrid = (props) => {
   // pagination
 
   const [activePage, setActivePage] = useState(1);
-  const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
+  //const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
   // const [pageSizeOptions, setPageSizeOptions] = useState([1, 2, 3]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([
+    { label: " 25 / page ", value: 25 },
+    { label: " 50 / page ", value: 50 },
+    { label: " 100 / page ", value: 100 },
+  ]);
+
   const [pageSize, setPageSize] = useState(25);
   // const [pageSize, setPageSize] = useState(1);
   const [totalOrdersCount, setTotalOrdersCount] = useState(0);
@@ -287,8 +295,8 @@ const NewOrdersGrid = (props) => {
     { label: "Cancelled", value: "cancelled" },
   ]);
   const [filterTitleORsku, setFilterTitleORsku] = useState("");
-  const [prevPage,setPrevPage]=useState(1);
- 
+  const [prevPage, setPrevPage] = useState(1);
+
   // loader
   const [syncBtnLoader, setSyncBtnLoader] = useState(false);
 
@@ -304,34 +312,70 @@ const NewOrdersGrid = (props) => {
     available: "",
     total: "",
   });
-  const checkValueHandler=(arr,filterName)=>{
-    let countryValue="";
-    Object.keys(arr).filter((item,index)=>{
+  const { Option } = Select;
+  const checkValueHandler = (arr, filterName) => {
+    let countryValue = "";
+    Object.keys(arr).filter((item, index) => {
       let indexOfFirstOpeningBracket = item.indexOf("[");
       let indexOfFirstClosingBracket = item.indexOf("]");
-      const mainItem=item.substring(
+      const mainItem = item.substring(
         indexOfFirstOpeningBracket + 1,
         indexOfFirstClosingBracket
       );
-      if(mainItem===filterName)
-      {
-          countryValue= item;
-          return ;
+      if (mainItem === filterName) {
+        countryValue = item;
+        return;
       }
-    })
+    });
     return countryValue;
-  }
-  
-  const initialCountryValue=reduxState[checkValueHandler(reduxState,"country")];
-  const initialStatusValue=reduxState[checkValueHandler(reduxState,"status")];
-   const moreFilters=["shopify_order_name","target_order_id"];
-  let initialMoreFiltersObj={};
-  moreFilters.map((moreFilter,index)=>{
-    let filterItem=checkValueHandler(reduxState,moreFilter);
-    if(filterItem)
-    initialMoreFiltersObj[filterItem]=reduxState[filterItem];
-  });
+  };
 
+  const initialCountryValue =
+    reduxState[checkValueHandler(reduxState, "country")];
+  const initialStatusValue =
+    reduxState[checkValueHandler(reduxState, "status")];
+  const moreFilters = ["shopify_order_name", "target_order_id"];
+  let initialMoreFiltersObj = {};
+  moreFilters.map((moreFilter, index) => {
+    let filterItem = checkValueHandler(reduxState, moreFilter);
+    if (filterItem) initialMoreFiltersObj[filterItem] = reduxState[filterItem];
+  });
+  const showTotal = (total, range) => {
+    if (range[0] > range[1]) {
+      range[0] = 1;
+    }
+    if (range[1] > totalOrdersCount) {
+      range[1] = totalOrdersCount;
+    }
+    if (totalOrdersCount)
+      return (
+        <div
+          style={{ display: "flex", justifyContent: "end", fontWeight: "bold" }}
+        >{`Showing ${range[0]}-${range[1]} of ${total} Order(s)`}</div>
+      );
+  };
+  const showJumpToPage = () => {
+    return (
+      <Input
+        style={{ width: "6rem" }}
+        value={jumpToActivePage ? jumpToActivePage : ""}
+        onChange={(e) => {
+          setJumpToActivePage(Number(e.target.value));
+        }}
+        onPressEnter={(e) => {
+          let numOfPages = totalOrdersCount / pageSize;
+          if (totalOrdersCount % pageSize > 0) {
+            numOfPages += 1;
+          }
+          if (jumpToActivePage > 0 && jumpToActivePage <= numOfPages) {
+            setActivePage(jumpToActivePage);
+            setPrevPage(activePage);
+            hitGetOrdersAPI(jumpToActivePage, pageSize);
+          }
+        }}
+      />
+    );
+  };
   const [orderAlertListData, setOrderAlertListData] = useState([
     // 'Racing car sprays burning fuel into crowd.',
     <div>
@@ -522,24 +566,24 @@ const NewOrdersGrid = (props) => {
     setOrderData(tempOrderData);
   };
 
-  const hitGetOrdersAPI = async (activePageNumber,activePageSize) => {
+  const hitGetOrdersAPI = async (activePageNumber, activePageSize) => {
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
       if (key !== "filtersPresent") {
-      if (key === "filter[country][1]") {
-        let matchedAccoount = connectedAccountsArray.find(
-          (connectedAccount) =>
-            connectedAccount["value"] === filtersToPass["filter[country][1]"]
-        );
-        filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
-      } else if (key === "filter[status][1]") {
-        filterPostData["filter[target_status][1]"] =
-          filtersToPass["filter[status][1]"];
-      } else {
-        filterPostData[key] = filtersToPass[key];
+        if (key === "filter[country][1]") {
+          let matchedAccoount = connectedAccountsArray.find(
+            (connectedAccount) =>
+              connectedAccount["value"] === filtersToPass["filter[country][1]"]
+          );
+          filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
+        } else if (key === "filter[status][1]") {
+          filterPostData["filter[target_status][1]"] =
+            filtersToPass["filter[status][1]"];
+        } else {
+          filterPostData[key] = filtersToPass[key];
+        }
       }
-    }
     }
     let postData = {
       count: activePageSize,
@@ -564,13 +608,11 @@ const NewOrdersGrid = (props) => {
   };
 
   useEffect(() => {
-    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+    if (filtersToPass && activePage > 1 && activePage !== prevPage) {
       hitGetOrdersAPI(1, pageSize);
       setActivePage(1);
-    }
-    else if(filtersToPass)
-    {
-      hitGetOrdersAPI(activePage,pageSize);
+    } else if (filtersToPass) {
+      hitGetOrdersAPI(activePage, pageSize);
     }
   }, [filtersToPass]);
 
@@ -692,7 +734,7 @@ const NewOrdersGrid = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      setFiltersToPass({filtersPresent:false});
+      setFiltersToPass({ filtersPresent: false });
       //notify.warn("No filters applied");
     }
   };
@@ -703,16 +745,14 @@ const NewOrdersGrid = (props) => {
       case "orderIds":
         returnFormElement = (
           <Form.Item
-          name={getLabelForFilter()}
-          rules={[
-            { required: true, message: "Please enter order IDs" },
-          ]}
-        >
-          <Input
-            value={multipleOrderIds}
-            onChange={(e) => setMultipleOrderIds(e.target.value)}
-            placeholder="multiple order IDs allow in ,(comma) separated form"
-          />
+            name={getLabelForFilter()}
+            rules={[{ required: true, message: "Please enter order IDs" }]}
+          >
+            <Input
+              value={multipleOrderIds}
+              onChange={(e) => setMultipleOrderIds(e.target.value)}
+              placeholder="multiple order IDs allow in ,(comma) separated form"
+            />
           </Form.Item>
         );
         break;
@@ -722,37 +762,43 @@ const NewOrdersGrid = (props) => {
             <Col span={12}>
               <>From</>
               <Form.Item
-                      name={getLabelForFilter()}
-                      rules={[
-                        { required: true, message: "Please select any created start date" },
-                      ]}
-                    >
-              <Input
-                placeholder="Start Date"
-                type={"date"}
-                value={orderCreatedAtStartDate}
-                onChange={(e) => {
-                  setOrderCreatedAtStartDate(e.target.value);
-                }}
-              />
+                name={getLabelForFilter()}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select any created start date",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="Start Date"
+                  type={"date"}
+                  value={orderCreatedAtStartDate}
+                  onChange={(e) => {
+                    setOrderCreatedAtStartDate(e.target.value);
+                  }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
               <>To</>
               <Form.Item
-                     name="end_date"
-                      rules={[
-                        { required: true, message: "Please select any created end date" },
-                      ]}
-                    >
-              <Input
-                placeholder="End Date"             
-                type={"date"}
-                value={orderCreatedAtEndDate}
-                onChange={(e) => {
-                  setOrderCreatedAtEndDate(e.target.value);
-                }}
-              />
+                name="end_date"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select any created end date",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="End Date"
+                  type={"date"}
+                  value={orderCreatedAtEndDate}
+                  onChange={(e) => {
+                    setOrderCreatedAtEndDate(e.target.value);
+                  }}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -764,37 +810,43 @@ const NewOrdersGrid = (props) => {
             <Col span={12}>
               <>From</>
               <Form.Item
-                      name={getLabelForFilter()}
-                      rules={[
-                        { required: true, message: "Please select any order modified start date" },
-                      ]}
-                    >
-              <Input
-                placeholder="Start Date"
-                type={"date"}
-                value={orderModifiedAtStartDate}
-                onChange={(e) => {
-                  setOrderModifiedAtStartDate(e.target.value);
-                }}
-              />
+                name={getLabelForFilter()}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select any order modified start date",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="Start Date"
+                  type={"date"}
+                  value={orderModifiedAtStartDate}
+                  onChange={(e) => {
+                    setOrderModifiedAtStartDate(e.target.value);
+                  }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
               <>To</>
               <Form.Item
-                      name="order_end_date"
-                      rules={[
-                        { required: true, message: "Please select any order modified end date" },
-                      ]}
-                    >
-              <Input
-                placeholder="End Date"    
-                type={"date"}
-                value={orderModifiedAtEndDate}
-                onChange={(e) => {
-                  setOrderModifiedAtEndDate(e.target.value);
-                }}
-              />
+                name="order_end_date"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select any order modified end date",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="End Date"
+                  type={"date"}
+                  value={orderModifiedAtEndDate}
+                  onChange={(e) => {
+                    setOrderModifiedAtEndDate(e.target.value);
+                  }}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -877,72 +929,69 @@ const NewOrdersGrid = (props) => {
       "label"
     ];
   };
-  const formatFilterValue=(filterName,filterValue)=>{
-  
-    if(filterName==="status")
-    {
-         const statusItem=status?.filter(item=>item.value===filterValue);
-         console.log("filter name",statusItem);
-         return statusItem[0]?.label;
-    }
-    else
-    {
+  const formatFilterValue = (filterName, filterValue) => {
+    if (filterName === "status") {
+      const statusItem = status?.filter((item) => item.value === filterValue);
+      console.log("filter name", statusItem);
+      return statusItem[0]?.label;
+    } else {
       return filterValue;
     }
-   }
+  };
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
       if (
         !filter.includes("filtersPresent") ||
         (filter.includes("filtersPresent") && filter["filtersPresent"])
       ) {
-      let indexOfFirstOpeningBracket = filter.indexOf("[");
-      let indexOfFirstClosingBracket = filter.indexOf("]");
-      let indexOfSecondOpeningBracket = filter.indexOf(
-        "[",
-        indexOfFirstOpeningBracket + 1
-      );
-      let indexOfSecondClosingBracket = filter.indexOf(
-        "]",
-        indexOfFirstClosingBracket + 1
-      );
-      let fieldValue = filter.substring(
-        indexOfFirstOpeningBracket + 1,
-        indexOfFirstClosingBracket
-      );
-      let operatorValue = filter.substring(
-        indexOfSecondOpeningBracket + 1,
-        indexOfSecondClosingBracket
-      );
-      return (
-        <PolarisTag
-          key={filter}
-          onRemove={() => {
-            const temp = Object.keys(filtersToPass).reduce((object, key) => {
-              if (key !== filter) {
-                object[key] = filtersToPass[key];
-              }
-              return object;
-            }, {});
-            let tempObj = { ...filters };
-            Object.keys(tempObj).forEach((object) => {
-              if (object === fieldValue) {
-                tempObj[object]["value"] = "";
-              }
-            });
-            // setFilterTitleORsku("");
-            // setEbayOrderId("");
-            ["source_order_id"].includes(fieldValue) && setEbayOrderId("");
-            setFilters(tempObj);
-            setFiltersToPass(temp);
-            setSelected({ ...selected, [fieldValue]: [] });
-          }}
-        >
-          {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-          {formatFilterValue(fieldValue,filtersToPass[filter])}
-        </PolarisTag>
-      );
-  }});
+        let indexOfFirstOpeningBracket = filter.indexOf("[");
+        let indexOfFirstClosingBracket = filter.indexOf("]");
+        let indexOfSecondOpeningBracket = filter.indexOf(
+          "[",
+          indexOfFirstOpeningBracket + 1
+        );
+        let indexOfSecondClosingBracket = filter.indexOf(
+          "]",
+          indexOfFirstClosingBracket + 1
+        );
+        let fieldValue = filter.substring(
+          indexOfFirstOpeningBracket + 1,
+          indexOfFirstClosingBracket
+        );
+        let operatorValue = filter.substring(
+          indexOfSecondOpeningBracket + 1,
+          indexOfSecondClosingBracket
+        );
+        return (
+          <PolarisTag
+            key={filter}
+            onRemove={() => {
+              const temp = Object.keys(filtersToPass).reduce((object, key) => {
+                if (key !== filter) {
+                  object[key] = filtersToPass[key];
+                }
+                return object;
+              }, {});
+              let tempObj = { ...filters };
+              Object.keys(tempObj).forEach((object) => {
+                if (object === fieldValue) {
+                  tempObj[object]["value"] = "";
+                }
+              });
+              // setFilterTitleORsku("");
+              // setEbayOrderId("");
+              ["source_order_id"].includes(fieldValue) && setEbayOrderId("");
+              setFilters(tempObj);
+              setFiltersToPass(temp);
+              setSelected({ ...selected, [fieldValue]: [] });
+            }}
+          >
+            {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
+            {formatFilterValue(fieldValue, filtersToPass[filter])}
+          </PolarisTag>
+        );
+      }
+    });
   };
 
   const verify = useCallback(
@@ -956,9 +1005,13 @@ const NewOrdersGrid = (props) => {
       let ebayOrderIdFilterObj = {};
       ebayOrderIdFilterObj[type] = value;
       if (ebayOrderIdFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...ebayOrderIdFilterObj,filtersPresent:true });
+        setFiltersToPass({
+          ...filtersToPass,
+          ...ebayOrderIdFilterObj,
+          filtersPresent: true,
+        });
       } else if (filtersToPass.hasOwnProperty("filter[source_order_id][3]")) {
-        let temp = { ...filtersToPass,filtersPresent:true };
+        let temp = { ...filtersToPass, filtersPresent: true };
         delete temp["filter[source_order_id][3]"];
         setFiltersToPass(temp);
       }
@@ -998,7 +1051,7 @@ const NewOrdersGrid = (props) => {
     </ShopifyButton>
   );
   const handleChange = (value, selectedType) => {
-    console.log("handler change",value);
+    console.log("handler change", value);
     let type = `filter[${selectedType}][1]`;
     let filterObj = {};
     filterObj[type] = value[0];
@@ -1006,8 +1059,13 @@ const NewOrdersGrid = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const renderOtherFilters = () => {
-    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
-    const initialStatusObj=status?.filter((statusItem,index)=> statusItem.value===initialStatusValue);
+    const initialCountryObj = connectedAccountsArray?.filter(
+      (connectedAccount, index) =>
+        connectedAccount.value === initialCountryValue
+    );
+    const initialStatusObj = status?.filter(
+      (statusItem, index) => statusItem.value === initialStatusValue
+    );
     return (
       <Stack wrap>
         <ButtonGroup segmented>
@@ -1019,7 +1077,11 @@ const NewOrdersGrid = (props) => {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={connectedAccountsArray}
-                selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
+                selected={
+                  initialCountryObj[0]
+                    ? [initialCountryObj[0].value]
+                    : selected["country"]
+                }
                 onChange={(value) => handleChange(value, "country")}
               />
             </div>
@@ -1032,7 +1094,11 @@ const NewOrdersGrid = (props) => {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={status}
-                selected={initialStatusObj[0]?[initialStatusObj[0].value]:selected["status"]}
+                selected={
+                  initialStatusObj[0]
+                    ? [initialStatusObj[0].value]
+                    : selected["status"]
+                }
                 onChange={(value) => handleChange(value, "status")}
               />
             </div>
@@ -1049,6 +1115,11 @@ const NewOrdersGrid = (props) => {
       </Stack>
     );
   };
+  const handleSelectChange = useCallback((value) => {
+    setPageSize(value);
+
+    hitGetOrdersAPI(activePage, value);
+  }, []);
   const rowSelectionFunc = () => {
     return {
       type: selectionType,
@@ -1162,7 +1233,16 @@ const NewOrdersGrid = (props) => {
             justify="space-between"
             style={{ marginBottom: 10 }}
           >
-            <Col className="gutter-row" span={6}>
+            <Col
+              className="gutter-row"
+              span={6}
+              xs={24}
+              sm={24}
+              md={6}
+              lg={6}
+              xl={6}
+              xxl={6}
+            >
               {/* <ProductMassMenu selectedRows={selectedRows} /> */}
               <OrderMassMenu
                 selectedRows={selectedRows}
@@ -1172,7 +1252,17 @@ const NewOrdersGrid = (props) => {
                 rowSelectionPassed={rowSelectionFunc}
               />
             </Col>
-            <Col className="gutter-row" span={18}>
+            <Col
+              className="gutter-row"
+              span={18}
+              xs={24}
+              sm={24}
+              md={18}
+              lg={18}
+              xl={18}
+              xxl={18}
+            >
+              {/*               
               <Stack distribution="trailing">
                 <PaginationComponent
                   totalCount={totalOrdersCount}
@@ -1186,7 +1276,90 @@ const NewOrdersGrid = (props) => {
                   size={"default"}
                   simple={false}
                 />
-              </Stack>
+              </Stack> */}
+              <Row gutter={[10, 8]} justify="space-evenly">
+                <Col
+                  span={6}
+                  xs={20}
+                  sm={13}
+                  md={6}
+                  lg={8}
+                  xl={6}
+                  xxl={6}
+                  style={{ margin: "auto" }}
+                >
+                  {showTotal(totalOrdersCount, [
+                    (activePage - 1) * pageSize + 1,
+                    activePage * pageSize,
+                  ])}
+                </Col>
+                <Col
+                  span={10}
+                  xs={24}
+                  sm={24}
+                  md={18}
+                  lg={16}
+                  xl={9}
+                  xxl={9}
+                  style={{ display: "flex", justifyContent: "end" }}
+                >
+                  <BasicPaginationComponent
+                    totalCount={totalOrdersCount}
+                    hitGetProductsAPI={hitGetOrdersAPI}
+                    pageSizeOptions={pageSizeOptions}
+                    activePage={activePage}
+                    setActivePage={setActivePage}
+                    setPrevPage={setPrevPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                    size={"default"}
+                    simple={false}
+                  />
+                </Col>
+                <Col
+                  span={4}
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  lg={12}
+                  xl={4}
+                  xxl={4}
+                  style={{ display: "flex", justifyContent: "end" }}
+                >
+                  {/* <Select
+      label=""
+      options={pageSizeOptions}
+      onChange={handleSelectChange}
+      value={pageSize}
+    
+    /> */}
+                  <Select
+                    defaultValue="25 / page"
+                    style={{
+                      width: "11rem",
+                    }}
+                    onChange={handleSelectChange}
+                  >
+                    {pageSizeOptions.map((pageSizeOption, index) => (
+                      <Option value={Number(pageSizeOption.value)}>
+                        {pageSizeOption.label}
+                      </Option>
+                    ))}
+                  </Select>
+                </Col>
+                <Col
+                  span={5}
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  lg={12}
+                  xl={5}
+                  xxl={5}
+                  style={{ display: "flex", justifyContent: "end" }}
+                >
+                  <div>Go To {showJumpToPage()} Page</div>
+                </Col>
+              </Row>
             </Col>
           </Row>
         </div>
@@ -1307,63 +1480,66 @@ const NewOrdersGrid = (props) => {
                 )}
                 {selectedAccount &&
                   filtersChecked &&
-                  selectedImportedOrderFilter && (
-                  
-                      getFormElement()
-                 
-                  )}       
-              <Stack distribution="center">
-                <Button
-                type="primary"
-                htmlType="submit"
-                  // key="back"
-                  onClick={async () => {
-                    setSyncBtnLoader(true);
-                    let postData = {
-                      shop_id: String(shopId),
-                      site_id: Number(siteID),
-                    };
-                    if (filtersChecked) {
-                      switch (selectedImportedOrderFilter) {
-                        case "orderIds":
-                          postData["order_ids"] = multipleOrderIds;
-                          break;
-                        case "orderCreatedAt":
-                          postData["create_time_from"] =
-                            orderCreatedAtStartDate;
-                          postData["create_time_to"] = orderCreatedAtEndDate;
-                          break;
-                        case "orderModifiedAt":
-                          postData["mod_time_from"] = orderModifiedAtStartDate;
-                          postData["mod_time_to"] = orderModifiedAtEndDate;
-                          break;
-                        default:
-                          break;
+                  selectedImportedOrderFilter &&
+                  getFormElement()}
+                <Stack distribution="center">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    // key="back"
+                    onClick={async () => {
+                      setSyncBtnLoader(true);
+                      let postData = {
+                        shop_id: String(shopId),
+                        site_id: Number(siteID),
+                      };
+                      if (filtersChecked) {
+                        switch (selectedImportedOrderFilter) {
+                          case "orderIds":
+                            postData["order_ids"] = multipleOrderIds;
+                            break;
+                          case "orderCreatedAt":
+                            postData["create_time_from"] =
+                              orderCreatedAtStartDate;
+                            postData["create_time_to"] = orderCreatedAtEndDate;
+                            break;
+                          case "orderModifiedAt":
+                            postData["mod_time_from"] =
+                              orderModifiedAtStartDate;
+                            postData["mod_time_to"] = orderModifiedAtEndDate;
+                            break;
+                          default:
+                            break;
+                        }
                       }
-                    }
-                    if(!filtersChecked || (postData["order_ids"] || (postData["create_time_from"] && postData["create_time_to"]) || (postData["mod_time_from"] && postData["mod_time_to"])))
-                    {
-                    let { success, message } = await importOrders(
-                      importOrdersURL,
-                      postData
-                    );
-                    if (success) {
-                      notify.success(message);
-                    } else {
-                      notify.error(message);
-                    }
-                   
-                    setImportEbayOrdersModal(false);
-                    hitGetOrdersAPI(activePage,pageSize);
-                  }
-                  setSyncBtnLoader(false);
-                  }}
-                  disabled={getDisabledSync()}
-                  loading={syncBtnLoader}
-                >
-                  Import
-                </Button>
-              </Stack>
+                      if (
+                        !filtersChecked ||
+                        postData["order_ids"] ||
+                        (postData["create_time_from"] &&
+                          postData["create_time_to"]) ||
+                        (postData["mod_time_from"] && postData["mod_time_to"])
+                      ) {
+                        let { success, message } = await importOrders(
+                          importOrdersURL,
+                          postData
+                        );
+                        if (success) {
+                          notify.success(message);
+                        } else {
+                          notify.error(message);
+                        }
+
+                        setImportEbayOrdersModal(false);
+                        hitGetOrdersAPI(activePage, pageSize);
+                      }
+                      setSyncBtnLoader(false);
+                    }}
+                    disabled={getDisabledSync()}
+                    loading={syncBtnLoader}
+                  >
+                    Import
+                  </Button>
+                </Stack>
               </Form>
             </Stack>
           </>

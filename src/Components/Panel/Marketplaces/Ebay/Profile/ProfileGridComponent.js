@@ -14,7 +14,17 @@ import {
   Button,
 } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
-import { Alert, Col, Image, List, PageHeader, Row, Typography } from "antd";
+import {
+  Alert,
+  Col,
+  Image,
+  Input,
+  List,
+  PageHeader,
+  Row,
+  Select,
+  Typography,
+} from "antd";
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
@@ -24,6 +34,7 @@ import { notify } from "../../../../../services/notify";
 import { prepareChoiceoption } from "../../../../../Subcomponents/Aggrid/gridHelper";
 import { showingGridRange } from "../../../../../Subcomponents/Aggrid/showgridrange";
 import { getProfilesURLFilter } from "../../../../../URLs/ProfilesURL";
+import BasicPaginationComponent from "../../../../AntDesignComponents/BasicPaginationComponent";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
 import PaginationComponent from "../../../../AntDesignComponents/PaginationComponent";
 import { mappingShopIDwithCountry } from "../Orders/SampleOrderData";
@@ -76,26 +87,27 @@ const ProfileGridComponent = (props) => {
     (state) => state.profileFilterReducer.reduxFilters
   );
   const dispatch = useDispatch();
-  let initialMoreFiltersObj={};
-  const checkValueHandler=(arr,filterName)=>{
-    let countryValue="";
-    Object.keys(arr).filter((item,index)=>{
+  let initialMoreFiltersObj = {};
+  const { Option } = Select;
+  const checkValueHandler = (arr, filterName) => {
+    let countryValue = "";
+    Object.keys(arr).filter((item, index) => {
       let indexOfFirstOpeningBracket = item.indexOf("[");
       let indexOfFirstClosingBracket = item.indexOf("]");
-      const mainItem=item.substring(
+      const mainItem = item.substring(
         indexOfFirstOpeningBracket + 1,
         indexOfFirstClosingBracket
       );
-      if(mainItem===filterName)
-      {
-          countryValue= item;
-          return ;
+      if (mainItem === filterName) {
+        countryValue = item;
+        return;
       }
-    })
+    });
     return countryValue;
-  }
-   const initialCountryValue=reduxState[checkValueHandler(reduxState,"country")];
-  
+  };
+  const initialCountryValue =
+    reduxState[checkValueHandler(reduxState, "country")];
+
   const profileGridColumns = [
     {
       title: <center>Name</center>,
@@ -137,6 +149,7 @@ const ProfileGridComponent = (props) => {
   ];
   const [allProfiles, setAllProfiles] = useState([]);
   const [filterCollapsible, setFilterCollapsibles] = useState(false);
+  const [jumpToActivePage, setJumpToActivePage] = useState(0);
   const [filtersProps, setFiltersProps] = useState({
     attributeoptions: [],
     filters: [],
@@ -174,26 +187,35 @@ const ProfileGridComponent = (props) => {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-   const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
- // const [pageSizeOptions, setPageSizeOptions] = useState([1,2]);
+  // const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([
+    { label: " 5 / page ", value: 5 },
+    { label: " 10 / page ", value: 10 },
+    { label: " 20 / page ", value: 20 },
+  ]);
+
+  // const [pageSizeOptions, setPageSizeOptions] = useState([1,2]);
   // const [pageSize, setPageSize] = useState(5);
   const [pageSize, setPageSize] = useState(5);
 
-  const [prevPage,setPrevPage]=useState(1);
+  const [prevPage, setPrevPage] = useState(1);
   const [totalShippingPolicyCount, setTotalShippingPolicyCount] = useState(0);
 
- 
+  const handleSelectChange = useCallback((value) => {
+    setPageSize(value);
+
+    getAllProfiles(activePage, value);
+  }, []);
+
   useEffect(() => {
-    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+    if (filtersToPass && activePage > 1 && activePage !== prevPage) {
       getAllProfiles(1, pageSize);
       setActivePage(1);
-    }
-    else if(filtersToPass)
-    {
-      getAllProfiles(activePage,pageSize);
+    } else if (filtersToPass) {
+      getAllProfiles(activePage, pageSize);
     }
   }, [filtersToPass]);
-  
+
   const filterData = (componentFilters) => {
     let temp = { ...filtersProps };
     temp["filters"] = [...componentFilters];
@@ -206,7 +228,42 @@ const ProfileGridComponent = (props) => {
     });
     return testArr[0];
   };
-
+  const showTotal = (total, range) => {
+    if (range[0] > range[1]) {
+      range[0] = 1;
+    }
+    if (range[1] > total) {
+      range[1] = totalShippingPolicyCount;
+    }
+    if (totalShippingPolicyCount)
+      return (
+        <div
+          style={{ display: "flex", justifyContent: "end", fontWeight: "bold" }}
+        >{`Showing ${range[0]}-${range[1]} of ${total} Profile(s)`}</div>
+      );
+  };
+  const showJumpToPage = () => {
+    return (
+      <Input
+        style={{ width: "6rem" }}
+        value={jumpToActivePage ? jumpToActivePage : ""}
+        onChange={(e) => {
+          setJumpToActivePage(Number(e.target.value));
+        }}
+        onPressEnter={(e) => {
+          let numOfPages = totalShippingPolicyCount / pageSize;
+          if (totalShippingPolicyCount % pageSize > 0) {
+            numOfPages += 1;
+          }
+          if (jumpToActivePage > 0 && jumpToActivePage <= numOfPages) {
+            setActivePage(jumpToActivePage);
+            setPrevPage(activePage);
+            getAllProfiles(jumpToActivePage, pageSize);
+          }
+        }}
+      />
+    );
+  };
   const getAccounts = async () => {
     let { success: accountConnectedSuccess, data: connectedAccountData } =
       await getConnectedAccounts();
@@ -343,7 +400,7 @@ const ProfileGridComponent = (props) => {
       notify.error(message);
     }
   };
-  const getAllProfiles = async (activePageNumber,activePageSize) => {
+  const getAllProfiles = async (activePageNumber, activePageSize) => {
     setGridLoader(true);
     let { filters } = filtersProps;
     //let { pageSize: count, activePage } = paginationProps;
@@ -386,10 +443,13 @@ const ProfileGridComponent = (props) => {
     // if (Object.keys(filterPostData).length) {
     //   dataToPost["activePage"] = 1;
     // }
-    let { success, data, message,count } = await getProfiles(getProfilesURLFilter, {
-      ...dataToPost,
-      ...filterPostData,
-    });
+    let { success, data, message, count } = await getProfiles(
+      getProfilesURLFilter,
+      {
+        ...dataToPost,
+        ...filterPostData,
+      }
+    );
     if (data.count) {
       setTotalShippingPolicyCount(data.count);
     }
@@ -447,53 +507,54 @@ const ProfileGridComponent = (props) => {
         !filter.includes("filtersPresent") ||
         (filter.includes("filtersPresent") && filter["filtersPresent"])
       ) {
-      let indexOfFirstOpeningBracket = filter.indexOf("[");
-      let indexOfFirstClosingBracket = filter.indexOf("]");
-      let indexOfSecondOpeningBracket = filter.indexOf(
-        "[",
-        indexOfFirstOpeningBracket + 1
-      );
-      let indexOfSecondClosingBracket = filter.indexOf(
-        "]",
-        indexOfFirstClosingBracket + 1
-      );
-      let fieldValue = filter.substring(
-        indexOfFirstOpeningBracket + 1,
-        indexOfFirstClosingBracket
-      );
-      let operatorValue = filter.substring(
-        indexOfSecondOpeningBracket + 1,
-        indexOfSecondClosingBracket
-      );
-      return (
-        <Tag
-          key={index}
-          onRemove={() => {
-            const temp = Object.keys(filtersToPass).reduce((object, key) => {
-              if (key !== filter) {
-                object[key] = filtersToPass[key];
-              }
-              return object;
-            }, {});
-            let tempObj = { ...filters };
-            Object.keys(tempObj).forEach((object) => {
-              if (object === fieldValue) {
-                tempObj[object]["value"] = "";
-              }
-            });
-            // setFilterProfileNameORQuery("");
-            ["querySentence", "name"].includes(fieldValue) &&
-              setFilterProfileNameORQuery("");
-            setFilters(tempObj);
-            setFiltersToPass(temp);
-            setSelected({ ...selected, [fieldValue]: [] });
-          }}
-        >
-          {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-          {filtersToPass[filter]}
-        </Tag>
-      );
-  }});
+        let indexOfFirstOpeningBracket = filter.indexOf("[");
+        let indexOfFirstClosingBracket = filter.indexOf("]");
+        let indexOfSecondOpeningBracket = filter.indexOf(
+          "[",
+          indexOfFirstOpeningBracket + 1
+        );
+        let indexOfSecondClosingBracket = filter.indexOf(
+          "]",
+          indexOfFirstClosingBracket + 1
+        );
+        let fieldValue = filter.substring(
+          indexOfFirstOpeningBracket + 1,
+          indexOfFirstClosingBracket
+        );
+        let operatorValue = filter.substring(
+          indexOfSecondOpeningBracket + 1,
+          indexOfSecondClosingBracket
+        );
+        return (
+          <Tag
+            key={index}
+            onRemove={() => {
+              const temp = Object.keys(filtersToPass).reduce((object, key) => {
+                if (key !== filter) {
+                  object[key] = filtersToPass[key];
+                }
+                return object;
+              }, {});
+              let tempObj = { ...filters };
+              Object.keys(tempObj).forEach((object) => {
+                if (object === fieldValue) {
+                  tempObj[object]["value"] = "";
+                }
+              });
+              // setFilterProfileNameORQuery("");
+              ["querySentence", "name"].includes(fieldValue) &&
+                setFilterProfileNameORQuery("");
+              setFilters(tempObj);
+              setFiltersToPass(temp);
+              setSelected({ ...selected, [fieldValue]: [] });
+            }}
+          >
+            {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
+            {filtersToPass[filter]}
+          </Tag>
+        );
+      }
+    });
   };
 
   const verify = useCallback(
@@ -507,13 +568,17 @@ const ProfileGridComponent = (props) => {
       let titleFilterObj = {};
       titleFilterObj[type] = value;
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
+        setFiltersToPass({
+          ...filtersToPass,
+          ...titleFilterObj,
+          filtersPresent: true,
+        });
       } else if (filtersToPass.hasOwnProperty("filter[name][3]")) {
-        let temp = { ...filtersToPass,filtersPresent:true };
+        let temp = { ...filtersToPass, filtersPresent: true };
         delete temp["filter[name][3]"];
         setFiltersToPass(temp);
       } else if (filtersToPass.hasOwnProperty("filter[querySentence][3]")) {
-        let temp = { ...filtersToPass,filtersPresent:true };
+        let temp = { ...filtersToPass, filtersPresent: true };
         delete temp["filter[querySentence][3]"];
         setFiltersToPass(temp);
       }
@@ -558,23 +623,30 @@ const ProfileGridComponent = (props) => {
     setSelected({ ...selected, [selectedType]: value });
   };
   const renderChoiceListForProfilenameCountry = () => {
-    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
+    const initialCountryObj = connectedAccountsArray?.filter(
+      (connectedAccount, index) =>
+        connectedAccount.value === initialCountryValue
+    );
     return (
-    <Popover
-      active={popOverStatus["country"]}
-      activator={countryActivator}
-      onClose={() => popOverHandler("country")}
-    >
-      <div style={{ margin: "10px", width: "200px" }}>
-        <ChoiceList
-          choices={connectedAccountsArray}
-          selected={initialCountryObj[0]?[initialCountryObj[0]?.value]:selected["country"]}
-          onChange={(value) => handleChange(value, "country")}
-        />
-      </div>
-    </Popover>
-
-  )};
+      <Popover
+        active={popOverStatus["country"]}
+        activator={countryActivator}
+        onClose={() => popOverHandler("country")}
+      >
+        <div style={{ margin: "10px", width: "200px" }}>
+          <ChoiceList
+            choices={connectedAccountsArray}
+            selected={
+              initialCountryObj[0]
+                ? [initialCountryObj[0]?.value]
+                : selected["country"]
+            }
+            onChange={(value) => handleChange(value, "country")}
+          />
+        </div>
+      </Popover>
+    );
+  };
 
   useEffect(() => {
     verify(filterProfileNameORQuery);
@@ -652,7 +724,7 @@ const ProfileGridComponent = (props) => {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
       //notify.warn("No filters applied");
-      setFiltersToPass({filtersPresent:false})
+      setFiltersToPass({ filtersPresent: false });
     }
   };
 
@@ -727,16 +799,19 @@ const ProfileGridComponent = (props) => {
                 tagMarkup()}
             </Stack>
           </div>
-          <Row justify="space-between">
-            <Col>
-              <p style={{ paddingTop: 5, fontWeight: "bold" }}>
-                {/* {showingGridRange(paginationProps, "Profile(s)")} */}
-              </p>
-            </Col>
-            <Col>
-              <Row gutter={[16, 0]}>
-                <Col>
-                <PaginationComponent
+          <Row justify="space-between" gutter={[8, 8]}>
+            {/* <Col     xs={24}
+              sm={24}
+              md={6}
+              lg={6}
+              xl={6}
+              xxl={6}>
+              <p style={{ paddingTop: 5, fontWeight: "bold" }}> */}
+            {/* {showingGridRange(paginationProps, "Profile(s)")} */}
+            {/* </p>
+            </Col> */}
+
+            {/* <PaginationComponent
               totalCount={totalShippingPolicyCount}
               hitGetProductsAPI={getAllProfiles}
               pageSizeOptions={pageSizeOptions}
@@ -747,9 +822,88 @@ const ProfileGridComponent = (props) => {
               setPageSize={setPageSize}
               size={"default"}
               simple={false}
-            />
-                </Col>
-              </Row>
+            /> */}
+
+            <Col
+              span={6}
+              xs={8}
+              sm={8}
+              md={10}
+              lg={4}
+              xl={5}
+              xxl={5}
+              style={{ display: "flex", justifyContent: "start" }}
+            >
+              {showTotal(totalShippingPolicyCount, [
+                (activePage - 1) * pageSize + 1,
+                activePage * pageSize,
+              ])}
+            </Col>
+            <Col
+              span={10}
+              xs={16}
+              sm={16}
+              md={14}
+              lg={10}
+              xl={9}
+              xxl={9}
+              style={{ display: "flex", justifyContent: "end" }}
+            >
+              <BasicPaginationComponent
+                totalCount={totalShippingPolicyCount}
+                hitGetProductsAPI={getAllProfiles}
+                pageSizeOptions={pageSizeOptions}
+                activePage={activePage}
+                setActivePage={setActivePage}
+                setPrevPage={setPrevPage}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                size={"default"}
+                simple={false}
+              />
+            </Col>
+            <Col
+              span={4}
+              xs={12}
+              sm={16}
+              md={16}
+              lg={5}
+              xl={5}
+              xxl={5}
+              style={{ display: "flex", justifyContent: "end" }}
+            >
+              {/* <Select
+      label=""
+      options={pageSizeOptions}
+      onChange={handleSelectChange}
+      value={pageSize}
+    
+    /> */}
+              <Select
+                defaultValue="5 / page"
+                style={{
+                  width: "11rem",
+                }}
+                onChange={handleSelectChange}
+              >
+                {pageSizeOptions.map((pageSizeOption, index) => (
+                  <Option value={Number(pageSizeOption.value)}>
+                    {pageSizeOption.label}
+                  </Option>
+                ))}
+              </Select>
+            </Col>
+            <Col
+              span={5}
+              xs={12}
+              sm={8}
+              md={8}
+              lg={5}
+              xl={5}
+              xxl={5}
+              style={{ display: "flex", justifyContent: "end" }}
+            >
+              <div>Go To {showJumpToPage()} Page</div>
             </Col>
           </Row>
         </div>
@@ -760,8 +914,8 @@ const ProfileGridComponent = (props) => {
           loading={gridLoader}
           pagination={false}
           scroll={{
-            x:1500,
-            y:500
+            x: 1500,
+            y: 500,
           }}
         />
       </Card>

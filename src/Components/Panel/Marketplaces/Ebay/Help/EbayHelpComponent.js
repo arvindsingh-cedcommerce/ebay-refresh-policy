@@ -24,7 +24,9 @@ const site = {
 const EbayHelpComponent = (props) => {
  
   let { question } = parseQueryString(props.location.search);
-  const questionValue=question.trim();
+  let questionValue="";
+  if(question)
+     questionValue=question.trim();
   const [faqData, setFaqData] = useState({});
   const [searchQuery,setSearchQuery]=useState("");
   const [searchFaqData,setSearchFaqData]= useState({});
