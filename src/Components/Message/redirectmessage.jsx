@@ -3,6 +3,7 @@ import { parseQueryString } from "../../services/helperFunction";
 import { Spinner, Stack } from "@shopify/polaris";
 import { displayText } from "../../PolarisComponents/InfoGroups";
 import { checkStepCompleted, saveCompletedStep } from "../../Apirequest/registrationApi";
+import { globalState } from "../../services/globalstate";
 const SuccessCheck = require("../../assets/successcheck.png");
 const FailedCross = require("../../assets/remove.png");
 
@@ -16,6 +17,11 @@ class Redirectmessage extends Component {
   }
 
   getStep = async() => {
+    let { token } = parseQueryString(this.props.location.search);
+    if(token) {
+      globalState.setLocalStorage('user_authenticated', 'true');
+      globalState.setLocalStorage('auth_token', token);
+    }
     let { success: nextStepSuccess, data: current_step } = await checkStepCompleted();
     // console.log("current_step", current_step);
     if(nextStepSuccess) {
