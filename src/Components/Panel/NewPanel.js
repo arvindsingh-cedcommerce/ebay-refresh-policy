@@ -532,8 +532,8 @@ const NewPanel = (props) => {
               </Button> */}
               <div style={{ display: "flex", justifyContent: "space-evenly" }}>
                 {/* <div style={{ display: "flex", justifyContent: 'flex-end' }}> */}
-                <div style={{width: '70%'}}>
-                {marqueeData.map((data) => (
+                <div style={{ width: "70%" }}>
+                  {marqueeData.map((data) => (
                     <Marquee
                       pauseOnHover
                       gradient={false}
@@ -543,7 +543,7 @@ const NewPanel = (props) => {
                       {data.Note && <div>Note: {data["Note"]}</div>}
                       {/* {data['Currently Running Activity'] && <div>Currently Running Activity: {data['Currently Running Activity']}</div>} */}
                     </Marquee>
-                ))}
+                  ))}
                 </div>
                 {/* <Stack distribution="trailing" alignment="center"> */}
                 <div
