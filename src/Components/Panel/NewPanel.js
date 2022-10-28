@@ -607,9 +607,10 @@ const NewPanel = (props) => {
                    {window.innerWidth > 1116 ? (
                     (queuedTasks.length > 0 || note) && (
                       <div
-                        style={{ display: "flex", justifyContent: "center" }}
+                        style={{ position:"absolute",left:"30%" }}
                       >
-                        <TextLoop interval={6000}>
+                        <TextLoop  springConfig={{ stiffness: 70, damping: 31 }}
+        adjustingSpeed={500}>
                           {queuedTasks.map(
                             (task, index) =>
                               task?.message && (
@@ -710,6 +711,7 @@ const NewPanel = (props) => {
                             minWidth: "29rem",
                             alignItems: "center",
                             justifyContent: "space-between",
+                            marginBottom:"-2rem"
                           }}
                         >
                           <p
