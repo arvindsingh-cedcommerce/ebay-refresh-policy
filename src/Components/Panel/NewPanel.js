@@ -74,7 +74,7 @@ const { SubMenu } = Menu;
 const NewPanel = (props) => {
   const [menuCollapsed, setMenuCollapsed] = useState(false);
   const [drawerVisible, setdrawerVisible] = useState(false);
-
+  const [note, setNote] = useState("");
   // activities
   const [allNotifications, setAllNotifications] = useState([]);
   const [bellClicked, setBellClicked] = useState(false);
@@ -89,7 +89,7 @@ const NewPanel = (props) => {
   //const [note,setNote]= useState("some dummy note");
   // marquee data
   const [marqueeData, setMarqueeData] = useState([]);
-  const [showQueuedTasks,setShowQueuedTasks]=useState(false);
+  const [showQueuedTasks, setShowQueuedTasks] = useState(false);
   const [personProfile, setPersonProfile] = useState({
     file: "",
     imagePreviewUrl: "",
@@ -603,54 +603,84 @@ const NewPanel = (props) => {
                 ) : (
                   ""
                 )}
-                <Stack.Item fill>        
-                  {window.innerWidth > 1116 ? (
-                    queuedTasks.length > 0 && (
-
-                <div style={{display:"flex",justifyContent:"center"}}>
-                      <TextLoop interval={6000}>
-                        {queuedTasks.map(
-                          (task, index) =>
-                            task?.message && (
-                              <p style={{ color: "white", height: "5rem" }}>
-                                <span style={{ fontWeight: "bold" }}>
-                                  Currently Running Activity :{" "}
-                                </span>
-                                <span>{task?.message}</span>
-                              </p>
-                            )
-                        )}
-                      </TextLoop>
+                <Stack.Item fill>
+                   {window.innerWidth > 1116 ? (
+                    (queuedTasks.length > 0 || note) && (
+                      <div
+                        style={{ display: "flex", justifyContent: "center" }}
+                      >
+                        <TextLoop interval={6000}>
+                          {queuedTasks.map(
+                            (task, index) =>
+                              task?.message && (
+                                <p style={{ color: "white", height: "5rem" }}>
+                                  <span style={{ fontWeight: "bold" }}>
+                                    Currently Running Activity :{" "}
+                                  </span>
+                                  <span>{task?.message}</span>
+                                </p>
+                              )
+                          )}
+                          {note ? (
+                            <p style={{ color: "white", height: "5rem" }}>
+                              <span style={{ fontWeight: "bold" }}>Note:</span>
+                              <span> {note}</span>
+                            </p>
+                          ) : (
+                            <></>
+                          )}
+                        </TextLoop>
                       </div>
                     )
                   ) : (
-                   <></>
+                    <></>
                   )}
                 </Stack.Item>
-    
-<Modal
-        activator={window.innerWidth<=1116? <Stack.Item><div style={{margin:"2rem 0"}} onClick={()=>{setShowQueuedTasks(!showQueuedTasks)}}><Icon
-        source={NoteMajorMonotone}
-        color="base"
-      />    </div>  </Stack.Item> :<></>}
-        open={showQueuedTasks}
-        onClose={()=>{setShowQueuedTasks(false)}}
-        title={<div style={{fontWeight:"bold"}}>Currently Running Activities</div>}
-      >
-        <Modal.Section>
-          <TextContainer>
-          {queuedTasks.map(
-                          (task, index) =>
-                            task?.message && (
-                              <p style={{ height: "2rem" }}>
-                             
-                               {task?.message}
-                              </p>
-                            )
-                        )}
-          </TextContainer>
-        </Modal.Section>
-      </Modal>
+
+                <Modal
+                  activator={
+                    window.innerWidth <= 1116 ? (
+                      <Stack.Item>
+                        <div
+                          style={{ margin: "2rem 0" }}
+                          onClick={() => {
+                            setShowQueuedTasks(!showQueuedTasks);
+                          }}
+                        >
+                          <Icon source={NoteMajorMonotone} color="base" />{" "}
+                        </div>{" "}
+                      </Stack.Item>
+                    ) : (
+                      <></>
+                    )
+                  }
+                  open={showQueuedTasks}
+                  onClose={() => {
+                    setShowQueuedTasks(false);
+                  }}
+                  title={
+                    <div style={{ fontWeight: "bold" }}>
+                      Currently Running Activities
+                    </div>
+                  }
+                >
+                  <Modal.Section>
+                    <TextContainer>
+                      {queuedTasks.map(
+                        (task, index) =>
+                          task?.message && (
+                            <p style={{ height: "2rem" }}>{task?.message}</p>
+                          )
+                      )}
+                      {note && (
+                        <p style={{ height: "2rem" }}>
+                          <span style={{ fontWeight: "bold" }}>Note :</span>{" "}
+                          <span>{note}</span>
+                        </p>
+                      )}
+                    </TextContainer>
+                  </Modal.Section>
+                </Modal>
                 <Stack.Item>
                   {/* <div style={{ marginBottom: "-8px" }}>
                 <ShopifyPopover
@@ -811,6 +841,8 @@ const NewPanel = (props) => {
                       refresh={refresh}
                       marqueeData={marqueeData}
                       setMarqueeData={setMarqueeData}
+                      note={note}
+                      setNote={setNote}
                       {...props}
                     />
                   );
@@ -818,12 +850,7 @@ const NewPanel = (props) => {
               />
               <Route
                 path="/panel/ebay/products"
-                component={(props) => (
-                  <NewProductsComponent
-                    hitGetNotifications={hitGetNotifications}
-                    {...props}
-                  />
-                )}
+                component={NewProductsComponent}
               />
               <Route path="/panel/ebay/accounts" component={NewAccountGrid} />
               <Route

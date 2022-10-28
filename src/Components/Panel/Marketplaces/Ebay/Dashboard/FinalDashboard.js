@@ -72,7 +72,8 @@ const FinalDashboard = (props) => {
     refresh,
     marqueeData,
     setMarqueeData,
-    hitGetNotifications,
+    note,
+    setNote
   } = props;
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [activeAccounts, setActiveAccounts] = useState(0);
@@ -192,8 +193,6 @@ const FinalDashboard = (props) => {
   // skeleton
   const [dashboardSkeleton, setDashboardSkeleton] = useState(true);
 
-  // note
-  const [note, setNote] = useState("");
 
   // faqloader
   const [faqLoader, setFaqLoader] = useState(false);

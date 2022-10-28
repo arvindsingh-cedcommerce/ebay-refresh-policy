@@ -241,7 +241,6 @@ const CsvBulkMenu = (props) => {
                     notify.error(message ? message : data);
                     setModal({ ...modal, active: false });
                   }
-                  props.hitGetNotifications();
                   setBtnLoader(false);
                 }}
               >
