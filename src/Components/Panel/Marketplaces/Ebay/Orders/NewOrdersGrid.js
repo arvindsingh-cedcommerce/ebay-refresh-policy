@@ -1131,8 +1131,11 @@ const NewOrdersGrid = (props) => {
   useEffect(() => {
     if (filtersToPass) {
       dispatch({ type: "orderFilter", payload: filtersToPass });
+      setSelectedRows([]);
+      setSelectedRowKeys([]);
     }
   }, [filtersToPass]);
+
   return (
     <PageHeader
       className="site-page-header-responsive"
