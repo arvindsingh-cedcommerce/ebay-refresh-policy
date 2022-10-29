@@ -237,11 +237,18 @@ const TitleTemplatePolaris = (props) => {
     <Card
       title="Title Template"
       sectioned
-      primaryFooterAction={{
-        content: "Save",
-        onAction: saveFormdata,
-        loading: saveBtnLoader,
-      }}
+      actions={[
+        {
+          content: <Button primary>Save</Button>,
+          onAction: saveFormdata,
+          loading: saveBtnLoader,
+        },
+      ]}
+      // primaryFooterAction={{
+      //   content: "Save",
+      //   onAction: saveFormdata,
+      //   loading: saveBtnLoader,
+      // }}
     >
       <Banner status="info">
         <p>

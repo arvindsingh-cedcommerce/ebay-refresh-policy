@@ -2598,11 +2598,18 @@ function to check final validation
       <Card
         title="Category template"
         sectioned
-        primaryFooterAction={{
-          content: "Save",
-          onAction: saveFormdata,
-          loading: saveBtnLoader,
-        }}
+        actions={[
+          {
+            content: <Button primary>Save</Button>,
+            onAction: saveFormdata,
+            loading: saveBtnLoader,
+          },
+        ]}
+        // primaryFooterAction={{
+        //   content: "Save",
+        //   onAction: saveFormdata,
+        //   loading: saveBtnLoader,
+        // }}
       >
         <Banner status="info">
           <p>
@@ -2634,11 +2641,18 @@ function to check final validation
         <Card
           title="Category template"
           sectioned
-          primaryFooterAction={{
-            content: "Save",
-            onAction: saveFormdata,
-            loading: saveBtnLoader,
-          }}
+          actions={[
+            {
+              content: <Button primary>Save</Button>,
+              onAction: saveFormdata,
+              loading: saveBtnLoader,
+            },
+          ]}
+          // primaryFooterAction={{
+          //   content: "Save",
+          //   onAction: saveFormdata,
+          //   loading: saveBtnLoader,
+          // }}
         >
           <Banner status="info">
             <p>

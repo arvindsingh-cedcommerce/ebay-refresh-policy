@@ -264,12 +264,19 @@ const PricingTemplatePolaris = (props) => {
     <Card
       title="Pricing Template"
       sectioned
-      primaryFooterAction={{
-        content: "Save",
-        onAction: saveFormdata,
-        // loading: props.loader,
-        loading: saveBtnLoader,
-      }}
+      actions={[
+        {
+          content: <Button primary>Save</Button>,
+          onAction: saveFormdata,
+          loading: saveBtnLoader,
+        }
+      ]}
+      // primaryFooterAction={{
+      //   content: "Save",
+      //   onAction: saveFormdata,
+      //   // loading: props.loader,
+      //   loading: saveBtnLoader,
+      // }}
     >
       <Banner status="info">
         <p>
