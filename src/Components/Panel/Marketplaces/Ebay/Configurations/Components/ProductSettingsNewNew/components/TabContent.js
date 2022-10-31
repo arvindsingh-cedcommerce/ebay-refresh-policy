@@ -150,6 +150,7 @@ const TabContent = ({
                           "shopify_attribute"
                         )
                       }
+                      placeholder="Please Select..."
                     />
                     <Select
                       label="eBay Attribute"
@@ -158,6 +159,7 @@ const TabContent = ({
                       onChange={(e) =>
                         matchFromEbayHandler(e, field, index, "ebay_attribute")
                       }
+                      placeholder="Please Select..."
                     />
                   </FormLayout.Group>
                 </FormLayout>
