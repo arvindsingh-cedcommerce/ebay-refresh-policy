@@ -1,7 +1,7 @@
 import { Stack } from "@shopify/polaris";
 import { Card, Col, Divider, Row } from "antd";
 import React from "react";
-import CategoryTemplateGIF from "../../../../../assets/gifs/categoryTemplate.gif";
+// import CategoryTemplateGIF from "../../../../../assets/gifs/categoryTemplate.gif";
 
 const { Meta } = Card;
 
@@ -13,7 +13,7 @@ const GifComponent = () => {
           size="small"
           style={{ marginBottom: "10px", borderRadius: "7px" }}
           hoverable
-          cover={<img src={CategoryTemplateGIF} style={{ width: "100%" }} />}
+          // cover={<img src={CategoryTemplateGIF} style={{ width: "100%" }} />}
         >
           <Stack distribution="center">
             <Meta

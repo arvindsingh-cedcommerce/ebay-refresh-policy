@@ -386,25 +386,25 @@ const FinalDashboard = (props) => {
   const hitNews = async () => {
     const searchQuery = {
       type: "news",
-      count: 2,
-      activePage: 1,
+      // count: 2,
+      // activePage: 1,
     };
-    let { success, data } = await getDashboardData(newsBlogsURL, searchQuery);
+    let { success, data: newsDataFromAPI } = await getDashboardData(newsBlogsURL, searchQuery);
     if (success) {
       // setNews(data);
-      setNews(newsData.slice(0, 3));
+      setNews(newsDataFromAPI.reverse().slice(0, 3));
     }
   };
   const hitBlogs = async () => {
     const searchQuery = {
       type: "blog",
-      count: 2,
-      activePage: 1,
+      // count: 2,
+      // activePage: 1,
     };
-    let { success, data } = await getDashboardData(newsBlogsURL, searchQuery);
+    let { success, data: blogDataFromAPI } = await getDashboardData(newsBlogsURL, searchQuery);
     if (success) {
       // setBlogs(data);
-      setBlogs(blogData.slice(0, 3));
+      setBlogs(blogDataFromAPI.reverse().slice(0, 3));
     }
   };
 
@@ -1577,13 +1577,13 @@ const FinalDashboard = (props) => {
                 title="Blogs"
                 size="small"
                 style={{ borderRadius: "8px" }}
-                actions={[
-                  {
-                    content: "See All",
-                    url: "https://cedcommerce.com/blog/?s=ebay",
-                    external: true,
-                  },
-                ]}
+                // actions={[
+                //   {
+                //     content: "See All",
+                //     url: "https://cedcommerce.com/blog/?s=ebay",
+                //     external: true,
+                //   },
+                // ]}
               >
                 <Scrollable shadow style={{ height: "280px" }} focusable>
                   <ResourceList

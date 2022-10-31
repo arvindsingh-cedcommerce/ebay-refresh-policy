@@ -23,7 +23,6 @@ import PriceTemplateGrid from "./TemplateGridsComponent/PriceTemplateGrid";
 import TitleTemplateGrid from "./TemplateGridsComponent/TitleTemplateGrid";
 import { withRouter } from "react-router-dom";
 // import ModalVideo from "react-modal-video";
-import CategoryTemplateGIF from "../../../../../../assets/gifs/categoryTemplate.gif";
 import TabsComponent from "../../../../../AntDesignComponents/TabsComponent";
 
 const { Option } = Select;
@@ -88,7 +87,7 @@ const FinalTemplateGridComponent = (props) => {
   // modal video
   const [isOpenModalVideo, setIsOpenModalVideo] = useState(false);
   // gif modal
-  const [isOpenGifModal, setIsOpenGifModal] = useState(false);
+  // const [isOpenGifModal, setIsOpenGifModal] = useState(false);
 
   useEffect(() => {
     if (categoryTemplateCount !== null) {
@@ -412,7 +411,7 @@ const FinalTemplateGridComponent = (props) => {
           </Stack>
         </Modal.Section>
       </Modal>
-      <Modal
+      {/* <Modal
         open={isOpenModalVideo}
         onClose={() => setIsOpenModalVideo(false)}
         title="How Can I Help?"
@@ -431,8 +430,8 @@ const FinalTemplateGridComponent = (props) => {
             </Button>
           </Stack>
         </Modal.Section>
-      </Modal>
-      <Modal
+      </Modal> */}
+      {/* <Modal
         open={isOpenGifModal}
         onClose={() => setIsOpenGifModal(false)}
         title="How to create Category Template?"
@@ -440,7 +439,7 @@ const FinalTemplateGridComponent = (props) => {
         <Modal.Section>
           <img src={CategoryTemplateGIF} style={{ width: "100%" }} />
         </Modal.Section>
-      </Modal>
+      </Modal> */}
       {/* <ModalVideo
         channel="custom"
         autoplay

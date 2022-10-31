@@ -91,6 +91,8 @@ const EbayHelpComponent = (props) => {
       });
       setFaqArray([...finalFaqArray]);
       setSearchFaqArray([...finalFaqArray]);
+    } else {
+      props.history.push('/auth/login')
     }
     setFaqLoader(false);
   };
