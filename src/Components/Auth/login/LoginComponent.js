@@ -39,10 +39,8 @@ const LoginComponent = (props) => {
   };
 
   const autoRedirect = () => {
-    console.log("admin autoRedirect");
     globalState.setLocalStorage("admin_login", false);
     const queryParams = queryString.parse(props.location.search);
-    // console.log('queryParams autoRedirect', queryParams, queryParams["user_token"]);
     if (queryParams["user_token"] != null) {
       globalState.setLocalStorage("user_authenticated", "true");
       globalState.setLocalStorage("auth_token", queryParams["user_token"]);
@@ -69,7 +67,6 @@ const LoginComponent = (props) => {
   };
 
   const getLiveStatus = () => {
-    console.log("live status getLiveStatus");
     setLiveStatus(environment.isLive);
   };
 
@@ -101,21 +98,6 @@ const LoginComponent = (props) => {
           </Stack>
         </Form>
       </Page>
-    );
-    console.log(
-      "liveStatus",
-      liveStatus,
-      "admin login storage",
-      globalState.getLocalStorage("admin_login"),
-      globalState.getLocalStorage("admin_login") == false,
-      "shop storage",
-      globalState.getLocalStorage("shop") === null
-    );
-    console.log(
-      "check",
-      liveStatus &&
-        !(globalState.getLocalStorage("admin_login") == false) &&
-        globalState.getLocalStorage("shop") === null
     );
     if (
       liveStatus &&

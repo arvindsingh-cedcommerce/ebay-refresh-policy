@@ -67,14 +67,8 @@ const { Title, Text } = Typography;
 const { Step } = Steps;
 
 const FinalDashboard = (props) => {
-  const {
-    queuedTasks,
-    refresh,
-    marqueeData,
-    setMarqueeData,
-    note,
-    setNote
-  } = props;
+  const { queuedTasks, refresh, marqueeData, setMarqueeData, note, setNote } =
+    props;
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const [activeAccounts, setActiveAccounts] = useState(0);
 
@@ -193,7 +187,6 @@ const FinalDashboard = (props) => {
   // skeleton
   const [dashboardSkeleton, setDashboardSkeleton] = useState(true);
 
-
   // faqloader
   const [faqLoader, setFaqLoader] = useState(false);
 
@@ -215,7 +208,7 @@ const FinalDashboard = (props) => {
           };
         });
       // console.log(temp);
-      setFaqsData(temp)
+      setFaqsData(temp);
       // let parsedData = getParseFaqData(data);
       // setFaqData(parsedData);
     }
@@ -389,7 +382,10 @@ const FinalDashboard = (props) => {
       // count: 2,
       // activePage: 1,
     };
-    let { success, data: newsDataFromAPI } = await getDashboardData(newsBlogsURL, searchQuery);
+    let { success, data: newsDataFromAPI } = await getDashboardData(
+      newsBlogsURL,
+      searchQuery
+    );
     if (success) {
       // setNews(data);
       setNews(newsDataFromAPI.reverse().slice(0, 3));
@@ -401,7 +397,10 @@ const FinalDashboard = (props) => {
       // count: 2,
       // activePage: 1,
     };
-    let { success, data: blogDataFromAPI } = await getDashboardData(newsBlogsURL, searchQuery);
+    let { success, data: blogDataFromAPI } = await getDashboardData(
+      newsBlogsURL,
+      searchQuery
+    );
     if (success) {
       // setBlogs(data);
       setBlogs(blogDataFromAPI.reverse().slice(0, 3));
@@ -671,24 +670,52 @@ const FinalDashboard = (props) => {
           // setCurrentPlanDetails(tempPlanDetails);
         }
         if (orderCredits) {
+          if (orderCredits?.booster) {
+            var {
+              available_credits: boosterAvailableOrderCredits,
+              service_credits: boosterServiceOrderCredits,
+            } = orderCredits?.booster;
+          }
           const { available_credits, service_credits } = orderCredits?.prepaid;
           let remainingCredits = (available_credits * 100) / service_credits;
           let truncatedRemainingCredits = truncateDecimals(remainingCredits, 2);
           setRemainingOrderCredits(truncatedRemainingCredits);
-          setAvailableOrderCredits(available_credits);
-          setTotalOrderCredits(service_credits);
+          if (boosterAvailableOrderCredits) {
+            setAvailableOrderCredits(
+              available_credits + Number(boosterAvailableOrderCredits)
+            );
+          } else setAvailableOrderCredits(available_credits);
+          if (boosterServiceOrderCredits) {
+            setTotalOrderCredits(
+              service_credits + Number(boosterServiceOrderCredits)
+            );
+          } else setTotalOrderCredits(service_credits);
           setRemainingOrderCreditsFormatted(
             `${available_credits}/${service_credits}`
           );
         }
         if (productCredits) {
+          if (productCredits?.booster) {
+            var {
+              available_credits: boosterAvailableProductCredits,
+              service_credits: boosterServiceProductCredits,
+            } = productCredits?.booster;
+          }
           const { available_credits, service_credits } =
             productCredits?.prepaid;
           let remainingCredits = (available_credits * 100) / service_credits;
           let truncatedRemainingCredits = truncateDecimals(remainingCredits, 2);
           setRemainingProductCredits(truncatedRemainingCredits);
-          setAvailableProductCredits(available_credits);
-          setTotalProductCredits(service_credits);
+          if (boosterAvailableProductCredits) {
+            setAvailableProductCredits(
+              available_credits + boosterAvailableProductCredits
+            );
+          } else setAvailableProductCredits(available_credits);
+          if (boosterServiceProductCredits) {
+            setTotalProductCredits(
+              service_credits + boosterServiceProductCredits
+            );
+          } else setTotalProductCredits(service_credits);
           setRemainingProductCreditsFormatted(
             `${available_credits}/${service_credits}`
           );
@@ -865,7 +892,9 @@ const FinalDashboard = (props) => {
               sm={24}
               md={24}
               lg={16}
-              className={window.innerWidth >= 768 ? "welcome-box" : "welcome-box-small"}
+              className={
+                window.innerWidth >= 768 ? "welcome-box" : "welcome-box-small"
+              }
             >
               <Card sectioned>
                 <Card.Section>
@@ -1506,27 +1535,30 @@ const FinalDashboard = (props) => {
                 sectioned={dashboardSkeleton}
               >
                 {/* <Scrollable shadow style={{ height: "200px" }} focusable> */}
-                {
-                  dashboardSkeleton ? <SkeletonBodyText lines={6} /> :
-                <Scrollable shadow style={{ height: "217px" }} focusable>
-                  <ResourceList
-                    items={faqsData}
-                    renderItem={(item) => {
-                      const { title } = item;
-                      return (
-                        <ResourceList.Item
-                          onClick={(e) => props.history.push(`help?question=${title}`)}
-                          accessibilityLabel={`View details for ${title}`}
-                        >
-                          <h3>
-                            <TextStyle variation="strong">{title}</TextStyle>
-                          </h3>
-                        </ResourceList.Item>
-                      );
-                    }}
-                  />
-                </Scrollable>
-                }
+                {dashboardSkeleton ? (
+                  <SkeletonBodyText lines={6} />
+                ) : (
+                  <Scrollable shadow style={{ height: "217px" }} focusable>
+                    <ResourceList
+                      items={faqsData}
+                      renderItem={(item) => {
+                        const { title } = item;
+                        return (
+                          <ResourceList.Item
+                            onClick={(e) =>
+                              props.history.push(`help?question=${title}`)
+                            }
+                            accessibilityLabel={`View details for ${title}`}
+                          >
+                            <h3>
+                              <TextStyle variation="strong">{title}</TextStyle>
+                            </h3>
+                          </ResourceList.Item>
+                        );
+                      }}
+                    />
+                  </Scrollable>
+                )}
               </Card>
             </Col>
           </Row>
