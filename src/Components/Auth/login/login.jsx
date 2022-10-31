@@ -9,6 +9,7 @@ import { getDashboardData } from '../../../APIrequests/DashboardAPI';
 import { dashboardAnalyticsURL } from '../../../URLs/DashboardURL';
 import { environment } from '../../../environment/environment';
 import Cancel from "../../../assets/warning.png";
+import * as queryString from "query-string";
 class Login extends Component {
 
     constructor(props){
@@ -18,7 +19,7 @@ class Login extends Component {
                 username: '',
                 password: '',
             },
-            loader: false
+            loader: false,
         }
     }
 
@@ -42,6 +43,39 @@ class Login extends Component {
         }
     }
 
+    autoRedirect()
+    {
+        const  queryParams = queryString.parse(this.props.location.search);
+        if(queryParams['user_token']!=null && queryParams['code']!=null) {
+            globalState.setLocalStorage('user_authenticated', 'true');
+            globalState.setLocalStorage('auth_token', queryParams['user_token']);
+            globalState.setLocalStorage('shop', queryParams['shop']);
+            this.redirect('/welcome');
+        } else if ( queryParams['admin_user_token'] ) {
+            globalState.setLocalStorage('user_authenticated', 'true');
+            globalState.setLocalStorage('auth_token',queryParams['admin_user_token']);
+            this.redirect('/welcome');
+        }
+
+    }
+
+    removeLocalStorage() {
+        globalState.removeLocalStorage('user_authenticated');
+          globalState.removeLocalStorage('auth_token');
+        //   if((this.verifyCompatibilityofBrowser())) {
+        //     this.getMaintainenceCheck();
+              this.autoRedirect();
+        //       this.state.browserCompatible=true;
+        //   }
+        //   else{
+        //       this.state.browserCompatible=false;
+        //   }
+  
+      }
+    componentDidMount() {
+      this.removeLocalStorage();
+    }
+    
     async getAndSetToken(){
         let { credentials } = this.state;
         let getToken = await login(credentials);
