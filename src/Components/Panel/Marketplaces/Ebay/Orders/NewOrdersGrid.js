@@ -255,9 +255,9 @@ const NewOrdersGrid = (props) => {
   // pagination
 
   const [activePage, setActivePage] = useState(1);
-  //const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([25,50,100]);
   // const [pageSizeOptions, setPageSizeOptions] = useState([1, 2, 3]);
-  const [pageSizeOptions, setPageSizeOptions] = useState([
+  const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([
     { label: " 25 / page ", value: 25 },
     { label: " 50 / page ", value: 50 },
     { label: " 100 / page ", value: 100 },
@@ -1267,7 +1267,7 @@ const NewOrdersGrid = (props) => {
               xl={18}
               xxl={18}
             >
-              {/*               
+                 {window.innerWidth>=768?           
               <Stack distribution="trailing">
                 <PaginationComponent
                   totalCount={totalOrdersCount}
@@ -1281,7 +1281,7 @@ const NewOrdersGrid = (props) => {
                   size={"default"}
                   simple={false}
                 />
-              </Stack> */}
+              </Stack>:
               <Row gutter={[10, 8]} justify="space-evenly">
                 <Col
                   span={6}
@@ -1311,7 +1311,7 @@ const NewOrdersGrid = (props) => {
                   <BasicPaginationComponent
                     totalCount={totalOrdersCount}
                     hitGetProductsAPI={hitGetOrdersAPI}
-                    pageSizeOptions={pageSizeOptions}
+                    responsivePageSizeOptions={responsivePageSizeOptions}
                     activePage={activePage}
                     setActivePage={setActivePage}
                     setPrevPage={setPrevPage}
@@ -1345,7 +1345,7 @@ const NewOrdersGrid = (props) => {
                     }}
                     onChange={handleSelectChange}
                   >
-                    {pageSizeOptions.map((pageSizeOption, index) => (
+                    {responsivePageSizeOptions.map((pageSizeOption, index) => (
                       <Option value={Number(pageSizeOption.value)}>
                         {pageSizeOption.label}
                       </Option>
@@ -1364,7 +1364,7 @@ const NewOrdersGrid = (props) => {
                 >
                   <div>Go To {showJumpToPage()} Page</div>
                 </Col>
-              </Row>
+              </Row>}
             </Col>
           </Row>
         </div>

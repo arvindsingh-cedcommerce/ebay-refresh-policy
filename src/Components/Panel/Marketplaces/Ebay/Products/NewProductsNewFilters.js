@@ -349,7 +349,9 @@ function NewProductsNewFilters(props) {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-  const [pageSizeOptions, setPageSizeOptions] = useState([{label:" 25 / page ",value:25},{label:" 50 / page ",value:50},{label:" 100 / page ",value:100}]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([25,50,100]);
+  const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([{label:" 25 / page ",value:25},{label:" 50 / page ",value:50},{label:" 100 / page ",value:100}]);
+  
   const [pageSize, setPageSize] = useState(25);
   const [totalProductsCount, setTotalProductsCount] = useState(0);
 
@@ -1329,7 +1331,7 @@ const showJumpToPage=()=>{
   //   }
   // }, [connectedAccountsArray]);
   const handleSelectChange = useCallback((value) => {setPageSize(value);
-  
+
     hitGetProductsAPI(activePage,value);}, []);
   function handleScroll(e) {
     if (
@@ -1424,6 +1426,7 @@ const showJumpToPage=()=>{
               />
               {/* </OutsideAlerterMassMenu> */}
             </Col>
+            { window.innerWidth<768?
             <Col
               className="gutter-row"
               span={18}
@@ -1455,7 +1458,7 @@ const showJumpToPage=()=>{
                 <BasicPaginationComponent
     totalCount={totalProductsCount}
     hitGetProductsAPI={hitGetProductsAPI}
-    pageSizeOptions={pageSizeOptions}
+    responsivePageSizeOptions={responsivePageSizeOptions}
     activePage={activePage}
     setActivePage={setActivePage}
     setPrevPage={setPrevPage}
@@ -1480,7 +1483,7 @@ const showJumpToPage=()=>{
       }}
       onChange={handleSelectChange}
     >
-    {pageSizeOptions.map((pageSizeOption,index)=>
+    {responsivePageSizeOptions.map((pageSizeOption,index)=>
 <Option value={Number(pageSizeOption.value)}>{pageSizeOption.label}</Option>
     )}</Select>
                 </Col>
@@ -1488,7 +1491,22 @@ const showJumpToPage=()=>{
                   <div>Go To {showJumpToPage()} Page</div>
                  </Col>
               </Row>
-            </Col>
+            </Col>:  <Col className="gutter-row" span={18}>
+            <Stack distribution="trailing">
+                <PaginationComponent
+                  totalCount={totalProductsCount}
+                  hitGetProductsAPI={hitGetProductsAPI}
+                  pageSizeOptions={pageSizeOptions}
+                  activePage={activePage}
+                  setActivePage={setActivePage}
+                  setPrevPage={setPrevPage}
+                  pageSize={pageSize}
+                  setPageSize={setPageSize}
+                  size={"default"}
+                  simple={false}
+                />
+                </Stack>
+           </Col>}
           </Row>
         </div>
         <div className="wrapper" onScroll={handleScroll}>
