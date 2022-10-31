@@ -4,7 +4,7 @@ import React from "react";
 const BasicPaginationComponent = ({
   totalCount,
   hitGetProductsAPI,
-  pageSizeOptions,
+  responsivePageSizeOptions,
   activePage,
   setActivePage,
   setPrevPage,
@@ -21,7 +21,7 @@ const BasicPaginationComponent = ({
       showLessItems={true}
       defaultCurrent={1}
       current={activePage}
-      defaultPageSize={pageSizeOptions[0]}
+      defaultPageSize={responsivePageSizeOptions[0]}
       pageSize={pageSize}
       onChange={(page, pageSize) => {
        

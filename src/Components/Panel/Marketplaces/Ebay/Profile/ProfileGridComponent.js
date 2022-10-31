@@ -187,8 +187,8 @@ const ProfileGridComponent = (props) => {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-  // const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
-  const [pageSizeOptions, setPageSizeOptions] = useState([
+   const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
+  const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([
     { label: " 5 / page ", value: 5 },
     { label: " 10 / page ", value: 10 },
     { label: " 20 / page ", value: 20 },
@@ -803,18 +803,19 @@ const ProfileGridComponent = (props) => {
             </Stack>
           </div>
           <Row justify="space-between" gutter={[8, 8]}>
-            {/* <Col     xs={24}
+{ window.innerWidth>=768?    <>
+            <Col     xs={24}
               sm={24}
               md={6}
               lg={6}
               xl={6}
               xxl={6}>
-              <p style={{ paddingTop: 5, fontWeight: "bold" }}> */}
+              <p style={{ paddingTop: 5, fontWeight: "bold" }}> 
             {/* {showingGridRange(paginationProps, "Profile(s)")} */}
-            {/* </p>
-            </Col> */}
+             </p>
+            </Col>
 
-            {/* <PaginationComponent
+            <PaginationComponent
               totalCount={totalShippingPolicyCount}
               hitGetProductsAPI={getAllProfiles}
               pageSizeOptions={pageSizeOptions}
@@ -825,8 +826,9 @@ const ProfileGridComponent = (props) => {
               setPageSize={setPageSize}
               size={"default"}
               simple={false}
-            /> */}
-
+            />
+            </>:
+            <>
             <Col
               span={6}
               xs={8}
@@ -855,7 +857,7 @@ const ProfileGridComponent = (props) => {
               <BasicPaginationComponent
                 totalCount={totalShippingPolicyCount}
                 hitGetProductsAPI={getAllProfiles}
-                pageSizeOptions={pageSizeOptions}
+                responsivePageSizeOptions={responsivePageSizeOptions}
                 activePage={activePage}
                 setActivePage={setActivePage}
                 setPrevPage={setPrevPage}
@@ -889,7 +891,7 @@ const ProfileGridComponent = (props) => {
                 }}
                 onChange={handleSelectChange}
               >
-                {pageSizeOptions.map((pageSizeOption, index) => (
+                {responsivePageSizeOptions.map((pageSizeOption, index) => (
                   <Option value={Number(pageSizeOption.value)}>
                     {pageSizeOption.label}
                   </Option>
@@ -908,6 +910,7 @@ const ProfileGridComponent = (props) => {
             >
               <div>Go To {showJumpToPage()} Page</div>
             </Col>
+            </>}
           </Row>
         </div>
         <NestedTableComponent
