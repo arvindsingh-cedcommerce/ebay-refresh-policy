@@ -4,8 +4,11 @@ import {
   Card,
   Label,
   List,
+  Modal,
   Page,
   Spinner,
+  Stack,
+  TextContainer,
   TextStyle,
 } from "@shopify/polaris";
 import { ImportMinor } from "@shopify/polaris-icons";
@@ -15,9 +18,13 @@ import DropZoneimport from "./DropZoneimport";
 import { isUndefined } from "util";
 import { requests } from "../../../../../services/request";
 import { notify } from "../../../../../services/notify";
+import { fetchProductById } from "../../../../../APIrequests/ProductsAPI";
+import { exportProductItemURL } from "../../../../../URLs/ProductsURL";
 
 const ImportProducts = (props) => {
   const [exportProductDataCsv, setExportProductDataCsv] = useState(false);
+  const [exportProductDataCsvLoader, setExportProductDataCsvLoader] =
+    useState(false);
   const [file_handle, setfile_handle] = useState({
     isfileUploaded: false,
     isFileuploading: false,
@@ -205,6 +212,44 @@ const ImportProducts = (props) => {
           </div>
         </Card.Section>
       </Card>
+      <Modal
+        open={exportProductDataCsv}
+        onClose={(e) => setExportProductDataCsv(false)}
+        title="Permission required"
+      >
+        <Modal.Section>
+          <Stack vertical spacing="extraTight">
+            <p>
+              Are you sure you want to initiate Export Products bulk action ?
+            </p>
+            <Stack distribution="center" spacing="tight">
+              <Button onClick={() => setExportProductDataCsv(false)}>
+                Cancel
+              </Button>
+              <Button
+                primary
+                loading={exportProductDataCsvLoader}
+                onClick={async () => {
+                  setExportProductDataCsvLoader(true);
+                  let { success, message, data } = await fetchProductById(
+                    exportProductItemURL
+                  );
+                  if (success) {
+                    notify.success(message ? message : data);
+                    props.history.push("/panel/ebay/activity");
+                  } else {
+                    notify.error(message ? message : data);
+                    setExportProductDataCsv(false);
+                  }
+                  setExportProductDataCsvLoader(false);
+                }}
+              >
+                OK
+              </Button>
+            </Stack>
+          </Stack>
+        </Modal.Section>
+      </Modal>
     </Page>
   );
 };
