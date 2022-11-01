@@ -4,6 +4,8 @@ import {
   Banner,
   Button,
   Card,
+  FooterHelp,
+  Link,
   Modal,
   Select as PolarisSelect,
   Stack,
@@ -129,23 +131,22 @@ const FinalPolicyGrid = (props) => {
   const cbFuncReturn = () => {
     getReturnPolicyCount();
   };
-  const checkValueHandler=(arr,filterName)=>{
-    let countryValue="";
-    Object.keys(arr).filter((item,index)=>{
+  const checkValueHandler = (arr, filterName) => {
+    let countryValue = "";
+    Object.keys(arr).filter((item, index) => {
       let indexOfFirstOpeningBracket = item.indexOf("[");
       let indexOfFirstClosingBracket = item.indexOf("]");
-      const mainItem=item.substring(
+      const mainItem = item.substring(
         indexOfFirstOpeningBracket + 1,
         indexOfFirstClosingBracket
       );
-      if(mainItem===filterName)
-      {
-          countryValue= item;
-          return ;
+      if (mainItem === filterName) {
+        countryValue = item;
+        return;
       }
-    })
+    });
     return countryValue;
-  }
+  };
   const getTabContent = () => {
     switch (selectedTabId) {
       case 0:
@@ -337,41 +338,41 @@ const FinalPolicyGrid = (props) => {
           Refresh Policies
         </Button>,
         <>
-        {window.innerWidth>=350?
-        <Select
-          key="addPolicies"
-          value={addTemplateValue}
-          placeholder={<Text strong>Create Policy</Text>}
-          onChange={(selectedPolicyValue) => {
-            if (connectedAccountsArray.length === 1) {
-              const { domainName } = connectedAccountsArray[0];
-              const url = `https://www.bizpolicy.ebay${domainName}/businesspolicy/${selectedPolicyValue}`;
-              window.open(url, "_blank");
-            } else {
-              setaccountSelectionModal({
-                ...accountSelectionModal,
-                active: true,
-                selectedPolicyValue: selectedPolicyValue,
-              });
-            }
-          }}
-        >
-         
-          {addPolicyOptions.map((option) => (
-            <Option key={option["value"]} value={option["value"]}>
-              {option["label"]}
-            </Option>
-          ))}
-        </Select>
-        :<>
-        </>}
+          {window.innerWidth >= 350 ? (
+            <Select
+              key="addPolicies"
+              value={addTemplateValue}
+              placeholder={<Text strong>Create Policy</Text>}
+              onChange={(selectedPolicyValue) => {
+                if (connectedAccountsArray.length === 1) {
+                  const { domainName } = connectedAccountsArray[0];
+                  const url = `https://www.bizpolicy.ebay${domainName}/businesspolicy/${selectedPolicyValue}`;
+                  window.open(url, "_blank");
+                } else {
+                  setaccountSelectionModal({
+                    ...accountSelectionModal,
+                    active: true,
+                    selectedPolicyValue: selectedPolicyValue,
+                  });
+                }
+              }}
+            >
+              {addPolicyOptions.map((option) => (
+                <Option key={option["value"]} value={option["value"]}>
+                  {option["label"]}
+                </Option>
+              ))}
+            </Select>
+          ) : (
+            <></>
+          )}
         </>,
       ]}
     >
-        {window.innerWidth<350?
+      {window.innerWidth < 350 ? (
         <Select
           key="addPolicies"
-          style={{marginBottom:"0.7rem"}}
+          style={{ marginBottom: "0.7rem" }}
           value={addTemplateValue}
           placeholder={<Text strong>Create Policy</Text>}
           onChange={(selectedPolicyValue) => {
@@ -388,15 +389,15 @@ const FinalPolicyGrid = (props) => {
             }
           }}
         >
-         
           {addPolicyOptions.map((option) => (
             <Option key={option["value"]} value={option["value"]}>
               {option["label"]}
             </Option>
           ))}
         </Select>
-        :<>
-        </>}
+      ) : (
+        <></>
+      )}
       <Card>
         <Tabs
           tabs={tabsData}
@@ -541,6 +542,15 @@ const FinalPolicyGrid = (props) => {
           </Stack>
         </Modal.Section>
       </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-ebay-business-policies"
+        >
+          Business Policy
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

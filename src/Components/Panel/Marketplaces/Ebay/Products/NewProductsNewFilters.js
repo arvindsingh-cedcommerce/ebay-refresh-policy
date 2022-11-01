@@ -1,11 +1,22 @@
-import { Image, PageHeader, Alert, Row, Col, Typography, Input, InputNumber, Select } from "antd";
+import {
+  Image,
+  PageHeader,
+  Alert,
+  Row,
+  Col,
+  Typography,
+  Input,
+  InputNumber,
+  Select,
+  Divider,
+} from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import NoProductImage from "../../../../../assets/notfound.png";
 import TabsComponent from "../../../../AntDesignComponents/TabsComponent";
 import VariantComponentData from "./VariantComponentData";
-import {    
+import {
   getProductsURL,
   getProductsCountURL,
   getVariantsURL,
@@ -34,6 +45,8 @@ import {
   TextContainer,
   Banner,
   List,
+  FooterHelp,
+  Link,
 } from "@shopify/polaris";
 import { notify } from "../../../../../services/notify";
 import ActionPopover from "./ActionPopover";
@@ -67,6 +80,7 @@ import OutsideAlerterMassMenu from "./OutsideAlerterMassMenu";
 import EbayActionsBulkMenu from "./EbayActionsBulkMenu";
 import ResponsiveBulkMenu from "./ResponsiveBulkMenu";
 import BasicPaginationComponent from "../../../../AntDesignComponents/BasicPaginationComponent";
+import { manageProductsGifs } from "../Help/gifHelper";
 
 const { Text } = Typography;
 
@@ -207,8 +221,8 @@ function NewProductsNewFilters(props) {
   const [isCsvBulkMenuOpen, setIsCsvBulkMenuOpen] = useState(false);
   const [isEbayActionBulkMenuOpen, setIsEbayActionBulkMenuOpen] =
     useState(false);
-    const [isOpenBulk,setIsOpenBulk]= useState(false);
-    const [jumpToActivePage,setJumpToActivePage]=useState(0);
+  const [isOpenBulk, setIsOpenBulk] = useState(false);
+  const [jumpToActivePage, setJumpToActivePage] = useState(0);
   const [productData, setProductData] = useState([]);
   const setCallbackCsvFunction = (openState) => {
     setIsCsvBulkMenuOpen(openState);
@@ -349,9 +363,13 @@ function NewProductsNewFilters(props) {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-  const [pageSizeOptions, setPageSizeOptions] = useState([25,50,100]);
-  const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([{label:" 25 / page ",value:25},{label:" 50 / page ",value:50},{label:" 100 / page ",value:100}]);
-  
+  const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
+  const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([
+    { label: " 25 / page ", value: 25 },
+    { label: " 50 / page ", value: 50 },
+    { label: " 100 / page ", value: 100 },
+  ]);
+
   const [pageSize, setPageSize] = useState(25);
   const [totalProductsCount, setTotalProductsCount] = useState(0);
 
@@ -405,6 +423,15 @@ function NewProductsNewFilters(props) {
     available: "",
     total: "",
   });
+  // modal video
+  const [isOpenModalVideo, setIsOpenModalVideo] = useState(false);
+  // gif modal
+  const [isOpenGifModal, setIsOpenGifModal] = useState({
+    active: false,
+    title: "",
+    url: "",
+  });
+
   const [prevPage, setPrevPage] = useState(1);
   const { Option } = Select;
   useEffect(() => {
@@ -660,7 +687,7 @@ function NewProductsNewFilters(props) {
           } = row;
           let tempObject = {};
           tempObject["source_product_id"] = source_product_id;
-          tempObject["key"] = (activePageNumber-1)*pageSize+index;
+          tempObject["key"] = (activePageNumber - 1) * pageSize + index;
           tempObject["image"] = (
             <center>
               {main_image ? (
@@ -771,7 +798,7 @@ function NewProductsNewFilters(props) {
       }
     } else {
       // if (code === "invalid_token" || code === "token_expired") {
-        // props.history.push("/auth/login");
+      // props.history.push("/auth/login");
       // }
       notify.error(message);
       props.history.push("/auth/login");
@@ -783,8 +810,8 @@ function NewProductsNewFilters(props) {
     preserveSelectedRowKeys: true,
     selectedRowKeys,
     onChange: (currentSelectedRowKeys, currentSelectedRows) => {
-        setSelectedRowKeys(currentSelectedRowKeys);
-        setSelectedRows(currentSelectedRows);
+      setSelectedRowKeys(currentSelectedRowKeys);
+      setSelectedRows(currentSelectedRows);
     },
     // onSelectAll: selected=> {
     //   console.log("selected",selected);
@@ -985,27 +1012,29 @@ function NewProductsNewFilters(props) {
               />
             </div>
           </Popover>
-        {window.innerWidth>360?
-          <Popover
-            active={popOverStatus["profile"]}
-            activator={profileActivator}
-            onClose={() => popOverHandler("profile")}
-          >
-            <div style={{ margin: "10px" }}>
-              <ChoiceList
-                choices={profileListForFilters}
-                selected={
-                  initialProfileObj[0]
-                    ? [initialProfileObj[0].value]
-                    : selected["profile_name"]
-                }
-                onChange={(value) => handleChange(value, "profile_name")}
-              />
-            </div>
-          </Popover>:<></>}
-        
+          {window.innerWidth > 360 ? (
+            <Popover
+              active={popOverStatus["profile"]}
+              activator={profileActivator}
+              onClose={() => popOverHandler("profile")}
+            >
+              <div style={{ margin: "10px" }}>
+                <ChoiceList
+                  choices={profileListForFilters}
+                  selected={
+                    initialProfileObj[0]
+                      ? [initialProfileObj[0].value]
+                      : selected["profile_name"]
+                  }
+                  onChange={(value) => handleChange(value, "profile_name")}
+                />
+              </div>
+            </Popover>
+          ) : (
+            <></>
+          )}
         </ButtonGroup>
-        {window.innerWidth<=360?
+        {window.innerWidth <= 360 ? (
           <Popover
             active={popOverStatus["profile"]}
             activator={profileActivator}
@@ -1022,7 +1051,10 @@ function NewProductsNewFilters(props) {
                 onChange={(value) => handleChange(value, "profile_name")}
               />
             </div>
-          </Popover>:<></>}
+          </Popover>
+        ) : (
+          <></>
+        )}
         <Button
           icon={<Icon source={FilterMajorMonotone} color="base" />}
           onClick={() => {
@@ -1034,33 +1066,42 @@ function NewProductsNewFilters(props) {
       </Stack>
     );
   };
-const showTotal=(total, range) => {
-        if(range[0] > range[1]) {
-          range[0] = 1
-        }
-        if(range[1]>totalProductsCount)
-        {
-          range[1]=totalProductsCount;
-        }
-        if (totalProductsCount)
-          return <div style={{display:"flex",justifyContent:"end",fontWeight:"bold"}}>{`Showing ${range[0]}-${range[1]} of ${total} Product(s)`}</div>;
-      };
-const showJumpToPage=()=>{
- return (<Input style={{width:"6rem"}} value={jumpToActivePage?jumpToActivePage:""} onChange={(e)=>{setJumpToActivePage(Number(e.target.value))}} onPressEnter={(e)=>{
-  let numOfPages=totalProductsCount/pageSize;
-  if(totalProductsCount%pageSize>0)
-  {
-    numOfPages+=1;
-  }
-  if(jumpToActivePage>0 && jumpToActivePage<=numOfPages)
-  {
-  setActivePage(jumpToActivePage);
-  setPrevPage(activePage);
-  hitGetProductsAPI(jumpToActivePage,pageSize);
-  }
- }}/>);
- 
-}
+  const showTotal = (total, range) => {
+    if (range[0] > range[1]) {
+      range[0] = 1;
+    }
+    if (range[1] > totalProductsCount) {
+      range[1] = totalProductsCount;
+    }
+    if (totalProductsCount)
+      return (
+        <div
+          style={{ display: "flex", justifyContent: "end", fontWeight: "bold" }}
+        >{`Showing ${range[0]}-${range[1]} of ${total} Product(s)`}</div>
+      );
+  };
+  const showJumpToPage = () => {
+    return (
+      <Input
+        style={{ width: "6rem" }}
+        value={jumpToActivePage ? jumpToActivePage : ""}
+        onChange={(e) => {
+          setJumpToActivePage(Number(e.target.value));
+        }}
+        onPressEnter={(e) => {
+          let numOfPages = totalProductsCount / pageSize;
+          if (totalProductsCount % pageSize > 0) {
+            numOfPages += 1;
+          }
+          if (jumpToActivePage > 0 && jumpToActivePage <= numOfPages) {
+            setActivePage(jumpToActivePage);
+            setPrevPage(activePage);
+            hitGetProductsAPI(jumpToActivePage, pageSize);
+          }
+        }}
+      />
+    );
+  };
   const prepareProfileList = (profiles) => {
     const profileList = profiles.map((profile) => {
       return {
@@ -1332,9 +1373,11 @@ const showJumpToPage=()=>{
   //     setFiltersToPass(reduxState);
   //   }
   // }, [connectedAccountsArray]);
-  const handleSelectChange = useCallback((value) => {setPageSize(value);
+  const handleSelectChange = useCallback((value) => {
+    setPageSize(value);
 
-    hitGetProductsAPI(activePage,value);}, []);
+    hitGetProductsAPI(activePage, value);
+  }, []);
   function handleScroll(e) {
     if (
       e.currentTarget.querySelector(".ant-table-wrapper").className ===
@@ -1349,45 +1392,60 @@ const showJumpToPage=()=>{
       className="site-page-header-responsive"
       title={"Products"}
       subTitle={
-        productCredits.total && (
-          <Badge>
-            <Text strong>
-              <Stack spacing="extraTight" alignment="center">
-                <>{`${productCredits.available}/${productCredits.total} product credits available`}</>
-                <div style={{ cursor: "pointer" }}>
-                  <Tooltip content="1 Product Credit means 1 product can be listed on eBay through the app">
-                    <Icon source={QuestionMarkMinor} />
-                  </Tooltip>
-                </div>
-              </Stack>
-            </Text>
-          </Badge>
-        )
+        <Stack spacing="extraTight">
+          <div
+            onClick={() => setIsOpenModalVideo(true)}
+            style={{ cursor: "pointer" }}
+          >
+            <Badge status="info">Need Help?</Badge>
+          </div>
+          <>
+            {productCredits.total && (
+              <Badge>
+                <Text strong>
+                  <Stack spacing="extraTight" alignment="center">
+                    <>{`${productCredits.available}/${productCredits.total} product credits available`}</>
+                    <div style={{ cursor: "pointer" }}>
+                      <Tooltip content="1 Product Credit means 1 product can be listed on eBay through the app">
+                        <Icon source={QuestionMarkMinor} />
+                      </Tooltip>
+                    </div>
+                  </Stack>
+                </Text>
+              </Badge>
+            )}
+          </>
+        </Stack>
       }
       ghost={true}
-      extra={window.innerWidth<768?[
-        <ResponsiveBulkMenu
-          profileList={profileList}
-          isOpenBulk={isOpenBulk}
-          setIsOpenBulk={setIsOpenBulk}
-        />,]:[
-        <CsvBulkMenu
-          profileList={profileList}
-          isCsvBulkMenuOpen={isCsvBulkMenuOpen}
-          setCallbackCsvFunction={setCallbackCsvFunction}
-        />,
-        <EbayActionsBulkMenu
-          profileList={profileList}
-          isEbayActionBulkMenuOpen={isEbayActionBulkMenuOpen}
-          setCallbackEbayActionFunction={setCallbackEbayActionFunction}
-        />,
-        // <ProductMassMenu selectedRows={selectedRows} />,
-        <ProductBulkMenu
-          profileList={profileList}
-          isProductBulkMenuOpen={isProductBulkMenuOpen}
-          setCallbackProductBulkFunction={setCallbackProductBulkFunction}
-        />,
-      ]}
+      extra={
+        window.innerWidth < 768
+          ? [
+              <ResponsiveBulkMenu
+                profileList={profileList}
+                isOpenBulk={isOpenBulk}
+                setIsOpenBulk={setIsOpenBulk}
+              />,
+            ]
+          : [
+              <CsvBulkMenu
+                profileList={profileList}
+                isCsvBulkMenuOpen={isCsvBulkMenuOpen}
+                setCallbackCsvFunction={setCallbackCsvFunction}
+              />,
+              <EbayActionsBulkMenu
+                profileList={profileList}
+                isEbayActionBulkMenuOpen={isEbayActionBulkMenuOpen}
+                setCallbackEbayActionFunction={setCallbackEbayActionFunction}
+              />,
+              // <ProductMassMenu selectedRows={selectedRows} />,
+              <ProductBulkMenu
+                profileList={profileList}
+                isProductBulkMenuOpen={isProductBulkMenuOpen}
+                setCallbackProductBulkFunction={setCallbackProductBulkFunction}
+              />,
+            ]
+      }
     >
       <Card sectioned>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -1428,23 +1486,34 @@ const showJumpToPage=()=>{
               />
               {/* </OutsideAlerterMassMenu> */}
             </Col>
-            { window.innerWidth<768?
-            <Col
-              className="gutter-row"
-              span={18}
-              xs={24}
-              sm={24}
-              md={18}
-              lg={18}
-              xl={18}
-              xxl={18}
-            >
-
-              <Row gutter={[10,8]} justify="space-evenly">
-                <Col span={6} xs={20} sm={13} md={6} lg={8} xl={6} xxl={6} style={{margin:"auto"}}>
-       {showTotal(totalProductsCount,[(activePage-1)*pageSize+1,activePage*pageSize])}
-                </Col>
-                {/* <PaginationComponent
+            {window.innerWidth < 768 ? (
+              <Col
+                className="gutter-row"
+                span={18}
+                xs={24}
+                sm={24}
+                md={18}
+                lg={18}
+                xl={18}
+                xxl={18}
+              >
+                <Row gutter={[10, 8]} justify="space-evenly">
+                  <Col
+                    span={6}
+                    xs={20}
+                    sm={13}
+                    md={6}
+                    lg={8}
+                    xl={6}
+                    xxl={6}
+                    style={{ margin: "auto" }}
+                  >
+                    {showTotal(totalProductsCount, [
+                      (activePage - 1) * pageSize + 1,
+                      activePage * pageSize,
+                    ])}
+                  </Col>
+                  {/* <PaginationComponent
                   totalCount={totalProductsCount}
                   hitGetProductsAPI={hitGetProductsAPI}
                   pageSizeOptions={pageSizeOptions}
@@ -1456,59 +1525,94 @@ const showJumpToPage=()=>{
                   size={"default"}
                   simple={false}
                 /> */}
-                <Col span={10} xs={24} sm={24} md={18} lg={16} xl={9} xxl={9} style={{display:"flex",justifyContent:"end"}}>
-                <BasicPaginationComponent
-    totalCount={totalProductsCount}
-    hitGetProductsAPI={hitGetProductsAPI}
-    responsivePageSizeOptions={responsivePageSizeOptions}
-    activePage={activePage}
-    setActivePage={setActivePage}
-    setPrevPage={setPrevPage}
-    pageSize={pageSize}
-    setPageSize={setPageSize}
-    size={"default"}
-    simple={false}
-                />
-                </Col>
-                <Col span={4} xs={12} sm={12} md={12} lg={12} xl={4} xxl={4} style={{display:"flex",justifyContent:"end"}}>
-                {/* <Select
+                  <Col
+                    span={10}
+                    xs={24}
+                    sm={24}
+                    md={18}
+                    lg={16}
+                    xl={9}
+                    xxl={9}
+                    style={{ display: "flex", justifyContent: "end" }}
+                  >
+                    <BasicPaginationComponent
+                      totalCount={totalProductsCount}
+                      hitGetProductsAPI={hitGetProductsAPI}
+                      responsivePageSizeOptions={responsivePageSizeOptions}
+                      activePage={activePage}
+                      setActivePage={setActivePage}
+                      setPrevPage={setPrevPage}
+                      pageSize={pageSize}
+                      setPageSize={setPageSize}
+                      size={"default"}
+                      simple={false}
+                    />
+                  </Col>
+                  <Col
+                    span={4}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={4}
+                    xxl={4}
+                    style={{ display: "flex", justifyContent: "end" }}
+                  >
+                    {/* <Select
       label=""
       options={pageSizeOptions}
       onChange={handleSelectChange}
       value={pageSize}
     
     /> */}
-       <Select
-      defaultValue="25 / page"
-      style={{
-        width:"11rem"
-      }}
-      onChange={handleSelectChange}
-    >
-    {responsivePageSizeOptions.map((pageSizeOption,index)=>
-<Option value={Number(pageSizeOption.value)}>{pageSizeOption.label}</Option>
-    )}</Select>
-                </Col>
-                <Col span={5} xs={12} sm={12} md={12} lg={12} xl={5} xxl={5}  style={{display:"flex", justifyContent:"end"}}>
-                  <div>Go To {showJumpToPage()} Page</div>
-                 </Col>
-              </Row>
-            </Col>:  <Col className="gutter-row" span={18}>
-            <Stack distribution="trailing">
-                <PaginationComponent
-                  totalCount={totalProductsCount}
-                  hitGetProductsAPI={hitGetProductsAPI}
-                  pageSizeOptions={pageSizeOptions}
-                  activePage={activePage}
-                  setActivePage={setActivePage}
-                  setPrevPage={setPrevPage}
-                  pageSize={pageSize}
-                  setPageSize={setPageSize}
-                  size={"default"}
-                  simple={false}
-                />
+                    <Select
+                      defaultValue="25 / page"
+                      style={{
+                        width: "11rem",
+                      }}
+                      onChange={handleSelectChange}
+                    >
+                      {responsivePageSizeOptions.map(
+                        (pageSizeOption, index) => (
+                          <Option value={Number(pageSizeOption.value)}>
+                            {pageSizeOption.label}
+                          </Option>
+                        )
+                      )}
+                    </Select>
+                  </Col>
+                  <Col
+                    span={5}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={5}
+                    xxl={5}
+                    style={{ display: "flex", justifyContent: "end" }}
+                  >
+                    <div>Go To {showJumpToPage()} Page</div>
+                  </Col>
+                </Row>
+              </Col>
+            ) : (
+              <Col className="gutter-row" span={18}>
+                <Stack distribution="trailing">
+                  <PaginationComponent
+                    totalCount={totalProductsCount}
+                    hitGetProductsAPI={hitGetProductsAPI}
+                    pageSizeOptions={pageSizeOptions}
+                    activePage={activePage}
+                    setActivePage={setActivePage}
+                    setPrevPage={setPrevPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                    size={"default"}
+                    simple={false}
+                  />
                 </Stack>
-           </Col>}
+              </Col>
+            )}
           </Row>
         </div>
         <div className="wrapper" onScroll={handleScroll}>
@@ -1607,6 +1711,80 @@ const showJumpToPage=()=>{
           </Banner>
         </Modal.Section>
       </Modal>
+      <Modal
+        open={isOpenModalVideo}
+        onClose={() => setIsOpenModalVideo(false)}
+        title="How Can I Help?"
+      >
+        <Modal.Section>
+          {manageProductsGifs.map((gif, index) => {
+            return (
+              <>
+                <Stack distribution="equalSpacing">
+                  <>{gif.title}</>
+                  <Button
+                    plain
+                    onClick={() => {
+                      setIsOpenModalVideo(false);
+                      setIsOpenGifModal({
+                        active: true,
+                        title: gif.title,
+                        url: gif.url,
+                      });
+                    }}
+                  >
+                    Watch
+                  </Button>
+                </Stack>
+                {index == manageProductsGifs.length - 1 ? <></> : <Divider />}
+              </>
+            );
+          })}
+          <Divider />
+          <center>
+            <Button primary onClick={() => setIsOpenModalVideo(false)}>
+              Close
+            </Button>
+          </center>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={isOpenGifModal.active}
+        onClose={() =>
+          setIsOpenGifModal({
+            active: false,
+            title: "",
+          })
+        }
+        title={isOpenGifModal.title}
+      >
+        <Modal.Section>
+          <img src={isOpenGifModal.url} style={{ width: "100%" }} />
+          <Divider />
+          <center>
+            <Button
+              primary
+              onClick={() =>
+                setIsOpenGifModal({
+                  active: false,
+                  title: "",
+                })
+              }
+            >
+              Close
+            </Button>
+          </center>
+        </Modal.Section>
+      </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-products-on-the-application"
+        >
+          Manage Products
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 }

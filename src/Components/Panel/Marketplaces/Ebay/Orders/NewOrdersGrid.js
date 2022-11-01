@@ -54,6 +54,7 @@ import {
   Tooltip,
   List,
   Link,
+  FooterHelp,
 } from "@shopify/polaris";
 import { FilterMajorMonotone, QuestionMarkMinor } from "@shopify/polaris-icons";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
@@ -1555,6 +1556,15 @@ const NewOrdersGrid = (props) => {
           </>
         }
       />
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-order-from-ebay"
+        >
+          Orders
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

@@ -3,6 +3,7 @@ import {
   Banner,
   Button,
   Card,
+  FooterHelp,
   Icon,
   Link,
   Modal,
@@ -21,7 +22,16 @@ import {
   CircleTickOutlineMinor,
   ImportMinor,
 } from "@shopify/polaris-icons";
-import { Alert, Badge, Col, Image, PageHeader, Progress, Row, Typography } from "antd";
+import {
+  Alert,
+  Badge,
+  Col,
+  Image,
+  PageHeader,
+  Progress,
+  Row,
+  Typography,
+} from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { getAllNotifications } from "../../../../../APIrequests/ActivitiesAPI";
 import { notify } from "../../../../../services/notify";
@@ -140,7 +150,15 @@ const ActivityGrid = (props) => {
       tempObject["message"] = (
         <Stack alignment="center" spacing="tight" wrap={false}>
           <>{getSeverityIcon(activity["severity"])}</>
-          <>{activity["message"].length<=160?activity["message"]:<Tooltip content={activity["message"]}><div>{`${activity["message"].substring(0,160)}...`}</div></Tooltip>}</>
+          <>
+            {activity["message"].length <= 160 ? (
+              activity["message"]
+            ) : (
+              <Tooltip content={activity["message"]}>
+                <div>{`${activity["message"].substring(0, 160)}...`}</div>
+              </Tooltip>
+            )}
+          </>
           {activity["url"] && (
             <Tooltip content={"Download Report"}>
               <div
@@ -380,20 +398,18 @@ const ActivityGrid = (props) => {
           actions={[
             {
               content: (
-
                 <AntButton
-                type="text"
-                key="1"
-                icon={<SyncOutlined style={{ color: "rgb(0 0 0 / 45%)" }} />}
-                onClick={() => {
-                  // hitGetActivitiesAPI();
-                  hitRefresh();
-                }}
-                loading={refreshBtnLoader}
-              >
-                <Text type="secondary">Refresh</Text>
-              </AntButton>
-               
+                  type="text"
+                  key="1"
+                  icon={<SyncOutlined style={{ color: "rgb(0 0 0 / 45%)" }} />}
+                  onClick={() => {
+                    // hitGetActivitiesAPI();
+                    hitRefresh();
+                  }}
+                  loading={refreshBtnLoader}
+                >
+                  <Text type="secondary">Refresh</Text>
+                </AntButton>
               ),
             },
           ]}
@@ -588,6 +604,15 @@ const ActivityGrid = (props) => {
           </Stack>
         </Modal.Section>
       </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=activities-section-of-the-app-2"
+        >
+          Activities
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

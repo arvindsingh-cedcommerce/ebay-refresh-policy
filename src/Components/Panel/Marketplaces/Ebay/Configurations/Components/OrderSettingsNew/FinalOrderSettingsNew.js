@@ -2,6 +2,7 @@ import {
   Banner,
   Button,
   Card,
+  FooterHelp,
   Link,
   SkeletonBodyText,
   SkeletonPage,
@@ -315,94 +316,116 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
   };
 
   return skeletonFlag ? (
-    <Card sectioned>
-      <SkeletonPage fullWidth={true}>
-        <Card.Section>
-          <SkeletonBodyText lines={2} />
-        </Card.Section>
-        <Card.Section>
-          <SkeletonBodyText lines={2} />
-        </Card.Section>
-        <Card.Section>
-          <SkeletonBodyText lines={2} />
-        </Card.Section>
-        <Card.Section>
-          <SkeletonBodyText lines={2} />
-        </Card.Section>
-      </SkeletonPage>
-    </Card>
+    <>
+      <Card sectioned>
+        <SkeletonPage fullWidth={true}>
+          <Card.Section>
+            <SkeletonBodyText lines={2} />
+          </Card.Section>
+          <Card.Section>
+            <SkeletonBodyText lines={2} />
+          </Card.Section>
+          <Card.Section>
+            <SkeletonBodyText lines={2} />
+          </Card.Section>
+          <Card.Section>
+            <SkeletonBodyText lines={2} />
+          </Card.Section>
+        </SkeletonPage>
+      </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-configuration-of-the-app"
+        >
+          Order Settings
+        </Link>
+      </FooterHelp>
+    </>
   ) : (
-    <Card
-      sectioned
-      actions={[
-        {
-          content: (
-            <Button primary onClick={callSaveData} loading={saveBtnLoader}>
-              Save
-            </Button>
-          ),
-        },
-      ]}
-    >
-      <Stack vertical>
-        {/* <Banner>
+    <>
+      <Card
+        sectioned
+        actions={[
+          {
+            content: (
+              <Button primary onClick={callSaveData} loading={saveBtnLoader}>
+                Save
+              </Button>
+            ),
+          },
+        ]}
+      >
+        <Stack vertical>
+          {/* <Banner>
           <p>
             Select from the available eBay accounts you wish to use for
             publishing your products on eBay. Use the default option to apply
             settings to all accounts.
           </p>
         </Banner> */}
-        <CheckboxComponent
-          connectedAccountsObject={connectedAccountsObject}
-          setconnectedAccountsObject={setconnectedAccountsObject}
-        />
-        {/* </Stack> */}
-        {panes.length > 0 && <Divider />}
-        <>Selected Accounts</>
-        {/* <Card.Section> */}
-        <Tabs onChange={() => {}} type="card">
-          {Object.keys(panes).map((pane) => {
-            return (
-              <TabPane
-                tab={
-                  panes[pane]["siteId"] ? (
-                    <Stack alignment="fill" spacing="tight">
-                      <Image
-                        preview={false}
-                        width={25}
-                        src={
-                          panes[pane]["siteId"] &&
-                          require(`../../../../../../../assets/flags/${panes[pane]["siteId"]}.png`)
-                        }
-                        style={{ borderRadius: "50%" }}
-                      />
-                      <>{pane.split("-")[1]}</>
-                    </Stack>
-                  ) : (
-                    <p>{pane}</p>
-                  )
-                }
-                key={panes[pane].shopId}
-              >
-                <div
-                  style={
-                    panes[pane]["status"] === "inactive"
-                      ? {
-                          pointerEvents: "none",
-                          opacity: 0.8,
-                        }
-                      : {}
+          <CheckboxComponent
+            connectedAccountsObject={connectedAccountsObject}
+            setconnectedAccountsObject={setconnectedAccountsObject}
+          />
+          {/* </Stack> */}
+          {panes.length > 0 && <Divider />}
+          <>Selected Accounts</>
+          {/* <Card.Section> */}
+          <Tabs onChange={() => {}} type="card">
+            {Object.keys(panes).map((pane) => {
+              return (
+                <TabPane
+                  tab={
+                    panes[pane]["siteId"] ? (
+                      <Stack alignment="fill" spacing="tight">
+                        <Image
+                          preview={false}
+                          width={25}
+                          src={
+                            panes[pane]["siteId"] &&
+                            require(`../../../../../../../assets/flags/${panes[pane]["siteId"]}.png`)
+                          }
+                          style={{ borderRadius: "50%" }}
+                        />
+                        <>{pane.split("-")[1]}</>
+                      </Stack>
+                    ) : (
+                      <p>{pane}</p>
+                    )
                   }
+                  key={panes[pane].shopId}
                 >
-                  {panes?.[pane]?.["content"]}
-                </div>
-              </TabPane>
-            );
-          })}
-        </Tabs>
-        {/* </Card.Section> */}
-      </Stack>
-    </Card>
+                  <div
+                    style={
+                      panes[pane]["status"] === "inactive"
+                        ? {
+                            pointerEvents: "none",
+                            opacity: 0.8,
+                          }
+                        : {}
+                    }
+                  >
+                    {panes?.[pane]?.["content"]}
+                  </div>
+                </TabPane>
+              );
+            })}
+          </Tabs>
+          {/* </Card.Section> */}
+        </Stack>
+      </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-configuration-of-the-app"
+        >
+          Order Settings
+        </Link>
+      </FooterHelp>
+    </>
   );
 };
 

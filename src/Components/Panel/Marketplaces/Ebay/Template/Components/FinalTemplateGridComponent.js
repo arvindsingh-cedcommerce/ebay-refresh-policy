@@ -18,6 +18,8 @@ import {
   Banner,
   Button,
   Card,
+  FooterHelp,
+  Link,
   Modal,
   Select as PolarisSelect,
   Stack,
@@ -472,6 +474,12 @@ const FinalTemplateGridComponent = (props) => {
               </>
             );
           })}
+          <Divider />
+          <center>
+            <Button primary onClick={() => setIsOpenModalVideo(false)}>
+              Close
+            </Button>
+          </center>
         </Modal.Section>
       </Modal>
       <Modal
@@ -486,8 +494,31 @@ const FinalTemplateGridComponent = (props) => {
       >
         <Modal.Section>
           <img src={isOpenGifModal.url} style={{ width: "100%" }} />
+          <Divider />
+          <center>
+            <Button
+              primary
+              onClick={() =>
+                setIsOpenGifModal({
+                  active: false,
+                  title: "",
+                })
+              }
+            >
+              Close
+            </Button>
+          </center>
         </Modal.Section>
       </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=templates-section-of-the-app"
+        >
+          Templates
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

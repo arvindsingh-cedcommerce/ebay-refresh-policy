@@ -35,6 +35,7 @@ import {
   SkeletonDisplayText,
   Tooltip,
   Scrollable,
+  FooterHelp,
 } from "@shopify/polaris";
 import { Button as AntButton } from "antd";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
@@ -1728,6 +1729,15 @@ const FinalDashboard = (props) => {
           </Row>
         </Col>
       </Row>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=dashboard-section-of-the-application"
+        >
+          Dashboard
+        </Link>
+      </FooterHelp>
       <TestModalComponent
         passedState={profilesModal}
         passedSetState={setProfilesModal}

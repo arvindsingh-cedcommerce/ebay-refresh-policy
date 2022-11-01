@@ -608,7 +608,7 @@ const NewPanel = (props) => {
                 <Stack.Item fill>
                   {window.innerWidth > 1116 ? (
                     (queuedTasks.length > 0 || note) && (
-                      <div style={{ position: "absolute", left: "30%" }}>
+                      <div style={{ position: "absolute", left: "20%" }}>
                         <TextLoop
                           springConfig={{ stiffness: 70, damping: 31 }}
                           adjustingSpeed={500}
@@ -651,7 +651,7 @@ const NewPanel = (props) => {
                             setShowQueuedTasks(!showQueuedTasks);
                           }}
                         >
-                          <Icon source={NoteMajorMonotone} color="base" />{" "}
+                          <Icon source={NoteMajorMonotone} color="primary" />{" "}
                         </div>{" "}
                       </Stack.Item>
                     ) : (

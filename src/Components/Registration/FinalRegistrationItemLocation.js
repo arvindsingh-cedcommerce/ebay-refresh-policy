@@ -15,6 +15,7 @@ import {
   TextStyle,
   Tooltip,
   DisplayText,
+  FooterHelp,
 } from "@shopify/polaris";
 import { ImportMinor, QuestionMarkMinor } from "@shopify/polaris-icons";
 import React, { useState, useEffect } from "react";
@@ -1478,6 +1479,15 @@ export const FinalRegistrationItemLocation = (props) => {
             },
           }}
         ></Modal>
+        <FooterHelp>
+          Learn more about{" "}
+          <Link
+            external
+            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=onboarding-process-for-the-application"
+          >
+            Onboarding Process
+          </Link>
+        </FooterHelp>
       </Page>
     </div>
   );

@@ -11,6 +11,8 @@ import {
   SkeletonPage,
   TextField,
   SkeletonDisplayText,
+  FooterHelp,
+  Link,
 } from "@shopify/polaris";
 import Title from "antd/lib/typography/Title";
 import React, { useEffect, useState } from "react";
@@ -534,79 +536,91 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
   };
 
   return flag ? (
-    <Card sectioned>
-      <SkeletonPage
-        fullWidth={true}
-        title={<SkeletonDisplayText size="small" />}
-      >
-        <Card.Section>
-          <SkeletonBodyText lines={2} />
-        </Card.Section>
-        <Card.Section>
-          <SkeletonBodyText lines={2} />
-        </Card.Section>
-        <Card.Section>
-          <SkeletonBodyText lines={2} />
-        </Card.Section>
-        <Card.Section>
-          <SkeletonBodyText lines={2} />
-        </Card.Section>
-      </SkeletonPage>
-    </Card>
+    <>
+      <Card sectioned>
+        <SkeletonPage
+          fullWidth={true}
+          title={<SkeletonDisplayText size="small" />}
+        >
+          <Card.Section>
+            <SkeletonBodyText lines={2} />
+          </Card.Section>
+          <Card.Section>
+            <SkeletonBodyText lines={2} />
+          </Card.Section>
+          <Card.Section>
+            <SkeletonBodyText lines={2} />
+          </Card.Section>
+          <Card.Section>
+            <SkeletonBodyText lines={2} />
+          </Card.Section>
+        </SkeletonPage>
+      </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=import-configuration-section"
+        >
+          Product Import Settings
+        </Link>
+      </FooterHelp>
+    </>
   ) : (
-    <Card
-      sectioned
-      title={<Title level={4}>Shopify To App</Title>}
-      actions={[
-        {
-          content: (
-            <Button
-              primary
-              onClick={() => saveData(false)}
-              loading={saveBtnLoader}
+    <>
+      <Card
+        sectioned
+        title={<Title level={4}>Shopify To App</Title>}
+        actions={[
+          {
+            content: (
+              <Button
+                primary
+                onClick={() => saveData(false)}
+                loading={saveBtnLoader}
+              >
+                Save
+              </Button>
+            ),
+          },
+        ]}
+      >
+        <FormLayout>
+          <Layout>
+            <Layout.AnnotatedSection
+              title="Import by Filters"
+              id="importByFilters"
+              description={
+                <span>
+                  The <b>import by filter</b> settings lets you set the
+                  condition for you to import the products from the Shopify
+                  store to app. It can be done on the following basis :
+                  Published status, Product status, Vendor & Product Type.
+                </span>
+              }
             >
-              Save
-            </Button>
-          ),
-        },
-      ]}
-    >
-      <FormLayout>
-        <Layout>
-          <Layout.AnnotatedSection
-            title="Import by Filters"
-            id="importByFilters"
-            description={
-              <span>
-                The <b>import by filter</b> settings lets you set the condition
-                for you to import the products from the Shopify store to app. It
-                can be done on the following basis : Published status, Product
-                status, Vendor & Product Type.
-              </span>
-            }
-          >
-            {getImportByFiltersStructure()}
-          </Layout.AnnotatedSection>
-        </Layout>
-        <Layout>
-          <Layout.AnnotatedSection
-            title="Import by Collection"
-            id="importByCollection"
-            description={
-              <span>
-                Products can be imported in the app based on the selected
-                Shopify collections, you can select the checkbox shown before to
-                the imported Shopify collections. And when you make any changes
-                to your collections or when collections seem to be missing in
-                the app, you can use <b>refresh collection</b> button so keep
-                the collections updated in the app.
-              </span>
-            }
-          >
-            {getImportByCollectionStructure()}
-          </Layout.AnnotatedSection>
-        </Layout>
-        {/* <Layout>
+              {getImportByFiltersStructure()}
+            </Layout.AnnotatedSection>
+          </Layout>
+          <Layout>
+            <Layout.AnnotatedSection
+              title="Import by Collection"
+              id="importByCollection"
+              description={
+                <span>
+                  Products can be imported in the app based on the selected
+                  Shopify collections, you can select the checkbox shown before
+                  to the imported Shopify collections. And when you make any
+                  changes to your collections or when collections seem to be
+                  missing in the app, you can use <b>refresh collection</b>{" "}
+                  button so keep the collections updated in the app.
+                </span>
+              }
+            >
+              {getImportByCollectionStructure()}
+            </Layout.AnnotatedSection>
+          </Layout>
+          {/* <Layout>
           <Layout.AnnotatedSection
             title="Import by Product ID"
             id="importByCollection"
@@ -614,70 +628,80 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
             {getImportByProductID()}
           </Layout.AnnotatedSection>
         </Layout> */}
-        <Layout>
-          <Layout.AnnotatedSection
-            title="Import and replace product"
-            id="importAndReplaceProduct"
-            description={
-              <span>
-                This option imports the products from Shopify based on the
-                applied filters and replaces /removes the existing products from
-                the app. By default, the setting is <b>No</b>, but before
-                initiating the import you can set the setting to <b>Yes</b> if
-                you want to remove all the existing products from the app.
-              </span>
-            }
-          >
-            <Card sectioned>
-              <ButtonGroup segmented>
-                <Button
-                  primary={
-                    importProductFilters["importAndReplaceProduct"][
-                      "enable"
-                    ] === "yes"
-                      ? true
-                      : false
-                  }
-                  pressed={
-                    importProductFilters["importAndReplaceProduct"][
-                      "enable"
-                    ] === "yes"
-                      ? true
-                      : false
-                  }
-                  onClick={(e) => {
-                    handleBtnPres(e, "importAndReplaceProduct");
-                  }}
-                >
-                  Yes
-                </Button>
-                <Button
-                  primary={
-                    importProductFilters["importAndReplaceProduct"][
-                      "enable"
-                    ] === "no"
-                      ? true
-                      : false
-                  }
-                  pressed={
-                    importProductFilters["importAndReplaceProduct"][
-                      "enable"
-                    ] === "no"
-                      ? true
-                      : false
-                  }
-                  onClick={(e) => {
-                    handleBtnPres(e, "importAndReplaceProduct");
-                  }}
-                >
-                  No
-                </Button>
-              </ButtonGroup>
-            </Card>
-          </Layout.AnnotatedSection>
-        </Layout>
-      </FormLayout>
-    </Card>
+          <Layout>
+            <Layout.AnnotatedSection
+              title="Import and replace product"
+              id="importAndReplaceProduct"
+              description={
+                <span>
+                  This option imports the products from Shopify based on the
+                  applied filters and replaces /removes the existing products
+                  from the app. By default, the setting is <b>No</b>, but before
+                  initiating the import you can set the setting to <b>Yes</b> if
+                  you want to remove all the existing products from the app.
+                </span>
+              }
+            >
+              <Card sectioned>
+                <ButtonGroup segmented>
+                  <Button
+                    primary={
+                      importProductFilters["importAndReplaceProduct"][
+                        "enable"
+                      ] === "yes"
+                        ? true
+                        : false
+                    }
+                    pressed={
+                      importProductFilters["importAndReplaceProduct"][
+                        "enable"
+                      ] === "yes"
+                        ? true
+                        : false
+                    }
+                    onClick={(e) => {
+                      handleBtnPres(e, "importAndReplaceProduct");
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    primary={
+                      importProductFilters["importAndReplaceProduct"][
+                        "enable"
+                      ] === "no"
+                        ? true
+                        : false
+                    }
+                    pressed={
+                      importProductFilters["importAndReplaceProduct"][
+                        "enable"
+                      ] === "no"
+                        ? true
+                        : false
+                    }
+                    onClick={(e) => {
+                      handleBtnPres(e, "importAndReplaceProduct");
+                    }}
+                  >
+                    No
+                  </Button>
+                </ButtonGroup>
+              </Card>
+            </Layout.AnnotatedSection>
+          </Layout>
+        </FormLayout>
+      </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=import-configuration-section"
+        >
+          Product Import Settings
+        </Link>
+      </FooterHelp>
+    </>
   );
 };
 

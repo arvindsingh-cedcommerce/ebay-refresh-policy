@@ -26,6 +26,7 @@ import {
   SkeletonBodyText,
   TextContainer,
   SkeletonDisplayText,
+  FooterHelp,
 } from "@shopify/polaris";
 import { submitIssue } from "../../../../../APIrequests/ContactUSAPI";
 import {
@@ -91,8 +92,11 @@ const ContactUs = (props) => {
 
   const getAllConnectedAccounts = async () => {
     setAccountLoader(true);
-    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
-      await getConnectedAccounts();
+    let {
+      success: accountConnectedSuccess,
+      data: connectedAccountData,
+      message,
+    } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let shopifyAccount = connectedAccountData.find(
         (account) => account.marketplace === "shopify"
@@ -344,7 +348,15 @@ const ContactUs = (props) => {
             </Stack>
           </Card>
         </Col>
-        <Col span={12} xs={24} sm={24} md={24} lg={12} xxl={12} style={window.innerWidth<=991?{margin:"0.8rem 0"}:{}}>
+        <Col
+          span={12}
+          xs={24}
+          sm={24}
+          md={24}
+          lg={12}
+          xxl={12}
+          style={window.innerWidth <= 991 ? { margin: "0.8rem 0" } : {}}
+        >
           <Card
             title="Schedule Demo"
             sectioned
@@ -546,6 +558,15 @@ const ContactUs = (props) => {
           </Card>
         </Col>
       </Row>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=connect-with-cedcommerce"
+        >
+          Contact Us
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

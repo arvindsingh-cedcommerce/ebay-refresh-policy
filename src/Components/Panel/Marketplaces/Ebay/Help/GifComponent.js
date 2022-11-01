@@ -1,4 +1,4 @@
-import { Modal, Stack } from "@shopify/polaris";
+import { Button, Modal, Stack } from "@shopify/polaris";
 import { Card, Col, Divider, Row } from "antd";
 import React, { useState } from "react";
 // import CategoryTemplateImage from "../../../../../assets/gifImage/categoryTemplate.png";
@@ -21,7 +21,7 @@ const GifComponent = () => {
             <Card
               size="small"
               style={{
-                marginBottom: "10px",
+                marginBottom: "15px",
                 borderRadius: "7px",
                 width: "80%",
               }}
@@ -35,10 +35,17 @@ const GifComponent = () => {
                 })
               }
             >
-              <Stack distribution="center">
-                {/* <Meta style={{ marginTop: "10px" }} title={<>{gif.title}</>} /> */}
-                <center style={{ margin: "10px" }}>{gif.title}</center>
-              </Stack>
+              <div
+                style={{
+                  display: "flex",
+                  minHeight: "60px",
+                  lineHeight: "24px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {gif.title}
+              </div>
             </Card>
           </Col>
         );
@@ -50,6 +57,17 @@ const GifComponent = () => {
       >
         <Modal.Section>
           <img src={gifImageModal.url} style={{ width: "100%" }} />
+          <Divider />
+          <center>
+            <Button
+              primary
+              onClick={() =>
+                setGifImageModal({ active: false, title: "", url: "" })
+              }
+            >
+              Close
+            </Button>
+          </center>
         </Modal.Section>
       </Modal>
     </Row>

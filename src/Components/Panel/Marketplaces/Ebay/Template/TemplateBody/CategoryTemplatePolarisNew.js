@@ -4,8 +4,10 @@ import {
   ButtonGroup,
   Card,
   Checkbox,
+  FooterHelp,
   FormLayout,
   Layout,
+  Link,
   Select,
   SkeletonBodyText,
   Stack,
@@ -2621,6 +2623,15 @@ function to check final validation
         <Card.Section>{getCategoryStructure("primary")}</Card.Section>
         <Card.Section>{getCategoryStructure("secondary")}</Card.Section>
       </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application"
+        >
+          Category Template
+        </Link>
+      </FooterHelp>
     </div>
   ) : (
     <LoadingOverlay
@@ -2664,6 +2675,15 @@ function to check final validation
           <Card.Section>{getCategoryStructure("primary")}</Card.Section>
           <Card.Section>{getCategoryStructure("secondary")}</Card.Section>
         </Card>
+        <FooterHelp>
+          Learn more about{" "}
+          <Link
+            external
+            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application"
+          >
+            Category Template
+          </Link>
+        </FooterHelp>
       </div>
     </LoadingOverlay>
   );

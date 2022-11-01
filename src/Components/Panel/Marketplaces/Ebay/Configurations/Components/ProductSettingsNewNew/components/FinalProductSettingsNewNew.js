@@ -1,5 +1,7 @@
 import {
   Card,
+  FooterHelp,
+  Link,
   SkeletonBodyText,
   SkeletonDisplayText,
   SkeletonPage,
@@ -152,6 +154,15 @@ const FinalProductSettingsNewNew = () => {
       />
       <Divider />
       <ShopifyToAppNewNew shopifyToAppData={shopifyToAppData} />
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=product-configuration-section"
+        >
+          Product Settings
+        </Link>
+      </FooterHelp>
     </div>
   );
 };

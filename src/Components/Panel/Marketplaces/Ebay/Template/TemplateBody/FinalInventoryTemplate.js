@@ -4,8 +4,10 @@ import {
   ButtonGroup,
   Card,
   Checkbox,
+  FooterHelp,
   FormLayout,
   Layout,
+  Link,
   Select,
   SkeletonBodyText,
   SkeletonPage,
@@ -218,138 +220,34 @@ const FinalInventoryTemplate = (props) => {
   };
 
   return flag ? (
-    <Card>
-      <SkeletonPage fullWidth title="Inventory Template" primaryAction={false}>
-        <Layout.AnnotatedSection
-          id="templateName"
-          title="Template name"
-          // description="Enter a unique name"
-          description="Define name as per your understanding. It will use to identify template in other sections of the app like product's profile."
+    <>
+      <Card>
+        <SkeletonPage
+          fullWidth
+          title="Inventory Template"
+          primaryAction={false}
         >
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-        <Layout.AnnotatedSection id="customise" title="Customise Inventory">
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-        <Layout.AnnotatedSection
-          id="thresholdInventory"
-          title="Threshold Inventory"
-          description={
-            <>
-              Set a minimum inventory that you want to keep for your Shopify
-              products, as soon as shopify product inventory reaches the
-              threshold value, product will be shown as{" "}
-              <b>{`“out of stock”`}</b> on eBay. Customise Inventory will not
-              applied on threshold inventory.
-            </>
-          }
-        >
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-        <Layout.AnnotatedSection
-          id="Quantity_restriction_per_buyer"
-          title="Quantity restriction per buyer"
-          description="Set a fix quantity of a product you want to offer to each buyer."
-        >
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-        <Layout.AnnotatedSection
-          id="deleteOutOfStock"
-          title="Delete out of stock product"
-          description={
-            <>
-              {/* Enabling the option will <b>{"END"}</b> the products from eBay
-              once out of stock in Shopify. */}
-            </>
-          }
-        >
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-      </SkeletonPage>
-    </Card>
-  ) : (
-    <Card
-      title="Inventory Template"
-      sectioned
-      actions={[
-        {
-          content: <Button primary>Save</Button>,
-          onAction: saveFormdata,
-          loading: saveBtnLoader,
-        },
-      ]}
-      // primaryFooterAction={{
-      //   content: "Save",
-      //   onAction: saveFormdata,
-      //   loading: saveBtnLoader,
-      // }}
-    >
-      <Banner status="info">
-        <p>
-          With the use of Inventory template you can assign properties like how
-          much should be the inventory, what is its limit (threshold),
-          restriction per buyer and whether to delete products when they are out
-          of stock. So by simply using the template all of these conditions can
-          be applied while listing on eBay.
-        </p>
-      </Banner>
-      <Card.Section>
-        <Layout>
           <Layout.AnnotatedSection
             id="templateName"
             title="Template name"
-            // description="Set unique name to identify in profile section."
+            // description="Enter a unique name"
             description="Define name as per your understanding. It will use to identify template in other sections of the app like product's profile."
           >
-            <Card sectioned>
-              <TextField
-                value={formData.name}
-                onChange={(e) => changeHandler(e, "name")}
-                error={errors.name}
-              />
-            </Card>
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
+          </Layout.AnnotatedSection>
+          <Layout.AnnotatedSection id="customise" title="Customise Inventory">
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
           </Layout.AnnotatedSection>
           <Layout.AnnotatedSection
-            id="customise"
-            title="Customise Inventory"
-            description="Customise product inventory while create listing on eBay. You can set fixed inventory or reserve shopify inventory before sending inventory details on eBay. i.e. Fixed inventory value will ignore the shopify inventory and Reserve inventory value will reduce shopify inventory before sending to eBay."
-          >
-            <Card sectioned>
-              <FormLayout>
-                <Select
-                  options={customiseInventoryOptions}
-                  value={formData.customiseInventoryType}
-                  onChange={(e) => {
-                    changeHandler(e, "customiseInventoryType");
-                  }}
-                  error={errors.customiseInventoryType}
-                />
-                {getCustomiseInventoryTypeStructure()}
-              </FormLayout>
-            </Card>
-          </Layout.AnnotatedSection>
-          <Layout.AnnotatedSection
-            id="threshold"
+            id="thresholdInventory"
             title="Threshold Inventory"
             description={
               <>
@@ -361,64 +259,194 @@ const FinalInventoryTemplate = (props) => {
               </>
             }
           >
-            <Card sectioned>
-              <TextField
-                type="number"
-                min={1}
-                value={formData.thresholdInventory}
-                onChange={(e) => changeHandler(e, "thresholdInventory")}
-                error={errors.thresholdInventory}
-              />
-            </Card>
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
           </Layout.AnnotatedSection>
           <Layout.AnnotatedSection
             id="Quantity_restriction_per_buyer"
             title="Quantity restriction per buyer"
             description="Set a fix quantity of a product you want to offer to each buyer."
           >
-            <Card sectioned>
-              <TextField
-                type="number"
-                min={1}
-                value={formData.QuantityRestrictPerBuyer}
-                onChange={(e) => changeHandler(e, "QuantityRestrictPerBuyer")}
-                error={errors.QuantityRestrictPerBuyer}
-              />
-            </Card>
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
           </Layout.AnnotatedSection>
           <Layout.AnnotatedSection
-            id="deleteOutOfStockProducts"
-            title="Delete Out of Stock Products"
+            id="deleteOutOfStock"
+            title="Delete out of stock product"
             description={
-              "Enable to END a product listing on eBay once it goes out of stock on Shopify."
+              <>
+                {/* Enabling the option will <b>{"END"}</b> the products from eBay
+              once out of stock in Shopify. */}
+              </>
             }
           >
-            <Card sectioned>
-              <ButtonGroup segmented>
-                <Button
-                  pressed={formData.delete_product_outofStock}
-                  primary={formData.delete_product_outofStock}
-                  onClick={(e) =>
-                    changeHandler(true, "delete_product_outofStock")
-                  }
-                >
-                  Yes
-                </Button>
-                <Button
-                  pressed={!formData.delete_product_outofStock}
-                  primary={!formData.delete_product_outofStock}
-                  onClick={(e) =>
-                    changeHandler(false, "delete_product_outofStock")
-                  }
-                >
-                  No
-                </Button>
-              </ButtonGroup>
-            </Card>
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
           </Layout.AnnotatedSection>
-        </Layout>
-      </Card.Section>
-    </Card>
+        </SkeletonPage>
+      </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=inventory-template-of-the-application"
+        >
+          Inventory Template
+        </Link>
+      </FooterHelp>
+    </>
+  ) : (
+    <>
+      <Card
+        title="Inventory Template"
+        sectioned
+        actions={[
+          {
+            content: <Button primary>Save</Button>,
+            onAction: saveFormdata,
+            loading: saveBtnLoader,
+          },
+        ]}
+        // primaryFooterAction={{
+        //   content: "Save",
+        //   onAction: saveFormdata,
+        //   loading: saveBtnLoader,
+        // }}
+      >
+        <Banner status="info">
+          <p>
+            With the use of Inventory template you can assign properties like
+            how much should be the inventory, what is its limit (threshold),
+            restriction per buyer and whether to delete products when they are
+            out of stock. So by simply using the template all of these
+            conditions can be applied while listing on eBay.
+          </p>
+        </Banner>
+        <Card.Section>
+          <Layout>
+            <Layout.AnnotatedSection
+              id="templateName"
+              title="Template name"
+              // description="Set unique name to identify in profile section."
+              description="Define name as per your understanding. It will use to identify template in other sections of the app like product's profile."
+            >
+              <Card sectioned>
+                <TextField
+                  value={formData.name}
+                  onChange={(e) => changeHandler(e, "name")}
+                  error={errors.name}
+                />
+              </Card>
+            </Layout.AnnotatedSection>
+            <Layout.AnnotatedSection
+              id="customise"
+              title="Customise Inventory"
+              description="Customise product inventory while create listing on eBay. You can set fixed inventory or reserve shopify inventory before sending inventory details on eBay. i.e. Fixed inventory value will ignore the shopify inventory and Reserve inventory value will reduce shopify inventory before sending to eBay."
+            >
+              <Card sectioned>
+                <FormLayout>
+                  <Select
+                    options={customiseInventoryOptions}
+                    value={formData.customiseInventoryType}
+                    onChange={(e) => {
+                      changeHandler(e, "customiseInventoryType");
+                    }}
+                    error={errors.customiseInventoryType}
+                  />
+                  {getCustomiseInventoryTypeStructure()}
+                </FormLayout>
+              </Card>
+            </Layout.AnnotatedSection>
+            <Layout.AnnotatedSection
+              id="threshold"
+              title="Threshold Inventory"
+              description={
+                <>
+                  Set a minimum inventory that you want to keep for your Shopify
+                  products, as soon as shopify product inventory reaches the
+                  threshold value, product will be shown as{" "}
+                  <b>{`“out of stock”`}</b> on eBay. Customise Inventory will
+                  not applied on threshold inventory.
+                </>
+              }
+            >
+              <Card sectioned>
+                <TextField
+                  type="number"
+                  min={1}
+                  value={formData.thresholdInventory}
+                  onChange={(e) => changeHandler(e, "thresholdInventory")}
+                  error={errors.thresholdInventory}
+                />
+              </Card>
+            </Layout.AnnotatedSection>
+            <Layout.AnnotatedSection
+              id="Quantity_restriction_per_buyer"
+              title="Quantity restriction per buyer"
+              description="Set a fix quantity of a product you want to offer to each buyer."
+            >
+              <Card sectioned>
+                <TextField
+                  type="number"
+                  min={1}
+                  value={formData.QuantityRestrictPerBuyer}
+                  onChange={(e) => changeHandler(e, "QuantityRestrictPerBuyer")}
+                  error={errors.QuantityRestrictPerBuyer}
+                />
+              </Card>
+            </Layout.AnnotatedSection>
+            <Layout.AnnotatedSection
+              id="deleteOutOfStockProducts"
+              title="Delete Out of Stock Products"
+              description={
+                "Enable to END a product listing on eBay once it goes out of stock on Shopify."
+              }
+            >
+              <Card sectioned>
+                <ButtonGroup segmented>
+                  <Button
+                    pressed={formData.delete_product_outofStock}
+                    primary={formData.delete_product_outofStock}
+                    onClick={(e) =>
+                      changeHandler(true, "delete_product_outofStock")
+                    }
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    pressed={!formData.delete_product_outofStock}
+                    primary={!formData.delete_product_outofStock}
+                    onClick={(e) =>
+                      changeHandler(false, "delete_product_outofStock")
+                    }
+                  >
+                    No
+                  </Button>
+                </ButtonGroup>
+              </Card>
+            </Layout.AnnotatedSection>
+          </Layout>
+        </Card.Section>
+      </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=inventory-template-of-the-application"
+        >
+          Inventory Template
+        </Link>
+      </FooterHelp>
+    </>
   );
 };
 

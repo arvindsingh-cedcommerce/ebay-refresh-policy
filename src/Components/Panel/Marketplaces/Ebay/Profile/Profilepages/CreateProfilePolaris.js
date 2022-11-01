@@ -1,4 +1,4 @@
-import { Button, TextStyle, Tooltip } from "@shopify/polaris";
+import { Button, FooterHelp, Link, TextStyle, Tooltip } from "@shopify/polaris";
 import { PageHeader } from "antd";
 import React, { useState, useEffect } from "react";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
@@ -485,6 +485,15 @@ const CreateProfilePolaris = (props) => {
           setAlreadyProfiledProductsCount={setAlreadyProfiledProductsCount}
         />
       )}
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=editing-and-creating-a-profile"
+        >
+          Edit & Create Profile
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

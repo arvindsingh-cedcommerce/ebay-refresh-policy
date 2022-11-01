@@ -4,8 +4,10 @@ import {
   ButtonGroup,
   Card,
   Checkbox,
+  FooterHelp,
   FormLayout,
   Layout,
+  Link,
   Select,
   SkeletonBodyText,
   SkeletonPage,
@@ -183,143 +185,31 @@ const TitleTemplatePolaris = (props) => {
   };
 
   return flag ? (
-    <Card sectioned>
-      <SkeletonPage fullWidth title="Title Template" primaryAction={false}>
-        <Layout.AnnotatedSection
-          id="templateName"
-          title="Template name"
-          // description="Enter a unique template name"
-          description="Define name as it will be used to identify template in other sections of the app like product's profile."
-        >
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-        <Layout.AnnotatedSection
-          id="title"
-          title="Title"
-          description="Map Title to Shopify attributes (title, description, price, vendor, products type, tags) and can set custom values ahead of the Shopify title."
-        >
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-        <Layout.AnnotatedSection
-          id="setSubtitle"
-          title="Set Subtitle"
-          // description="Facilitate you to add a sub-title for the products on eBay."
-          description="Subtitle to use in addition to the title. Provides more keywords when buyers search in titles and descriptions. You cannot use HTML in the Subtitle. eBay will charge extra amount for adding Subtitle in product details."
-        >
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-        <Layout.AnnotatedSection
-          id="Description"
-          title="Description"
-          description="Map Description for eBay with the Shopify attributes (title, description, price, vendor, products type, tags). Select Set Custom Values option to insert the customize description or the  HTML code for the description."
-        >
-          <Layout.Section>
-            <Card sectioned>
-              <SkeletonBodyText />
-            </Card>
-          </Layout.Section>
-        </Layout.AnnotatedSection>
-      </SkeletonPage>
-    </Card>
-  ) : (
-    <Card
-      title="Title Template"
-      sectioned
-      actions={[
-        {
-          content: <Button primary>Save</Button>,
-          onAction: saveFormdata,
-          loading: saveBtnLoader,
-        },
-      ]}
-      // primaryFooterAction={{
-      //   content: "Save",
-      //   onAction: saveFormdata,
-      //   loading: saveBtnLoader,
-      // }}
-    >
-      <Banner status="info">
-        <p>
-          Title template helps you map desired Shopify attributes to Title, sub
-          title & description attribute of eBay. You can even pass combination
-          of Shopify attributes and custom values to the aforementioned eBay
-          attributes.
-        </p>
-      </Banner>
-      <Card.Section>
-        <Layout>
+    <>
+      <Card sectioned>
+        <SkeletonPage fullWidth title="Title Template" primaryAction={false}>
           <Layout.AnnotatedSection
             id="templateName"
             title="Template name"
             // description="Enter a unique template name"
             description="Define name as it will be used to identify template in other sections of the app like product's profile."
           >
-            <Card sectioned>
-              <TextField
-                value={formData.name}
-                onChange={(e) => changeHandler(e, "name")}
-                error={errors.name}
-              />
-            </Card>
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
           </Layout.AnnotatedSection>
           <Layout.AnnotatedSection
             id="title"
             title="Title"
             description="Map Title to Shopify attributes (title, description, price, vendor, products type, tags) and can set custom values ahead of the Shopify title."
           >
-            <Card sectioned>
-              <FormLayout>
-                <Select
-                  options={AttributeMapoptions}
-                  label="Mapping options for title field"
-                  value={formData["title"]["selected"]}
-                  onChange={(e) => changeHandler(e, "title", "selected")}
-                />
-                <Checkbox
-                  label="Trim Title"
-                  checked={formData["title"]["trim_title"]}
-                  onChange={(e) => changeHandler(e, "title", "trim_title")}
-                  helpText="*Enable the option if you want to trim the title if greater than 80 characters.This might make your title absurd so make sure accordingly."
-                />
-                {formData["title"]["selected"] === "default" && (
-                  <Stack vertical={false}>
-                    <Stack.Item>
-                      <Select
-                        label="Choose to add attribute"
-                        options={defaultAttributeoptions}
-                        value={default_settings["title"]}
-                        onChange={(e) => defaultChangeHandler(e, "title")}
-                        placeholder="Please Select..."
-                      />
-                    </Stack.Item>
-                    <Stack.Item fill>
-                      <TextField
-                        label="Value"
-                        value={formData["title"]["default_setting"]["value"]}
-                        onChange={(e) => {
-                          // changeHandler(e, "title", "default_setting", "value");
-                          let temp = { ...formData };
-                          temp["title"]["default_setting"]["value"] = e;
-                          setFormData(temp);
-                        }}
-                      />
-                    </Stack.Item>
-                  </Stack>
-                )}
-              </FormLayout>
-            </Card>
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
           </Layout.AnnotatedSection>
           <Layout.AnnotatedSection
             id="setSubtitle"
@@ -327,51 +217,113 @@ const TitleTemplatePolaris = (props) => {
             // description="Facilitate you to add a sub-title for the products on eBay."
             description="Subtitle to use in addition to the title. Provides more keywords when buyers search in titles and descriptions. You cannot use HTML in the Subtitle. eBay will charge extra amount for adding Subtitle in product details."
           >
-            <Card sectioned>
-              <FormLayout>
-                <ButtonGroup segmented>
-                  <Button
-                    primary={formData.set_subtitle}
-                    pressed={formData.set_subtitle}
-                    onClick={(e) => changeHandler(true, "set_subtitle")}
-                  >
-                    Yes
-                  </Button>
-                  <Button
-                    primary={!formData.set_subtitle}
-                    pressed={!formData.set_subtitle}
-                    onClick={(e) => changeHandler(false, "set_subtitle")}
-                  >
-                    No
-                  </Button>
-                </ButtonGroup>
-                {formData["set_subtitle"] && (
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
+          </Layout.AnnotatedSection>
+          <Layout.AnnotatedSection
+            id="Description"
+            title="Description"
+            description="Map Description for eBay with the Shopify attributes (title, description, price, vendor, products type, tags). Select Set Custom Values option to insert the customize description or the  HTML code for the description."
+          >
+            <Layout.Section>
+              <Card sectioned>
+                <SkeletonBodyText />
+              </Card>
+            </Layout.Section>
+          </Layout.AnnotatedSection>
+        </SkeletonPage>
+      </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=title-template-of-the-app"
+        >
+          Title Template
+        </Link>
+      </FooterHelp>
+    </>
+  ) : (
+    <>
+      <Card
+        title="Title Template"
+        sectioned
+        actions={[
+          {
+            content: <Button primary>Save</Button>,
+            onAction: saveFormdata,
+            loading: saveBtnLoader,
+          },
+        ]}
+        // primaryFooterAction={{
+        //   content: "Save",
+        //   onAction: saveFormdata,
+        //   loading: saveBtnLoader,
+        // }}
+      >
+        <Banner status="info">
+          <p>
+            Title template helps you map desired Shopify attributes to Title,
+            sub title & description attribute of eBay. You can even pass
+            combination of Shopify attributes and custom values to the
+            aforementioned eBay attributes.
+          </p>
+        </Banner>
+        <Card.Section>
+          <Layout>
+            <Layout.AnnotatedSection
+              id="templateName"
+              title="Template name"
+              // description="Enter a unique template name"
+              description="Define name as it will be used to identify template in other sections of the app like product's profile."
+            >
+              <Card sectioned>
+                <TextField
+                  value={formData.name}
+                  onChange={(e) => changeHandler(e, "name")}
+                  error={errors.name}
+                />
+              </Card>
+            </Layout.AnnotatedSection>
+            <Layout.AnnotatedSection
+              id="title"
+              title="Title"
+              description="Map Title to Shopify attributes (title, description, price, vendor, products type, tags) and can set custom values ahead of the Shopify title."
+            >
+              <Card sectioned>
+                <FormLayout>
                   <Select
-                    label="Mapping options for subtitle field"
                     options={AttributeMapoptions}
-                    value={formData["subtitle"]["selected"]}
-                    onChange={(e) => changeHandler(e, "subtitle", "selected")}
+                    label="Mapping options for title field"
+                    value={formData["title"]["selected"]}
+                    onChange={(e) => changeHandler(e, "title", "selected")}
                   />
-                )}
-                {formData["set_subtitle"] &&
-                  formData["subtitle"]["selected"] === "default" && (
+                  <Checkbox
+                    label="Trim Title"
+                    checked={formData["title"]["trim_title"]}
+                    onChange={(e) => changeHandler(e, "title", "trim_title")}
+                    helpText="*Enable the option if you want to trim the title if greater than 80 characters.This might make your title absurd so make sure accordingly."
+                  />
+                  {formData["title"]["selected"] === "default" && (
                     <Stack vertical={false}>
                       <Stack.Item>
                         <Select
                           label="Choose to add attribute"
                           options={defaultAttributeoptions}
-                          value={default_settings["subtitle"]}
-                          onChange={(e) => defaultChangeHandler(e, "subtitle")}
+                          value={default_settings["title"]}
+                          onChange={(e) => defaultChangeHandler(e, "title")}
                           placeholder="Please Select..."
                         />
                       </Stack.Item>
                       <Stack.Item fill>
                         <TextField
                           label="Value"
-                          value={
-                            formData["subtitle"]["default_setting"]["value"]
-                          }
+                          value={formData["title"]["default_setting"]["value"]}
                           onChange={(e) => {
+                            // changeHandler(e, "title", "default_setting", "value");
                             let temp = { ...formData };
                             temp["title"]["default_setting"]["value"] = e;
                             setFormData(temp);
@@ -380,68 +332,149 @@ const TitleTemplatePolaris = (props) => {
                       </Stack.Item>
                     </Stack>
                   )}
-              </FormLayout>
-            </Card>
-          </Layout.AnnotatedSection>
-          <Layout.AnnotatedSection
-            id="Description"
-            title="Description"
-            description="Map Description for eBay with the Shopify attributes (title, description, price, vendor, products type, tags). Select Set Custom Values option to insert the customize description or the  HTML code for the description."
-          >
-            <Card sectioned>
-              <FormLayout>
-                <Select
-                  label="Mapping options for description field"
-                  options={AttributeMapoptions}
-                  value={formData["description"]["selected"]}
-                  onChange={(e) => changeHandler(e, "description", "selected")}
-                />
-                {formData["description"]["selected"] === "default" && (
-                  <Stack vertical={false}>
-                    <Stack.Item>
-                      <Select
-                        label="Choose to add attribute"
-                        options={defaultAttributeoptions}
-                        value={default_settings["description"]}
-                        onChange={(e) => defaultChangeHandler(e, "description")}
-                        placeholder="Please Select..."
-                      />
-                    </Stack.Item>
-                    <Stack.Item fill>
-                      <FormLayout>
-                        <FormLayout.Group condensed>
+                </FormLayout>
+              </Card>
+            </Layout.AnnotatedSection>
+            <Layout.AnnotatedSection
+              id="setSubtitle"
+              title="Set Subtitle"
+              // description="Facilitate you to add a sub-title for the products on eBay."
+              description="Subtitle to use in addition to the title. Provides more keywords when buyers search in titles and descriptions. You cannot use HTML in the Subtitle. eBay will charge extra amount for adding Subtitle in product details."
+            >
+              <Card sectioned>
+                <FormLayout>
+                  <ButtonGroup segmented>
+                    <Button
+                      primary={formData.set_subtitle}
+                      pressed={formData.set_subtitle}
+                      onClick={(e) => changeHandler(true, "set_subtitle")}
+                    >
+                      Yes
+                    </Button>
+                    <Button
+                      primary={!formData.set_subtitle}
+                      pressed={!formData.set_subtitle}
+                      onClick={(e) => changeHandler(false, "set_subtitle")}
+                    >
+                      No
+                    </Button>
+                  </ButtonGroup>
+                  {formData["set_subtitle"] && (
+                    <Select
+                      label="Mapping options for subtitle field"
+                      options={AttributeMapoptions}
+                      value={formData["subtitle"]["selected"]}
+                      onChange={(e) => changeHandler(e, "subtitle", "selected")}
+                    />
+                  )}
+                  {formData["set_subtitle"] &&
+                    formData["subtitle"]["selected"] === "default" && (
+                      <Stack vertical={false}>
+                        <Stack.Item>
+                          <Select
+                            label="Choose to add attribute"
+                            options={defaultAttributeoptions}
+                            value={default_settings["subtitle"]}
+                            onChange={(e) =>
+                              defaultChangeHandler(e, "subtitle")
+                            }
+                            placeholder="Please Select..."
+                          />
+                        </Stack.Item>
+                        <Stack.Item fill>
                           <TextField
                             label="Value"
-                            multiline={10}
-                            showCharacterCount
                             value={
-                              formData["description"]["default_setting"][
-                                "value"
-                              ]
+                              formData["subtitle"]["default_setting"]["value"]
                             }
                             onChange={(e) => {
                               let temp = { ...formData };
-                              temp["description"]["default_setting"]["value"] =
-                                e;
+                              temp["title"]["default_setting"]["value"] = e;
                               setFormData(temp);
                             }}
                           />
-                          {ckeditor(
-                            formData["description"]["default_setting"]["value"],
-                            () => {},
-                            true
-                          )}
-                        </FormLayout.Group>
-                      </FormLayout>
-                    </Stack.Item>
-                  </Stack>
-                )}
-              </FormLayout>
-            </Card>
-          </Layout.AnnotatedSection>
-        </Layout>
-      </Card.Section>
-    </Card>
+                        </Stack.Item>
+                      </Stack>
+                    )}
+                </FormLayout>
+              </Card>
+            </Layout.AnnotatedSection>
+            <Layout.AnnotatedSection
+              id="Description"
+              title="Description"
+              description="Map Description for eBay with the Shopify attributes (title, description, price, vendor, products type, tags). Select Set Custom Values option to insert the customize description or the  HTML code for the description."
+            >
+              <Card sectioned>
+                <FormLayout>
+                  <Select
+                    label="Mapping options for description field"
+                    options={AttributeMapoptions}
+                    value={formData["description"]["selected"]}
+                    onChange={(e) =>
+                      changeHandler(e, "description", "selected")
+                    }
+                  />
+                  {formData["description"]["selected"] === "default" && (
+                    <Stack vertical={false}>
+                      <Stack.Item>
+                        <Select
+                          label="Choose to add attribute"
+                          options={defaultAttributeoptions}
+                          value={default_settings["description"]}
+                          onChange={(e) =>
+                            defaultChangeHandler(e, "description")
+                          }
+                          placeholder="Please Select..."
+                        />
+                      </Stack.Item>
+                      <Stack.Item fill>
+                        <FormLayout>
+                          <FormLayout.Group condensed>
+                            <TextField
+                              label="Value"
+                              multiline={10}
+                              showCharacterCount
+                              value={
+                                formData["description"]["default_setting"][
+                                  "value"
+                                ]
+                              }
+                              onChange={(e) => {
+                                let temp = { ...formData };
+                                temp["description"]["default_setting"][
+                                  "value"
+                                ] = e;
+                                setFormData(temp);
+                              }}
+                            />
+                            {ckeditor(
+                              formData["description"]["default_setting"][
+                                "value"
+                              ],
+                              () => {},
+                              true
+                            )}
+                          </FormLayout.Group>
+                        </FormLayout>
+                      </Stack.Item>
+                    </Stack>
+                  )}
+                </FormLayout>
+              </Card>
+            </Layout.AnnotatedSection>
+          </Layout>
+        </Card.Section>
+      </Card>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=title-template-of-the-app"
+        >
+          Title Template
+        </Link>
+      </FooterHelp>
+    </>
   );
 };
 

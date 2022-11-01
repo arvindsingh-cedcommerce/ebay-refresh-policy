@@ -70,3 +70,28 @@ export const gifTemplates = [
     url: "https://integration.cedcommerce.com/assets/gifs/priceTemplate.gif",
   },
 ];
+
+export const manageProductsGifs = [
+  {
+    title: "How to upload products in bulk?",
+    url: "https://integration.cedcommerce.com/assets/gifs/uploadProductsBulk.gif",
+  },
+  {
+    title: "How to select and upload products?",
+    url: "https://integration.cedcommerce.com/assets/gifs/uploadProducts.gif",
+  },
+];
+
+export const profileGifs = [
+  {
+    title: "How to create profile?",
+    url: "https://integration.cedcommerce.com/assets/gifs/profile.gif",
+  },
+];
+
+export const ebayAccountGifs = [
+  {
+    title: "How to connect eBay account?",
+    url: "https://integration.cedcommerce.com/assets/gifs/connectEbayAccount.gif",
+  },
+];

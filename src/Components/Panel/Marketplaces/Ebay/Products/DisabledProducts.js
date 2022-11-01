@@ -11,6 +11,8 @@ import {
   Modal,
   Banner,
   Badge,
+  FooterHelp,
+  Link,
 } from "@shopify/polaris";
 import { Alert, Col, Image, PageHeader, Row } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
@@ -238,39 +240,47 @@ const DisabledProducts = (props) => {
     product_type: [],
     brand: [],
   });
-  const [prevPage,setPrevPage]=useState(1);
- 
+  const [prevPage, setPrevPage] = useState(1);
+
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
   const reduxState = useSelector(
     (state) => state.disabledProductFilterReducer.reduxFilters
   );
-  const checkValueHandler=(arr,filterName)=>{
-    let countryValue="";
-    Object.keys(arr).filter((item,index)=>{
+  const checkValueHandler = (arr, filterName) => {
+    let countryValue = "";
+    Object.keys(arr).filter((item, index) => {
       let indexOfFirstOpeningBracket = item.indexOf("[");
       let indexOfFirstClosingBracket = item.indexOf("]");
-      const mainItem=item.substring(
+      const mainItem = item.substring(
         indexOfFirstOpeningBracket + 1,
         indexOfFirstClosingBracket
       );
-      if(mainItem===filterName)
-      {
-          countryValue= item;
-          return ;
+      if (mainItem === filterName) {
+        countryValue = item;
+        return;
       }
-    })
+    });
     return countryValue;
-  }
-  const initialCountryValue=reduxState[checkValueHandler(reduxState,"country")];
-  const initialStatusValue=reduxState[checkValueHandler(reduxState,"status")];
-  const initialProfileValue=reduxState[checkValueHandler(reduxState,"profile_name")];
-  const moreFilters=["listing_id","product_type","brand","tags","price","quantity"];
-  let initialMoreFiltersObj={};
-  moreFilters.map((moreFilter,index)=>{
-    let filterItem=checkValueHandler(reduxState,moreFilter);
-    if(filterItem)
-    initialMoreFiltersObj[filterItem]=reduxState[filterItem];
+  };
+  const initialCountryValue =
+    reduxState[checkValueHandler(reduxState, "country")];
+  const initialStatusValue =
+    reduxState[checkValueHandler(reduxState, "status")];
+  const initialProfileValue =
+    reduxState[checkValueHandler(reduxState, "profile_name")];
+  const moreFilters = [
+    "listing_id",
+    "product_type",
+    "brand",
+    "tags",
+    "price",
+    "quantity",
+  ];
+  let initialMoreFiltersObj = {};
+  moreFilters.map((moreFilter, index) => {
+    let filterItem = checkValueHandler(reduxState, moreFilter);
+    if (filterItem) initialMoreFiltersObj[filterItem] = reduxState[filterItem];
   });
 
   function trimTitle(title = "") {
@@ -285,14 +295,14 @@ const DisabledProducts = (props) => {
     actionPayload: {},
     api: "",
   });
-   // status popup
-   const [errorPopup, setErrorPopup] = useState({
+  // status popup
+  const [errorPopup, setErrorPopup] = useState({
     active: false,
     content: [],
   });
   const [btnLoader, setBtnLoader] = useState(false);
 
-  const hitGetProductsAPI = async (activePageNumber,activePageSize) => {
+  const hitGetProductsAPI = async (activePageNumber, activePageSize) => {
     setGridLoader(true);
     let filterPostData = {};
     for (const key in filtersToPass) {
@@ -303,11 +313,10 @@ const DisabledProducts = (props) => {
               connectedAccount["value"] === filtersToPass["filter[country][1]"]
           );
           filterPostData["filter[shop_id][1]"] = matchedAccoount?.["shopId"];
+        } else {
+          filterPostData[key] = filtersToPass[key];
         }
-      else {
-        filterPostData[key] = filtersToPass[key];
       }
-    }
     }
     let postData = {
       productOnly: true,
@@ -361,7 +370,7 @@ const DisabledProducts = (props) => {
             } = row;
             let tempObject = {};
             tempObject["source_product_id"] = source_product_id;
-            tempObject["key"] = (activePageNumber-1)*pageSize+index;
+            tempObject["key"] = (activePageNumber - 1) * pageSize + index;
             tempObject["image"] = (
               <center>
                 {main_image ? (
@@ -571,19 +580,17 @@ const DisabledProducts = (props) => {
       );
     }
   };
-  
+
   const redirect = (url) => {
     props.history.push(url);
   };
 
   useEffect(() => {
-    if (filtersToPass && (activePage>1 && activePage!==prevPage)) {
+    if (filtersToPass && activePage > 1 && activePage !== prevPage) {
       hitGetProductsAPI(1, pageSize);
       setActivePage(1);
-    }
-    else if(filtersToPass)
-    {
-      hitGetProductsAPI(activePage,pageSize);
+    } else if (filtersToPass) {
+      hitGetProductsAPI(activePage, pageSize);
     }
   }, [filtersToPass]);
 
@@ -599,13 +606,17 @@ const DisabledProducts = (props) => {
       titleFilterObj[type] = value;
       // setFiltersToPass({ ...filtersToPass, ...titleFilterObj });
       if (titleFilterObj[type] !== "") {
-        setFiltersToPass({ ...filtersToPass, ...titleFilterObj,filtersPresent:true });
+        setFiltersToPass({
+          ...filtersToPass,
+          ...titleFilterObj,
+          filtersPresent: true,
+        });
       } else if (filtersToPass.hasOwnProperty("filter[title][3]")) {
-        let temp = { ...filtersToPass,filtersPresent:true };
+        let temp = { ...filtersToPass, filtersPresent: true };
         delete temp["filter[title][3]"];
         setFiltersToPass(temp);
       } else if (filtersToPass.hasOwnProperty("filter[sku][3]")) {
-        let temp = { ...filtersToPass,filtersPresent:true };
+        let temp = { ...filtersToPass, filtersPresent: true };
         delete temp["filter[sku][3]"];
         setFiltersToPass(temp);
       }
@@ -716,7 +727,7 @@ const DisabledProducts = (props) => {
     if (Object.keys(temp).length > 0) {
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
     } else {
-      setFiltersToPass({filtersPresent:false});
+      setFiltersToPass({ filtersPresent: false });
       //notify.warn("No filters applied");
     }
     // setFiltersToPass({ ...temp });
@@ -731,10 +742,17 @@ const DisabledProducts = (props) => {
   };
 
   const renderOtherFilters = () => {
-    const initialCountryObj=connectedAccountsArray?.filter((connectedAccount,index)=> connectedAccount.value===initialCountryValue);
-    const initialStatusObj=status?.filter((statusItem,index)=> statusItem.value===initialStatusValue);
-    const initialProfileObj=profileList?.filter((profileItem,index)=> profileItem.value===initialProfileValue);
-   
+    const initialCountryObj = connectedAccountsArray?.filter(
+      (connectedAccount, index) =>
+        connectedAccount.value === initialCountryValue
+    );
+    const initialStatusObj = status?.filter(
+      (statusItem, index) => statusItem.value === initialStatusValue
+    );
+    const initialProfileObj = profileList?.filter(
+      (profileItem, index) => profileItem.value === initialProfileValue
+    );
+
     return (
       <Stack wrap>
         <ButtonGroup segmented>
@@ -747,7 +765,11 @@ const DisabledProducts = (props) => {
               <ChoiceList
                 // allowMultiple
                 choices={connectedAccountsArray}
-                selected={initialCountryObj[0]?[initialCountryObj[0].value]:selected["country"]}
+                selected={
+                  initialCountryObj[0]
+                    ? [initialCountryObj[0].value]
+                    : selected["country"]
+                }
                 onChange={(value) => handleChange(value, "country")}
               />
             </div>
@@ -760,27 +782,38 @@ const DisabledProducts = (props) => {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={status}
-                selected={initialStatusObj[0]?[initialStatusObj[0].value]:selected["status"]}
+                selected={
+                  initialStatusObj[0]
+                    ? [initialStatusObj[0].value]
+                    : selected["status"]
+                }
                 onChange={(value) => handleChange(value, "status")}
               />
             </div>
           </Popover>
-          {window.innerWidth>360?
-          <Popover
-            active={popOverStatus["profile"]}
-            activator={profileActivator}
-            onClose={() => popOverHandler("profile")}
-          >
-            <div style={{ margin: "10px" }}>
-              <ChoiceList
-                choices={profileList}
-                selected={initialProfileObj[0]? [initialProfileObj[0].value]:selected["profile_name"]}
-                onChange={(value) => handleChange(value, "profile_name")}
-              />
-            </div>
-          </Popover>:<></>}
+          {window.innerWidth > 360 ? (
+            <Popover
+              active={popOverStatus["profile"]}
+              activator={profileActivator}
+              onClose={() => popOverHandler("profile")}
+            >
+              <div style={{ margin: "10px" }}>
+                <ChoiceList
+                  choices={profileList}
+                  selected={
+                    initialProfileObj[0]
+                      ? [initialProfileObj[0].value]
+                      : selected["profile_name"]
+                  }
+                  onChange={(value) => handleChange(value, "profile_name")}
+                />
+              </div>
+            </Popover>
+          ) : (
+            <></>
+          )}
         </ButtonGroup>
-        {window.innerWidth<=360?
+        {window.innerWidth <= 360 ? (
           <Popover
             active={popOverStatus["profile"]}
             activator={profileActivator}
@@ -789,11 +822,18 @@ const DisabledProducts = (props) => {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={profileList}
-                selected={initialProfileObj[0]? [initialProfileObj[0].value]:selected["profile_name"]}
+                selected={
+                  initialProfileObj[0]
+                    ? [initialProfileObj[0].value]
+                    : selected["profile_name"]
+                }
                 onChange={(value) => handleChange(value, "profile_name")}
               />
             </div>
-          </Popover>:<></>}
+          </Popover>
+        ) : (
+          <></>
+        )}
         <Button
           icon={<Icon source={FilterMajorMonotone} color="base" />}
           onClick={() => {
@@ -867,8 +907,11 @@ const DisabledProducts = (props) => {
     }
   };
   const getAccounts = async () => {
-    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
-      await getConnectedAccounts();
+    let {
+      success: accountConnectedSuccess,
+      data: connectedAccountData,
+      message,
+    } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
         (account) => account["marketplace"] === "ebay"
@@ -955,70 +998,67 @@ const DisabledProducts = (props) => {
     }
     return value;
   };
-  const formatFilterValue=(filterName,filterValue)=>{
-  
-    if(filterName==="status")
-    {
-         const statusItem=status?.filter(item=>item.value===filterValue);
-         console.log("filter name",statusItem);
-         return statusItem[0]?.label;
-    }
-    else
-    {
+  const formatFilterValue = (filterName, filterValue) => {
+    if (filterName === "status") {
+      const statusItem = status?.filter((item) => item.value === filterValue);
+      console.log("filter name", statusItem);
+      return statusItem[0]?.label;
+    } else {
       return filterValue;
     }
-   }
+  };
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
       if (
         !filter.includes("filtersPresent") ||
         (filter.includes("filtersPresent") && filter["filtersPresent"])
       ) {
-      let indexOfFirstOpeningBracket = filter.indexOf("[");
-      let indexOfFirstClosingBracket = filter.indexOf("]");
-      let indexOfSecondOpeningBracket = filter.indexOf(
-        "[",
-        indexOfFirstOpeningBracket + 1
-      );
-      let indexOfSecondClosingBracket = filter.indexOf(
-        "]",
-        indexOfFirstClosingBracket + 1
-      );
-      let fieldValue = filter.substring(
-        indexOfFirstOpeningBracket + 1,
-        indexOfFirstClosingBracket
-      );
-      let operatorValue = filter.substring(
-        indexOfSecondOpeningBracket + 1,
-        indexOfSecondClosingBracket
-      );
-      return (
-        <Tag
-          key={filter}
-          onRemove={() => {
-            const temp = Object.keys(filtersToPass).reduce((object, key) => {
-              if (key !== filter) {
-                object[key] = filtersToPass[key];
-              }
-              return object;
-            }, {});
-            let tempObj = { ...filters };
-            Object.keys(tempObj).forEach((object) => {
-              if (object === fieldValue) {
-                tempObj[object]["value"] = "";
-              }
-            });
-            setFilterTitleORsku("");
-            setFilters(tempObj);
-            setFiltersToPass(temp);
-            setSelected({ ...selected, [fieldValue]: [] });
-          }}
-        >
-          {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-          {formatFilterValue(fieldValue,filtersToPass[filter])}
-        </Tag>
-      );
-    }});
+        let indexOfFirstOpeningBracket = filter.indexOf("[");
+        let indexOfFirstClosingBracket = filter.indexOf("]");
+        let indexOfSecondOpeningBracket = filter.indexOf(
+          "[",
+          indexOfFirstOpeningBracket + 1
+        );
+        let indexOfSecondClosingBracket = filter.indexOf(
+          "]",
+          indexOfFirstClosingBracket + 1
+        );
+        let fieldValue = filter.substring(
+          indexOfFirstOpeningBracket + 1,
+          indexOfFirstClosingBracket
+        );
+        let operatorValue = filter.substring(
+          indexOfSecondOpeningBracket + 1,
+          indexOfSecondClosingBracket
+        );
+        return (
+          <Tag
+            key={filter}
+            onRemove={() => {
+              const temp = Object.keys(filtersToPass).reduce((object, key) => {
+                if (key !== filter) {
+                  object[key] = filtersToPass[key];
+                }
+                return object;
+              }, {});
+              let tempObj = { ...filters };
+              Object.keys(tempObj).forEach((object) => {
+                if (object === fieldValue) {
+                  tempObj[object]["value"] = "";
+                }
+              });
+              setFilterTitleORsku("");
+              setFilters(tempObj);
+              setFiltersToPass(temp);
+              setSelected({ ...selected, [fieldValue]: [] });
+            }}
+          >
+            {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
+            {formatFilterValue(fieldValue, filtersToPass[filter])}
+          </Tag>
+        );
+      }
+    });
   };
   useEffect(() => {
     if (filtersToPass) {
@@ -1182,6 +1222,15 @@ const DisabledProducts = (props) => {
           </Stack>
         </Modal.Section>
       </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=handling-disabled-products"
+        >
+          Disabled Products
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

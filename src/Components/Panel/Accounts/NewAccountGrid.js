@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   Col,
+  Divider,
   Image,
   PageHeader,
   Radio,
@@ -34,10 +35,14 @@ import {
   Select as ShopifySelect,
   SkeletonBodyText,
   Tooltip,
+  FooterHelp,
+  Link,
+  Badge,
 } from "@shopify/polaris";
 import { getDashboardData } from "../../../APIrequests/DashboardAPI";
 import { dashboardAnalyticsURL, ebayDetails } from "../../../URLs/DashboardURL";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
+import { ebayAccountGifs } from "../Marketplaces/Ebay/Help/gifHelper";
 
 export const getCountryName = (site_id) => {
   let countryName = json.flag_country.filter(
@@ -117,6 +122,14 @@ const NewAccount = (props) => {
   const [reconnectAccountLoader, setReconnectAccountLoader] = useState(false);
 
   const [getDetailsBtnLoader, setGetDetailsBtnLoader] = useState(false);
+  // modal video
+  const [isOpenModalVideo, setIsOpenModalVideo] = useState(false);
+  // gif modal
+  const [isOpenGifModal, setIsOpenGifModal] = useState({
+    active: false,
+    title: "",
+    url: "",
+  });
 
   const hitAPIFunc = async (record) => {
     let { success, message } = await updateactiveInactiveAccounts({
@@ -330,6 +343,14 @@ const NewAccount = (props) => {
       className="site-page-header-responsive"
       title={"eBay Accounts"}
       ghost={true}
+      subTitle={
+        <div
+          onClick={() => setIsOpenModalVideo(true)}
+          style={{ cursor: "pointer" }}
+        >
+          <Badge status="info">Need Help?</Badge>
+        </div>
+      }
       extra={[
         <ShopifyButton
           key="1"
@@ -593,6 +614,80 @@ const NewAccount = (props) => {
         }}
         handleCancel={() => setReconnectModalStatus(false)}
       /> */}
+      <Modal
+        open={isOpenModalVideo}
+        onClose={() => setIsOpenModalVideo(false)}
+        title="How Can I Help?"
+      >
+        <Modal.Section>
+          {ebayAccountGifs.map((gif, index) => {
+            return (
+              <>
+                <Stack distribution="equalSpacing">
+                  <>{gif.title}</>
+                  <ShopifyButton
+                    plain
+                    onClick={() => {
+                      setIsOpenModalVideo(false);
+                      setIsOpenGifModal({
+                        active: true,
+                        title: gif.title,
+                        url: gif.url,
+                      });
+                    }}
+                  >
+                    Watch
+                  </ShopifyButton>
+                </Stack>
+                {index == ebayAccountGifs.length - 1 ? <></> : <Divider />}
+              </>
+            );
+          })}
+          <Divider />
+          <center>
+            <ShopifyButton primary onClick={() => setIsOpenModalVideo(false)}>
+              Close
+            </ShopifyButton>
+          </center>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={isOpenGifModal.active}
+        onClose={() =>
+          setIsOpenGifModal({
+            active: false,
+            title: "",
+          })
+        }
+        title={isOpenGifModal.title}
+      >
+        <Modal.Section>
+          <img src={isOpenGifModal.url} style={{ width: "100%" }} />
+          <Divider />
+          <center>
+            <ShopifyButton
+              primary
+              onClick={() =>
+                setIsOpenGifModal({
+                  active: false,
+                  title: "",
+                })
+              }
+            >
+              Close
+            </ShopifyButton>
+          </center>
+        </Modal.Section>
+      </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-ebay-accounts-on-app"
+        >
+          eBay Accounts
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

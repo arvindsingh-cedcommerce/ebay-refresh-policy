@@ -48,6 +48,7 @@ import {
   SkeletonDisplayText,
   List,
   Banner,
+  FooterHelp,
 } from "@shopify/polaris";
 import { AlertMinor } from "@shopify/polaris-icons";
 import { getCountyrName } from "../Template/Components/TemplateGridComponent";
@@ -249,7 +250,7 @@ const ProductViewPolarisNew = (props) => {
 
   useEffect(() => {
     // console.log('itemUrls', itemUrls);
-  }, [itemUrls])
+  }, [itemUrls]);
 
   const extractEditedDataForVariationProduct = (forvariationproduct, type) => {
     let tempArr = [];
@@ -493,11 +494,11 @@ const ProductViewPolarisNew = (props) => {
     let variantCount = variantProductsData.length;
     let temp = [...variantProductsData];
     temp.forEach((curr) => curr.isExclude === true && count++);
-    let flag = false
-    if(count+1 === variantCount) {
-      flag = true
-    } else flag = false
-    return flag
+    let flag = false;
+    if (count + 1 === variantCount) {
+      flag = true;
+    } else flag = false;
+    return flag;
   };
 
   const extractDataFromAPI = (productData, rows, ebay_product_response) => {
@@ -656,19 +657,24 @@ const ProductViewPolarisNew = (props) => {
         return tempObj;
       });
       let includeIsExcludeKey = variantProductsData.map((e, index) => {
-        if(e.hasOwnProperty('isExclude')) {
-          return {...e, isExcludeDisabled: false}
+        if (e.hasOwnProperty("isExclude")) {
+          return { ...e, isExcludeDisabled: false };
         } else {
-          let flag = getCheckedAtleastOnce(variantProductsData, index)
-          return {...e, isExclude: false, isExcludeDisabled: flag}
+          let flag = getCheckedAtleastOnce(variantProductsData, index);
+          return { ...e, isExclude: false, isExcludeDisabled: flag };
         }
-      })
-      let tempUtkEditedVariantProductsData = getFillDataForEditedContent(tempUtkEditedData, tempVariantProductsData)
+      });
+      let tempUtkEditedVariantProductsData = getFillDataForEditedContent(
+        tempUtkEditedData,
+        tempVariantProductsData
+      );
       // setVariants(variantProductsData);
-      setVariants(includeIsExcludeKey)
-      if(tempUtkEditedVariantProductsData) setCustomVariants(tempUtkEditedVariantProductsData)
+      setVariants(includeIsExcludeKey);
+      if (tempUtkEditedVariantProductsData)
+        setCustomVariants(tempUtkEditedVariantProductsData);
       else setCustomVariants(tempVariantProductsData);
-      if(tempUtkEditedVariantProductsData) setCustomVariantData(tempUtkEditedVariantProductsData)
+      if (tempUtkEditedVariantProductsData)
+        setCustomVariantData(tempUtkEditedVariantProductsData);
       else setCustomVariantData(tempVariantProductsData);
       // setCustomVariants(tempVariantProductsData);
       // setCustomVariants(tempUtkEditedVariantProductsData)
@@ -997,7 +1003,6 @@ const ProductViewPolarisNew = (props) => {
     return postData;
   };
 
-
   const differenceArrayDeepNew = (data) => {
     // console.log(data);
     let parsedDataArray = data.map((variantData) => {
@@ -1228,7 +1233,7 @@ const ProductViewPolarisNew = (props) => {
     });
     return statusStructures;
   };
-  
+
   const menu = (
     <Menu>
       <Menu.Item
@@ -1269,43 +1274,50 @@ const ProductViewPolarisNew = (props) => {
       >
         <SyncOutlined /> Sync from Shopify
       </Menu.Item>
-      {!getItemURLs().every(item => item == false)?
-      <Menu.Item
-        key="end"
-        onClick={() => {
-          let postData = {
-            product_id: [apiCallMainProduct["source_product_id"]],
-          };
-          setModal({
-            ...modal,
-            active: true,
-            content: "End",
-            actionName: postActionOnProductById,
-            actionPayload: postData,
-            api: endProductByIdURL,
-          });
-        }}
-      >
-        <DeleteOutlined /> End
-      </Menu.Item>:<></>}
-      {!getItemURLs().every(item => item == false)?<Menu.Item
-        key="Relist Item"
-        onClick={() => {
-          let postData = {
-            product_id: [apiCallMainProduct["source_product_id"]],
-          };
-          setModal({
-            ...modal,
-            active: true,
-            content: "Relist Item",
-            actionName: postActionOnProductById,
-            actionPayload: postData,
-            api: relistItemURL,
-          });
-        }}
-      >
-        <RollbackOutlined /> Relist Item
-      </Menu.Item>:<></>}
+      {!getItemURLs().every((item) => item == false) ? (
+        <Menu.Item
+          key="end"
+          onClick={() => {
+            let postData = {
+              product_id: [apiCallMainProduct["source_product_id"]],
+            };
+            setModal({
+              ...modal,
+              active: true,
+              content: "End",
+              actionName: postActionOnProductById,
+              actionPayload: postData,
+              api: endProductByIdURL,
+            });
+          }}
+        >
+          <DeleteOutlined /> End
+        </Menu.Item>
+      ) : (
+        <></>
+      )}
+      {!getItemURLs().every((item) => item == false) ? (
+        <Menu.Item
+          key="Relist Item"
+          onClick={() => {
+            let postData = {
+              product_id: [apiCallMainProduct["source_product_id"]],
+            };
+            setModal({
+              ...modal,
+              active: true,
+              content: "Relist Item",
+              actionName: postActionOnProductById,
+              actionPayload: postData,
+              api: relistItemURL,
+            });
+          }}
+        >
+          <RollbackOutlined /> Relist Item
+        </Menu.Item>
+      ) : (
+        <></>
+      )}
     </Menu>
   );
   return showSkeleton ? (
@@ -1371,7 +1383,7 @@ const ProductViewPolarisNew = (props) => {
           />
           <Stack vertical spacing="extraTight">
             <>{mainProduct["title"]}</>
-            {!getItemURLs().every(item => item == false) && itemUrls.length && (
+            {!getItemURLs().every((item) => item == false) && itemUrls.length && (
               <Popover
                 placement="right"
                 content={getItemURLs()}
@@ -1521,6 +1533,15 @@ const ProductViewPolarisNew = (props) => {
           <Banner status="critical">{errorPopup.content}</Banner>
         </Modal.Section>
       </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=editing-product-details-in-application"
+        >
+          Edit Product
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };

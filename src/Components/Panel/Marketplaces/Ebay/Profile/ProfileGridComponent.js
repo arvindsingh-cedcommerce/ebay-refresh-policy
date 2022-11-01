@@ -12,11 +12,16 @@ import {
   Banner,
   ButtonGroup,
   Button,
+  Link,
+  FooterHelp,
+  Badge,
+  Modal,
 } from "@shopify/polaris";
 import { FilterMajorMonotone } from "@shopify/polaris-icons";
 import {
   Alert,
   Col,
+  Divider,
   Image,
   Input,
   List,
@@ -37,6 +42,7 @@ import { getProfilesURLFilter } from "../../../../../URLs/ProfilesURL";
 import BasicPaginationComponent from "../../../../AntDesignComponents/BasicPaginationComponent";
 import NestedTableComponent from "../../../../AntDesignComponents/NestedTableComponent";
 import PaginationComponent from "../../../../AntDesignComponents/PaginationComponent";
+import { profileGifs } from "../Help/gifHelper";
 import { mappingShopIDwithCountry } from "../Orders/SampleOrderData";
 import NewFilterComponentSimilarPolaris from "../Products/NewFilterComponentSimilarPolaris";
 import {
@@ -187,7 +193,7 @@ const ProfileGridComponent = (props) => {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-   const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
   const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([
     { label: " 5 / page ", value: 5 },
     { label: " 10 / page ", value: 10 },
@@ -200,6 +206,15 @@ const ProfileGridComponent = (props) => {
 
   const [prevPage, setPrevPage] = useState(1);
   const [totalShippingPolicyCount, setTotalShippingPolicyCount] = useState(0);
+
+  // modal video
+  const [isOpenModalVideo, setIsOpenModalVideo] = useState(false);
+  // gif modal
+  const [isOpenGifModal, setIsOpenGifModal] = useState({
+    active: false,
+    title: "",
+    url: "",
+  });
 
   const handleSelectChange = useCallback((value) => {
     setPageSize(value);
@@ -265,8 +280,11 @@ const ProfileGridComponent = (props) => {
     );
   };
   const getAccounts = async () => {
-    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
-      await getConnectedAccounts();
+    let {
+      success: accountConnectedSuccess,
+      data: connectedAccountData,
+      message,
+    } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
         (account) => account["marketplace"] === "ebay"
@@ -761,6 +779,14 @@ const ProfileGridComponent = (props) => {
         //   </TextStyle>
         // </Tooltip>
       }
+      subTitle={
+        <div
+          onClick={() => setIsOpenModalVideo(true)}
+          style={{ cursor: "pointer" }}
+        >
+          <Badge status="info">Need Help?</Badge>
+        </div>
+      }
       ghost={true}
       extra={[
         <ShopifyButton
@@ -803,114 +829,112 @@ const ProfileGridComponent = (props) => {
             </Stack>
           </div>
           <Row justify="space-between" gutter={[8, 8]}>
-{ window.innerWidth>=768?    <>
-            <Col     xs={24}
-              sm={24}
-              md={6}
-              lg={6}
-              xl={6}
-              xxl={6}>
-              <p style={{ paddingTop: 5, fontWeight: "bold" }}> 
-            {/* {showingGridRange(paginationProps, "Profile(s)")} */}
-             </p>
-            </Col>
+            {window.innerWidth >= 768 ? (
+              <>
+                <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
+                  <p style={{ paddingTop: 5, fontWeight: "bold" }}>
+                    {/* {showingGridRange(paginationProps, "Profile(s)")} */}
+                  </p>
+                </Col>
 
-            <PaginationComponent
-              totalCount={totalShippingPolicyCount}
-              hitGetProductsAPI={getAllProfiles}
-              pageSizeOptions={pageSizeOptions}
-              activePage={activePage}
-              setActivePage={setActivePage}
-              setPrevPage={setPrevPage}
-              pageSize={pageSize}
-              setPageSize={setPageSize}
-              size={"default"}
-              simple={false}
-            />
-            </>:
-            <>
-            <Col
-              span={6}
-              xs={8}
-              sm={8}
-              md={10}
-              lg={4}
-              xl={5}
-              xxl={5}
-              style={{ display: "flex", justifyContent: "start" }}
-            >
-              {showTotal(totalShippingPolicyCount, [
-                (activePage - 1) * pageSize + 1,
-                activePage * pageSize,
-              ])}
-            </Col>
-            <Col
-              span={10}
-              xs={16}
-              sm={16}
-              md={14}
-              lg={10}
-              xl={9}
-              xxl={9}
-              style={{ display: "flex", justifyContent: "end" }}
-            >
-              <BasicPaginationComponent
-                totalCount={totalShippingPolicyCount}
-                hitGetProductsAPI={getAllProfiles}
-                responsivePageSizeOptions={responsivePageSizeOptions}
-                activePage={activePage}
-                setActivePage={setActivePage}
-                setPrevPage={setPrevPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                size={"default"}
-                simple={false}
-              />
-            </Col>
-            <Col
-              span={4}
-              xs={12}
-              sm={16}
-              md={16}
-              lg={5}
-              xl={5}
-              xxl={5}
-              style={{ display: "flex", justifyContent: "end" }}
-            >
-              {/* <Select
+                <PaginationComponent
+                  totalCount={totalShippingPolicyCount}
+                  hitGetProductsAPI={getAllProfiles}
+                  pageSizeOptions={pageSizeOptions}
+                  activePage={activePage}
+                  setActivePage={setActivePage}
+                  setPrevPage={setPrevPage}
+                  pageSize={pageSize}
+                  setPageSize={setPageSize}
+                  size={"default"}
+                  simple={false}
+                />
+              </>
+            ) : (
+              <>
+                <Col
+                  span={6}
+                  xs={8}
+                  sm={8}
+                  md={10}
+                  lg={4}
+                  xl={5}
+                  xxl={5}
+                  style={{ display: "flex", justifyContent: "start" }}
+                >
+                  {showTotal(totalShippingPolicyCount, [
+                    (activePage - 1) * pageSize + 1,
+                    activePage * pageSize,
+                  ])}
+                </Col>
+                <Col
+                  span={10}
+                  xs={16}
+                  sm={16}
+                  md={14}
+                  lg={10}
+                  xl={9}
+                  xxl={9}
+                  style={{ display: "flex", justifyContent: "end" }}
+                >
+                  <BasicPaginationComponent
+                    totalCount={totalShippingPolicyCount}
+                    hitGetProductsAPI={getAllProfiles}
+                    responsivePageSizeOptions={responsivePageSizeOptions}
+                    activePage={activePage}
+                    setActivePage={setActivePage}
+                    setPrevPage={setPrevPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                    size={"default"}
+                    simple={false}
+                  />
+                </Col>
+                <Col
+                  span={4}
+                  xs={12}
+                  sm={16}
+                  md={16}
+                  lg={5}
+                  xl={5}
+                  xxl={5}
+                  style={{ display: "flex", justifyContent: "end" }}
+                >
+                  {/* <Select
       label=""
       options={pageSizeOptions}
       onChange={handleSelectChange}
       value={pageSize}
     
     /> */}
-              <Select
-                defaultValue="5 / page"
-                style={{
-                  width: "11rem",
-                }}
-                onChange={handleSelectChange}
-              >
-                {responsivePageSizeOptions.map((pageSizeOption, index) => (
-                  <Option value={Number(pageSizeOption.value)}>
-                    {pageSizeOption.label}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
-            <Col
-              span={5}
-              xs={12}
-              sm={8}
-              md={8}
-              lg={5}
-              xl={5}
-              xxl={5}
-              style={{ display: "flex", justifyContent: "end" }}
-            >
-              <div>Go To {showJumpToPage()} Page</div>
-            </Col>
-            </>}
+                  <Select
+                    defaultValue="5 / page"
+                    style={{
+                      width: "11rem",
+                    }}
+                    onChange={handleSelectChange}
+                  >
+                    {responsivePageSizeOptions.map((pageSizeOption, index) => (
+                      <Option value={Number(pageSizeOption.value)}>
+                        {pageSizeOption.label}
+                      </Option>
+                    ))}
+                  </Select>
+                </Col>
+                <Col
+                  span={5}
+                  xs={12}
+                  sm={8}
+                  md={8}
+                  lg={5}
+                  xl={5}
+                  xxl={5}
+                  style={{ display: "flex", justifyContent: "end" }}
+                >
+                  <div>Go To {showJumpToPage()} Page</div>
+                </Col>
+              </>
+            )}
           </Row>
         </div>
         <NestedTableComponent
@@ -938,6 +962,80 @@ const ProfileGridComponent = (props) => {
         setFilterTitleORsku={setFilterProfileNameORQuery}
         setSelected={setSelected}
       />
+      <Modal
+        open={isOpenModalVideo}
+        onClose={() => setIsOpenModalVideo(false)}
+        title="How Can I Help?"
+      >
+        <Modal.Section>
+          {profileGifs.map((gif, index) => {
+            return (
+              <>
+                <Stack distribution="equalSpacing">
+                  <>{gif.title}</>
+                  <Button
+                    plain
+                    onClick={() => {
+                      setIsOpenModalVideo(false);
+                      setIsOpenGifModal({
+                        active: true,
+                        title: gif.title,
+                        url: gif.url,
+                      });
+                    }}
+                  >
+                    Watch
+                  </Button>
+                </Stack>
+                {index == profileGifs.length - 1 ? <></> : <Divider />}
+              </>
+            );
+          })}
+          <Divider />
+          <center>
+            <Button primary onClick={() => setIsOpenModalVideo(false)}>
+              Close
+            </Button>
+          </center>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={isOpenGifModal.active}
+        onClose={() =>
+          setIsOpenGifModal({
+            active: false,
+            title: "",
+          })
+        }
+        title={isOpenGifModal.title}
+      >
+        <Modal.Section>
+          <img src={isOpenGifModal.url} style={{ width: "100%" }} />
+          <Divider />
+          <center>
+            <Button
+              primary
+              onClick={() =>
+                setIsOpenGifModal({
+                  active: false,
+                  title: "",
+                })
+              }
+            >
+              Close
+            </Button>
+          </center>
+        </Modal.Section>
+      </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=profiling-section-of-the-application"
+        >
+          Profiles
+        </Link>
+      </FooterHelp>
     </PageHeader>
   );
 };
