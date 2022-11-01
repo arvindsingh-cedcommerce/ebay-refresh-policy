@@ -8,6 +8,7 @@ import {
   MobileHamburgerMajor,
   MobileHamburgerMajorMonotone,
   NoteMajorMonotone,
+  PhoneMajorMonotone,
 } from "@shopify/polaris-icons";
 import Marquee from "react-fast-marquee";
 import {
@@ -48,6 +49,7 @@ import {
   ActionList,
   Modal,
   TextContainer,
+  Tooltip,
 } from "@shopify/polaris";
 import {
   CircleCancelMinor,
@@ -604,13 +606,13 @@ const NewPanel = (props) => {
                   ""
                 )}
                 <Stack.Item fill>
-                   {window.innerWidth > 1116 ? (
+                  {window.innerWidth > 1116 ? (
                     (queuedTasks.length > 0 || note) && (
-                      <div
-                        style={{ position:"absolute",left:"30%" }}
-                      >
-                        <TextLoop  springConfig={{ stiffness: 70, damping: 31 }}
-        adjustingSpeed={500}>
+                      <div style={{ position: "absolute", left: "30%" }}>
+                        <TextLoop
+                          springConfig={{ stiffness: 70, damping: 31 }}
+                          adjustingSpeed={500}
+                        >
                           {queuedTasks.map(
                             (task, index) =>
                               task?.message && (
@@ -640,7 +642,8 @@ const NewPanel = (props) => {
 
                 <Modal
                   activator={
-                    window.innerWidth <= 1116 ? (
+                    window.innerWidth <= 1116 &&
+                    (queuedTasks.length > 0 || note) ? (
                       <Stack.Item>
                         <div
                           style={{ margin: "2rem 0" }}
@@ -683,6 +686,66 @@ const NewPanel = (props) => {
                   </Modal.Section>
                 </Modal>
                 <Stack.Item>
+                  {window.innerWidth > 1116 ? (
+                    <div
+                      style={{ paddingTop: "2rem" }}
+                      onClick={(e) => {
+                        window.open(
+                          "https://calendly.com/scale-business-with-cedcommerce/marketplace-integration?utm_campaign=Shopify-eBayI&utm_source=ebay-shopify-integration&month=2021-12",
+                          "_blank"
+                        );
+                        e.preventDefault();
+                      }}
+                      title="Book a Call"
+                    >
+                      {/* <Tooltip content="Book a Call"> */}
+                        <Icon source={PhoneMajorMonotone} color="primary" />
+                      {/* </Tooltip> */}
+                    </div>
+                  ) : (
+                    // <div style={{ paddingTop: "1.4rem", display: "block" }}>
+                    //   <Button
+                    //     onClick={(e) => {
+                    //       window.open(
+                    //         "https://calendly.com/scale-business-with-cedcommerce/marketplace-integration?utm_campaign=Shopify-eBayI&utm_source=ebay-shopify-integration&month=2021-12",
+                    //         "_blank"
+                    //       );
+                    //       e.preventDefault();
+                    //     }}
+                    //     size="medium"
+                    //   >
+                    //     <Stack
+                    //       wrap={false}
+                    //       alignment="center"
+                    //       spacing="extraTight"
+                    //       distribution="fill"
+                    //     >
+                    //       <Icon source={PhoneMajorMonotone} color="base" />
+                    //       {/* <div style={{ paddingBottom: "1rem" }}>
+                    //         <Icon source={PhoneMajorMonotone} color="base" />
+                    //       </div>
+                    //       <p style={{ width: "7rem" }}>Book a Call</p> */}
+                    //     </Stack>
+                    //   </Button>
+                    // </div>
+                    <div
+                      style={{ paddingTop: "2rem" }}
+                      onClick={(e) => {
+                        window.open(
+                          "https://calendly.com/scale-business-with-cedcommerce/marketplace-integration?utm_campaign=Shopify-eBayI&utm_source=ebay-shopify-integration&month=2021-12",
+                          "_blank"
+                        );
+                        e.preventDefault();
+                      }}
+                      title="Book a Call"
+                    >
+                      {/* <Tooltip content="Book a Call"> */}
+                        <Icon source={PhoneMajorMonotone} color="primary" />
+                      {/* </Tooltip> */}
+                    </div>
+                  )}
+                </Stack.Item>
+                <Stack.Item>
                   {/* <div style={{ marginBottom: "-8px" }}>
                 <ShopifyPopover
                   active={bellClicked}
@@ -711,7 +774,7 @@ const NewPanel = (props) => {
                             minWidth: "29rem",
                             alignItems: "center",
                             justifyContent: "space-between",
-                            marginBottom:"-2rem"
+                            marginBottom: "-2rem",
                           }}
                         >
                           <p
