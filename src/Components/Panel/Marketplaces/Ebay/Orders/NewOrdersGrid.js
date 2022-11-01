@@ -255,7 +255,7 @@ const NewOrdersGrid = (props) => {
   // pagination
 
   const [activePage, setActivePage] = useState(1);
-  const [pageSizeOptions, setPageSizeOptions] = useState([25,50,100]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
   // const [pageSizeOptions, setPageSizeOptions] = useState([1, 2, 3]);
   const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([
     { label: " 25 / page ", value: 25 },
@@ -379,8 +379,8 @@ const NewOrdersGrid = (props) => {
   const [orderAlertListData, setOrderAlertListData] = useState([
     // 'Racing car sprays burning fuel into crowd.',
     <div>
-      By Default, we fetched only paid and non-shipped eBay orders. for fetching
-      other types of orders please{" "}
+      By default, we fetch only paid and non-shipped eBay orders, for fetching
+      other types of orders. Please{" "}
       <span
         style={{ color: "blue", cursor: "pointer" }}
         onClick={() => props.history.push("/panel/ebay/contactUs")}
@@ -390,20 +390,20 @@ const NewOrdersGrid = (props) => {
       .
     </div>,
     <div>
-      It is recommended that sellers should fulfill orders after 1 hour of their
-      purchase because buyer are eligible for cancelling the order with in 1
-      hour of their purchase.
+      It is recommended that the seller should fulfil orders after 1 hour of
+      purchase because buyers are eligible to cancel the order within 1 hour of
+      purchase.{" "}
       <Link
         url="https://community.ebay.com/t5/Selling/1-Hour-Order-Cancellation-Time-Frame/td-p/31178605"
         external
-        // removeUnderline
+        removeUnderline
       >
         Read More
       </Link>
     </div>,
   ]);
-  const getAllOrders = (ordersData,activePageNumber) => {
-     let tempOrderData = [];
+  const getAllOrders = (ordersData, activePageNumber) => {
+    let tempOrderData = [];
     tempOrderData = ordersData["rows"].map((order, index) => {
       let trackingNumberArray = [];
       let trackingURLArray = [];
@@ -446,7 +446,7 @@ const NewOrdersGrid = (props) => {
         (fulfillment) => fulfillment?.tracking_url
       );
       let tempObject = {};
-      tempObject["key"] =  (activePageNumber-1)*pageSize+index;
+      tempObject["key"] = (activePageNumber - 1) * pageSize + index;
       tempObject["eBayOrderId"] = (
         <center>
           <Text
@@ -602,7 +602,7 @@ const NewOrdersGrid = (props) => {
     );
     if (ordersDataSuccess) {
       setTotalOrdersCount(ordersData.count);
-      getAllOrders(ordersData,activePageNumber);
+      getAllOrders(ordersData, activePageNumber);
     }
     setGridLoader(false);
   };
@@ -1267,51 +1267,12 @@ const NewOrdersGrid = (props) => {
               xl={18}
               xxl={18}
             >
-                 {window.innerWidth>=768?           
-              <Stack distribution="trailing">
-                <PaginationComponent
-                  totalCount={totalOrdersCount}
-                  hitGetProductsAPI={hitGetOrdersAPI}
-                  pageSizeOptions={pageSizeOptions}
-                  activePage={activePage}
-                  setActivePage={setActivePage}
-                  setPrevPage={setPrevPage}
-                  pageSize={pageSize}
-                  setPageSize={setPageSize}
-                  size={"default"}
-                  simple={false}
-                />
-              </Stack>:
-              <Row gutter={[10, 8]} justify="space-evenly">
-                <Col
-                  span={6}
-                  xs={20}
-                  sm={13}
-                  md={6}
-                  lg={8}
-                  xl={6}
-                  xxl={6}
-                  style={{ margin: "auto" }}
-                >
-                  {showTotal(totalOrdersCount, [
-                    (activePage - 1) * pageSize + 1,
-                    activePage * pageSize,
-                  ])}
-                </Col>
-                <Col
-                  span={10}
-                  xs={24}
-                  sm={24}
-                  md={18}
-                  lg={16}
-                  xl={9}
-                  xxl={9}
-                  style={{ display: "flex", justifyContent: "end" }}
-                >
-                  <BasicPaginationComponent
+              {window.innerWidth >= 768 ? (
+                <Stack distribution="trailing">
+                  <PaginationComponent
                     totalCount={totalOrdersCount}
                     hitGetProductsAPI={hitGetOrdersAPI}
-                    responsivePageSizeOptions={responsivePageSizeOptions}
+                    pageSizeOptions={pageSizeOptions}
                     activePage={activePage}
                     setActivePage={setActivePage}
                     setPrevPage={setPrevPage}
@@ -1320,51 +1281,94 @@ const NewOrdersGrid = (props) => {
                     size={"default"}
                     simple={false}
                   />
-                </Col>
-                <Col
-                  span={4}
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={4}
-                  xxl={4}
-                  style={{ display: "flex", justifyContent: "end" }}
-                >
-                  {/* <Select
+                </Stack>
+              ) : (
+                <Row gutter={[10, 8]} justify="space-evenly">
+                  <Col
+                    span={6}
+                    xs={20}
+                    sm={13}
+                    md={6}
+                    lg={8}
+                    xl={6}
+                    xxl={6}
+                    style={{ margin: "auto" }}
+                  >
+                    {showTotal(totalOrdersCount, [
+                      (activePage - 1) * pageSize + 1,
+                      activePage * pageSize,
+                    ])}
+                  </Col>
+                  <Col
+                    span={10}
+                    xs={24}
+                    sm={24}
+                    md={18}
+                    lg={16}
+                    xl={9}
+                    xxl={9}
+                    style={{ display: "flex", justifyContent: "end" }}
+                  >
+                    <BasicPaginationComponent
+                      totalCount={totalOrdersCount}
+                      hitGetProductsAPI={hitGetOrdersAPI}
+                      responsivePageSizeOptions={responsivePageSizeOptions}
+                      activePage={activePage}
+                      setActivePage={setActivePage}
+                      setPrevPage={setPrevPage}
+                      pageSize={pageSize}
+                      setPageSize={setPageSize}
+                      size={"default"}
+                      simple={false}
+                    />
+                  </Col>
+                  <Col
+                    span={4}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={4}
+                    xxl={4}
+                    style={{ display: "flex", justifyContent: "end" }}
+                  >
+                    {/* <Select
       label=""
       options={pageSizeOptions}
       onChange={handleSelectChange}
       value={pageSize}
     
     /> */}
-                  <Select
-                    defaultValue="25 / page"
-                    style={{
-                      width: "11rem",
-                    }}
-                    onChange={handleSelectChange}
+                    <Select
+                      defaultValue="25 / page"
+                      style={{
+                        width: "11rem",
+                      }}
+                      onChange={handleSelectChange}
+                    >
+                      {responsivePageSizeOptions.map(
+                        (pageSizeOption, index) => (
+                          <Option value={Number(pageSizeOption.value)}>
+                            {pageSizeOption.label}
+                          </Option>
+                        )
+                      )}
+                    </Select>
+                  </Col>
+                  <Col
+                    span={5}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={5}
+                    xxl={5}
+                    style={{ display: "flex", justifyContent: "end" }}
                   >
-                    {responsivePageSizeOptions.map((pageSizeOption, index) => (
-                      <Option value={Number(pageSizeOption.value)}>
-                        {pageSizeOption.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Col>
-                <Col
-                  span={5}
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={5}
-                  xxl={5}
-                  style={{ display: "flex", justifyContent: "end" }}
-                >
-                  <div>Go To {showJumpToPage()} Page</div>
-                </Col>
-              </Row>}
+                    <div>Go To {showJumpToPage()} Page</div>
+                  </Col>
+                </Row>
+              )}
             </Col>
           </Row>
         </div>

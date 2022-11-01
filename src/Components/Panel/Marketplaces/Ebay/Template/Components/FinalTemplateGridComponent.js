@@ -1,4 +1,12 @@
-import { Alert, Image, List, PageHeader, Select, Typography } from "antd";
+import {
+  Alert,
+  Divider,
+  Image,
+  List,
+  PageHeader,
+  Select,
+  Typography,
+} from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { getTemplates } from "../../../../../../APIrequests/TemplatesAPI";
 import { json } from "../../../../../../globalConstant/static-json";
@@ -24,6 +32,7 @@ import TitleTemplateGrid from "./TemplateGridsComponent/TitleTemplateGrid";
 import { withRouter } from "react-router-dom";
 // import ModalVideo from "react-modal-video";
 import TabsComponent from "../../../../../AntDesignComponents/TabsComponent";
+import { gifTemplates } from "../../Help/gifHelper";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -87,7 +96,11 @@ const FinalTemplateGridComponent = (props) => {
   // modal video
   const [isOpenModalVideo, setIsOpenModalVideo] = useState(false);
   // gif modal
-  // const [isOpenGifModal, setIsOpenGifModal] = useState(false);
+  const [isOpenGifModal, setIsOpenGifModal] = useState({
+    active: false,
+    title: "",
+    url: "",
+  });
 
   useEffect(() => {
     if (categoryTemplateCount !== null) {
@@ -122,33 +135,52 @@ const FinalTemplateGridComponent = (props) => {
     (selectedTabIndex) => setSelectedTabId(selectedTabIndex),
     []
   );
-  const checkValueHandler=(arr,filterName)=>{
-    let countryValue="";
-    Object.keys(arr).filter((item,index)=>{
+  const checkValueHandler = (arr, filterName) => {
+    let countryValue = "";
+    Object.keys(arr).filter((item, index) => {
       let indexOfFirstOpeningBracket = item.indexOf("[");
       let indexOfFirstClosingBracket = item.indexOf("]");
-      const mainItem=item.substring(
+      const mainItem = item.substring(
         indexOfFirstOpeningBracket + 1,
         indexOfFirstClosingBracket
       );
-      if(mainItem===filterName)
-      {
-          countryValue= item;
-          return ;
+      if (mainItem === filterName) {
+        countryValue = item;
+        return;
       }
-    })
+    });
     return countryValue;
-  }
+  };
   const getTabContent = () => {
     switch (selectedTabId) {
       case 0:
-        return <CategoryTemplateGrid cbFuncCategory={cbFuncCategory} checkValueHandler={checkValueHandler}/>;
+        return (
+          <CategoryTemplateGrid
+            cbFuncCategory={cbFuncCategory}
+            checkValueHandler={checkValueHandler}
+          />
+        );
       case 1:
-        return <InventoryTemplateGrid cbFuncInventory={cbFuncInventory} checkValueHandler={checkValueHandler}/>;
+        return (
+          <InventoryTemplateGrid
+            cbFuncInventory={cbFuncInventory}
+            checkValueHandler={checkValueHandler}
+          />
+        );
       case 2:
-        return <PriceTemplateGrid cbFuncPrice={cbFuncPrice} checkValueHandler={checkValueHandler}/>;
+        return (
+          <PriceTemplateGrid
+            cbFuncPrice={cbFuncPrice}
+            checkValueHandler={checkValueHandler}
+          />
+        );
       case 3:
-        return <TitleTemplateGrid cbFuncTitle={cbFuncTitle} checkValueHandler={checkValueHandler}/>;
+        return (
+          <TitleTemplateGrid
+            cbFuncTitle={cbFuncTitle}
+            checkValueHandler={checkValueHandler}
+          />
+        );
       default:
         break;
     }
@@ -411,42 +443,51 @@ const FinalTemplateGridComponent = (props) => {
           </Stack>
         </Modal.Section>
       </Modal>
-      {/* <Modal
+      <Modal
         open={isOpenModalVideo}
         onClose={() => setIsOpenModalVideo(false)}
         title="How Can I Help?"
       >
         <Modal.Section>
-          <Stack distribution="equalSpacing">
-            <>How to create Category Template?</>
-            <Button
-              plain
-              onClick={() => {
-                setIsOpenModalVideo(false);
-                setIsOpenGifModal(true);
-              }}
-            >
-              Watch
-            </Button>
-          </Stack>
+          {gifTemplates.map((gifTemplate, index) => {
+            return (
+              <>
+                <Stack distribution="equalSpacing">
+                  <>{gifTemplate.title}</>
+                  <Button
+                    plain
+                    onClick={() => {
+                      setIsOpenModalVideo(false);
+                      setIsOpenGifModal({
+                        active: true,
+                        title: gifTemplate.title,
+                        url: gifTemplate.url,
+                      });
+                    }}
+                  >
+                    Watch
+                  </Button>
+                </Stack>
+                {index == gifTemplates.length - 1 ? <></> : <Divider />}
+              </>
+            );
+          })}
         </Modal.Section>
-      </Modal> */}
-      {/* <Modal
-        open={isOpenGifModal}
-        onClose={() => setIsOpenGifModal(false)}
-        title="How to create Category Template?"
+      </Modal>
+      <Modal
+        open={isOpenGifModal.active}
+        onClose={() =>
+          setIsOpenGifModal({
+            active: false,
+            title: "",
+          })
+        }
+        title={isOpenGifModal.title}
       >
         <Modal.Section>
-          <img src={CategoryTemplateGIF} style={{ width: "100%" }} />
+          <img src={isOpenGifModal.url} style={{ width: "100%" }} />
         </Modal.Section>
-      </Modal> */}
-      {/* <ModalVideo
-        channel="custom"
-        autoplay
-        isOpen={isOpenModalVideo}
-        url={CategoryTemplateGIF}
-        onClose={() => setIsOpenModalVideo(false)}
-      /> */}
+      </Modal>
     </PageHeader>
   );
 };

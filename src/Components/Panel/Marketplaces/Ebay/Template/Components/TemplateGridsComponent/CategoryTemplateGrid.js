@@ -53,7 +53,7 @@ const getCountyrName = (siteId) => {
 const getUsername = (shopid, username) => {
   if (shopid && username.length) {
     let test = username.find((user) => user.shopID == shopid);
-    return test.label;
+    return test?.label;
   }
 };
 

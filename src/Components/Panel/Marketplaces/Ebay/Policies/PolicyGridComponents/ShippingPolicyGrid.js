@@ -202,7 +202,7 @@ const ShippingPolicyGrid = (props) => {
   const getUsername = (siteid, username) => {
     if (siteid && username.length) {
       let test = username.find((user) => user.siteID === siteid);
-      return test.label;
+      return test?.label;
     }
   };
 

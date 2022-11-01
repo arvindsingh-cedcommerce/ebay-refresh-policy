@@ -708,12 +708,12 @@ const FinalDashboard = (props) => {
           setRemainingProductCredits(truncatedRemainingCredits);
           if (boosterAvailableProductCredits) {
             setAvailableProductCredits(
-              available_credits + boosterAvailableProductCredits
+              available_credits + Number(boosterAvailableProductCredits)
             );
           } else setAvailableProductCredits(available_credits);
           if (boosterServiceProductCredits) {
             setTotalProductCredits(
-              service_credits + boosterServiceProductCredits
+              service_credits + Number(boosterServiceProductCredits)
             );
           } else setTotalProductCredits(service_credits);
           setRemainingProductCreditsFormatted(

@@ -58,8 +58,11 @@ const ShopifyAccount = (props) => {
   // }, []);
 
   const getAllConnectedAccounts = async () => {
-    let { success: accountConnectedSuccess, data: connectedAccountData, message } =
-      await getConnectedAccounts();
+    let {
+      success: accountConnectedSuccess,
+      data: connectedAccountData,
+      message,
+    } = await getConnectedAccounts();
     if (
       accountConnectedSuccess &&
       Array.isArray(connectedAccountData) &&
