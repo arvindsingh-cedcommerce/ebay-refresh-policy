@@ -248,7 +248,17 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
             ...uniquesValuesArr,
           ];
           setImportProductFilters(temp);
-          saveData(true);
+          let tempCollectionList = collectionList.map((e) => {
+            return Object.keys(e)[0];
+          });
+          // temp["import_collection"]["selected_collection"] = [1, 2, 3]
+          let matchedValues = temp["import_collection"][
+            "selected_collection"
+          ].every((e) => tempCollectionList.includes(e));
+          if (!matchedValues) {
+            saveData(true);
+          }
+          // saveData(true);
         }
       }
       setImportProductFilters(temp);
