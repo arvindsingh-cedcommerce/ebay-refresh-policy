@@ -204,12 +204,12 @@ const NewPanel = (props) => {
     <BellOutlined
       className="floating-right-bottom-btn"
       style={{
-        color: "#000",
+        color: "rgb(16 114 198)",
         fontSize: "2rem",
         padding: "9px",
-        borderRadius: "50%",
-        border: "1px solid #fff",
-        backgroundColor: "rgb(255 245 234)",
+        // borderRadius: "50%",
+        // border: "1px solid #fff",
+        // backgroundColor: "rgb(255 245 234)",
       }}
       onClick={(e) => {
         setBellClicked(!bellClicked);
