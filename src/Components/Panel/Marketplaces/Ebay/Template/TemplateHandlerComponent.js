@@ -21,6 +21,7 @@ import CategoryTemplatePolarisNew from "./TemplateBody/CategoryTemplatePolarisNe
 import FinalInventoryTemplate from "./TemplateBody/FinalInventoryTemplate";
 import { getProfiles } from "../../../../../APIrequests/ProfilesAPI";
 import { getProfilesURLFilter } from "../../../../../URLs/ProfilesURL";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 class TemplateHandlerComponent extends Component {
   constructor(props) {
@@ -42,18 +43,21 @@ class TemplateHandlerComponent extends Component {
       marketplace: "ebay",
       grid: true,
     };
-    let { success, data, message } = await getProfiles(
+    let { success, data, message, code } = await getProfiles(
       getProfilesURLFilter,
       dataToPost
     );
-    if (success && data.rows.length) {
-      let temp = data.rows.map((row) => {
-        return { label: row.name, value: row.profile_id };
-      });
-      this.setState({ profilesList: [...temp] });
+    if (success) {
+      if (data.rows.length) {
+        let temp = data.rows.map((row) => {
+          return { label: row.name, value: row.profile_id };
+        });
+        this.setState({ profilesList: [...temp] });
+      }
     } else {
       notify.error(message);
-      this.props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code))
+        this.props.history.push("/auth/login");
     }
   };
   componentDidMount() {
