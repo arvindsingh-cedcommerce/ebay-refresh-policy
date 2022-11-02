@@ -197,8 +197,13 @@ const NewPanel = (props) => {
     window.addEventListener("scroll", () => {
       setBellClicked(false);
     });
-    hitGetNotifications();
-    return window.removeEventListener("scroll", () => {});
+    const activityInterval = setInterval(() => {
+      hitGetNotifications();
+    }, 60000);
+    return () => {
+      clearInterval(activityInterval);
+      window.removeEventListener("scroll", () => {});
+    };
   }, []);
   const activator = (
     <BellOutlined
