@@ -247,6 +247,9 @@ code {
   z-index: 1060 !important;
 }
 
-.ant-select-dropdown{
+.ant-select-dropdown {
   z-index: 1065 !important;
+}
+.Polaris-Modal-Dialog__Modal {
+  max-height: calc(100vh - 15rem) !important;
 }
