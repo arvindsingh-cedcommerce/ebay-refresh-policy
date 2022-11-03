@@ -66,6 +66,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDashboardData } from "../../../../../APIrequests/DashboardAPI";
 import { dashboardAnalyticsURL } from "../../../../../URLs/DashboardURL";
 import BasicPaginationComponent from "../../../../AntDesignComponents/BasicPaginationComponent";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const { Text } = Typography;
 let demo = {
@@ -680,6 +681,7 @@ const NewOrdersGrid = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
@@ -716,7 +718,7 @@ const NewOrdersGrid = (props) => {
       setconnectedAccountsArray(tempArr);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
 

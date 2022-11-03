@@ -69,6 +69,7 @@ import PolicyComponent from "./Marketplaces/Ebay/Policies/PolicyComponent";
 import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsComponent";
 import DisbaledProductsWrapper from "./Marketplaces/Ebay/Products/DisbaledProductsWrapper";
 import { TextLoop } from "react-text-loop-next";
+import { tokenExpireValues } from "../../HelperVariables";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -172,6 +173,7 @@ const NewPanel = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let shopifyAccount = connectedAccountData.find(
@@ -184,7 +186,7 @@ const NewPanel = (props) => {
       }
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
 
@@ -704,7 +706,7 @@ const NewPanel = (props) => {
                       title="Book a Call"
                     >
                       {/* <Tooltip content="Book a Call"> */}
-                        <Icon source={PhoneMajorMonotone} color="primary" />
+                      <Icon source={PhoneMajorMonotone} color="primary" />
                       {/* </Tooltip> */}
                     </div>
                   ) : (
@@ -745,7 +747,7 @@ const NewPanel = (props) => {
                       title="Book a Call"
                     >
                       {/* <Tooltip content="Book a Call"> */}
-                        <Icon source={PhoneMajorMonotone} color="primary" />
+                      <Icon source={PhoneMajorMonotone} color="primary" />
                       {/* </Tooltip> */}
                     </div>
                   )}

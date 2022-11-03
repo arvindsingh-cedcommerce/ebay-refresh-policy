@@ -10,6 +10,7 @@ import FinalProductSettings from "./Components/ProductSettingsNew/FinalProductSe
 import FinalOrderSettingsNew from "./Components/OrderSettingsNew/FinalOrderSettingsNew";
 import FinalProductSettingsNewNew from "./Components/ProductSettingsNewNew/components/FinalProductSettingsNewNew";
 import { Col, Row } from "antd";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const configurationTabs = [
   "Product Settings",
@@ -33,7 +34,9 @@ const Configuration = (props) => {
     useState({});
 
   const getSavedData = async () => {
-    let { data, success, message } = await configurationAPI(getAppSettingsURL);
+    let { data, success, message, code } = await configurationAPI(
+      getAppSettingsURL
+    );
     if (success) {
       if (data?.data?.import_settings) {
         setImportSettingsFromSavedAPIData(data.data.import_settings);
@@ -53,7 +56,7 @@ const Configuration = (props) => {
       setOrderSettingsFromSavedAPIData(temp);
     } else {
       notify.error(message);
-      redirect("/auth/login");
+      if (tokenExpireValues.includes(code)) redirect("/auth/login");
     }
   };
 
@@ -70,8 +73,7 @@ const Configuration = (props) => {
     configurationTabs.forEach((tabName) => {
       switch (tabName) {
         case "Product Settings":
-          content[tabName] = 
-          <FinalProductSettingsNewNew />
+          content[tabName] = <FinalProductSettingsNewNew />;
           // <FinalProductSettings />;
           break;
         // case "App Settings":
@@ -111,12 +113,12 @@ const Configuration = (props) => {
   };
 
   return (
-    <Row justify="center">
+    <Row justify="center" className="site-page-header-responsive">
       <Col xs={22} md={24} lg={24} xl={24} xxl={24}>
-    <Page fullWidth title="Configuration">
-      <TabsComponent totalTabs={6} tabContents={getTabContent()} />
-    </Page>
-    </Col>
+        <Page fullWidth title="Configuration">
+          <TabsComponent totalTabs={6} tabContents={getTabContent()} />
+        </Page>
+      </Col>
     </Row>
   );
 };

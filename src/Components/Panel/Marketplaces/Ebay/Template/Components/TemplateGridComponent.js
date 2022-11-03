@@ -35,6 +35,7 @@ import { notify } from "../../../../../../services/notify";
 import { Modal, Select as PolarisSelect, Stack } from "@shopify/polaris";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import { getCountryName } from "../../../../Accounts/NewAccount";
+import { tokenExpireValues } from "../../../../../../HelperVariables";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -61,8 +62,10 @@ const TemplateGridComponent = (props) => {
       dataIndex: "templateName",
       key: "templateName",
       sorter: (a, b) => {
-        return a.templateName.props.children.localeCompare(b.templateName.props.children)
-      }
+        return a.templateName.props.children.localeCompare(
+          b.templateName.props.children
+        );
+      },
     },
     {
       title: "Type",
@@ -137,26 +140,27 @@ const TemplateGridComponent = (props) => {
     if (success) {
       notify.success(message);
       // await getTemplatesList();
-      hitRequiredFuncs()
+      hitRequiredFuncs();
     } else {
       notify.error(message);
       // await getTemplatesList();
-      hitRequiredFuncs()
+      hitRequiredFuncs();
     }
   };
 
   const getUsername = (siteid, username) => {
-    if(siteid) {
-      let test =  username.find(user => user.siteID === siteid)
-      return test.label
+    if (siteid) {
+      let test = username.find((user) => user.siteID === siteid);
+      return test.label;
     }
-  }
+  };
   const getTemplatesList = async (ebayAccountsObj) => {
     setGridLoader(true);
     const {
       success,
       data: fetchedTemplatesArray,
       message,
+      code,
     } = await getTemplates(getTemplatesURL, {
       marketplace: "ebay",
       multitype: ["category", "price", "inventory", "title"],
@@ -175,11 +179,17 @@ const TemplateGridComponent = (props) => {
                 onClick={() => {
                   if (template["type"] === "category") {
                     props.history.push(
-                      `/panel/ebay/templatesUS/handler?type=${template["type"].toLowerCase()}&id=${template["_id"]}&siteID=${template["data"]?.site_id}&shopID=${template["data"]?.shop_id}`
+                      `/panel/ebay/templatesUS/handler?type=${template[
+                        "type"
+                      ].toLowerCase()}&id=${template["_id"]}&siteID=${
+                        template["data"]?.site_id
+                      }&shopID=${template["data"]?.shop_id}`
                     );
                   } else {
                     props.history.push(
-                      `/panel/ebay/templatesUS/handler?type=${capitalizeFirstLetterofWords(template["type"]).toLowerCase()}&id=${template["_id"]}`
+                      `/panel/ebay/templatesUS/handler?type=${capitalizeFirstLetterofWords(
+                        template["type"]
+                      ).toLowerCase()}&id=${template["_id"]}`
                     );
                   }
                 }}
@@ -188,11 +198,16 @@ const TemplateGridComponent = (props) => {
               </Text>
             ),
             siteID: template["data"]?.site_id,
-            shopID: template['data']?.shop_id,
+            shopID: template["data"]?.shop_id,
             templateConnectedAccount:
-              Object.keys(template["data"]).length > 0 ? 
-                <Stack alignment="center" spacing="tight"><>{getCountyrName(template["data"]["site_id"])}</><>{getUsername(template["data"]["site_id"], ebayAccountsObj)}</></Stack>
-               : (
+              Object.keys(template["data"]).length > 0 ? (
+                <Stack alignment="center" spacing="tight">
+                  <>{getCountyrName(template["data"]["site_id"])}</>
+                  <>
+                    {getUsername(template["data"]["site_id"], ebayAccountsObj)}
+                  </>
+                </Stack>
+              ) : (
                 <Text>
                   {" "}
                   <LineOutlined style={{ color: "#000" }} />
@@ -207,14 +222,14 @@ const TemplateGridComponent = (props) => {
       // }, 1000);
     } else {
       notify.error(message);
-      redirect('/auth/login')
+      if (tokenExpireValues.includes(code)) redirect("/auth/login");
     }
     setGridLoader(false);
   };
 
   const redirect = (url) => {
-    props.history.push(url)
-  }
+    props.history.push(url);
+  };
 
   useEffect(() => {
     let categoryTemplatesTemp = [];
@@ -277,36 +292,37 @@ const TemplateGridComponent = (props) => {
     } else {
       notify.error(message);
     }
-    return ebayAccountsObj
+    return ebayAccountsObj;
   };
 
-  const hitRequiredFuncs = async() => {
+  const hitRequiredFuncs = async () => {
     let ebayAccountsObj = await getAllConnectedAccounts();
     await getTemplatesList(ebayAccountsObj);
-  }
-  
+  };
+
   useEffect(() => {
-    hitRequiredFuncs()
+    hitRequiredFuncs();
   }, []);
 
   const getColumns = (templateName) => {
-    let columns
-    if(templateName === 'All') {
-      columns = templateGridColumns
-      return columns
-    }
-    else {
+    let columns;
+    if (templateName === "All") {
+      columns = templateGridColumns;
+      return columns;
+    } else {
       columns = templateGridColumns.filter(
         (column) => column["dataIndex"] !== "templateType"
-      )
-      if(templateName !== 'Category') {
-        columns = columns.filter(col => col['dataIndex'] !== 'templateConnectedAccount')
-        return columns
+      );
+      if (templateName !== "Category") {
+        columns = columns.filter(
+          (col) => col["dataIndex"] !== "templateConnectedAccount"
+        );
+        return columns;
       } else {
-        return columns
+        return columns;
       }
     }
-  }
+  };
   const getTabContent = () => {
     let content = {};
     let templatestTabObject = {
@@ -324,14 +340,13 @@ const TemplateGridComponent = (props) => {
         )
       ] = (
         <NestedTableComponent
-          columns={
-            getColumns(templateName)
-          }
+          columns={getColumns(templateName)}
           dataSource={templatestTabObject[templateName]}
           // scroll={{ x: 1000 }}
-          scroll={{ x: 1000
+          scroll={{
+            x: 1000,
             // , y: "55vh"
-           }}
+          }}
           bordered={false}
           loading={
             // templateName === "All" &&

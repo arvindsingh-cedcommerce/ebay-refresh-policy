@@ -10,44 +10,46 @@ import React from "react";
 
 const OrderSkeleton = () => {
   return (
-    <SkeletonPage fullWidth primaryAction>
-      <Layout>
-        <Layout.Section>
-          <Card sectioned>
-            <SkeletonBodyText lines={4} />
-          </Card>
-          <Card sectioned>
-            <TextContainer>
+    <div className="site-page-header-responsive">
+      <SkeletonPage fullWidth primaryAction>
+        <Layout>
+          <Layout.Section>
+            <Card sectioned>
               <SkeletonBodyText lines={4} />
-            </TextContainer>
-          </Card>
-          <Card sectioned>
-            <TextContainer>
-              <SkeletonBodyText lines={4} />
-            </TextContainer>
-          </Card>
-        </Layout.Section>
-        <Layout.Section secondary>
-          <Card>
-            <Card.Section>
+            </Card>
+            <Card sectioned>
               <TextContainer>
-                <SkeletonDisplayText size="small" />
                 <SkeletonBodyText lines={4} />
               </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <SkeletonBodyText lines={4} />
-            </Card.Section>
-            <Card.Section>
-              <SkeletonBodyText lines={4} />
-            </Card.Section>
-            <Card.Section>
-              <SkeletonBodyText lines={4} />
-            </Card.Section>
-          </Card>
-        </Layout.Section>
-      </Layout>
-    </SkeletonPage>
+            </Card>
+            <Card sectioned>
+              <TextContainer>
+                <SkeletonBodyText lines={4} />
+              </TextContainer>
+            </Card>
+          </Layout.Section>
+          <Layout.Section secondary>
+            <Card>
+              <Card.Section>
+                <TextContainer>
+                  <SkeletonDisplayText size="small" />
+                  <SkeletonBodyText lines={4} />
+                </TextContainer>
+              </Card.Section>
+              <Card.Section>
+                <SkeletonBodyText lines={4} />
+              </Card.Section>
+              <Card.Section>
+                <SkeletonBodyText lines={4} />
+              </Card.Section>
+              <Card.Section>
+                <SkeletonBodyText lines={4} />
+              </Card.Section>
+            </Card>
+          </Layout.Section>
+        </Layout>
+      </SkeletonPage>
+    </div>
   );
 };
 

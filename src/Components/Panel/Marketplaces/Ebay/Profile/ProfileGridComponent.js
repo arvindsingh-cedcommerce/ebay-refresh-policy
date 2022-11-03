@@ -34,6 +34,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
 import { getProfiles } from "../../../../../APIrequests/ProfilesAPI";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 import { getpaginationInfo } from "../../../../../services/helperFunction";
 import { notify } from "../../../../../services/notify";
 import { prepareChoiceoption } from "../../../../../Subcomponents/Aggrid/gridHelper";
@@ -284,6 +285,7 @@ const ProfileGridComponent = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
@@ -314,7 +316,7 @@ const ProfileGridComponent = (props) => {
       setconnectedAccountsArray(tempArr);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
 

@@ -44,6 +44,7 @@ import {
 import NoProductImage from "../../../../../assets/notfound.png";
 import { fetchProductById } from "../../../../../APIrequests/ProductsAPI";
 import { viewProductDataURL } from "../../../../../URLs/ProductsURL";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const { Text, Title } = Typography;
 
@@ -179,7 +180,10 @@ const ViewOrdersPolarisNew = (props) => {
     setFlag(true);
     let { id } = parseQueryString(props.location.search);
     let postData = { order_id: id };
-    let { success, data, message } = await getOrder(getOrderURL, postData);
+    let { success, data, message, code } = await getOrder(
+      getOrderURL,
+      postData
+    );
     if (success) {
       setRecievedData(data);
       extractUpdateOrderData(data, updateOrder, setUpdateOrder);
@@ -286,7 +290,7 @@ const ViewOrdersPolarisNew = (props) => {
     } else {
       notify.error(message);
       // redirect("/auth/login");
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
     setFlag(false);
   };

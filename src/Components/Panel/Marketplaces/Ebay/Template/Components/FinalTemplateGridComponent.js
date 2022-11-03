@@ -35,6 +35,7 @@ import { withRouter } from "react-router-dom";
 // import ModalVideo from "react-modal-video";
 import TabsComponent from "../../../../../AntDesignComponents/TabsComponent";
 import { gifTemplates } from "../../Help/gifHelper";
+import { tokenExpireValues } from "../../../../../../HelperVariables";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -193,6 +194,7 @@ const FinalTemplateGridComponent = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     let ebayAccountsObj = [];
     if (accountConnectedSuccess) {
@@ -225,7 +227,7 @@ const FinalTemplateGridComponent = (props) => {
       });
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
   const cbFuncCategory = () => {

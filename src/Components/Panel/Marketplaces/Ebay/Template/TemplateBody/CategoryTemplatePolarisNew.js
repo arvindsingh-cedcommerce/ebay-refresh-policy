@@ -32,6 +32,7 @@ import {
 import { notify } from "../../../../../../services/notify";
 import LoadingOverlay from "react-loading-overlay";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
+import { tokenExpireValues } from "../../../../../../HelperVariables";
 
 export function debounce(func, wait, immediate) {
   var timeout;
@@ -1221,7 +1222,7 @@ function to handle optional attribute changes
         }
         setAttributesLoader(false);
       }
-    } else if (code === "token_expired") {
+    } else if (tokenExpireValues.includes(code)) {
       notify.error(message);
       redirect("/auth/login");
     }
@@ -1508,7 +1509,7 @@ function to handle optional attribute changes
       if (success) {
         getShopifyAttributes("primaryCategory", data);
         // getConfigurableAttributes();
-      } else if (code === "token_expired" || code === "invalid_token") {
+      } else if (tokenExpireValues.includes(code)) {
         notify.error(message);
         redirect("/auth/login");
       }
@@ -2291,7 +2292,8 @@ function to check final validation
           </Layout.AnnotatedSection>
           {id &&
             primaryCategoryMapping.length > 0 &&
-            barcodeOptions.length == 0 && !isCategoryChanged &&(
+            barcodeOptions.length == 0 &&
+            !isCategoryChanged && (
               <Layout.AnnotatedSection
                 id="additionalInformation"
                 title="Additional Information"

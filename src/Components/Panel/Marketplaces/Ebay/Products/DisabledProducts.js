@@ -55,6 +55,7 @@ import NewFilterComponentSimilarPolaris from "./NewFilterComponentSimilarPolaris
 import { getVariantsCountDetails } from "./helperFunctions/commonHelper";
 import { useDispatch, useSelector } from "react-redux";
 import PopoverProduct from "./PopoverProduct";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const DisabledProducts = (props) => {
   const [gridLoader, setGridLoader] = useState(false);
@@ -911,6 +912,7 @@ const DisabledProducts = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
@@ -944,7 +946,7 @@ const DisabledProducts = (props) => {
       getProfilesProducttypeVendor();
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
   useEffect(() => {

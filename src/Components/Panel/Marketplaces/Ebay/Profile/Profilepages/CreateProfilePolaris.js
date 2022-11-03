@@ -7,6 +7,7 @@ import {
   saveProfile,
 } from "../../../../../../Apirequest/ebayApirequest/profileApi";
 import { getTemplatesPost } from "../../../../../../APIrequests/TemplatesAPI";
+import { tokenExpireValues } from "../../../../../../HelperVariables";
 import { parseQueryString } from "../../../../../../services/helperFunction";
 import { notify } from "../../../../../../services/notify";
 import { getTemplatesURL } from "../../../../../../URLs/TemplateURLS";
@@ -297,6 +298,7 @@ const CreateProfilePolaris = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
@@ -338,7 +340,7 @@ const CreateProfilePolaris = (props) => {
       setUpdatedConnectedAccountObject(true);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
 

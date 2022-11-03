@@ -63,6 +63,7 @@ import WhatsApp from "../../../../../assets/whatsapp.png";
 import Skype from "../../../../../assets/skype.png";
 import Mail from "../../../../../assets/mail.png";
 import { faqAPI } from "../../../../../APIrequests/HelpAPI";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
@@ -201,7 +202,7 @@ const FinalDashboard = (props) => {
         .map((faq) => {
           return faq.data;
         })
-        .filter((faq) => faq.showInApp === "Dashboard")
+        .filter((faq) => faq.showInApp === "Dashboard" && faq.enable)
         .slice(0, 3)
         .map((faq) => {
           return {
@@ -278,6 +279,7 @@ const FinalDashboard = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       if (Array.isArray(connectedAccountData) && connectedAccountData.length) {
@@ -373,7 +375,7 @@ const FinalDashboard = (props) => {
       }
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
 

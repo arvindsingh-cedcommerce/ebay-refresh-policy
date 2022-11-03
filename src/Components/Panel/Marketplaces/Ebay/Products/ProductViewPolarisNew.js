@@ -60,6 +60,7 @@ import {
   parseMetaFieldsData,
 } from "./helperFunctions/viewProductHelper";
 import MetafieldsComponent from "./Components/MetafieldsComponent";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const columns = [
   {
@@ -819,6 +820,7 @@ const ProductViewPolarisNew = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
 
     if (accountConnectedSuccess) {
@@ -851,7 +853,7 @@ const ProductViewPolarisNew = (props) => {
       setconnectedAccounts(tempArr);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
 
@@ -1321,55 +1323,58 @@ const ProductViewPolarisNew = (props) => {
     </Menu>
   );
   return showSkeleton ? (
-    <SkeletonPage primaryAction fullWidth>
-      <SkeletonBodyText lines={2} />
-      <br />
-      <Layout>
-        <Layout.Section secondary>
-          <Card>
-            <Card.Section>
+    <div className="site-page-header-responsive">
+      <SkeletonPage primaryAction fullWidth>
+        <SkeletonBodyText lines={2} />
+        <br />
+        <Layout>
+          <Layout.Section secondary>
+            <Card>
+              <Card.Section>
+                <TextContainer>
+                  <SkeletonDisplayText size="small" />
+                  <SkeletonBodyText lines={2} />
+                </TextContainer>
+              </Card.Section>
+              <Card.Section>
+                <SkeletonBodyText lines={1} />
+              </Card.Section>
+            </Card>
+            <Card subdued>
+              <Card.Section>
+                <TextContainer>
+                  <SkeletonDisplayText size="small" />
+                  <SkeletonBodyText lines={2} />
+                </TextContainer>
+              </Card.Section>
+              <Card.Section>
+                <SkeletonBodyText lines={2} />
+              </Card.Section>
+            </Card>
+          </Layout.Section>
+          <Layout.Section>
+            <Card sectioned>
+              <SkeletonBodyText />
+            </Card>
+            <Card sectioned>
               <TextContainer>
                 <SkeletonDisplayText size="small" />
-                <SkeletonBodyText lines={2} />
+                <SkeletonBodyText />
               </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <SkeletonBodyText lines={1} />
-            </Card.Section>
-          </Card>
-          <Card subdued>
-            <Card.Section>
+            </Card>
+            <Card sectioned>
               <TextContainer>
                 <SkeletonDisplayText size="small" />
-                <SkeletonBodyText lines={2} />
+                <SkeletonBodyText />
               </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <SkeletonBodyText lines={2} />
-            </Card.Section>
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
-          <Card sectioned>
-            <SkeletonBodyText />
-          </Card>
-          <Card sectioned>
-            <TextContainer>
-              <SkeletonDisplayText size="small" />
-              <SkeletonBodyText />
-            </TextContainer>
-          </Card>
-          <Card sectioned>
-            <TextContainer>
-              <SkeletonDisplayText size="small" />
-              <SkeletonBodyText />
-            </TextContainer>
-          </Card>
-        </Layout.Section>
-      </Layout>
-    </SkeletonPage>
+            </Card>
+          </Layout.Section>
+        </Layout>
+      </SkeletonPage>
+    </div>
   ) : (
     <PageHeader
+      className="site-page-header-responsive"
       title={
         <Stack alignment="center">
           <Thumbnail

@@ -43,6 +43,7 @@ import { getDashboardData } from "../../../APIrequests/DashboardAPI";
 import { dashboardAnalyticsURL, ebayDetails } from "../../../URLs/DashboardURL";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import { ebayAccountGifs } from "../Marketplaces/Ebay/Help/gifHelper";
+import { tokenExpireValues } from "../../../HelperVariables";
 
 export const getCountryName = (site_id) => {
   let countryName = json.flag_country.filter(
@@ -238,6 +239,7 @@ const NewAccount = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
@@ -305,7 +307,7 @@ const NewAccount = (props) => {
       setShopifyData(testObj);
     } else {
       notify.error(message);
-      redirect("/auth/login");
+      if (tokenExpireValues.includes(code)) redirect("/auth/login");
     }
     setGridLoader(false);
   };

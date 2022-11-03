@@ -1,10 +1,4 @@
-import {
-  PageHeader,
-  Typography,
-  Menu,
-  Popover,
-  Tag,
-} from "antd";
+import { PageHeader, Typography, Menu, Popover, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
 import {
@@ -56,6 +50,7 @@ import PopoverProduct from "./PopoverProduct";
 import { getCountyrName } from "../Template/Components/TemplateGridComponent";
 import NoProductImage from "../../../../../assets/notfound.png";
 import AdditionalDetailsComponent from "./Components/AdditionalDetailsComponent";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const columns = [
   {
@@ -645,7 +640,7 @@ const DisabledProductsView = (props) => {
       source_product_id,
       // source_marketplace: "ebay",
     };
-    let { success, data, message } = await fetchProductById(
+    let { success, data, message, code } = await fetchProductById(
       viewProductDataURL,
       postData
     );
@@ -658,7 +653,7 @@ const DisabledProductsView = (props) => {
       );
     } else {
       notify.error(message);
-      redirect("/auth/login");
+      if (tokenExpireValues.includes(code)) redirect("/auth/login");
     }
     setShowSkeleton(false);
     setPageLoader(false);

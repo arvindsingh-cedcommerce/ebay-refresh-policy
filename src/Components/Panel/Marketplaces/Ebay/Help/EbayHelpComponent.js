@@ -7,11 +7,19 @@ import { getParseFaqData } from "../Products/helperFunctions/commonHelper";
 import { videos } from "../Products/SampleProductData";
 import GroupFAQComponent from "./GroupFAQComponent";
 import YoutubeEmbed from "./YoutubeEmbed";
-import { Card as ShopifyCard, Icon, SkeletonBodyText, SkeletonDisplayText, TextContainer, TextField } from "@shopify/polaris";
+import {
+  Card as ShopifyCard,
+  Icon,
+  SkeletonBodyText,
+  SkeletonDisplayText,
+  TextContainer,
+  TextField,
+} from "@shopify/polaris";
 import { SearchMinor } from "@shopify/polaris-icons";
 import { parseQueryString } from "../../../../../services/helperFunction";
 import GifComponent from "./GifComponent";
 import { notify } from "../../../../../services/notify";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const { Meta } = Card;
 
@@ -24,75 +32,73 @@ const site = {
 };
 
 const EbayHelpComponent = (props) => {
- 
   let { question } = parseQueryString(props.location.search);
-  let questionValue="";
-  if(question)
-     questionValue=question.trim();
+  let questionValue = "";
+  if (question) questionValue = question.trim();
   const [faqData, setFaqData] = useState({});
-  const [searchQuery,setSearchQuery]=useState("");
-  const [searchFaqData,setSearchFaqData]= useState({});
-  const [faqArray,setFaqArray]=useState([]);
-  const [searchFaqArray,setSearchFaqArray]=useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchFaqData, setSearchFaqData] = useState({});
+  const [faqArray, setFaqArray] = useState([]);
+  const [searchFaqArray, setSearchFaqArray] = useState([]);
   // faqloader
   const [faqLoader, setFaqLoader] = useState(false);
-  
-  useEffect(()=>{
-  let finalFaqArray=[...faqArray];
-  if(searchQuery)
-  {
-  let updatedFaqArray=[];
 
-  finalFaqArray.forEach((faqKey,index)=>{
-      let questionArray=[];
-      let faqObj={...faqKey};
-      let initialQuestionArray=[...faqKey["qas"]];
-      initialQuestionArray.forEach((questionKey)=>{
-  if(questionKey["question"].toLowerCase().includes(searchQuery.toLowerCase()))
-  {
-    questionArray.push(questionKey);
-  }
-      })
-      faqObj["qas"]=[...questionArray];
-      updatedFaqArray.push(faqObj);
-     });
+  useEffect(() => {
+    let finalFaqArray = [...faqArray];
+    if (searchQuery) {
+      let updatedFaqArray = [];
+
+      finalFaqArray.forEach((faqKey, index) => {
+        let questionArray = [];
+        let faqObj = { ...faqKey };
+        let initialQuestionArray = [...faqKey["qas"]];
+        initialQuestionArray.forEach((questionKey) => {
+          if (
+            questionKey["question"]
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          ) {
+            questionArray.push(questionKey);
+          }
+        });
+        faqObj["qas"] = [...questionArray];
+        updatedFaqArray.push(faqObj);
+      });
       setSearchFaqArray([...updatedFaqArray]);
-    }
-    else
-    {
+    } else {
       setSearchFaqArray([...finalFaqArray]);
     }
-  },[searchQuery]);
-  useEffect(()=>{
-    if(questionValue && faqArray.length>0)
-    setSearchQuery(questionValue);
-  },[faqArray]);
+  }, [searchQuery]);
+  useEffect(() => {
+    if (questionValue && faqArray.length > 0) setSearchQuery(questionValue);
+  }, [faqArray]);
   const getAllFAQs = async () => {
     setFaqLoader(true);
-    let { success, data, message } = await getMethod(faqAPI, {
+    let { success, data, message, code } = await getMethod(faqAPI, {
       type: "FAQ",
     });
     if (success) {
       let parsedData = getParseFaqData(data);
-      let parsedValues=Object.values(parsedData);
-      let finalFaqArray=[];
-      parsedValues.map((parsedValue,index)=>{
-        let questionsList=[];
-        
-        finalFaqArray[index]={...parsedValue};
-        questionsList=Object.keys(parsedValue["qas"]);
-        let currentArr=[];
-        questionsList.map((question,i)=>{
-          let questionObj={...parsedValue["qas"][question]};
-          questionObj["question"]=question;
+      let parsedValues = Object.values(parsedData);
+      let finalFaqArray = [];
+      parsedValues.map((parsedValue, index) => {
+        let questionsList = [];
+
+        finalFaqArray[index] = { ...parsedValue };
+        questionsList = Object.keys(parsedValue["qas"]);
+        let currentArr = [];
+        questionsList.map((question, i) => {
+          let questionObj = { ...parsedValue["qas"][question] };
+          questionObj["question"] = question;
           currentArr.push(questionObj);
-        })
-        finalFaqArray[index]["qas"]=currentArr;
+        });
+        finalFaqArray[index]["qas"] = currentArr;
       });
       setFaqArray([...finalFaqArray]);
       setSearchFaqArray([...finalFaqArray]);
     } else {
-      props.history.push('/auth/login')
+      notify.error(message);
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
     setFaqLoader(false);
   };
@@ -104,32 +110,38 @@ const EbayHelpComponent = (props) => {
   }, []);
 
   return (
-    <PageHeader title="Help">
+    <PageHeader title="Help" className="site-page-header-responsive">
       <ShopifyCard sectioned>
         <TabsComponent
           totalTabs={2}
           tabContents={{
             "FAQ(s)": (
               <>
-              {searchFaqArray.length===0?  ( <Card sectioned>
-               <TextContainer>
-              <SkeletonDisplayText size="small" />
-              <SkeletonBodyText />
-            </TextContainer>
-          </Card>):
-              (<>  <TextField
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e);
-                }}
-                placeholder={"Search your query"
-                }
-                prefix={(<Icon
-                  source={SearchMinor}
-
-                  color="base"
-                />)}
-              /><br/><GroupFAQComponent faqs={searchFaqArray} setSearchFaqArray={setSearchFaqArray} /></>)}
+                {searchFaqArray.length === 0 ? (
+                  <Card sectioned>
+                    <TextContainer>
+                      <SkeletonDisplayText size="small" />
+                      <SkeletonBodyText lines={12} />
+                    </TextContainer>
+                  </Card>
+                ) : (
+                  <>
+                    {" "}
+                    <TextField
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e);
+                      }}
+                      placeholder={"Search your query"}
+                      prefix={<Icon source={SearchMinor} color="base" />}
+                    />
+                    <br />
+                    <GroupFAQComponent
+                      faqs={searchFaqArray}
+                      setSearchFaqArray={setSearchFaqArray}
+                    />
+                  </>
+                )}
               </>
             ),
             "GIF(s)": <GifComponent />,

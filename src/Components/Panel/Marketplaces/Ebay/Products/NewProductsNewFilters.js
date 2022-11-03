@@ -81,6 +81,7 @@ import EbayActionsBulkMenu from "./EbayActionsBulkMenu";
 import ResponsiveBulkMenu from "./ResponsiveBulkMenu";
 import BasicPaginationComponent from "../../../../AntDesignComponents/BasicPaginationComponent";
 import { manageProductsGifs } from "../Help/gifHelper";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const { Text } = Typography;
 
@@ -801,7 +802,7 @@ function NewProductsNewFilters(props) {
       // props.history.push("/auth/login");
       // }
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
     setGridLoader(false);
   };

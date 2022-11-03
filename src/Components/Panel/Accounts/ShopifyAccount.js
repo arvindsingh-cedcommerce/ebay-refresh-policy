@@ -13,6 +13,7 @@ import {
   uploadCustomData,
   uploadPic,
 } from "../../../Apirequest/accountsApi";
+import { tokenExpireValues } from "../../../HelperVariables";
 import { notify } from "../../../services/notify";
 import AppAccountDetailsComponent from "./AccountTabsComponent/AppAccountDetailsComponent";
 import ImageUpload from "./ImageUpload";
@@ -62,6 +63,7 @@ const ShopifyAccount = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (
       accountConnectedSuccess &&
@@ -97,7 +99,7 @@ const ShopifyAccount = (props) => {
       setShopifyData(testObj);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
 

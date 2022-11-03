@@ -30,6 +30,7 @@ import {
   refreshPoliciesURL,
 } from "../../../../../URLs/PoliciesURL";
 import { json } from "../../../../../globalConstant/static-json";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -189,6 +190,7 @@ const FinalPolicyGrid = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     let ebayAccountsObj = [];
     if (accountConnectedSuccess) {
@@ -230,7 +232,7 @@ const FinalPolicyGrid = (props) => {
       });
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
     return ebayAccountsObj;
   };

@@ -35,6 +35,7 @@ import {
 } from "../../../../../URLs/ContactUsURL";
 import { Card } from "@shopify/polaris";
 import { notify } from "../../../../../services/notify";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -96,6 +97,7 @@ const ContactUs = (props) => {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
+      code,
     } = await getConnectedAccounts();
     if (accountConnectedSuccess) {
       let shopifyAccount = connectedAccountData.find(
@@ -172,7 +174,7 @@ const ContactUs = (props) => {
       setAccountLoader(false);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
   };
 
@@ -183,7 +185,11 @@ const ContactUs = (props) => {
   }, []);
 
   return (
-    <PageHeader title="Contact Us" ghost={true}>
+    <PageHeader
+      title="Contact Us"
+      ghost={true}
+      className="site-page-header-responsive"
+    >
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col span={12} xs={24} sm={24} md={24} lg={12} xxl={12}>
           <Card sectioned>

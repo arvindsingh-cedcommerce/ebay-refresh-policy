@@ -50,6 +50,7 @@ import {
 import { queuedActivities } from "../Products/SampleProductData";
 import { debounce } from "../Template/TemplateBody/CategoryTemplatePolarisNew";
 import LoaderImage from "../../../../../assets/loader/bannerActivityLoader.gif";
+import { tokenExpireValues } from "../../../../../HelperVariables";
 const { Title, Text } = Typography;
 const filtersFields = [
   {
@@ -210,6 +211,7 @@ const ActivityGrid = (props) => {
       success: activityDataSuccess,
       data: activityData,
       message,
+      code,
     } = await getAllNotifications(allNotificationsURL, dataToPost);
     if (activityDataSuccess) {
       const { queuedTask } = activityData;
@@ -217,7 +219,7 @@ const ActivityGrid = (props) => {
       getQueuedActivities(queuedTask);
     } else {
       notify.error(message);
-      props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
     setGridLoader(false);
   };
