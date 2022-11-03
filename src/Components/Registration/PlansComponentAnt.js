@@ -9,6 +9,7 @@ import {
   List,
   Avatar,
   Button,
+  Divider,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import {
@@ -36,6 +37,10 @@ import {
 } from "../../Apirequest/registrationApi";
 import { notify } from "../../services/notify";
 import { withRouter } from "react-router-dom";
+import { tokenExpireValues } from "../../HelperVariables";
+import PlansFAQComponent from "./PlansFAQComponent";
+import { getMethod } from "../../APIrequests/DashboardAPI";
+import { faqAPI } from "../../APIrequests/HelpAPI";
 
 const { Title, Text, Link } = Typography;
 const PlansComponentAnt = ({
@@ -62,9 +67,13 @@ const PlansComponentAnt = ({
   const [freePlan, setFreePlan] = useState({});
 
   const [okPlanLoader, setOkPlanLoader] = useState(false);
+  // faq
+  const [faqArray, setFaqArray] = useState([]);
+
+  const [faqLoader, setFaqLoader] = useState(false);
 
   const hitRequiredFuncs = async () => {
-    let { success, data: apiData, message } = await getPlans();
+    let { success, data: apiData, message, code } = await getPlans();
     if (success) {
       const { data: planData } = apiData;
       if (planData.rows) {
@@ -85,7 +94,9 @@ const PlansComponentAnt = ({
       // console.log(planData.rows[2], plans[0]);
     } else {
       notify.error(message);
-      // props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code)) {
+        props.history.push("/auth/login");
+      }
     }
   };
   useEffect(() => {
@@ -93,6 +104,7 @@ const PlansComponentAnt = ({
     document.description = "Plans";
     hitRequiredFuncs();
     fromOnBoarding && checkActivePlan();
+    getAllFAQs();
   }, []);
 
   const checkActivePlan = async () => {
@@ -107,6 +119,32 @@ const PlansComponentAnt = ({
         }
       }
     }
+  };
+
+  const getAllFAQs = async () => {
+    let pricingFaqs = [];
+    setFaqLoader(true);
+    let { success, data } = await getMethod(faqAPI, {
+      type: "FAQ",
+    });
+    if (success) {
+      let temp = data
+        .map((faq) => {
+          return faq.data;
+        })
+        .filter((faq) => faq.showInApp === "Pricing" && faq.enable)
+        .map((faq) => {
+          return {
+            title: faq.title,
+            description: faq.description,
+            isOpen: false,
+          };
+        });
+      setFaqArray(temp);
+      // let parsedData = getParseFaqData(data);
+      // setFaqData(parsedData);
+    }
+    setFaqLoader(false);
   };
 
   const hitTestAPI = async (plan) => {
@@ -143,7 +181,7 @@ const PlansComponentAnt = ({
   //     });
   //   }
   // };
-  
+
   const onMouseHoverCard = () => {
     var plansCard = document.getElementsByClassName("plansCard");
     for (var i = 0; i < plansCard.length; i++) {
@@ -153,15 +191,13 @@ const PlansComponentAnt = ({
           current[0].className = current[0].className.replace(" active", "");
           this.className += " active";
         });
-      }
-      else {
+      } else {
         plansCard[i].addEventListener("click", function () {
           var current = document.getElementsByClassName("active");
           current[0].className = current[0].className.replace(" active", "");
           this.className += " active";
         });
       }
-
     }
   };
 
@@ -169,7 +205,7 @@ const PlansComponentAnt = ({
     <PageHeader
       className="site-page-header-responsive"
       ghost={true}
-      style={{ padding: "0px 10px 10px 10px", height: "calc(100vh - 50px)" }}
+      // style={{ padding: "0px 10px 10px 10px", height: "calc(100vh - 50px)" }}
     >
       <div
       // style={
@@ -370,7 +406,15 @@ const PlansComponentAnt = ({
               <Row justify="center" gutter={8} style={{ marginBottom: "30px" }}>
                 {showSkeleton
                   ? [1, 2, 3, 4, 5].map((e) => (
-                      <Col span={4} xs={24} sm={16} md={12} lg={8} xl={4} xxl={4}>
+                      <Col
+                        span={4}
+                        xs={24}
+                        sm={16}
+                        md={12}
+                        lg={8}
+                        xl={4}
+                        xxl={4}
+                      >
                         <Card title={<SkeletonDisplayText size="small" />}>
                           <SkeletonBodyText />
                         </Card>
@@ -384,9 +428,16 @@ const PlansComponentAnt = ({
                       )
                       .map((plan, index) => {
                         return (
-                          
-                          <Col span={4} xs={24} sm={16} md={12} lg={8} xl={4} xxl={4} style={{padding:'0'}}>
-                         
+                          <Col
+                            span={4}
+                            xs={24}
+                            sm={16}
+                            md={12}
+                            lg={8}
+                            xl={4}
+                            xxl={4}
+                            style={{ padding: "0" }}
+                          >
                             <Card
                               title={<Title level={5}> {plan["title"]}</Title>}
                               size="small"
@@ -451,7 +502,10 @@ const PlansComponentAnt = ({
                                   );
                                 }}
                               />
-                              <Row justify="center" style={{marginTop:'20px'}}>
+                              <Row
+                                justify="center"
+                                style={{ marginTop: "20px" }}
+                              >
                                 <ShopifyButton
                                   primary
                                   size="slim"
@@ -474,7 +528,6 @@ const PlansComponentAnt = ({
                                   //     },
                                   //   })
                                   // }
-                                
                                 >
                                   Choose Plan
                                 </ShopifyButton>
@@ -485,6 +538,16 @@ const PlansComponentAnt = ({
                       })}
               </Row>
             </Col>
+          </Row>{" "}
+          <Row gutter={[0, 16]}>
+            <Col span={24}>
+              {" "}
+              <PlansFAQComponent
+                faqLoader={faqLoader}
+                faqs={faqArray}
+                setFaqArray={setFaqArray}
+              />
+            </Col>{" "}
           </Row>
         </Card>
       </div>
