@@ -147,6 +147,9 @@ const CategoryTemplatePolarisNew = (props) => {
   const [storeFrontExists, setStoreFrontExists] = useState(false);
   const [storeFrontSelected, setStoreFrontSelected] = useState("");
 
+  //
+  const [isCategoryChanged, setIsCategoryChanged] = useState(false);
+
   /*
 rishi-feature-template-category-validation
 function to validate primary and secondary categories
@@ -177,11 +180,40 @@ function to validate primary and secondary categories
             options={level?.["options"]}
             value={level?.["value"]}
             onChange={(e) => {
+              if (categoryType === "primaryCategory") {
+                setIsCategoryChanged(true);
+                setRequiredAttributesMapping({
+                  mapping: [],
+                  counter: 0,
+                  options: [],
+                });
+                setOptionalAttributesMapping({
+                  mapping: [],
+                  counter: 0,
+                  options: [],
+                });
+                setCustomAttributesMapping({
+                  mapping: [],
+                  counter: 0,
+                  optionsCheck: [
+                    {
+                      label: "Set Shopify Attributes",
+                      value: "ShopifyAttributes",
+                    },
+                    {
+                      label: "Set Custom",
+                      value: "Custom",
+                    },
+                  ],
+                });
+                setBarcodeOptions([]);
+                setCategoryFeatureOptions([]);
+              }
               if (e) {
                 validatePrimaryAndSecondaryCategories(categoryType, index);
                 let tempMapping = [...categoryTypeMapping];
-                setBarcodeOptions([]);
-                setCategoryFeatureOptions([]);
+                // setBarcodeOptions([]);
+                // setCategoryFeatureOptions([]);
                 tempMapping.splice(index + 1);
                 tempMapping[index]["value"] = e;
                 tempMapping[index]["value"] &&
@@ -1023,7 +1055,6 @@ function to handle optional attribute changes
     let barcode_options = [];
     let categoryFeature_options = [];
     let isBestOfferEnabled = false;
-    console.log("dataCategoryFeatures", dataCategoryFeatures);
     if (dataCategoryFeatures) {
       Object.keys(dataCategoryFeatures).map((key) => {
         switch (key) {
@@ -1079,9 +1110,6 @@ function to handle optional attribute changes
     setBarcodeOptions(barcode_options);
     setCategoryFeatureOptions(categoryFeature_options);
   };
-  useEffect(() => {
-    console.log("barcodeOptions", barcodeOptions);
-  }, [barcodeOptions]);
   const getCategory = async (
     requestObj,
     categoryTypeMapping,
@@ -2047,8 +2075,10 @@ function to check final validation
     let { success, data } = await getParentCategories({ ...passedObj });
     if (success) {
       let tempMapping = [...categoryTypeMapping];
-      setBarcodeOptions([]);
-      setCategoryFeatureOptions([]);
+      if (mappingType === "primary") {
+        setBarcodeOptions([]);
+        setCategoryFeatureOptions([]);
+      }
       tempMapping.splice(1);
       data.forEach((dataAtLevel, index) => {
         if (!tempMapping[index]) {
@@ -2108,6 +2138,31 @@ function to check final validation
           );
           setSelectedOptions(selected);
           setInputValue(selectedValue.label);
+          setIsCategoryChanged(true);
+          setRequiredAttributesMapping({
+            mapping: [],
+            counter: 0,
+            options: [],
+          });
+          setOptionalAttributesMapping({
+            mapping: [],
+            counter: 0,
+            options: [],
+          });
+          setCustomAttributesMapping({
+            mapping: [],
+            counter: 0,
+            optionsCheck: [
+              {
+                label: "Set Shopify Attributes",
+                value: "ShopifyAttributes",
+              },
+              {
+                label: "Set Custom",
+                value: "Custom",
+              },
+            ],
+          });
         }}
         onSearch={(e) => {
           setInputValue(e);
@@ -2236,7 +2291,7 @@ function to check final validation
           </Layout.AnnotatedSection>
           {id &&
             primaryCategoryMapping.length > 0 &&
-            barcodeOptions.length == 0 && (
+            barcodeOptions.length == 0 && !isCategoryChanged &&(
               <Layout.AnnotatedSection
                 id="additionalInformation"
                 title="Additional Information"
@@ -2277,7 +2332,8 @@ function to check final validation
           )} */}
           {id &&
             primaryCategoryMapping.length > 0 &&
-            requiredAttributesMapping?.options?.length == 0 && (
+            optionalAttributesMapping?.options?.length == 0 &&
+            !isCategoryChanged && (
               <Layout.AnnotatedSection
                 id="requiredAttributeMapping"
                 title="Required Attributes (Item Specifics)"
@@ -2290,7 +2346,7 @@ function to check final validation
                 </Card>
               </Layout.AnnotatedSection>
             )}
-          {requiredAttributesMapping?.options?.length > 1 && (
+          {requiredAttributesMapping?.options?.length > 0 && (
             <Layout.AnnotatedSection
               id="requiredAttributeMapping"
               title="Required Attributes (Item Specifics)"
@@ -2377,7 +2433,8 @@ function to check final validation
           )}
           {id &&
             primaryCategoryMapping.length > 0 &&
-            optionalAttributesMapping?.options?.length == 0 && (
+            optionalAttributesMapping?.options?.length == 0 &&
+            !isCategoryChanged && (
               <Layout.AnnotatedSection
                 id="optionalAttributeMapping"
                 title="Optional Attributes (Item Specifics)"
@@ -2417,7 +2474,8 @@ function to check final validation
           )}
           {id &&
             primaryCategoryMapping.length > 0 &&
-            optionalAttributesMapping?.options?.length == 0 && (
+            optionalAttributesMapping?.options?.length == 0 &&
+            !isCategoryChanged && (
               <Layout.AnnotatedSection
                 id="customAttributeMapping"
                 title="Custom Attributes (Item Specifics)"
@@ -2454,7 +2512,8 @@ function to check final validation
           )}
           {id &&
             primaryCategoryMapping.length > 0 &&
-            categoryFeatureOptions.length == 0 && (
+            categoryFeatureOptions.length == 0 &&
+            !isCategoryChanged && (
               <Layout.AnnotatedSection
                 id="productCondition"
                 title="Product condition"
@@ -2587,52 +2646,58 @@ function to check final validation
     );
   };
   return id ? (
-    <div
-      style={
-        accountStatus === "inactive"
-          ? {
-              pointerEvents: "none",
-              opacity: 0.8,
-            }
-          : {}
-      }
+    <LoadingOverlay
+      active={loaderOverlayActive}
+      spinner
+      text="Loading your content..."
     >
-      <Card
-        title="Category template"
-        sectioned
-        actions={[
-          {
-            content: <Button primary>Save</Button>,
-            onAction: saveFormdata,
-            loading: saveBtnLoader,
-          },
-        ]}
-        // primaryFooterAction={{
-        //   content: "Save",
-        //   onAction: saveFormdata,
-        //   loading: saveBtnLoader,
-        // }}
+      <div
+        style={
+          accountStatus === "inactive"
+            ? {
+                pointerEvents: "none",
+                opacity: 0.8,
+              }
+            : {}
+        }
       >
-        <Banner status="info">
-          <p>
-            Set category related components for eBay listing. Here you can set
-            primary category and it's attributes. You can set product condition,
-            store front category and secondary category also.
-          </p>
-        </Banner>
-        <Card.Section>{getCategoryStructure("primary")}</Card.Section>
-        <Card.Section>{getCategoryStructure("secondary")}</Card.Section>
-      </Card>
-      <FooterHelp>
-        Learn more about{" "}
-        <Link
-          external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application"
+        <Card
+          title="Category template"
+          sectioned
+          actions={[
+            {
+              content: <Button primary>Save</Button>,
+              onAction: saveFormdata,
+              loading: saveBtnLoader,
+            },
+          ]}
+          // primaryFooterAction={{
+          //   content: "Save",
+          //   onAction: saveFormdata,
+          //   loading: saveBtnLoader,
+          // }}
         >
-          Category Template
-        </Link>
-      </FooterHelp>
-    </div>
+          <Banner status="info">
+            <p>
+              Set category related components for eBay listing. Here you can set
+              primary category and it's attributes. You can set product
+              condition, store front category and secondary category also.
+            </p>
+          </Banner>
+          <Card.Section>{getCategoryStructure("primary")}</Card.Section>
+          <Card.Section>{getCategoryStructure("secondary")}</Card.Section>
+        </Card>
+        <FooterHelp>
+          Learn more about{" "}
+          <Link
+            external
+            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application"
+          >
+            Category Template
+          </Link>
+        </FooterHelp>
+      </div>
+    </LoadingOverlay>
   ) : (
     <LoadingOverlay
       active={loaderOverlayActive}
