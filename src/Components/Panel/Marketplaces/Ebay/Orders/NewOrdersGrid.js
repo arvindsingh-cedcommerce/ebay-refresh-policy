@@ -141,6 +141,13 @@ export const getFitersInitially = () => {
   });
   return tempObj;
 };
+
+const getUsername = (shopid, username) => {
+  if (shopid && username.length) {
+    let test = username.find((user) => user.shopId == shopid);
+    return test?.label;
+  }
+};
 const NewOrdersGrid = (props) => {
   const reduxState = useSelector((state) => {
     return state.orderFilterReducer.reduxFilters;
@@ -505,7 +512,7 @@ const NewOrdersGrid = (props) => {
       tempObject["shopifyOrderId1"] = order["target_order_id"];
       tempObject["accountConnected"] = (
         <center>
-          <Image
+          {/* <Image
             preview={false}
             width={25}
             src={
@@ -513,7 +520,8 @@ const NewOrdersGrid = (props) => {
               require(`../../../../../assets/flags/${order["site_id"]}.png`)
             }
             style={{ borderRadius: "50%" }}
-          />
+          /> */}
+          <>{getUsername(order["shop_id"], connectedAccountsArray)}</>
         </center>
       );
       tempObject["targetErrorMessage"] = order["target_error_message"];
@@ -643,12 +651,14 @@ const NewOrdersGrid = (props) => {
   const hitDashoboardAPI = async () => {
     let { success, data } = await getDashboardData(dashboardAnalyticsURL);
     if (success) {
-      const { available_credits, total_used_credits, service_credits } =
-        data?.planDetails?.orderCredits?.prepaid;
-      let temp = { ...orderCredits };
-      temp["available"] = available_credits;
-      temp["total"] = service_credits;
-      setOrderCredits(temp);
+      if (data?.planDetails?.orderCredits?.prepaid) {
+        const { available_credits, total_used_credits, service_credits } =
+          data?.planDetails?.orderCredits?.prepaid;
+        let temp = { ...orderCredits };
+        temp["available"] = available_credits;
+        temp["total"] = service_credits;
+        setOrderCredits(temp);
+      }
     }
   };
 

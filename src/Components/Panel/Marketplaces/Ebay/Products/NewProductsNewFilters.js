@@ -1208,16 +1208,17 @@ function NewProductsNewFilters(props) {
       getProfilesProducttypeVendor();
     }
   };
-
   const hitDashoboardAPI = async () => {
     let { success, data } = await getDashboardData(dashboardAnalyticsURL);
     if (success) {
-      const { available_credits, total_used_credits, service_credits } =
-        data?.planDetails?.productCredits?.prepaid;
-      let temp = { ...productCredits };
-      temp["available"] = available_credits;
-      temp["total"] = service_credits;
-      setProductCredits(temp);
+      if (data?.planDetails?.productCredits?.prepaid) {
+        const { available_credits, total_used_credits, service_credits } =
+          data?.planDetails?.productCredits?.prepaid;
+        let temp = { ...productCredits };
+        temp["available"] = available_credits;
+        temp["total"] = service_credits;
+        setProductCredits(temp);
+      }
     }
   };
 
