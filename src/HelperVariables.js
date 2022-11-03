@@ -5,4 +5,5 @@ export const tokenExpireValues = [
   "unable_to_remove_the_token",
   "missing_token",
   "token_user_not_found",
+  "invalid_token",
 ];
