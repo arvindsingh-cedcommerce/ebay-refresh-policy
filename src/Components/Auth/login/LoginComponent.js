@@ -15,6 +15,7 @@ import { globalState } from "../../../services/globalstate";
 import { notify } from "../../../services/notify";
 import * as queryString from "query-string";
 import { environment } from "../../../environment/environment";
+import Cancel from "../../../assets/warning.png";
 
 const LoginComponent = (props) => {
   const [credentials, setCredentials] = useState({
@@ -105,6 +106,7 @@ const LoginComponent = (props) => {
       globalState.getLocalStorage("shop") === null
     ) {
       struct = (
+        // <Page>
         <Card>
           <Card.Section>
             <div
@@ -115,7 +117,7 @@ const LoginComponent = (props) => {
               }}
             >
               <Stack alignment={"center"} vertical={true}>
-                {/* <img src={Cancel} style={{ height: "5rem", width: "5rem" }} /> */}
+                <img src={Cancel} style={{ height: "5rem", width: "5rem" }} />
                 <DisplayText size={"extraLarge"}>Oops !!</DisplayText>
                 <DisplayText size="small">
                   <b>Unauthorized access attempt</b>
@@ -127,6 +129,7 @@ const LoginComponent = (props) => {
             </div>
           </Card.Section>
         </Card>
+        // </Page>
       );
     }
     return struct;
