@@ -11,6 +11,7 @@ import FinalOrderSettingsNew from "./Components/OrderSettingsNew/FinalOrderSetti
 import FinalProductSettingsNewNew from "./Components/ProductSettingsNewNew/components/FinalProductSettingsNewNew";
 import { Col, Row } from "antd";
 import { tokenExpireValues } from "../../../../../HelperVariables";
+import { withRouter } from "react-router-dom";
 
 const configurationTabs = [
   "Product Settings",
@@ -123,4 +124,4 @@ const Configuration = (props) => {
   );
 };
 
-export default Configuration;
+export default withRouter(Configuration);
