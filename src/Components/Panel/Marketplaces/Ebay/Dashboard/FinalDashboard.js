@@ -391,7 +391,7 @@ const FinalDashboard = (props) => {
     );
     if (success) {
       // setNews(data);
-      setNews(newsDataFromAPI.reverse().slice(0, 3));
+      setNews(newsDataFromAPI.slice(0, 3));
     }
   };
   const hitBlogs = async () => {
@@ -406,7 +406,7 @@ const FinalDashboard = (props) => {
     );
     if (success) {
       // setBlogs(data);
-      setBlogs(blogDataFromAPI.reverse().slice(0, 3));
+      setBlogs(blogDataFromAPI.slice(0, 3));
     }
   };
 
