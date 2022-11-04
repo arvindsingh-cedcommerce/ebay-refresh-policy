@@ -158,60 +158,67 @@ const ShopifyAccount = (props) => {
   };
 
   return (
-    <Page fullWidth={false} title="User Profile">
-      <Layout>
-        <Layout.Section secondary>
-          <ImageUpload person={person} setPerson={setPerson} />
-        </Layout.Section>
-        <Layout.Section>
-          <AppAccountDetailsComponent shopifyData={shopifyData} />
-          <Card
-            sectioned
-            primaryFooterAction={{
-              content: "Submit",
-              onAction: saveCustomDetails,
-              disabled: disableLoading(),
-            }}
-            title="Contact Details"
-          >
-            <FormLayout>
-              <FormLayout.Group>
-                <TextField
-                  label="Contact Number"
-                  onChange={(value) =>
-                    setCustomDetails({ ...customDetails, contactNumber: value })
-                  }
-                  autoComplete="off"
-                  value={customDetails.contactNumber}
-                  type="number"
-                  min={0}
-                />
-                <TextField
-                  type="email"
-                  label="Contact Email"
-                  onChange={(value) =>
-                    setCustomDetails({ ...customDetails, email: value })
-                  }
-                  autoComplete="email"
-                  value={customDetails.email}
-                />
-                <TextField
-                  label={"Skype Group Link"}
-                  onChange={(value) =>
-                    setCustomDetails({ ...customDetails, skypeLink: value })
-                  }
-                  autoComplete="off"
-                  value={customDetails.skypeLink}
-                />
-                <TextField
-                  label="WhatsApp Group Link"
-                  onChange={(value) =>
-                    setCustomDetails({ ...customDetails, whatsAppLink: value })
-                  }
-                  autoComplete="off"
-                  value={customDetails.whatsAppLink}
-                />
-                <ChoiceList
+    <div className="site-page-header-responsive">
+      <Page fullWidth={false} title="User Profile">
+        <Layout>
+          <Layout.Section secondary>
+            <ImageUpload person={person} setPerson={setPerson} />
+          </Layout.Section>
+          <Layout.Section>
+            <AppAccountDetailsComponent shopifyData={shopifyData} />
+            <Card
+              sectioned
+              primaryFooterAction={{
+                content: "Submit",
+                onAction: saveCustomDetails,
+                disabled: disableLoading(),
+              }}
+              title="Contact Details"
+            >
+              <FormLayout>
+                <FormLayout.Group>
+                  <TextField
+                    label="Contact Number"
+                    onChange={(value) =>
+                      setCustomDetails({
+                        ...customDetails,
+                        contactNumber: value,
+                      })
+                    }
+                    autoComplete="off"
+                    value={customDetails.contactNumber}
+                    type="number"
+                    min={0}
+                  />
+                  <TextField
+                    type="email"
+                    label="Contact Email"
+                    onChange={(value) =>
+                      setCustomDetails({ ...customDetails, email: value })
+                    }
+                    autoComplete="email"
+                    value={customDetails.email}
+                  />
+                  <TextField
+                    label={"Skype Group Link"}
+                    onChange={(value) =>
+                      setCustomDetails({ ...customDetails, skypeLink: value })
+                    }
+                    autoComplete="off"
+                    value={customDetails.skypeLink}
+                  />
+                  <TextField
+                    label="WhatsApp Group Link"
+                    onChange={(value) =>
+                      setCustomDetails({
+                        ...customDetails,
+                        whatsAppLink: value,
+                      })
+                    }
+                    autoComplete="off"
+                    value={customDetails.whatsAppLink}
+                  />
+                  {/* <ChoiceList
                   allowMultiple
                   title="Email Notification"
                   choices={[
@@ -229,13 +236,14 @@ const ShopifyAccount = (props) => {
                       selectedEmailNotifications: value,
                     })
                   }
-                />
-              </FormLayout.Group>
-            </FormLayout>
-          </Card>
-        </Layout.Section>
-      </Layout>
-    </Page>
+                /> */}
+                </FormLayout.Group>
+              </FormLayout>
+            </Card>
+          </Layout.Section>
+        </Layout>
+      </Page>
+    </div>
   );
 };
 
