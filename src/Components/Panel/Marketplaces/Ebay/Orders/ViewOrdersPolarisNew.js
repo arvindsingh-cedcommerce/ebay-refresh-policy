@@ -700,9 +700,9 @@ const ViewOrdersPolarisNew = (props) => {
                     getModalStructure("Update Order", true, "updateOrder"),
                 },
                 // {
-                //   content: "Cancel eBay Order",
+                //   content: "Sync Cancellation",
                 //   onAction: () =>
-                //     getModalStructure("Cancel eBay Order", true, "cancelOrder"),
+                //     getModalStructure("Sync Cancellation", true, "cancelOrder"),
                 // },
                 {
                   content: "Delete Shopify Order",
@@ -726,9 +726,9 @@ const ViewOrdersPolarisNew = (props) => {
                     getModalStructure("Sync Shipment", true, "syncShipment"),
                 },
                 {
-                  content: "Cancel eBay Order",
+                  content: "Sync Cancellation",
                   onAction: () =>
-                    getModalStructure("Cancel eBay Order", true, "cancelOrder"),
+                    getModalStructure("Sync Cancellation", true, "cancelOrder"),
                 },
                 {
                   content: "Delete Shopify Order",

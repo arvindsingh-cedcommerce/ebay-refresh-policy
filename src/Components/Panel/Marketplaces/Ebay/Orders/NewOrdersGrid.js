@@ -80,7 +80,8 @@ let demo = {
   },
   cancel: {
     status: false,
-    title: "Cancel eBay Order",
+    // title: "Cancel eBay Order",
+    title: "Sync Cancellation",
   },
   delete: {
     status: false,
@@ -419,7 +420,7 @@ const NewOrdersGrid = (props) => {
       let shippedDateArray = [];
       let targetStatus = "";
       let progressBarStatus = "";
-      switch (order?.target_status.toLowerCase()) {
+      switch (order?.target_status?.toLowerCase()) {
         case "fulfilled":
           targetStatus = "success";
           progressBarStatus = "complete";
@@ -551,8 +552,8 @@ const NewOrdersGrid = (props) => {
                 Failed
               </div>
             ) : (
-              order?.target_status.slice(0, 1).toUpperCase() +
-              order?.target_status.slice(1)
+              order?.target_status?.slice(0, 1).toUpperCase() +
+              order?.target_status?.slice(1)
             )}
           </PolarisBadge>
         </center>
@@ -910,7 +911,8 @@ const NewOrdersGrid = (props) => {
           order_ids: ebayOrdersIdsToPost,
         });
         break;
-      case "Cancel eBay Order":
+      // case "Cancel eBay Order":
+      case "Sync Cancellation":
         let {} = await massAction(cancelOrdersURl, {
           order_ids: ebayOrdersIdsToPost,
         });

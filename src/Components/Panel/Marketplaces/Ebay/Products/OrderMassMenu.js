@@ -141,7 +141,7 @@ const OrderMassMenu = ({
                 <UploadOutlined /> Sync Shipment
               </Menu.Item>
               <Menu.Item
-                key="Cancel eBay Order"
+                key="Sync Cancellation"
                 onClick={() => {
                   let parsedShopifyOrdersIds = selectedRows.filter(
                     (selectedRow) => selectedRow?.["shopifyOrderId1"]
@@ -165,7 +165,8 @@ const OrderMassMenu = ({
                       setModal({
                         ...modal,
                         active: true,
-                        content: "Cancel eBay Order",
+                        // content: "Sync Cancellation",
+                        content: "Sync Cancellation",
                         actionName: massAction,
                         actionPayload: shopifyOrdersIdsToPost,
                         api: cancelOrdersURl,
@@ -183,7 +184,8 @@ const OrderMassMenu = ({
                   }
                 }}
               >
-                <UploadOutlined /> Cancel eBay Order
+                {/* <UploadOutlined /> Sync Cancellation */}
+                <UploadOutlined /> Sync Cancellation
               </Menu.Item>
               <Menu.Item
                 key="Delete Shopify Order"
@@ -269,7 +271,7 @@ const OrderMassMenu = ({
                 </TextContainer>
                 // </Banner>
               )}
-            {modal.content === "Cancel eBay Order" &&
+            {modal.content === "Sync Cancellation" &&
               modal.selectedRowsCount > modal.actionPayload.length && (
                 // <Banner status="info">
                 <TextContainer>
