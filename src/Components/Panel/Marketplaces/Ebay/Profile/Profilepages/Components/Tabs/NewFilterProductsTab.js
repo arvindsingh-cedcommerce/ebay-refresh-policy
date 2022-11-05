@@ -192,24 +192,33 @@ const NewFilterProductsTab = ({
     let { success, data } = await getImportAttribute();
     if (success && data) {
       const { product_type, vendor, collection } = data;
-      product_type
-        .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
-        .reverse();
-      vendor
-        .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
-        .reverse();
-      const productTypeList = product_type.map((type) => {
-        return { label: type, value: type };
-      });
-      const vendorList = vendor.map((type) => {
-        return { label: type, value: type };
-      });
-      const collectionList = Object.entries(collection).map((val) => {
-        return { label: val[1], value: val[0] };
-      });
-      setProductTypeList(productTypeList);
-      setVendorList(vendorList);
-      setCollectionList(collectionList);
+      if (product_type) {
+        product_type
+          .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+          .reverse();
+        const productTypeList = product_type.map((type) => {
+          return { label: type, value: type };
+        });
+        setProductTypeList(productTypeList);
+      }
+      if (vendor) {
+        vendor
+          .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+          .reverse();
+        const vendorList = vendor.map((type) => {
+          return { label: type, value: type };
+        });
+        setVendorList(vendorList);
+      }
+      if (collection) {
+        const collectionList = Object.entries(collection).map((val) => {
+          return { label: val[1], value: val[0] };
+        });
+        setCollectionList(collectionList);
+      }
+      // setProductTypeList(productTypeList);
+      // setVendorList(vendorList);
+      // setCollectionList(collectionList);
     }
   };
 
@@ -819,7 +828,7 @@ const NewFilterProductsTab = ({
                   // disabled={!overriceCheckboxStatus}
                   primary
                   onClick={() => {
-                    setOverriceCheckboxStatus(!overriceCheckboxStatus)
+                    setOverriceCheckboxStatus(!overriceCheckboxStatus);
                     setOverrideProductsModalActive(false);
                   }}
                 >
