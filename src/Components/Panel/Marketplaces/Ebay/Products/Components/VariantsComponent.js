@@ -181,7 +181,7 @@ const VariantsComponent = ({
       <Image width={25} preview={false} src={NoProductImage} />
     );
     let skuText=key["sku"];
-        if(skuText.length>80)
+        if(skuText?.length>80)
     tempObject["variantSKU"] = (
       // <>{key["sku"]}  { customVariantData[index][`customsku`] ?<EditFilled style={{width:"0.6rem",height:"0.6rem"}} />:<></>}</>
    
