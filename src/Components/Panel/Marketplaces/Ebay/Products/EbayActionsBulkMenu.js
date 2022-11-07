@@ -14,6 +14,7 @@ import {
   ActionList,
   Banner,
   Button,
+  ChoiceList,
   FormLayout,
   Modal,
   Popover,
@@ -22,10 +23,11 @@ import {
   Tag,
   TextField,
 } from "@shopify/polaris";
-import { Dropdown, Menu } from "antd";
+import { Checkbox, Col, Dropdown, Menu, Row, Select as AntSelect } from "antd";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import {
+  editProductById,
   fetchProductById,
   getrequest,
   postActionOnProductById,
@@ -45,7 +47,7 @@ import {
 } from "../../../../../URLs/ProductsURL";
 
 const EbayActionsBulkMenu = (props) => {
-  const { profileList } = props;
+  const { profileList, connectedAccountsArray } = props;
   const [modal, setModal] = useState({
     active: false,
     content: "",
@@ -80,6 +82,31 @@ const EbayActionsBulkMenu = (props) => {
 
   // import by id validation
   const [importByIdError, setImportByIdError] = useState(false);
+
+  // match from ebay
+  const [matchFromEbayAccount, setMatchFromEbayAccount] = useState({
+    modal: {
+      active: false,
+      content: "",
+      actionName: "",
+      actionPayload: {
+        shop_id: '',
+      },
+      api: "",
+    },
+    btnLoader: false,
+    account: '',
+  });
+
+
+  useEffect(() => {
+    if(connectedAccountsArray.length>0) {
+      let temp = {...matchFromEbayAccount}
+      temp['modal']['actionPayload']['shop_id'] = connectedAccountsArray[0]?.shopId
+      temp['account'] = connectedAccountsArray[0]?.value
+      setMatchFromEbayAccount(temp)
+    }
+  }, [connectedAccountsArray])
 
   const checkImportProductById = (id) => {
     let validID = true;
@@ -129,32 +156,32 @@ const EbayActionsBulkMenu = (props) => {
             {
               content: (
                 <div
-                  key="Match from eBay"
+                  key="Upload Products"
                   onClick={() =>
                     setModal({
                       ...modal,
                       active: true,
-                      content: "Match From eBay",
-                      actionName: getrequest,
-                      actionPayload: {},
-                      api: matchFromEbayURL,
+                      content: "Upload Products",
+                      actionName: postActionOnProductById,
+                      actionPayload: { action: "upload" },
+                      api: uploadProductByIdURL,
                     })
                   }
                 >
-                  <ShrinkOutlined /> Match from eBay
+                  <UploadOutlined /> Upload Products
                 </div>
               ),
             },
             {
               content: (
                 <div
-                  key="Upload and Revise"
+                  key="Revise Products"
                   onClick={() => {
                     let temp = { ...uploadAndReviseOnEbay };
                     temp["modal"]["active"] = true;
                     temp["modal"]["actionName"] = postActionOnProductById;
                     temp["modal"]["actionPayloadByAll"] = {
-                      action: "upload_and_revise",
+                      action: "revise",
                     };
                     temp["modal"]["actionPayloadById"] = {};
                     temp["modal"]["apiByAll"] = uploadProductByIdURL;
@@ -162,7 +189,7 @@ const EbayActionsBulkMenu = (props) => {
                     setUploadAndReviseOnEbay(temp);
                   }}
                 >
-                  <RedoOutlined /> Upload and Revise
+                  <RedoOutlined /> Revise Products
                 </div>
               ),
             },
@@ -213,19 +240,20 @@ const EbayActionsBulkMenu = (props) => {
             {
               content: (
                 <div
-                  key="Upload Products"
-                  onClick={() =>
-                    setModal({
-                      ...modal,
-                      active: true,
-                      content: "Upload Products",
-                      actionName: postActionOnProductById,
-                      actionPayload: { action: "upload" },
-                      api: uploadProductByIdURL,
-                    })
-                  }
+                  key="Match from eBay"
+                  onClick={() => {
+                    let temp = { ...matchFromEbayAccount };
+                    temp["modal"]["active"] = true;
+                    temp["modal"]["content"] = "Match From eBay";
+                    temp["modal"]["actionName"] = postActionOnProductById;
+                    temp["modal"]["actionPayload"] = {
+                      shop_id: "",
+                    };
+                    temp["modal"]["api"] = matchFromEbayURL;
+                    setMatchFromEbayAccount(temp);
+                  }}
                 >
-                  <UploadOutlined /> Upload Products
+                  <ShrinkOutlined /> Match from eBay
                 </div>
               ),
             },
@@ -265,13 +293,13 @@ const EbayActionsBulkMenu = (props) => {
                 <ShrinkOutlined /> Match from eBay
               </Menu.Item>
               <Menu.Item
-                key="Upload and Revise"
+                key="Revise Products"
                 onClick={() => {
                   let temp = { ...uploadAndReviseOnEbay };
                   temp["modal"]["active"] = true;
                   temp["modal"]["actionName"] = postActionOnProductById;
                   temp["modal"]["actionPayloadByAll"] = {
-                    action: "upload_and_revise",
+                    action: "revise",
                   };
                   temp["modal"]["actionPayloadById"] = {};
                   temp["modal"]["apiByAll"] = uploadProductByIdURL;
@@ -279,7 +307,7 @@ const EbayActionsBulkMenu = (props) => {
                   setUploadAndReviseOnEbay(temp);
                 }}
               >
-                <RedoOutlined /> Upload and Revise
+                <RedoOutlined /> Revise Products
               </Menu.Item>
               <Menu.Item
                 key="Sync Inventory"
@@ -597,6 +625,93 @@ const EbayActionsBulkMenu = (props) => {
                     setModal({ ...modal, active: false });
                   }
                   setBtnLoader(false);
+                }}
+              >
+                OK
+              </Button>
+            </Stack>
+          </Stack>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={matchFromEbayAccount.modal.active}
+        onClose={() =>
+          setMatchFromEbayAccount({
+            modal: {
+              active: false,
+              content: "",
+              actionName: "",
+              actionPayload: {
+                shop_id: "",
+              },
+              api: "",
+            },
+            btnLoader: false,
+          })
+        }
+        title="Permission required"
+      >
+        <Modal.Section>
+          <Stack vertical spacing="tight">
+            <>
+              Are you sure you want to initiate {matchFromEbayAccount.modal.content} bulk action ?
+            </>
+            <Stack wrap={true}>
+              <Stack.Item fill>
+                <AntSelect
+                  options={connectedAccountsArray}
+                  value={matchFromEbayAccount["account"]}
+                  onChange={(e) => {
+                    let temp = { ...matchFromEbayAccount };
+                    temp["account"] = e;
+                    temp["modal"]["actionPayload"]["shop_id"] =
+                      connectedAccountsArray.find(
+                        (account) => account.value === e
+                      )?.["shopId"];
+                    setMatchFromEbayAccount(temp);
+                  }}
+                  style={{ width: "100%" }}
+                />
+              </Stack.Item>
+            </Stack>
+            <Stack distribution="center" spacing="tight">
+              <Button>Cancel</Button>
+              <Button
+                primary
+                loading={matchFromEbayAccount["btnLoader"]}
+                onClick={async () => {
+                  setMatchFromEbayAccount({
+                    ...matchFromEbayAccount,
+                    btnLoader: true,
+                  });
+                  let { success, message, data } =
+                    await matchFromEbayAccount.modal.actionName(
+                      matchFromEbayAccount.modal.api,
+                      matchFromEbayAccount.modal.actionPayload
+                    );
+                  if (success) {
+                    notify.success(message ? message : data);
+                    props.history.push("/panel/ebay/activity");
+                  } else {
+                    notify.error(message ? message : data);
+                    setMatchFromEbayAccount({
+                      modal: {
+                        active: false,
+                        content: "",
+                        actionName: "",
+                        actionPayload: {
+                          shop_id: "",
+                        },
+                        api: "",
+                      },
+                      btnLoader: false,
+                      account: "",
+                    });
+                  }
+                  setMatchFromEbayAccount({
+                    ...matchFromEbayAccount,
+                    btnLoader: false,
+                  });
                 }}
               >
                 OK
