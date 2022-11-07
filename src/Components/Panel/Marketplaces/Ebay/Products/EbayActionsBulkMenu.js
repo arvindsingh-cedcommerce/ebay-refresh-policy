@@ -45,6 +45,7 @@ import {
   uploadProductByIdURL,
   uploadProductByProfileURL,
 } from "../../../../../URLs/ProductsURL";
+import { getCountyrName } from "../Template/Components/FinalTemplateGridComponent";
 
 const EbayActionsBulkMenu = (props) => {
   const { profileList, connectedAccountsArray } = props;
@@ -90,23 +91,15 @@ const EbayActionsBulkMenu = (props) => {
       content: "",
       actionName: "",
       actionPayload: {
-        shop_id: '',
+        shop_id: "",
+        product_id: [],
       },
       api: "",
     },
     btnLoader: false,
-    account: '',
+    account: "",
+    siteID: "",
   });
-
-
-  useEffect(() => {
-    if(connectedAccountsArray.length>0) {
-      let temp = {...matchFromEbayAccount}
-      temp['modal']['actionPayload']['shop_id'] = connectedAccountsArray[0]?.shopId
-      temp['account'] = connectedAccountsArray[0]?.value
-      setMatchFromEbayAccount(temp)
-    }
-  }, [connectedAccountsArray])
 
   const checkImportProductById = (id) => {
     let validID = true;
@@ -643,10 +636,13 @@ const EbayActionsBulkMenu = (props) => {
               actionName: "",
               actionPayload: {
                 shop_id: "",
+                product_id: [],
               },
               api: "",
             },
             btnLoader: false,
+            account: "",
+            siteID: "",
           })
         }
         title="Permission required"
@@ -654,31 +650,67 @@ const EbayActionsBulkMenu = (props) => {
         <Modal.Section>
           <Stack vertical spacing="tight">
             <>
-              Are you sure you want to initiate {matchFromEbayAccount.modal.content} bulk action ?
+              Are you sure you want to initiate{" "}
+              {matchFromEbayAccount.modal.content} bulk action ?
             </>
-            <Stack wrap={true}>
-              <Stack.Item fill>
-                <AntSelect
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ marginRight: "10px" }}>
+                {matchFromEbayAccount["siteID"] &&
+                  getCountyrName(matchFromEbayAccount["siteID"])}
+              </div>
+              <div style={{ minWidth: "50%" }}>
+                <Select
+                  placeholder="Please Select..."
                   options={connectedAccountsArray}
-                  value={matchFromEbayAccount["account"]}
+                  value={
+                    matchFromEbayAccount["modal"]["actionPayload"]["value"]
+                  }
                   onChange={(e) => {
                     let temp = { ...matchFromEbayAccount };
-                    temp["account"] = e;
-                    temp["modal"]["actionPayload"]["shop_id"] =
-                      connectedAccountsArray.find(
-                        (account) => account.value === e
-                      )?.["shopId"];
+                    temp["modal"]["actionPayload"]["value"] = e;
+                    temp["modal"]["actionPayload"]["shop_id"] = e;
+                    temp["siteID"] = connectedAccountsArray.filter(
+                      (account) => account.value == e
+                    )?.[0]?.siteID;
                     setMatchFromEbayAccount(temp);
                   }}
-                  style={{ width: "100%" }}
                 />
-              </Stack.Item>
-            </Stack>
+              </div>
+            </div>
             <Stack distribution="center" spacing="tight">
-              <Button>Cancel</Button>
+              <Button
+                onClick={() =>
+                  setMatchFromEbayAccount({
+                    modal: {
+                      active: false,
+                      content: "",
+                      actionName: "",
+                      actionPayload: {
+                        shop_id: "",
+                        product_id: [],
+                      },
+                      api: "",
+                    },
+                    btnLoader: false,
+                    account: "",
+                    siteID: "",
+                  })
+                }
+              >
+                Cancel
+              </Button>
               <Button
                 primary
                 loading={matchFromEbayAccount["btnLoader"]}
+                disabled={
+                  !matchFromEbayAccount["modal"]["actionPayload"]["shop_id"]
+                }
                 onClick={async () => {
                   setMatchFromEbayAccount({
                     ...matchFromEbayAccount,
@@ -687,13 +719,18 @@ const EbayActionsBulkMenu = (props) => {
                   let { success, message, data } =
                     await matchFromEbayAccount.modal.actionName(
                       matchFromEbayAccount.modal.api,
-                      matchFromEbayAccount.modal.actionPayload
+                      // matchFromEbayAccount.modal.actionPayload
+                      {
+                        shop_id:
+                          matchFromEbayAccount.modal.actionPayload.shop_id,
+                        product_id:
+                          matchFromEbayAccount.modal.actionPayload.product_id,
+                      }
                     );
                   if (success) {
                     notify.success(message ? message : data);
                     props.history.push("/panel/ebay/activity");
                   } else {
-                    notify.error(message ? message : data);
                     setMatchFromEbayAccount({
                       modal: {
                         active: false,
@@ -701,17 +738,17 @@ const EbayActionsBulkMenu = (props) => {
                         actionName: "",
                         actionPayload: {
                           shop_id: "",
+                          product_id: [],
                         },
                         api: "",
                       },
                       btnLoader: false,
                       account: "",
+                      siteID: "",
+                      btnLoader: false,
                     });
+                    notify.error(message ? message : data);
                   }
-                  setMatchFromEbayAccount({
-                    ...matchFromEbayAccount,
-                    btnLoader: false,
-                  });
                 }}
               >
                 OK

@@ -10,7 +10,7 @@ export async function getProductsCount(url, filters) {
 }
 
 export async function getrequest(url, filters = {}) {
-  return await requests.getRequest(url);
+  return await requests.getRequest(url, filters);
 }
 
 // edit product

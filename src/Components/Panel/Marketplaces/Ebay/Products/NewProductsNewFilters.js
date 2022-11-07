@@ -408,6 +408,8 @@ function NewProductsNewFilters(props) {
 
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
+  const [connectedAccountsArrayImage, setconnectedAccountsArrayImage] =
+    useState([]);
 
   const [gridLoader, setGridLoader] = useState(false);
 
@@ -970,12 +972,6 @@ function NewProductsNewFilters(props) {
     const initialProfileObj = profileListForFilters?.filter(
       (profileItem, index) => profileItem.value === initialProfileValue
     );
-    console.log("initial object 1", initialCountryObj);
-    console.log("initial object 2", initialStatusObj);
-    console.log("initial object 3", initialProfileObj);
-    console.log("initial object 4", selected["country"]);
-    console.log("initial object 5", selected["status"]);
-    console.log("initial object 6", selected["profile_name"]);
     return (
       <Stack wrap>
         <ButtonGroup segmented>
@@ -1205,7 +1201,34 @@ function NewProductsNewFilters(props) {
         };
         return accountName;
       });
+
+      let tempArrImage = ebayAccounts.map((account, key) => {
+        let accountName = {
+          // label: account["warehouses"][0]["user_id"],
+          // // value: `${getCountryName(account["warehouses"][0]["site_id"])}-${
+          // //   account["warehouses"][0]["user_id"]
+          // // }`,
+
+          label: `${getCountryName(account["warehouses"][0]["site_id"])}-${
+            account["warehouses"][0]["user_id"]
+          }`,
+          siteID: account["warehouses"][0]["site_id"],
+          shopId: account["id"],
+          value: "" + account["id"],
+          image: getCountyrName(account["warehouses"][0]["site_id"]),
+          abbreviation: getCountryAbbreviation(
+            account["warehouses"][0]["site_id"]
+          ),
+          username: account["warehouses"][0]["user_id"],
+          active:
+            account["warehouses"][0]["status"] === "active" ? true : false,
+          disabled:
+            account["warehouses"][0]["status"] === "inactive" ? true : false,
+        };
+        return accountName;
+      });
       setconnectedAccountsArray(tempArr);
+      setconnectedAccountsArrayImage(tempArrImage);
       getProfilesProducttypeVendor();
     }
   };
@@ -1439,6 +1462,8 @@ function NewProductsNewFilters(props) {
                 profileList={profileList}
                 isEbayActionBulkMenuOpen={isEbayActionBulkMenuOpen}
                 setCallbackEbayActionFunction={setCallbackEbayActionFunction}
+                // connectedAccountsArray={connectedAccountsArray}
+                connectedAccountsArray={connectedAccountsArrayImage}
               />,
               // <ProductMassMenu selectedRows={selectedRows} />,
               <ProductBulkMenu
@@ -1485,6 +1510,8 @@ function NewProductsNewFilters(props) {
                 selectedRows={selectedRows}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
+                // connectedAccountsArray={connectedAccountsArray}
+                connectedAccountsArray={connectedAccountsArrayImage}
               />
               {/* </OutsideAlerterMassMenu> */}
             </Col>

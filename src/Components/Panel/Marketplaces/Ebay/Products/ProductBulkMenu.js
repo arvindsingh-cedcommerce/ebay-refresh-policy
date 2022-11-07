@@ -103,147 +103,180 @@ const ProductBulkMenu = (props) => {
 
   return (
     <>
-<Popover
+      <Popover
         active={props.isProductBulkMenuOpen}
-        activator={ (<Button onClick={() => props.setCallbackProductBulkFunction(!props.isProductBulkMenuOpen)}>
-        <div>
-          Shopify Actions <DownOutlined />
-        </div>
-      </Button>)}
+        activator={
+          <Button
+            onClick={() =>
+              props.setCallbackProductBulkFunction(!props.isProductBulkMenuOpen)
+            }
+          >
+            <div>
+              Shopify Actions <DownOutlined />
+            </div>
+          </Button>
+        }
         autofocusTarget="first-node"
-        onClose={()=>{props.setCallbackProductBulkFunction(false)}}
+        onClose={() => {
+          props.setCallbackProductBulkFunction(false);
+        }}
       >
         <ActionList
           actionRole="menuitem"
-          items={[{content: <div
-            key="Import Products"
-            onClick={() =>
-              setModal({
-                ...modal,
-                active: true,
-                content: "Import Products",
-                actionName: getrequest,
-                actionPayload: {},
-                api: importProductURL,
-              })
-            }
-          >
-            <DownloadOutlined /> Import Products
-          </div>  
-         }, {content: <div
-          key="Sync Inventory Shopify"
-          onClick={() =>
-            setModal({
-              ...modal,
-              active: true,
-              content: "Sync Inventory",
-              actionName: postActionOnProductById,
-              actionPayload: {
-                sync: ["inventory"],
-                action: "shopify_to_app",
-              },
-              api: syncInventoryPrice,
-            })
-          }
-        >
-          <FileTextOutlined /> Sync Inventory
-        </div> },{content:  <div
-                key="Sync Price Shopify"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Sync Price",
-                    actionName: postActionOnProductById,
-                    actionPayload: {
-                      sync: ["price"],
-                      action: "shopify_to_app",
-                    },
-                    api: syncInventoryPrice,
-                  })
-                }
-              >
-                <DollarOutlined /> Sync Price
-              </div> },{content:
-              <div
-                key="Sync Details"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Sync Details",
-                    actionName: getrequest,
-                    actionPayload: {},
-                    api: syncProductDetails,
-                  })
-                }
-              >
-                <SyncOutlined /> Sync Details
-              </div>},{ content:
-              <div
-                key="Import Collection Products"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Import Collection Products",
-                    actionName: getrequest,
-                    actionPayload: {},
-                    api: importCollectionProductURL,
-                  })
-                }
-              >
-                <DownloadOutlined /> Import Collection Products
-              </div>},{content:
-              <div
-                key="Import metafileds of products"
-                onClick={() =>
-                  setModal({
-                    ...modal,
-                    active: true,
-                    content: "Import metafileds of products",
-                    actionName: getrequest,
-                    actionPayload: {},
-                    api: importMetaFieldURL,
-                  })
-                }
-              >
-                <DownloadOutlined /> Import metafields of products
-              </div>},{content:
-              <div
-                key="Import product by Id"
-                onClick={
-                  () => {
-                    let temp = { ...importProductById };
-                    temp["modal"]["active"] = true;
-                    temp["modal"]["actionName"] = postActionOnProductById;
-                    temp["modal"]["actionPayload"] = {
-                      product_id: [],
-                    };
-                    temp["modal"]["api"] = importByIdURL;
-                    setImportProductById(temp);
+          items={[
+            {
+              content: (
+                <div
+                  key="Sync Details"
+                  onClick={() =>
+                    setModal({
+                      ...modal,
+                      active: true,
+                      content: "Sync Details",
+                      actionName: getrequest,
+                      actionPayload: {},
+                      api: syncProductDetails,
+                    })
                   }
-                  // setModal({
-                  //   ...modal,
-                  //   active: true,
-                  //   content: (
-                  //     <>
-                  //       <TextField placeholder="" />
-                  //     </>
-                  //   ),
-                  //   actionName: getrequest,
-                  //   actionPayload: {},
-                  //   api: importMetaFieldURL,
-                  // })
-                }
-              >
-                <DownloadOutlined /> Import product by Id
-              </div>}]}
+                >
+                  <SyncOutlined /> Sync Details
+                </div>
+              ),
+            },
+            //     {content: <div
+            //     key="Import Products"
+            //     onClick={() =>
+            //       setModal({
+            //         ...modal,
+            //         active: true,
+            //         content: "Import Products",
+            //         actionName: getrequest,
+            //         actionPayload: {},
+            //         api: importProductURL,
+            //       })
+            //     }
+            //   >
+            //     <DownloadOutlined /> Import Products
+            //   </div>
+            //  },
+            {
+              content: (
+                <div
+                  key="Sync Inventory Shopify"
+                  onClick={() =>
+                    setModal({
+                      ...modal,
+                      active: true,
+                      content: "Sync Inventory",
+                      actionName: postActionOnProductById,
+                      actionPayload: {
+                        sync: ["inventory"],
+                        action: "shopify_to_app",
+                      },
+                      api: syncInventoryPrice,
+                    })
+                  }
+                >
+                  <FileTextOutlined /> Sync Inventory
+                </div>
+              ),
+            },
+            {
+              content: (
+                <div
+                  key="Sync Price Shopify"
+                  onClick={() =>
+                    setModal({
+                      ...modal,
+                      active: true,
+                      content: "Sync Price",
+                      actionName: postActionOnProductById,
+                      actionPayload: {
+                        sync: ["price"],
+                        action: "shopify_to_app",
+                      },
+                      api: syncInventoryPrice,
+                    })
+                  }
+                >
+                  <DollarOutlined /> Sync Price
+                </div>
+              ),
+            },
+            // { content:
+            // <div
+            //   key="Import Collection Products"
+            //   onClick={() =>
+            //     setModal({
+            //       ...modal,
+            //       active: true,
+            //       content: "Import Collection Products",
+            //       actionName: getrequest,
+            //       actionPayload: {},
+            //       api: importCollectionProductURL,
+            //     })
+            //   }
+            // >
+            //   <DownloadOutlined /> Import Collection Products
+            // </div>},
+
+            {
+              content: (
+                <div
+                  key="Import product by Id"
+                  onClick={
+                    () => {
+                      let temp = { ...importProductById };
+                      temp["modal"]["active"] = true;
+                      temp["modal"]["actionName"] = postActionOnProductById;
+                      temp["modal"]["actionPayload"] = {
+                        product_id: [],
+                      };
+                      temp["modal"]["api"] = importByIdURL;
+                      setImportProductById(temp);
+                    }
+                    // setModal({
+                    //   ...modal,
+                    //   active: true,
+                    //   content: (
+                    //     <>
+                    //       <TextField placeholder="" />
+                    //     </>
+                    //   ),
+                    //   actionName: getrequest,
+                    //   actionPayload: {},
+                    //   api: importMetaFieldURL,
+                    // })
+                  }
+                >
+                  <DownloadOutlined /> Import product by Id
+                </div>
+              ),
+            },
+            {
+              content: (
+                <div
+                  key="Import metafileds of products"
+                  onClick={() =>
+                    setModal({
+                      ...modal,
+                      active: true,
+                      content: "Import metafileds of products",
+                      actionName: getrequest,
+                      actionPayload: {},
+                      api: importMetaFieldURL,
+                    })
+                  }
+                >
+                  <DownloadOutlined /> Import Metafields
+                   {/* of products */}
+                </div>
+              ),
+            },
+          ]}
         />
       </Popover>
 
-
-      
       <Modal
         open={uploadAndReviseOnEbay.modal.active}
         onClose={() => {
