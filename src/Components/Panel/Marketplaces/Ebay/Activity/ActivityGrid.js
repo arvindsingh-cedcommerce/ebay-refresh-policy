@@ -202,10 +202,15 @@ const ActivityGrid = (props) => {
 
   const hitGetActivitiesAPI = async () => {
     setGridLoader(true);
+    const tempFilters = {};
+    for (const key in filtersToPass) {
+      if (filtersToPass[key]) tempFilters[key] = filtersToPass[key];
+    }
     let dataToPost = {
       count: pageSize,
       activePage: activePage,
-      ...filtersToPass,
+      // ...filtersToPass,
+      ...tempFilters,
     };
     let {
       success: activityDataSuccess,
@@ -276,9 +281,9 @@ const ActivityGrid = (props) => {
   );
 
   useEffect(() => {
-    if (filterName !== "") {
-      verify(filterName);
-    }
+    // if (filterName !== "") {
+    verify(filterName);
+    // }
   }, [filterName]);
 
   const renderActivitySearchQuery = () => {
@@ -320,50 +325,52 @@ const ActivityGrid = (props) => {
 
   const tagMarkup = () => {
     return Object.keys(filtersToPass).map((filter, index) => {
-      let indexOfFirstOpeningBracket = filter.indexOf("[");
-      let indexOfFirstClosingBracket = filter.indexOf("]");
-      let indexOfSecondOpeningBracket = filter.indexOf(
-        "[",
-        indexOfFirstOpeningBracket + 1
-      );
-      let indexOfSecondClosingBracket = filter.indexOf(
-        "]",
-        indexOfFirstClosingBracket + 1
-      );
-      let fieldValue = filter.substring(
-        indexOfFirstOpeningBracket + 1,
-        indexOfFirstClosingBracket
-      );
-      let operatorValue = filter.substring(
-        indexOfSecondOpeningBracket + 1,
-        indexOfSecondClosingBracket
-      );
-      return (
-        <Tag
-          key={index}
-          onRemove={() => {
-            const temp = Object.keys(filtersToPass).reduce((object, key) => {
-              if (key !== filter) {
-                object[key] = filtersToPass[key];
-              }
-              return object;
-            }, {});
-            let tempObj = { ...filters };
-            Object.keys(tempObj).forEach((object) => {
-              if (object === fieldValue) {
-                tempObj[object]["value"] = "";
-              }
-            });
-            setFilterName("");
-            setFilters(tempObj);
-            setFiltersToPass(temp);
-            setSelected({ ...selected, [fieldValue]: [] });
-          }}
-        >
-          {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
-          {filtersToPass[filter]}
-        </Tag>
-      );
+      if (filtersToPass[filter]) {
+        let indexOfFirstOpeningBracket = filter.indexOf("[");
+        let indexOfFirstClosingBracket = filter.indexOf("]");
+        let indexOfSecondOpeningBracket = filter.indexOf(
+          "[",
+          indexOfFirstOpeningBracket + 1
+        );
+        let indexOfSecondClosingBracket = filter.indexOf(
+          "]",
+          indexOfFirstClosingBracket + 1
+        );
+        let fieldValue = filter.substring(
+          indexOfFirstOpeningBracket + 1,
+          indexOfFirstClosingBracket
+        );
+        let operatorValue = filter.substring(
+          indexOfSecondOpeningBracket + 1,
+          indexOfSecondClosingBracket
+        );
+        return (
+          <Tag
+            key={index}
+            onRemove={() => {
+              const temp = Object.keys(filtersToPass).reduce((object, key) => {
+                if (key !== filter) {
+                  object[key] = filtersToPass[key];
+                }
+                return object;
+              }, {});
+              let tempObj = { ...filters };
+              Object.keys(tempObj).forEach((object) => {
+                if (object === fieldValue) {
+                  tempObj[object]["value"] = "";
+                }
+              });
+              setFilterName("");
+              setFilters(tempObj);
+              setFiltersToPass(temp);
+              setSelected({ ...selected, [fieldValue]: [] });
+            }}
+          >
+            {getFieldValue(fieldValue)} {getOperatorLabel(operatorValue)}{" "}
+            {filtersToPass[filter]}
+          </Tag>
+        );
+      }
     });
   };
   useEffect(() => {
