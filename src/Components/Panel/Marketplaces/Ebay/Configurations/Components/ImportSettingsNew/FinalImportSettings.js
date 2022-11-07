@@ -13,6 +13,8 @@ import {
   SkeletonDisplayText,
   FooterHelp,
   Link,
+  Modal,
+  TextContainer,
 } from "@shopify/polaris";
 import Title from "antd/lib/typography/Title";
 import React, { useEffect, useState } from "react";
@@ -21,11 +23,17 @@ import {
   initiateVendorProductTypeFetch,
 } from "../../../../../../../Apirequest/registrationApi";
 import { configurationAPI } from "../../../../../../../APIrequests/ConfigurationAPI";
+import { getrequest } from "../../../../../../../APIrequests/ProductsAPI";
 import { notify } from "../../../../../../../services/notify";
 import {
   collectionFetchURL,
   saveAppSettingsShopifyToAppURL,
 } from "../../../../../../../URLs/ConfigurationURL";
+import {
+  importCollectionProductURL,
+  importProductURL,
+} from "../../../../../../../URLs/ProductsURL";
+import { withRouter } from "react-router-dom";
 
 const publishedStatusOptions = [
   {
@@ -46,7 +54,7 @@ const productStatusOptions = [
   { label: "Draft", value: "draft" },
 ];
 
-const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
+const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
   const [flag, setflag] = useState(true);
   const [saveBtnLoader, setSaveBtnLoader] = useState(false);
 
@@ -121,6 +129,18 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     refreshProductTypeVendorBtnLoader,
     setRefreshProductTypeVendorBtnLoader,
   ] = useState(false);
+
+  // import by filters
+  const [importProductModalActive, setImportProductModalActive] =
+    useState(false);
+  const [importProductLoader, setImportProductLoader] = useState(false);
+  const [importProductModalData, setImportProductModalData] = useState({});
+
+  // import by collection
+  const [importCollectionModalActive, setImportCollectionModalActive] =
+    useState(false);
+  const [importCollectionLoader, setImportCollectionLoader] = useState(false);
+
   const [refreshCollectionBtnLoader, setRefreshCollectionBtnLoader] =
     useState(false);
 
@@ -310,8 +330,9 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     setRefreshCollectionBtnLoader(false);
   };
 
-  const saveData = async (force = false) => {
-    !force && setSaveBtnLoader(true);
+  const saveData = async (force = false, importType) => {
+    if (!["importProduct", "importCollection"].includes(importType))
+      !force && setSaveBtnLoader(true);
     let tempObj = {
       import_settings: {},
       setting_type: ["import_settings"],
@@ -356,10 +377,37 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     );
     if (success) {
       !force && notify.success(message);
+      if (importType === "importProduct") {
+        setImportProductLoader(true);
+        let { success, message, data } = await getrequest(importProductURL);
+        if (success) {
+          notify.success(message ? message : data);
+          props.history.push("/panel/ebay/activity");
+        } else {
+          notify.error(message ? message : data);
+          setImportProductModalActive(false);
+        }
+        setImportProductLoader(false);
+      }
+      if (importType === "importCollection") {
+        setImportCollectionLoader(true);
+        let { success, message, data } = await getrequest(
+          importCollectionProductURL
+        );
+        if (success) {
+          notify.success(message ? message : data);
+          props.history.push("/panel/ebay/activity");
+        } else {
+          notify.error(message ? message : data);
+          setImportCollectionModalActive(false);
+        }
+        setImportCollectionLoader(false);
+      }
     } else {
       notify.error(message);
     }
-    !force && setSaveBtnLoader(false);
+    if (!["importProduct", "importCollection"].includes(importType))
+      !force && setSaveBtnLoader(false);
   };
 
   const getParsedData = (data) => {
@@ -448,29 +496,58 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     return (
       <Card
         sectioned
-        actions={{
-          content: (
-            <Button
-              onClick={importProductTypeVendor}
-              loading={refreshProductTypeVendorBtnLoader}
-            >
-              Refresh Product Type & Vendor
-            </Button>
-          ),
-        }}
+        actions={[
+          {
+            content: (
+              <Stack>
+                <Button
+                pressed
+                  // primary
+                  onClick={() => {
+                    let parsedData =
+                      parseImportProductData(importProductFilters);
+                    setImportProductModalData(parsedData);
+                    setImportProductModalActive(true);
+                  }}
+                >
+                  Import Products
+                </Button>
+                {/* <Button
+                  onClick={importProductTypeVendor}
+                  loading={refreshProductTypeVendorBtnLoader}
+                >
+                  Refresh Product Type & Vendor
+                </Button> */}
+              </Stack>
+            ),
+            // {/* ),
+            // onAction: () => {
+            //   let parsedData = parseImportProductData(importProductFilters);
+            //   setImportProductModalData(parsedData);
+            //   setImportProductModalActive(true);
+            // },
+          },
+        ]}
       >
         <Card.Section>{resultArr1}</Card.Section>
         <Card.Section
           title="Additional Filters"
-          // actions={[
-          //   {
-          //     content: (
-          //       <Tooltip content="If all options not listed then please wait while data fetching process running you can reload the page to check the options">
-          //         <Icon source={QuestionMarkMinor} color="base" />
-          //       </Tooltip>
-          //     ),
-          //   },
-          // ]}
+          actions={[
+            {
+              content:
+                // <Tooltip content="If all options not listed then please wait while data fetching process running you can reload the page to check the options">
+                //   <Icon source={QuestionMarkMinor} color="base" />
+                // </Tooltip>
+                // <Button
+                //   onClick={importProductTypeVendor}
+                //   loading={refreshProductTypeVendorBtnLoader}
+                // >
+                "Refresh Product Type & Vendor",
+              // {/* </Button> */}
+              onClick: importProductTypeVendor,
+              loading: refreshProductTypeVendorBtnLoader,
+            },
+          ]}
         >
           {resultArr2}
         </Card.Section>
@@ -482,16 +559,46 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
     return (
       <Card
         sectioned
-        actions={{
-          content: (
-            <Button
-              onClick={importCollections}
-              loading={refreshCollectionBtnLoader}
-            >
-              Refresh Collections
-            </Button>
-          ),
-        }}
+        actions={[
+          {
+            content: "Refresh Collections",
+            onAction: importCollections,
+            loading: refreshCollectionBtnLoader,
+          },
+          {
+            content: (
+              <Stack>
+                <Button
+                  // primary
+                  pressed
+                  onClick={() => {
+                    let parsedData =
+                      parseImportProductData(importProductFilters);
+                    setImportCollectionModalActive(true);
+                  }}
+                >
+                  Import Collection Products
+                  {/* onAction: () => {
+            setImportCollectionModalActive(true);
+          }, */}
+                </Button>
+                {/* <Button
+                onClick={importCollections}
+                loading={refreshCollectionBtnLoader}
+              >
+                Refresh Collections
+              </Button> */}
+              </Stack>
+            ),
+          },
+        ]}
+        // secondaryFooterActions={[
+        //   {
+        //     content: "Refresh Collections",
+        //     onAction: importCollections,
+        //     loading: refreshCollectionBtnLoader,
+        //   },
+        // ]}
       >
         <div style={{ maxHeight: 400, overflowY: "scroll" }}>
           <ChoiceList
@@ -533,6 +640,45 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
         />
       </Card>
     );
+  };
+
+  const parseImportProductData = (data) => {
+    let parsedData = {};
+    let importByFiltersList = [
+      "publishedStatus",
+      "productStatus",
+      "productType",
+      "vendor",
+    ];
+    for (const key in data) {
+      if (importByFiltersList.includes(key) && data[key]["value"]) {
+        if (key === "publishedStatus") {
+          let findValue = publishedStatusOptions.find(
+            (option) => option.value === data[key]["value"]
+          )["label"];
+          parsedData["Published Status"] = findValue;
+        }
+        if (key === "productStatus") {
+          let findValue = productStatusOptions.find(
+            (option) => option.value === data[key]["value"]
+          )["label"];
+          parsedData["Product Status"] = findValue;
+        }
+        if (key === "productType") {
+          let findValue = data[key]["options"].find(
+            (option) => option.value === data[key]["value"]
+          )["label"];
+          parsedData["Product Type"] = findValue;
+        }
+        if (key === "vendor") {
+          let findValue = data[key]["options"].find(
+            (option) => option.value === data[key]["value"]
+          )["label"];
+          parsedData["Vendor"] = findValue;
+        }
+      }
+    }
+    return parsedData;
   };
 
   return flag ? (
@@ -701,8 +847,77 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData }) => {
           Product Import Settings
         </Link>
       </FooterHelp>
+      <Modal
+        open={importProductModalActive}
+        onClose={() => setImportProductModalActive(false)}
+        title="Permission required"
+      >
+        <Modal.Section>
+          <TextContainer>
+            <p>
+              Are you sure you want to initiate Import Products action for the
+              following filters ?
+            </p>
+            <center>
+              <Stack vertical spacing="extraTight">
+                {Object.keys(importProductModalData).map((key) => {
+                  return (
+                    <Stack distribution="center">
+                      <>{key} - </>
+                      <>{importProductModalData[key]}</>
+                    </Stack>
+                  );
+                })}
+              </Stack>
+            </center>
+            <Stack distribution="center" spacing="tight">
+              <Button onClick={() => setImportProductModalActive(false)}>
+                Cancel
+              </Button>
+              <Button
+                primary
+                loading={importProductLoader}
+                onClick={async () => {
+                  saveData(false, "importProduct");
+                }}
+              >
+                OK
+              </Button>
+            </Stack>
+          </TextContainer>
+        </Modal.Section>
+      </Modal>
+
+      <Modal
+        open={importCollectionModalActive}
+        onClose={() => setImportCollectionModalActive(false)}
+        title="Permission required"
+      >
+        <Modal.Section>
+          <TextContainer>
+            <p>
+              Are you sure you want to initiate Import Collection Products
+              action ?
+            </p>
+            <Stack distribution="center" spacing="tight">
+              <Button onClick={() => setImportCollectionModalActive(false)}>
+                Cancel
+              </Button>
+              <Button
+                primary
+                loading={importCollectionLoader}
+                onClick={async () => {
+                  saveData(false, "importCollection");
+                }}
+              >
+                OK
+              </Button>
+            </Stack>
+          </TextContainer>
+        </Modal.Section>
+      </Modal>
     </>
   );
 };
 
-export default FinalImportSettings;
+export default withRouter(FinalImportSettings);
