@@ -14,7 +14,7 @@ import {
   FooterHelp,
   Link,
 } from "@shopify/polaris";
-import { Alert, Col, Image, PageHeader, Row } from "antd";
+import { Alert, Col, Divider, Image, PageHeader, Row } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
@@ -56,6 +56,7 @@ import { getVariantsCountDetails } from "./helperFunctions/commonHelper";
 import { useDispatch, useSelector } from "react-redux";
 import PopoverProduct from "./PopoverProduct";
 import { tokenExpireValues } from "../../../../../HelperVariables";
+import { disabledProductsGifs } from "../Help/gifHelper";
 
 const DisabledProducts = (props) => {
   const [gridLoader, setGridLoader] = useState(false);
@@ -245,6 +246,16 @@ const DisabledProducts = (props) => {
 
   // countries
   const [connectedAccountsArray, setconnectedAccountsArray] = useState([]);
+
+  // modal video
+  const [isOpenModalVideo, setIsOpenModalVideo] = useState(false);
+  // gif modal
+  const [isOpenGifModal, setIsOpenGifModal] = useState({
+    active: false,
+    title: "",
+    url: "",
+  });
+
   const reduxState = useSelector(
     (state) => state.disabledProductFilterReducer.reduxFilters
   );
@@ -1081,6 +1092,14 @@ const DisabledProducts = (props) => {
       className="site-page-header-responsive"
       title="Disabled Products"
       ghost={true}
+      subTitle={
+        <div
+          onClick={() => setIsOpenModalVideo(true)}
+          style={{ cursor: "pointer" }}
+        >
+          <Badge status="info">Need Help?</Badge>
+        </div>
+      }
       extra={[
         <Button
           onClick={() => {
@@ -1222,6 +1241,71 @@ const DisabledProducts = (props) => {
               </Button>
             </Stack>
           </Stack>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={isOpenModalVideo}
+        onClose={() => setIsOpenModalVideo(false)}
+        title="How Can I Help?"
+      >
+        <Modal.Section>
+          {disabledProductsGifs.map((gif, index) => {
+            return (
+              <>
+                <Stack distribution="equalSpacing">
+                  <>{gif.title}</>
+                  <Button
+                    plain
+                    onClick={() => {
+                      setIsOpenModalVideo(false);
+                      setIsOpenGifModal({
+                        active: true,
+                        title: gif.title,
+                        url: gif.url,
+                      });
+                    }}
+                  >
+                    Watch
+                  </Button>
+                </Stack>
+                {index == disabledProductsGifs.length - 1 ? <></> : <Divider />}
+              </>
+            );
+          })}
+          <Divider />
+          <center>
+            <Button primary onClick={() => setIsOpenModalVideo(false)}>
+              Close
+            </Button>
+          </center>
+        </Modal.Section>
+      </Modal>
+      <Modal
+        open={isOpenGifModal.active}
+        onClose={() =>
+          setIsOpenGifModal({
+            active: false,
+            title: "",
+          })
+        }
+        title={isOpenGifModal.title}
+      >
+        <Modal.Section>
+          <img src={isOpenGifModal.url} style={{ width: "100%" }} />
+          <Divider />
+          <center>
+            <Button
+              primary
+              onClick={() =>
+                setIsOpenGifModal({
+                  active: false,
+                  title: "",
+                })
+              }
+            >
+              Close
+            </Button>
+          </center>
         </Modal.Section>
       </Modal>
       <FooterHelp>

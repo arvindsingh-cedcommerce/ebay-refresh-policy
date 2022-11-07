@@ -6,6 +6,9 @@ import uploadProducts from "../../../../../assets/gifImage/uploadProducts.jpg";
 import inventoryTemplate from "../../../../../assets/gifImage/inventoryTemplate.jpg";
 import titleTemplate from "../../../../../assets/gifImage/titleTemplate.jpg";
 import priceTemplateFixedListing from "../../../../../assets/gifImage/priceTemplateFixedListing.jpg";
+import disableProducts from "../../../../../assets/gifImage/disableProducts.jpg";
+import enableProducts from "../../../../../assets/gifImage/enableProducts.jpg";
+import importProductsCollection from "../../../../../assets/gifImage/importProductsCollection.png";
 
 export const gifs = [
   {
@@ -49,6 +52,21 @@ export const gifs = [
     url: "https://integration.cedcommerce.com/assets/gifs/profile.gif",
     gifModalImage: profile,
   },
+  {
+    title: "How to disable products in the app?",
+    url: "https://integration.cedcommerce.com/assets/gifs/disableProducts.gif",
+    gifModalImage: disableProducts,
+  },
+  {
+    title: "How to enable products in the app?",
+    url: "https://integration.cedcommerce.com/assets/gifs/enableProducts.gif",
+    gifModalImage: enableProducts,
+  },
+  {
+    title: "How to import products from Shopify Collections?",
+    url: "https://integration.cedcommerce.com/assets/gifs/importProductsCollection.gif",
+    gifModalImage: importProductsCollection,
+  },
 ];
 
 export const gifTemplates = [
@@ -79,6 +97,22 @@ export const manageProductsGifs = [
   {
     title: "How to select and upload products?",
     url: "https://integration.cedcommerce.com/assets/gifs/uploadProducts.gif",
+  },
+  {
+    title: "How to disable products in the app?",
+    url: "https://integration.cedcommerce.com/assets/gifs/disableProducts.gif",
+  },
+  {
+    title: "How to import products from Shopify Collections?",
+    url: "https://integration.cedcommerce.com/assets/gifs/importProductsCollection.gif",
+    gifModalImage: importProductsCollection,
+  },
+];
+
+export const disabledProductsGifs = [
+  {
+    title: "How to enable products in the app?",
+    url: "https://integration.cedcommerce.com/assets/gifs/enableProducts.gif",
   },
 ];
 
