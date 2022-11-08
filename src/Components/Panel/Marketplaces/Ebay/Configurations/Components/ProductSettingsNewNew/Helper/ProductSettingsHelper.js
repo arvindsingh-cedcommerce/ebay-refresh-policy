@@ -88,7 +88,7 @@ export const getParsedEbayAccounts = (ebayAccounts, shopifyWarehouses) => {
           },
         ],
         description:
-          "Set the attribute preference between Title or SKU to map the already existing eBay linting to  Shopify listings.",
+          "Set the attribute preference between Title or SKU to map the already existing eBay listing to Shopify listings.",
       },
     };
     if (!["United States", "Canada (Eng)"].includes(getCountryName(siteId))) {
