@@ -444,6 +444,7 @@ const NewOrdersGrid = (props) => {
           targetStatus = "critical";
           break;
         default:
+          targetStatus = "critical";
           break;
       }
       shippedDateArray = order?.["fulfillments"]?.map(
@@ -542,12 +543,17 @@ const NewOrdersGrid = (props) => {
               id: order["source_order_id"],
             })
           }
-          style={{ cursor: "pointer" }}
+          style={!order?.target_status ? {} : { cursor: "pointer" }}
         >
           <PolarisBadge status={targetStatus} progress={progressBarStatus}>
-            {["error", "failed"].includes(order?.target_status) ? (
+            {["error", "failed"].includes(order?.target_status) ||
+            !order?.target_status ? (
               <div
-                style={{ cursor: "pointer", borderBottom: "2px solid black" }}
+                style={
+                  !order?.target_status
+                    ? {}
+                    : { cursor: "pointer", borderBottom: "2px solid black" }
+                }
               >
                 Failed
               </div>
