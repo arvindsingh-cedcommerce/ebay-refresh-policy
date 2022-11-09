@@ -401,7 +401,7 @@ const ProductMassMenu = ({
                         setModal({
                           ...modal,
                           active: true,
-                          content: "Import metafileds of products",
+                          content: "Import metafields of products",
                           actionName: postActionOnProductById,
                           actionPayload: {
                             product_id: postData,
@@ -410,7 +410,7 @@ const ProductMassMenu = ({
                         });
                       }}
                     >
-                      <DownloadOutlined /> Import metafileds of products
+                      <DownloadOutlined /> Import metafields of products
                     </div>
                   ),
                 },
