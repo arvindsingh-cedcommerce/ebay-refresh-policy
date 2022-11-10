@@ -48,10 +48,10 @@ const shopifyOrderNoteTagsNameOptions = [
     label: "Set default value",
     value: "default",
   },
-  {
-    label: "Set custom value",
-    value: "custom",
-  },
+  // {
+  //   label: "Set custom value",
+  //   value: "custom",
+  // },
 ];
 const shopifyOrderNoteTagsNameCustomAttributeOptions = [
   {
@@ -465,8 +465,8 @@ const TabContent = ({
                               onChange={(e) => handleBtnPres(e, field)}
                               options={shopifyOrderNoteTagsNameOptions}
                             />
-                            {fields[field]["value"] === "custom" &&
-                              getCustomStructure(field)}
+                            {/* {fields[field]["value"] === "custom" &&
+                              getCustomStructure(field)} */}
                           </Stack>
                         )}
                         {field === "useEbayCustomerDetails" &&
