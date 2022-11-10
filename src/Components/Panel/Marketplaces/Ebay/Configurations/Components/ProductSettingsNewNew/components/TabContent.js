@@ -86,6 +86,14 @@ const TabContent = ({
   const matchFromEbayHandler = (e, field, index, attributeType) => {
     let temp = { ...connectedAccountsObject };
     temp[account]["fields"][field]["value"][index][attributeType] = e;
+    if (attributeType === "shopify_attribute") {
+      if (e === "sku")
+        temp[account]["fields"][field]["value"][index]["ebay_attribute"] =
+          "SKU";
+      else if (e === "title")
+        temp[account]["fields"][field]["value"][index]["ebay_attribute"] =
+          "Title";
+    }
     setconnectedAccountsObject(temp);
   };
 
@@ -159,7 +167,8 @@ const TabContent = ({
                       onChange={(e) =>
                         matchFromEbayHandler(e, field, index, "ebay_attribute")
                       }
-                      placeholder="Please Select..."
+                      // placeholder="Please Select..."
+                      disabled
                     />
                   </FormLayout.Group>
                 </FormLayout>
@@ -260,10 +269,10 @@ const TabContent = ({
       getCurrencyFunc();
     }
   }, [connectedAccountsObject]);
-const validateVatPercentageValue=(value)=>{
-  let pattern = /^\d+\.?\d*$/;
-  return !pattern.test(value);
-}
+  const validateVatPercentageValue = (value) => {
+    let pattern = /^\d+\.?\d*$/;
+    return !pattern.test(value);
+  };
   const removeErrors = (value, field, innerField) => {
     let temp = { ...errorsData };
     if (value && innerField) {
@@ -511,24 +520,31 @@ const validateVatPercentageValue=(value)=>{
                             <TextField
                               label="VAT Percentage"
                               value={fields[field]["vatPercentage"]}
-                              onChange={(value) =>
-                                {
-                                  console.log("FINAL VALUE",value);
-                                if(  errorsData?.[account]?.["fields"]?.[field]?.[
-                                  "vatPercentage"
-                                ] && (value>=0 && value<=30))
-                                  {
-                                    removeErrors(value, field, "vatPercentage");
-                                  }
-                                handleBtnPres(value, field, "vatPercentage")
+                              onChange={(value) => {
+                                console.log("FINAL VALUE", value);
+                                if (
+                                  errorsData?.[account]?.["fields"]?.[field]?.[
+                                    "vatPercentage"
+                                  ] &&
+                                  value >= 0 &&
+                                  value <= 30
+                                ) {
+                                  removeErrors(value, field, "vatPercentage");
                                 }
-                              }
+                                handleBtnPres(value, field, "vatPercentage");
+                              }}
                               type="text"
                               error={
                                 errorsData?.[account]?.["fields"]?.[field]?.[
                                   "vatPercentage"
                                 ]
-                              ?(validateVatPercentageValue(fields[field]["vatPercentage"])?"Invalid value format":"Value should be greater than or equal to 0 and less than or equal to 30"):false}
+                                  ? validateVatPercentageValue(
+                                      fields[field]["vatPercentage"]
+                                    )
+                                    ? "Invalid value format"
+                                    : "Value should be greater than or equal to 0 and less than or equal to 30"
+                                  : false
+                              }
                             />
                           </FormLayout.Group>
                         </FormLayout>
