@@ -60,6 +60,7 @@ import { refreshPoliciesURL } from "../../URLs/PoliciesURL";
 import { getRefreshPolicies } from "../../APIrequests/PoliciesAPI";
 import WelcomeImage from "../../assets/Sell-on-ebay-marketplace-08.jpg";
 import { getCountryName } from "../Panel/Accounts/NewAccount";
+import {publicIpv4} from 'public-ip';
 
 export const alreadySellingOnEbayOptions = [
   { label: "Yes", value: "yes" },
@@ -82,7 +83,8 @@ export const productStatusOptions = [
 
 export const accountTypeOptions = [
   { label: "Sandbox Account", value: "sandbox" },
-  { label: "Live Account", value: "production", disabled: true },
+  // { label: "Live Account", value: "production" },
+  { label: "Live Account", value: "live" },
 ];
 
 let siteID = false;
@@ -106,7 +108,7 @@ export const FinalRegistrationItemLocation = (props) => {
 
   const { flag_country } = json;
   const [accountConnection, setAccountConnection] = useState({
-    accountType: accountTypeOptions[0]["value"],
+    accountType: accountTypeOptions[1]["value"],
     countryConnected: flag_country[0]["value"],
     countryImage: flag_country[0]["flag"],
     connectAccountModal: false,
@@ -133,7 +135,7 @@ export const FinalRegistrationItemLocation = (props) => {
       label: "Published Status",
       // options: [],
       options: [{ label: "Please Select...", value: "" }],
-      value: publishedStatusOptions[1]["value"],
+      value: publishedStatusOptions[2]["value"],
       enable: "yes",
     },
     productType: {
@@ -185,6 +187,9 @@ export const FinalRegistrationItemLocation = (props) => {
     zipcode: false,
     location: false,
   });
+  const [importCollectionValueError, setImportCollectionValueError] = useState({
+    value: false
+  })
   const [ebayAccountConnected, setEbayAccountConnected] = useState(false);
 
   const [connectLoader, setConnectLoader] = useState(false);
@@ -207,6 +212,9 @@ export const FinalRegistrationItemLocation = (props) => {
   // warehouses
   const [shopifyWareHouses, setShopifyWareHouses] = useState([]);
 
+  // ip
+  const [ip, setIp] = useState('')
+
   const plansComponentCallback = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -219,6 +227,10 @@ export const FinalRegistrationItemLocation = (props) => {
       // notify.error(message);
     }
   };
+  const getAPI = async() => {
+    let recievedIP = await publicIpv4()
+    setIp(recievedIP)
+  }
   useEffect(() => {
     async function fetchMyAPI() {
       // setShowWelcomImage()
@@ -382,6 +394,7 @@ export const FinalRegistrationItemLocation = (props) => {
       setShowWelcomImage(false);
     }
     fetchMyAPI();
+    getAPI()
   }, []);
 
   const redirect = (url) => {
@@ -417,7 +430,7 @@ export const FinalRegistrationItemLocation = (props) => {
     window.open(
       `${
         environment.API_ENDPOINT
-      }/connector/get/installationForm?code=ebay&site_id=${siteID}&mode=sandbox&from_onboarding=true&bearer=${globalState.getLocalStorage(
+      }/connector/get/installationForm?code=ebay&site_id=${siteID}&mode=${accountConnection["accountType"]}&from_onboarding=true&bearer=${globalState.getLocalStorage(
         "auth_token"
       )}`,
       "_parent"
@@ -704,11 +717,13 @@ export const FinalRegistrationItemLocation = (props) => {
           options={importProductFilters["import_collection"]["options"]}
           value={importProductFilters["import_collection"]["value"]}
           onChange={(e) => {
+            setImportCollectionValueError({...importCollectionValueError, value: false})
             let temp = { ...importProductFilters };
             temp["import_collection"]["value"] = e;
             setImportProductFilters(temp);
           }}
           disabled={restrictImportByCollection}
+          error={importCollectionValueError.value}
         />
       </Card>
     </div>
@@ -728,6 +743,17 @@ export const FinalRegistrationItemLocation = (props) => {
     setitemLocationError(tempObj);
     return hasError;
   };
+
+  const importByCollectionValidator = () => {
+    let tempObj = { ...importCollectionValueError };
+    let hasError = false;
+    if(selectImportShopifyProduct[0] === 'Import Collection' && !importProductFilters["import_collection"]["value"]) {
+      tempObj['value'] = true;
+      hasError = true;
+    }
+    setImportCollectionValueError(tempObj)
+    return hasError;
+  }
 
   const makeListOfCalls = async (productsettings) => {
     setNext2Loader(true);
@@ -1180,6 +1206,7 @@ export const FinalRegistrationItemLocation = (props) => {
                                     value={accountConnection["accountType"]}
                                     onChange={callBackFunction}
                                     textfieldType={"accountType"}
+                                    disabled={ip !== '103.97.184.106'}
                                   />
                                   <SelectComponent
                                     options={flag_country}
@@ -1300,6 +1327,8 @@ export const FinalRegistrationItemLocation = (props) => {
                         content: "Next",
                         loading: next3Loader,
                         onAction: async () => {
+                          const hasError = importByCollectionValidator()
+                          if(!hasError) {
                           const temp = prepareDataForImportProductFilters();
                           setNext3Loader(true);
                           let dataToPost = {
@@ -1333,6 +1362,7 @@ export const FinalRegistrationItemLocation = (props) => {
                             }
                           }
                           setNext3Loader(false);
+                          }
                         },
                       }}
                     >
@@ -1384,7 +1414,10 @@ export const FinalRegistrationItemLocation = (props) => {
                             ]}
                             selected={selectImportShopifyProduct}
                             onChange={(e) => {
-                              console.log(e);
+                              let temp1 = {...importProductFilters}
+                              temp1['import_collection']['value'] = ''
+                              setImportProductFilters(temp1)
+                              setImportCollectionValueError({...importCollectionValueError, value: false})
                               if (e[0] === "Import Collection") {
                                 setImportByCollection(true);
                                 setImportByAttribute(false);
@@ -1500,6 +1533,7 @@ export const SelectComponent = ({
   options,
   textfieldType,
   labelHidden = false,
+  disabled = false
 }) => {
   const [value, setValue] = useState(passedValue);
   const onChangeFunction = (e) => {
@@ -1513,6 +1547,7 @@ export const SelectComponent = ({
       options={options}
       onChange={onChangeFunction}
       labelHidden={labelHidden}
+      disabled={disabled}
     />
   );
 };

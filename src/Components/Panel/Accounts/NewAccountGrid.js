@@ -44,6 +44,7 @@ import { dashboardAnalyticsURL, ebayDetails } from "../../../URLs/DashboardURL";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import { ebayAccountGifs } from "../Marketplaces/Ebay/Help/gifHelper";
 import { tokenExpireValues } from "../../../HelperVariables";
+import { publicIpv4 } from "public-ip";
 
 export const getCountryName = (site_id) => {
   let countryName = json.flag_country.filter(
@@ -233,6 +234,14 @@ const NewAccount = (props) => {
     },
   ]);
 
+  // ip
+  const [ip, setIp] = useState("");
+
+  const getAPI = async () => {
+    let recievedIP = await publicIpv4();
+    setIp(recievedIP);
+  };
+
   const getAllConnectedAccounts = async () => {
     setGridLoader(true);
     let {
@@ -332,6 +341,7 @@ const NewAccount = (props) => {
     document.title = "Accounts | Integration for eBay";
     document.description = "Accounts";
     getAllConnectedAccounts();
+    getAPI();
   }, []);
 
   // useEffect(() => {
@@ -440,6 +450,7 @@ const NewAccount = (props) => {
                   onChange={(accountType) =>
                     setSelectedAddAccountType(accountType)
                   }
+                  disabled={ip !== "103.97.184.106"}
                   // size="large"
                 />
               </Col>
