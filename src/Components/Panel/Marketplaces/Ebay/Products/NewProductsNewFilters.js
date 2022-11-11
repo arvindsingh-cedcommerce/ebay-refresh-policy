@@ -579,7 +579,12 @@ function NewProductsNewFilters(props) {
       </center>
     );
   };
-  const getProductStatusEbayResponse = (response) => {
+  const getProductStatusEbayResponse = (response1) => {
+    let response = {}
+    response1.forEach(responseObj => {
+      const {shop_id, ...remainingProps} = responseObj
+      response[shop_id] = remainingProps
+    })
     let statusStructures = [];
     if (response && Object.keys(response).length) {
       for (const shopId in response) {
