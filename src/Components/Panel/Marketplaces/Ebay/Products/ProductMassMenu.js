@@ -289,6 +289,10 @@ const ProductMassMenu = ({
                           shop_id: "",
                           product_id: postData,
                         };
+                        if (connectedAccountsArray.length == 1) {
+                          temp["modal"]["actionPayload"]["shop_id"] =
+                            "" + connectedAccountsArray[0]["shopId"] + "";
+                        }
                         temp["modal"]["api"] = matchFromEbayURL;
                         setMatchFromEbayAccount(temp);
                       }}
@@ -549,36 +553,38 @@ const ProductMassMenu = ({
               Are you sure you want to initiate{" "}
               {matchFromEbayAccount.modal.content} bulk action ?
             </>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ marginRight: "10px" }}>
-                {matchFromEbayAccount["siteID"] &&
-                  getCountyrName(matchFromEbayAccount["siteID"])}
+            {connectedAccountsArray.length > 1 && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div style={{ marginRight: "10px" }}>
+                  {matchFromEbayAccount["siteID"] &&
+                    getCountyrName(matchFromEbayAccount["siteID"])}
+                </div>
+                <div style={{ minWidth: "50%" }}>
+                  <Select
+                    placeholder="Please Select..."
+                    options={connectedAccountsArray}
+                    value={
+                      matchFromEbayAccount["modal"]["actionPayload"]["value"]
+                    }
+                    onChange={(e) => {
+                      let temp = { ...matchFromEbayAccount };
+                      temp["modal"]["actionPayload"]["value"] = e;
+                      temp["modal"]["actionPayload"]["shop_id"] = e;
+                      temp["siteID"] = connectedAccountsArray.filter(
+                        (account) => account.value == e
+                      )?.[0]?.siteID;
+                      setMatchFromEbayAccount(temp);
+                    }}
+                  />
+                </div>
               </div>
-              <div style={{ minWidth: "50%" }}>
-                <Select
-                  placeholder="Please Select..."
-                  options={connectedAccountsArray}
-                  value={
-                    matchFromEbayAccount["modal"]["actionPayload"]["value"]
-                  }
-                  onChange={(e) => {
-                    let temp = { ...matchFromEbayAccount };
-                    temp["modal"]["actionPayload"]["value"] = e;
-                    temp["modal"]["actionPayload"]["shop_id"] = e;
-                    temp["siteID"] = connectedAccountsArray.filter(
-                      (account) => account.value == e
-                    )?.[0]?.siteID;
-                    setMatchFromEbayAccount(temp);
-                  }}
-                />
-              </div>
-            </div>
+            )}
             <Stack distribution="center" spacing="tight">
               <Button
                 onClick={() =>
