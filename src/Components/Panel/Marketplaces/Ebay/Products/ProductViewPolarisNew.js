@@ -467,7 +467,16 @@ const ProductViewPolarisNew = (props) => {
         editedProductData["variationProduct"] = editedVariantProduct;
       }
       // for errors
-      let shopsForErrors = editedData[0].shops;
+      // let shopsForErrors = editedData[0].shops;
+      let temp = [...editedData[0].shops];
+      let tempObj = {}
+      temp.forEach(obj => {
+        const {shop_id, ...remainingProps} = obj
+        console.log(shop_id, remainingProps);
+        tempObj[shop_id] = remainingProps
+      })
+      let shopsForErrors = {...tempObj}
+      
       let dataForErrors = extractProductUploadErrorData(
         shopsForErrors,
         ebay_product_response
