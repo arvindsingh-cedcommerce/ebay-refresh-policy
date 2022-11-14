@@ -22,12 +22,12 @@ const AppToEbayNewNew = ({
 }) => {
   // const [connectedAccountsObject, setconnectedAccountsObject] = useState({});
   const [errorsData, setErrorsData] = useState({});
-  
+
   // tabs
   const [panes, setPanes] = useState({});
 
   const [saveBtnLoader, setSaveBtnLoader] = useState(false);
-   
+
   useEffect(() => {
     if (Object.keys(connectedAccountsObject).length > 0) {
       const filteredArray = Object.keys(connectedAccountsObject)
@@ -101,14 +101,18 @@ const AppToEbayNewNew = ({
                 errorCount++;
               }
             }
-            if(field==="vatDetails")
-            {
+            if (field === "vatDetails") {
               let pattern = /^\d+\.?\d*$/;
               errorData[account][attribute][field] = {};
-              if (data[account][attribute][field]["vatPercentage"] && (data[account][attribute][field]["vatPercentage"]<0 || data[account][attribute][field]["vatPercentage"]>30 || !pattern.test(data[account][attribute][field]["vatPercentage"]))) {
-                errorData[account][attribute][field][
-                  "vatPercentage"
-                ] = true;
+              if (
+                data[account][attribute][field]["vatPercentage"] &&
+                (data[account][attribute][field]["vatPercentage"] < 0 ||
+                  data[account][attribute][field]["vatPercentage"] > 30 ||
+                  !pattern.test(
+                    data[account][attribute][field]["vatPercentage"]
+                  ))
+              ) {
+                errorData[account][attribute][field]["vatPercentage"] = true;
                 errorCount++;
               }
             }
@@ -281,50 +285,68 @@ export const CheckboxComponent = ({
         Object.keys(connectedAccountsObject).map((account, index) => {
           return (
             <Stack alignment="fill" spacing="tight" key={index}>
-              <Checkbox
-                key={index}
-                disabled={
-                  (connectedAccountsObject[account]["checked"] &&
-                    getDisbledLength()) ||
-                  (connectedAccountsObject[account]["status"] === "inactive"
-                    ? true
-                    : false)
+              <div
+                style={
+                  connectedAccountsObject[account]["status"] === "inactive"
+                    ? {
+                        pointerEvents: "none",
+                        opacity: 0.3,
+                      }
+                    : connectedAccountsObject[account]["checked"] &&
+                      getDisbledLength()
+                    ? {
+                        pointerEvents: "none",
+                        opacity: 0.8,
+                      }
+                    : {}
                 }
-                checked={connectedAccountsObject[account]["checked"]}
-                onChange={(e) => {
-                  let temp = { ...connectedAccountsObject };
-                  temp[account]["checked"] = e.target.checked;
-                  setconnectedAccountsObject(temp);
-                }}
               >
-                {connectedAccountsObject[account]["siteId"] ? (
-                  <div
-                    style={
-                      connectedAccountsObject[account]["status"] === "inactive"
-                        ? {
-                            pointerEvents: "none",
-                            opacity: 0.4,
+                <Checkbox
+                  key={index}
+                  // disabled={
+                  //   // (connectedAccountsObject[account]["checked"] &&
+                  //   //   getDisbledLength()) 
+                  //   // ||
+                  //   // (connectedAccountsObject[account]["status"] === "inactive"
+                  //   //   ? true
+                  //   //   : false)
+                  // }
+                  checked={connectedAccountsObject[account]["checked"]}
+                  onChange={(e) => {
+                    let temp = { ...connectedAccountsObject };
+                    temp[account]["checked"] = e.target.checked;
+                    setconnectedAccountsObject(temp);
+                  }}
+                >
+                  {connectedAccountsObject[account]["siteId"] ? (
+                    <div
+                    // style={
+                    //   connectedAccountsObject[account]["status"] === "inactive"
+                    //     ? {
+                    //         pointerEvents: "none",
+                    //         opacity: 0.4,
+                    //       }
+                    //     : {}
+                    // }
+                    >
+                      <Stack alignment="fill" spacing="tight">
+                        <Image
+                          preview={false}
+                          width={25}
+                          src={
+                            connectedAccountsObject[account]["siteId"] &&
+                            require(`../../../../../../../../assets/flags/${connectedAccountsObject[account]["siteId"]}.png`)
                           }
-                        : {}
-                    }
-                  >
-                    <Stack alignment="fill" spacing="tight">
-                      <Image
-                        preview={false}
-                        width={25}
-                        src={
-                          connectedAccountsObject[account]["siteId"] &&
-                          require(`../../../../../../../../assets/flags/${connectedAccountsObject[account]["siteId"]}.png`)
-                        }
-                        style={{ borderRadius: "50%" }}
-                      />
-                      <>{account.split("-")[1]}</>
-                    </Stack>
-                  </div>
-                ) : (
-                  <p>{account}</p>
-                )}
-              </Checkbox>
+                          style={{ borderRadius: "50%" }}
+                        />
+                        <>{account.split("-")[1]}</>
+                      </Stack>
+                    </div>
+                  ) : (
+                    <p>{account}</p>
+                  )}
+                </Checkbox>
+              </div>
             </Stack>
           );
         })}

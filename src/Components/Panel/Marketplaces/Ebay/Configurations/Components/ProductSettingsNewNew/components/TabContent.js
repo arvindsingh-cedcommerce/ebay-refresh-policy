@@ -66,7 +66,6 @@ const TabContent = ({
   let { fields, value } = content;
   const [currencyLoader, setCurrencyLoader] = useState(false);
   const handleBtnPres = (value, field, innerField) => {
-    console.log("final value",value, field, innerField);
     let temp = { ...connectedAccountsObject };
     if (innerField) {
       temp[account]["fields"][field][innerField] = value;
@@ -87,12 +86,13 @@ const TabContent = ({
     let temp = { ...connectedAccountsObject };
     temp[account]["fields"][field]["value"][index][attributeType] = e;
     if (attributeType === "shopify_attribute") {
-      if (e === "sku")
+      if (e === "sku") {
         temp[account]["fields"][field]["value"][index]["ebay_attribute"] =
           "SKU";
-      else if (e === "title")
+      } else if (e === "title") {
         temp[account]["fields"][field]["value"][index]["ebay_attribute"] =
           "Title";
+      }
     }
     setconnectedAccountsObject(temp);
   };
