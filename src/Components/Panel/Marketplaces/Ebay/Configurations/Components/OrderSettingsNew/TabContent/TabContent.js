@@ -20,9 +20,19 @@ const yesNoButtonList = [
   "shipmentSync",
 ];
 const shopifyOrderNoteTagsNameList = [
-  "setOrderName",
-  "setOrderNote",
+  // "setOrderName",
+  // "setOrderNote",
   "setOrderTags",
+];
+const shopifyOrderNoteList = [
+  // "setOrderName",
+  "setOrderNote",
+  // "setOrderTags",
+];
+const shopifyOrderNameList = [
+  "setOrderName",
+  // "setOrderNote",
+  // "setOrderTags",
 ];
 
 const inventoryBehavioursettingOptions = [
@@ -40,6 +50,34 @@ const inventoryBehavioursettingOptions = [
   },
 ];
 const shopifyOrderNoteTagsNameOptions = [
+  {
+    label: "eBay Order Id",
+    value: "ebayOrderId",
+  },
+  {
+    label: "Set default value",
+    value: "default",
+  },
+  {
+    label: "Set custom value",
+    value: "custom",
+  },
+];
+const shopifyOrderNoteOptions = [
+  // {
+  //   label: "eBay Order Id",
+  //   value: "ebayOrderId",
+  // },
+  {
+    label: "Set default value",
+    value: "default",
+  },
+  {
+    label: "Set custom value",
+    value: "custom",
+  },
+];
+const shopifyOrderNameOptions = [
   {
     label: "eBay Order Id",
     value: "ebayOrderId",
@@ -458,12 +496,34 @@ const TabContent = ({
                             options={inventoryBehavioursettingOptions}
                           />
                         )}
+                        {shopifyOrderNoteList.includes(field) && (
+                          <Stack vertical spacing="tight">
+                            <Select
+                              value={fields[field]["value"]}
+                              onChange={(e) => handleBtnPres(e, field)}
+                              options={shopifyOrderNoteOptions}
+                            />
+                            {fields[field]["value"] === "custom" &&
+                              getCustomStructure(field)}
+                          </Stack>
+                        )}
                         {shopifyOrderNoteTagsNameList.includes(field) && (
                           <Stack vertical spacing="tight">
                             <Select
                               value={fields[field]["value"]}
                               onChange={(e) => handleBtnPres(e, field)}
                               options={shopifyOrderNoteTagsNameOptions}
+                            />
+                            {fields[field]["value"] === "custom" &&
+                              getCustomStructure(field)}
+                          </Stack>
+                        )}
+                        {shopifyOrderNameList.includes(field) && (
+                          <Stack vertical spacing="tight">
+                            <Select
+                              value={fields[field]["value"]}
+                              onChange={(e) => handleBtnPres(e, field)}
+                              options={shopifyOrderNameOptions}
                             />
                             {/* {fields[field]["value"] === "custom" &&
                               getCustomStructure(field)} */}
