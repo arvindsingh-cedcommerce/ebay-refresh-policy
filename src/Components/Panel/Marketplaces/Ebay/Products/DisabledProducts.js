@@ -548,7 +548,14 @@ const DisabledProducts = (props) => {
     //   return <Badge status="attention">Not Uploaded</Badge>;
     // }
   };
-  const getProductStatusEbayResponse = (response) => {
+  const getProductStatusEbayResponse = (response1) => {
+    let response = {};
+    if (response1) {
+      response1.forEach((responseObj) => {
+        const { shop_id, ...remainingProps } = responseObj;
+        response[shop_id] = remainingProps;
+      });
+    }
     let statusStructures = [];
     if (response && Object.keys(response).length) {
       for (const shopId in response) {
