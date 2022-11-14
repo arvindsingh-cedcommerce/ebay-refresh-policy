@@ -204,6 +204,22 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
     return options;
   };
 
+  function sortPropertiesByValue(object) {
+    const keys = Object.keys(object);
+    keys
+      .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+      .reverse();
+    const valuesIndex = keys.map((key) => ({ key, value: object[key] }));
+    // valuesIndex.sort((a, b) => b.value - a.value); // reverse sort
+
+    const newObject = {};
+
+    for (const item of valuesIndex) {
+      newObject[item.key] = item.value;
+    }
+    return newObject;
+  }
+
   const hitAPIsInitialRender = async () => {
     let { success, data } = await getImportAttribute();
     if (success) {
@@ -244,7 +260,16 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
       }
       if (data?.collection) {
         let collectionList = { ...data.collection };
-
+        let newTemp = {};
+        for (const key in data.collection) {
+          newTemp[data.collection[key]] = key;
+        }
+        let sortedCollectionList = sortPropertiesByValue(newTemp);
+        let collectionList1 = Object.keys(sortedCollectionList)
+          // .filter((val) => !["155237777487", "155728478287"].includes(val))
+          .map((val) => {
+            return { [sortedCollectionList[val]]: val };
+          });
         collectionList = Object.keys(data.collection)
           // .filter((val) => !["155237777487", "155728478287"].includes(val))
           .map((val) => ({ [val]: data.collection[val] }));
@@ -255,11 +280,17 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
           tempObj["label"] = key[Object.keys(key)[0]];
           return tempObj;
         });
+        const options1 = collectionList1.map((key) => {
+          let tempObj = {};
+          tempObj["value"] = Object.keys(key)[0];
+          tempObj["label"] = key[Object.keys(key)[0]];
+          return tempObj;
+        });
 
-        temp["import_collection"]["collections_options"] = options;
+        temp["import_collection"]["collections_options"] = options1;
 
         let uniquesValuesArr = getMatchedCollectionValues(
-          options,
+          options1,
           temp["import_collection"]["selected_collection"]
         );
         if (temp["import_collection"]["selected_collection"].length > 0) {
@@ -501,7 +532,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
             content: (
               <Stack>
                 <Button
-                pressed
+                  pressed
                   // primary
                   onClick={() => {
                     let parsedData =
