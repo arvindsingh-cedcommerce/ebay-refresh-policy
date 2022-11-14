@@ -151,7 +151,9 @@ console.log("variant arr",variants);
         </Stack>
       );
       tempObject["variantImage"] = key["main_image"] ? (
-        <Image width={40} src={key["main_image"]} />
+        <Image width={30} src={key["main_image"]} />
+      ) :  key["variant_image"] ? (
+        <Image width={30} src={key["variant_image"]} />
       ) : (
         // <Image width={50} src={ImageResizer(key["variant_image"])} />
         <Image width={40} preview={false} src={NoProductImage} />
