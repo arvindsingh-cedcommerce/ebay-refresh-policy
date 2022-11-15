@@ -551,7 +551,7 @@ const ProductMassMenu = ({
           <Stack vertical spacing="tight">
             <>
               Are you sure you want to initiate{" "}
-              {matchFromEbayAccount.modal.content} bulk action ?
+              {matchFromEbayAccount.modal.content} action ?
             </>
             {connectedAccountsArray.length > 1 && (
               <div
