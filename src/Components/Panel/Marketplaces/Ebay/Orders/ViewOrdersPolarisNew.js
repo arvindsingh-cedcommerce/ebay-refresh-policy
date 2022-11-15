@@ -18,6 +18,8 @@ import {
   Banner,
   Tag,
   Thumbnail,
+  FooterHelp,
+  Link,
 } from "@shopify/polaris";
 import { Avatar, Badge, PageHeader, Typography } from "antd";
 import React, { useEffect, useState } from "react";
@@ -1072,6 +1074,16 @@ const ViewOrdersPolarisNew = (props) => {
           <Banner status="critical">{erroModal.msg}</Banner>
         </Modal.Section>
       </Modal>
+      <FooterHelp>
+        Learn more about{" "}
+        <Link
+          external
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-order-from-ebay"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=viewing-orders"
+        >
+          Orders
+        </Link>
+      </FooterHelp>
     </Page>
     // {/* </PageHeader> */}
   );
@@ -1189,7 +1201,8 @@ export const OrderDetailsComponent = ({
                           onClick={() => {
                             if (order?.["containerIdProduct"])
                               historyProps.history.push(
-                                `/panel/ebay/products/viewproducts?id=${order?.["containerIdProduct"]}&source_product_id=${order?.["containerIdProduct"]}`
+                                // `/panel/ebay/products/viewproducts?id=${order?.["containerIdProduct"]}&source_product_id=${order?.["containerIdProduct"]}`
+                                `/panel/ebay/products/viewproducts?id=${order?.["containerIdProduct"]}&source_product_id=${order?.["source_product_id"]}`
                               );
                           }}
                           style={
