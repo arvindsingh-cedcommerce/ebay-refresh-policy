@@ -548,7 +548,8 @@ const FinalPolicyGrid = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-ebay-business-policies"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-ebay-business-policies"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=business-policies-3"
         >
           Business Policy
         </Link>

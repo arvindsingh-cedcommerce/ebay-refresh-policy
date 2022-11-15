@@ -696,7 +696,8 @@ const NewAccount = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-ebay-accounts-on-app"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-ebay-accounts-on-app"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=ebay-accounts-4"
         >
           eBay Accounts
         </Link>

@@ -1735,7 +1735,8 @@ const FinalDashboard = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=dashboard-section-of-the-application"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=dashboard-section-of-the-application"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=dashboard-section-of-the-application-2"
         >
           Dashboard
         </Link>

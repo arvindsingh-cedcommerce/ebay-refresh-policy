@@ -240,7 +240,8 @@ const TitleTemplatePolaris = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=title-template-of-the-app"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=title-template-of-the-app"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=title-template-of-the-app-2"
         >
           Title Template
         </Link>
@@ -469,7 +470,8 @@ const TitleTemplatePolaris = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=title-template-of-the-app"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=title-template-of-the-app"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=title-template-of-the-app-2"
         >
           Title Template
         </Link>

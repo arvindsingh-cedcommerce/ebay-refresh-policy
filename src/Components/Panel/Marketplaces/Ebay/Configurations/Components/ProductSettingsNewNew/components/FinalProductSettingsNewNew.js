@@ -158,7 +158,8 @@ const FinalProductSettingsNewNew = () => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=product-configuration-section"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=product-configuration-section"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=product-import-configuration-section-2"
         >
           Product Settings
         </Link>

@@ -568,7 +568,8 @@ const ContactUs = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=connect-with-cedcommerce"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=connect-with-cedcommerce"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=contact-us-page"
         >
           Contact Us
         </Link>

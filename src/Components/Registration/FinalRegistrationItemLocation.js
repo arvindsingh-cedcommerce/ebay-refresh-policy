@@ -1516,7 +1516,8 @@ export const FinalRegistrationItemLocation = (props) => {
           Learn more about{" "}
           <Link
             external
-            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=onboarding-process-for-the-application"
+            // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=onboarding-process-for-the-application"
+            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=onboarding-process-for-the-application-2"
           >
             Onboarding Process
           </Link>

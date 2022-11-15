@@ -737,7 +737,8 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=import-configuration-section"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=import-configuration-section"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=product-import-configuration-section-3"
         >
           Product Import Settings
         </Link>
@@ -873,7 +874,8 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=import-configuration-section"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=import-configuration-section"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=product-import-configuration-section-3"
         >
           Product Import Settings
         </Link>

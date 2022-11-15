@@ -1580,7 +1580,8 @@ const NewOrdersGrid = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-order-from-ebay"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-order-from-ebay"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-section-of-the-app-4"
         >
           Orders
         </Link>

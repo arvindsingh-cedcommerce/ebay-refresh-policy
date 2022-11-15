@@ -337,7 +337,8 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-configuration-of-the-app"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-configuration-of-the-app"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-configuration-of-the-app-3"
         >
           Order Settings
         </Link>
@@ -420,7 +421,8 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-configuration-of-the-app"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-configuration-of-the-app"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=order-configuration-of-the-app-3"
         >
           Order Settings
         </Link>

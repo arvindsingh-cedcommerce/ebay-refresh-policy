@@ -617,7 +617,8 @@ const ActivityGrid = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=activities-section-of-the-app-2"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=activities-section-of-the-app-2"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=activities-section-of-the-app-4"
         >
           Activities
         </Link>

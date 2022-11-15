@@ -298,7 +298,8 @@ const FinalInventoryTemplate = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=inventory-template-of-the-application"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=inventory-template-of-the-application"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=inventory-template-of-the-application-2"
         >
           Inventory Template
         </Link>
@@ -441,7 +442,8 @@ const FinalInventoryTemplate = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=inventory-template-of-the-application"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=inventory-template-of-the-application"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=inventory-template-of-the-application-2"
         >
           Inventory Template
         </Link>

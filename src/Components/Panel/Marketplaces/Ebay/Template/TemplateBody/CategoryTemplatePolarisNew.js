@@ -2693,7 +2693,8 @@ function to check final validation
           Learn more about{" "}
           <Link
             external
-            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application"
+            // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application"
+            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application-2"
           >
             Category Template
           </Link>
@@ -2746,7 +2747,8 @@ function to check final validation
           Learn more about{" "}
           <Link
             external
-            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application"
+            // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application"
+            url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=category-template-of-the-application-2"
           >
             Category Template
           </Link>

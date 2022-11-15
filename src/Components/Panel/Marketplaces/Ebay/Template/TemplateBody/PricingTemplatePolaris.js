@@ -773,7 +773,8 @@ const PricingTemplatePolaris = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=price-template-of-the-app"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=price-template-of-the-app"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=price-template-of-the-app-2"
         >
           Price Template
         </Link>
@@ -868,7 +869,8 @@ const PricingTemplatePolaris = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=price-template-of-the-app"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=price-template-of-the-app"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=price-template-of-the-app-2"
         >
           Price Template
         </Link>

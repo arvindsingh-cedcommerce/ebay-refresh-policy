@@ -516,7 +516,8 @@ const FinalTemplateGridComponent = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=templates-section-of-the-app"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=templates-section-of-the-app"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=templates-section-of-the-app-2"
         >
           Templates
         </Link>
