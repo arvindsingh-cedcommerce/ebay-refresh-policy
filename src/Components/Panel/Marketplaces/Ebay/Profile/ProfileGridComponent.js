@@ -194,7 +194,8 @@ const ProfileGridComponent = (props) => {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-  const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
+  // const [pageSizeOptions, setPageSizeOptions] = useState([5, 10, 20]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([10, 15, 20]);
   const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([
     { label: " 5 / page ", value: 5 },
     { label: " 10 / page ", value: 10 },
@@ -203,7 +204,8 @@ const ProfileGridComponent = (props) => {
 
   // const [pageSizeOptions, setPageSizeOptions] = useState([1,2]);
   // const [pageSize, setPageSize] = useState(5);
-  const [pageSize, setPageSize] = useState(5);
+  // const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
 
   const [prevPage, setPrevPage] = useState(1);
   const [totalShippingPolicyCount, setTotalShippingPolicyCount] = useState(0);
@@ -237,6 +239,16 @@ const ProfileGridComponent = (props) => {
     temp["filters"] = [...componentFilters];
     setFiltersProps(temp);
   };
+  const fetchCurrentSearchWithProfile=()=>{
+    if(filtersToPass)
+    {
+    if(filtersToPass.hasOwnProperty("filter[name][3]") && !searchWithProfileName || filtersToPass.hasOwnProperty("filter[querySentence][3]") && searchWithProfileName)
+       return !searchWithProfileName;
+    else
+    return searchWithProfileName;
+    }
+    return searchWithProfileName;
+  }
 
   const getFlag = (country) => {
     let testArr = Object.keys(mappingShopIDwithCountry).filter((siteId) => {
@@ -617,7 +629,7 @@ const ProfileGridComponent = (props) => {
           setFilterProfileNameORQuery(e);
         }}
         placeholder={
-          searchWithProfileName ? "Search with name" : "Search with query"
+          fetchCurrentSearchWithProfile() ? "Search with name" : "Search with query"
         }
       />
     );
@@ -678,8 +690,8 @@ const ProfileGridComponent = (props) => {
   const renderChoiceListForNameQuery = () => (
     <ButtonGroup segmented>
       <Button
-        primary={searchWithProfileName}
-        pressed={searchWithProfileName}
+        primary={fetchCurrentSearchWithProfile()}
+        pressed={fetchCurrentSearchWithProfile()}
         onClick={(e) => {
           let temp = { ...filtersToPass };
           if (temp.hasOwnProperty("filter[querySentence][3]")) {
@@ -693,8 +705,8 @@ const ProfileGridComponent = (props) => {
         Name
       </Button>
       <Button
-        primary={!searchWithProfileName}
-        pressed={!searchWithProfileName}
+        primary={!fetchCurrentSearchWithProfile()}
+        pressed={!fetchCurrentSearchWithProfile()}
         onClick={(e) => {
           let temp = { ...filtersToPass };
           if (temp.hasOwnProperty("filter[name][3]")) {
@@ -1033,7 +1045,8 @@ const ProfileGridComponent = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=profiling-section-of-the-application"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=profiling-section-of-the-application"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=profiling-section-of-the-app-3"
         >
           Profiles
         </Link>
