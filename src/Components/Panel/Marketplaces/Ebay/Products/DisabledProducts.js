@@ -548,6 +548,18 @@ const DisabledProducts = (props) => {
     //   return <Badge status="attention">Not Uploaded</Badge>;
     // }
   };
+
+  const fetchCurrentSearchWithTitle = () => {
+    if (filtersToPass) {
+      if (
+        (filtersToPass.hasOwnProperty("filter[sku][3]") && searchWithTitle) ||
+        (filtersToPass.hasOwnProperty("filter[title][3]") && !searchWithTitle)
+      )
+        return !searchWithTitle;
+      else return searchWithTitle;
+    }
+    return searchWithTitle;
+  };
   const getProductStatusEbayResponse = (response1) => {
     let response = {};
     if (response1) {
@@ -654,15 +666,15 @@ const DisabledProducts = (props) => {
         onChange={(e) => {
           setFilterTitleORsku(e);
         }}
-        placeholder={searchWithTitle ? "Search with title" : "Search with SKU"}
+        placeholder={fetchCurrentSearchWithTitle() ? "Search with title" : "Search with SKU"}
       />
     );
   };
   const renderChoiceListForTitleSKU = () => (
     <ButtonGroup segmented>
       <Button
-        primary={searchWithTitle}
-        pressed={searchWithTitle}
+        primary={fetchCurrentSearchWithTitle()}
+        pressed={fetchCurrentSearchWithTitle()}
         onClick={(e) => {
           let temp = { ...filtersToPass };
           if (temp.hasOwnProperty("filter[sku][3]")) {
@@ -676,8 +688,8 @@ const DisabledProducts = (props) => {
         Title
       </Button>
       <Button
-        primary={!searchWithTitle}
-        pressed={!searchWithTitle}
+        primary={!fetchCurrentSearchWithTitle()}
+        pressed={!fetchCurrentSearchWithTitle()}
         onClick={(e) => {
           let temp = { ...filtersToPass };
           if (temp.hasOwnProperty("filter[title][3]")) {
@@ -1319,7 +1331,8 @@ const DisabledProducts = (props) => {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=handling-disabled-products"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=handling-disabled-products"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=disable-products"
         >
           Disabled Products
         </Link>
