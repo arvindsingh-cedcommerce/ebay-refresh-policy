@@ -400,7 +400,7 @@ const CategoryTemplateGrid = (props) => {
           setFilterTitleORCategoryMapping(e);
         }}
         placeholder={
-          searchWithTitle
+          fetchCurrentSearchWithCategoryTemplate()
             ? "Search with category name"
             : "Search with category mapping"
         }
@@ -511,8 +511,8 @@ const CategoryTemplateGrid = (props) => {
     return (
       <ButtonGroup segmented>
         <Button
-          primary={searchWithTitle}
-          pressed={searchWithTitle}
+          primary={fetchCurrentSearchWithCategoryTemplate()}
+          pressed={fetchCurrentSearchWithCategoryTemplate()}
           onClick={(e) => {
             let temp = { ...filtersToPass };
             if (temp.hasOwnProperty("filter[primaryCategoryMappingName][3]")) {
@@ -526,8 +526,8 @@ const CategoryTemplateGrid = (props) => {
           Title
         </Button>
         <Button
-          primary={!searchWithTitle}
-          pressed={!searchWithTitle}
+          primary={!fetchCurrentSearchWithCategoryTemplate()}
+          pressed={!fetchCurrentSearchWithCategoryTemplate()}
           onClick={(e) => {
             let temp = { ...filtersToPass };
             if (temp.hasOwnProperty("filter[title][3]")) {
@@ -572,7 +572,16 @@ const CategoryTemplateGrid = (props) => {
       // </Stack>
     );
   };
-
+  const fetchCurrentSearchWithCategoryTemplate=()=>{
+    if(filtersToPass)
+    {
+    if(filtersToPass.hasOwnProperty("filter[primaryCategoryMappingName][3]") && searchWithTitle || filtersToPass.hasOwnProperty("filter[title][3]") && !searchWithTitle)
+       return !searchWithTitle;
+    else
+    return searchWithTitle;
+    }
+    return searchWithTitle;
+  }
   const gatherAllFilters = () => {
     let temp = {};
     Object.keys(filters).forEach((filter) => {
