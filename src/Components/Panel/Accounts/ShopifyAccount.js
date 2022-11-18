@@ -218,25 +218,25 @@ const ShopifyAccount = (props) => {
                     autoComplete="off"
                     value={customDetails.whatsAppLink}
                   />
-                  {/* <ChoiceList
-                  allowMultiple
-                  title="Email Notification"
-                  choices={[
-                    {
-                      label: "Failed Order",
-                      value: "failedOrder",
-                      // helpText:
-                      //   "Reduces the number of fields required to check out. The billing address can still be edited.",
-                    },
-                  ]}
-                  selected={customDetails.selectedEmailNotifications}
-                  onChange={(value) =>
-                    setCustomDetails({
-                      ...customDetails,
-                      selectedEmailNotifications: value,
-                    })
-                  }
-                /> */}
+                  <ChoiceList
+                    allowMultiple
+                    title="Email Notification"
+                    choices={[
+                      {
+                        label: "Failed Order",
+                        value: "failedOrder",
+                        // helpText:
+                        //   "Reduces the number of fields required to check out. The billing address can still be edited.",
+                      },
+                    ]}
+                    selected={customDetails.selectedEmailNotifications}
+                    onChange={(value) =>
+                      setCustomDetails({
+                        ...customDetails,
+                        selectedEmailNotifications: value,
+                      })
+                    }
+                  />
                 </FormLayout.Group>
               </FormLayout>
             </Card>
