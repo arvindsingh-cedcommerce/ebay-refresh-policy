@@ -11,7 +11,6 @@ const MyResponsivePie2 = ({
   setAccountClicked,
   accountClickedDetails,
 }) => {
-  console.log("New pie");
   const [hasProductFlag, setHasProductFlag] = useState(false);
 
   useEffect(() => {
