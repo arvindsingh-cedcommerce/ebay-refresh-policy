@@ -20,6 +20,26 @@ export const order_settings = {
     },
   ],
 };
+export const order_settingsFalse = {
+  autoOrderSync: false,
+  includeTax: true,
+  inventoryBehavioursetting: "decrement_obeying_policy",
+  syncWithoutProductdetails: false,
+  setOrderNote: "default",
+  setOrderTags: "default",
+  setOrderName: "default",
+  useEbayCustomerDetails: true,
+  shipmentSync: {
+    syncTrackingDetails: true,
+    mappingOfShippingCarrier: false,
+  },
+  orderCancelation: [
+    {
+      shopifyAttribute: "Other",
+      ebayAttribute: "UNKNOWN",
+    },
+  ],
+};
 // export const order_settings = {
 //   default: {
 //     autoOrderSync: {
@@ -168,7 +188,8 @@ export const product_settings = {
       images: true,
       tags: true,
     },
-    autoDeleteProduct: true,
+    // autoDeleteProduct: true,
+    autoProductDelete: true,
     autoProductCreate: true,
   },
   app_to_ebay: {
