@@ -165,7 +165,7 @@ const commonFields = [
   "title",
   "brand",
   "tags",
-  "producttype",
+  "product_type",
   "description",
   "length",
   "width",
@@ -625,7 +625,7 @@ const ProductViewPolarisNew = (props) => {
           enable: false,
           value: "",
         },
-        checkProducttype: {
+        checkProduct_type: {
           enable: false,
           value: "",
         },
@@ -645,7 +645,7 @@ const ProductViewPolarisNew = (props) => {
       tempObj["brand"] = brand ? brand : "";
       tempObj["checkBrand"]["value"] = brand ? brand : "";
       tempObj["product_type"] = product_type ? product_type : "";
-      tempObj["checkProducttype"]["value"] = product_type ? product_type : "";
+      tempObj["checkProduct_type"]["value"] = product_type ? product_type : "";
       tempObj["tags"] = tags ? tags : "";
       tempObj["checkTags"]["value"] = tags ? tags : "";
       tempObj["checkTags"]["valueArray"] = tags ? tags.split(",") : [];

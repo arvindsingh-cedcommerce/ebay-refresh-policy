@@ -141,19 +141,19 @@ const DetailsComponentNew = ({
                 <Text strong>{apiCallMainProduct["product_type"]}</Text>
                 <Checkbox
                   label={"Set Custom"}
-                  checked={mainProduct?.["checkProducttype"]?.["enable"]}
+                  checked={mainProduct?.["checkProduct_type"]?.["enable"]}
                   onChange={(e) =>
-                    onChangeHandler(e, "checkProducttype", "enable")
+                    onChangeHandler(e, "checkProduct_type", "enable")
                   }
                 />
-                {mainProduct?.["checkProducttype"]?.["enable"] && (
+                {mainProduct?.["checkProduct_type"]?.["enable"] && (
                   <TextField
                     type="title"
                     onChange={(e) =>
-                      onChangeHandler(e, "checkProducttype", "value")
+                      onChangeHandler(e, "checkProduct_type", "value")
                     }
                     autoComplete="off"
-                    value={mainProduct?.["checkProducttype"]?.["value"]}
+                    value={mainProduct?.["checkProduct_type"]?.["value"]}
                     showCharacterCount
                   />
                 )}
