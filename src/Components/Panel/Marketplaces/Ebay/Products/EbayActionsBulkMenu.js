@@ -69,6 +69,17 @@ const EbayActionsBulkMenu = (props) => {
     btnLoader: false,
     idArray: [],
   });
+  const [uploadAndReviseOnEbayUpload, setUploadAndReviseOnEbayUpload] =
+    useState({
+      modal: {
+        active: false,
+        content: "",
+        actionName: "",
+        actionPayload: {},
+        api: "",
+      },
+      btnLoader: false,
+    });
   const [uploadAndReviseOnEbay, setUploadAndReviseOnEbay] = useState({
     modal: {
       active: false,
@@ -80,6 +91,7 @@ const EbayActionsBulkMenu = (props) => {
     btnLoader: false,
   });
   const [selectedProfle, setSelectedProfle] = useState("all");
+  const [selectedProfleUpload, setSelectedProfleUpload] = useState("all");
 
   // import by id validation
   const [importByIdError, setImportByIdError] = useState(false);
@@ -150,16 +162,28 @@ const EbayActionsBulkMenu = (props) => {
               content: (
                 <div
                   key="Upload Products"
-                  onClick={() =>
-                    setModal({
-                      ...modal,
-                      active: true,
-                      content: "Upload Products",
-                      actionName: postActionOnProductById,
-                      actionPayload: { action: "upload" },
-                      api: uploadProductByIdURL,
-                    })
-                  }
+                  // onClick={() =>
+                  //   setModal({
+                  //     ...modal,
+                  //     active: true,
+                  //     content: "Upload Products",
+                  //     actionName: postActionOnProductById,
+                  //     actionPayload: { action: "upload" },
+                  //     api: uploadProductByIdURL,
+                  //   })
+                  // }
+                  onClick={() => {
+                    let temp = { ...uploadAndReviseOnEbayUpload };
+                    temp["modal"]["active"] = true;
+                    temp["modal"]["actionName"] = postActionOnProductById;
+                    temp["modal"]["actionPayloadByAll"] = {
+                      action: "upload",
+                    };
+                    temp["modal"]["actionPayloadById"] = {};
+                    temp["modal"]["apiByAll"] = uploadProductByIdURL;
+                    temp["modal"]["apiById"] = uploadProductByProfileURL;
+                    setUploadAndReviseOnEbayUpload(temp);
+                  }}
                 >
                   <UploadOutlined /> Upload Products
                 </div>
@@ -371,6 +395,104 @@ const EbayActionsBulkMenu = (props) => {
           </Button>
         </Dropdown> */}
       <Modal
+        open={uploadAndReviseOnEbayUpload.modal.active}
+        onClose={() => {
+          let temp = { ...uploadAndReviseOnEbayUpload };
+          temp["modal"]["active"] = false;
+          setUploadAndReviseOnEbayUpload(temp);
+        }}
+        title="Permission required"
+      >
+        <Modal.Section>
+          <Stack vertical spacing="tight">
+            <Banner status="info">
+              If you want to upload the product(s) with single profile kindly
+              select one from below and click on Upload, or your all product(s)
+              get uploaded with all profiles.
+            </Banner>
+            <Select
+              options={profileList}
+              label="Select profile"
+              value={selectedProfleUpload}
+              onChange={(e) => {
+                setSelectedProfleUpload(e);
+              }}
+              placeholder="Please Select..."
+            />
+            <Stack distribution="center" spacing="tight">
+              <Button
+                onClick={() => {
+                  let temp = { ...uploadAndReviseOnEbayUpload };
+                  temp["modal"]["active"] = false;
+                  setUploadAndReviseOnEbayUpload(temp);
+                  setSelectedProfleUpload("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                primary
+                loading={btnLoader}
+                onClick={async () => {
+                  setBtnLoader(true);
+                  if (selectedProfleUpload === "all") {
+                    // console.log(
+                    //   "uploadAndReviseOnEbay upload",
+                    //   uploadAndReviseOnEbayUpload.modal.actionName,
+                    //   uploadAndReviseOnEbayUpload.modal.apiByAll,
+                    //   uploadAndReviseOnEbayUpload.modal.actionPayloadByAll
+                    // );
+                    let { success, message, data } =
+                      await uploadAndReviseOnEbayUpload.modal.actionName(
+                        uploadAndReviseOnEbayUpload.modal.apiByAll,
+                        uploadAndReviseOnEbayUpload.modal.actionPayloadByAll
+                      );
+                    if (success) {
+                      notify.success(message ? message : data);
+                      props.history.push("/panel/ebay/activity");
+                    } else {
+                      notify.error(message ? message : data);
+                      // setModal({ ...modal, active: false });
+                      let temp = { ...uploadAndReviseOnEbayUpload };
+                      temp["modal"]["active"] = false;
+                      setUploadAndReviseOnEbayUpload(temp);
+                    }
+                  } else if (selectedProfleUpload !== "") {
+                    let selectedProfleDetails = profileList.find(
+                      (profile) => profile.value === selectedProfleUpload
+                    );
+                    // console.log(
+                    //   "uploadAndReviseOnEbay upload id",
+                    //   uploadAndReviseOnEbayUpload.modal.actionName,
+                    //   uploadAndReviseOnEbayUpload.modal.apiById,
+                    //   { profile_id: selectedProfleDetails.profileId, action: 'upload' }
+                    // );
+                    let { success, message, data } =
+                      await uploadAndReviseOnEbayUpload.modal.actionName(
+                        uploadAndReviseOnEbayUpload.modal.apiById,
+                        { profile_id: selectedProfleDetails.profileId, action: 'upload' }
+                      );
+                    if (success) {
+                      notify.success(message ? message : data);
+                      props.history.push("/panel/ebay/activity");
+                    } else {
+                      notify.error(message ? message : data);
+                      // setModal({ ...modal, active: false });
+                      let temp = { ...uploadAndReviseOnEbayUpload };
+                      temp["modal"]["active"] = false;
+                      setUploadAndReviseOnEbayUpload(temp);
+                    }
+                  }
+                  setBtnLoader(false);
+                }}
+              >
+                Upload
+              </Button>
+            </Stack>
+          </Stack>
+        </Modal.Section>
+      </Modal>
+      <Modal
         open={uploadAndReviseOnEbay.modal.active}
         onClose={() => {
           let temp = { ...uploadAndReviseOnEbay };
@@ -412,6 +534,12 @@ const EbayActionsBulkMenu = (props) => {
                 onClick={async () => {
                   setBtnLoader(true);
                   if (selectedProfle === "all") {
+                    // console.log(
+                    //   "uploadAndReviseOnEbay",
+                    //   uploadAndReviseOnEbay.modal.actionName,
+                    //   uploadAndReviseOnEbay.modal.apiByAll,
+                    //   uploadAndReviseOnEbay.modal.actionPayloadByAll
+                    // );
                     let { success, message, data } =
                       await uploadAndReviseOnEbay.modal.actionName(
                         uploadAndReviseOnEbay.modal.apiByAll,
@@ -431,10 +559,16 @@ const EbayActionsBulkMenu = (props) => {
                     let selectedProfleDetails = profileList.find(
                       (profile) => profile.value === selectedProfle
                     );
+                    // console.log(
+                    //   "uploadAndReviseOnEbay apiById",
+                    //   uploadAndReviseOnEbay.modal.actionName,
+                    //   uploadAndReviseOnEbay.modal.apiById,
+                    //   { profile_id: selectedProfleDetails.profileId, action: 'revise' }
+                    // );
                     let { success, message, data } =
                       await uploadAndReviseOnEbay.modal.actionName(
                         uploadAndReviseOnEbay.modal.apiById,
-                        { profile_id: selectedProfleDetails.profileId }
+                        { profile_id: selectedProfleDetails.profileId, action: 'revise' }
                       );
                     if (success) {
                       notify.success(message ? message : data);
