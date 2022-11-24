@@ -457,7 +457,8 @@ const PlansComponentAnt = ({
                                 </Col>
                                 <Col>
                                   <Title level={5}>
-                                    {!reactSwitchPlan ? "/monthly" : "/yearly"}
+                                    {/* {!reactSwitchPlan ? "/monthly" : "/yearly"} */}
+                                    {!reactSwitchPlan ? "/month" : "/year"}
                                   </Title>
                                 </Col>
                               </Row>
