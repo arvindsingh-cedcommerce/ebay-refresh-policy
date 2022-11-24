@@ -1,6 +1,7 @@
 import { Banner, Card, Layout, List, Stack } from "@shopify/polaris";
 import { Tabs, Divider, Image } from "antd";
 import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router-dom";
 import AccountTabContent from "./AccountTabContent";
 import CheckboxComponent from "./CheckboxComponent";
 
@@ -103,4 +104,4 @@ const AccountConnectionPolicyTemplate = ({
   );
 };
 
-export default AccountConnectionPolicyTemplate;
+export default withRouter(AccountConnectionPolicyTemplate);

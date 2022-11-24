@@ -5,16 +5,23 @@ import {
   Layout,
   SkeletonDisplayText,
   SkeletonBodyText,
+  Link,
+  Icon,
+  Tooltip,
 } from "@shopify/polaris";
+import { ExternalMinor, ExternalSmallMinor } from "@shopify/polaris-icons";
 import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router-dom";
 import { getPolicies } from "../../../../../../../APIrequests/PoliciesAPI";
 import { getPoliciesURL } from "../../../../../../../URLs/PoliciesURL";
+import { getDomainName } from "../../../Policies/FinalPolicyGrid";
 
 const Policy = ({
   label,
   value,
   connectedAccountsObject,
   setconnectedAccountsObject,
+  ...props
 }) => {
   const [policyOptions, setPolicyOptions] = useState({});
   const [loader, setLoader] = useState(false);
@@ -110,11 +117,43 @@ const Policy = ({
       ) : (
         <FormLayout>
           {Object.keys(policyOptions).map((policyOption, index) => {
-            // console.log(connectedAccountsObject[label][policyOption]);
             return (
               <Layout>
                 <Layout.AnnotatedSection
-                  title={policyOption?.split("_")?.join(" ")?.toUpperCase()}
+                  title={
+                    <Stack spacing="extraTight">
+                      <>{policyOption?.split("_")?.join(" ")?.toUpperCase()}</>
+                      {connectedAccountsObject[label][policyOption] && (
+                        <Tooltip content="View Policy">
+                          <Link
+                            removeUnderline
+                            onClick={(e) => {
+                              let policyType = policyOption.split("_")[0];
+                              let value1 =
+                                connectedAccountsObject[label][policyOption];
+                              // return props.history.push(
+                              //   `/panel/ebay/policy/handler?type=${policyType}&id=${value}&site_id=${value["siteID"]}&shop_id=${value["shopId"]}`
+                              // );
+                              console.log(`https://www.bizpolicy.ebay${getDomainName(
+                                value["siteID"]
+                              )}/businesspolicy/${policyType.toLowerCase()}?profileId=${value1}`);
+                              return window.open(
+                                `https://www.bizpolicy.ebay${getDomainName(
+                                  value["siteID"]
+                                )}/businesspolicy/${policyType.toLowerCase()}?profileId=${value1}`,
+                                "_blank"
+                              );
+                              // https://www.bizpolicy.ebay.pl/businesspolicy/shipping?profileId=6062591000
+                              // http://amazon-ebay-multi.local.cedcommerce.com:5000/ebay/panel/ebay/policy/handler?type=shipping&id=6062591000&site_id=212&shop_id=755
+                            }}
+                          >
+                            {/* {policyOption?.split("_")?.join(" ")?.toUpperCase()} */}
+                            <Icon color="primary" source={ExternalSmallMinor} />
+                          </Link>
+                        </Tooltip>
+                      )}
+                    </Stack>
+                  }
                 >
                   <Select
                     key={index}
@@ -140,4 +179,4 @@ const Policy = ({
   );
 };
 
-export default Policy;
+export default withRouter(Policy);

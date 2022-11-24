@@ -1,6 +1,7 @@
 import { Button, FooterHelp, Link, TextStyle, Tooltip } from "@shopify/polaris";
 import { PageHeader } from "antd";
 import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import { getConnectedAccounts } from "../../../../../../Apirequest/accountsApi";
 import {
   getProfilebyId,
@@ -244,6 +245,8 @@ const CreateProfilePolaris = (props) => {
                 // connectedAccountsObject[account]["siteID"] ===
                 // template["data"]["site_id"]
               )[0],
+              siteId: template['data']['site_id'],
+              shopId: template['data']['shop_id']
             });
             break;
           case "title":
@@ -501,4 +504,4 @@ const CreateProfilePolaris = (props) => {
   );
 };
 
-export default CreateProfilePolaris;
+export default withRouter(CreateProfilePolaris);

@@ -6,6 +6,7 @@ import {
   TextField,
 } from "@shopify/polaris";
 import React from "react";
+import { withRouter } from "react-router-dom";
 import AccountConnectionPolicyTemplate from "../AccountConnectionPolicyTemplate";
 
 const AccountSelectionTab = ({
@@ -72,4 +73,4 @@ const AccountSelectionTab = ({
   );
 };
 
-export default AccountSelectionTab;
+export default withRouter(AccountSelectionTab);

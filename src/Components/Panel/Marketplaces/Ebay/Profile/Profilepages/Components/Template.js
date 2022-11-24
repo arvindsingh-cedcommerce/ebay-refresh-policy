@@ -1,11 +1,22 @@
-import { FormLayout, Select, Stack, Layout } from "@shopify/polaris";
+import {
+  FormLayout,
+  Select,
+  Stack,
+  Layout,
+  Link,
+  Icon,
+  Tooltip,
+} from "@shopify/polaris";
+import { ExternalMinor, ExternalSmallMinor } from "@shopify/polaris-icons";
 import React from "react";
+import { withRouter } from "react-router-dom";
 
 const Template = ({
   templateOptions,
   connectedAccountsObject,
   account,
   setconnectedAccountsObject,
+  ...props
 }) => {
   const handleChange = (e, templateOption) => {
     let temp = { ...connectedAccountsObject };
@@ -31,7 +42,49 @@ const Template = ({
           return (
             <Layout>
               <Layout.AnnotatedSection
-                title={templateOption?.split("_")?.join(" ")?.toUpperCase()}
+                title={
+                  <Stack spacing="extraTight">
+                    <div>
+                      {templateOption?.split("_")?.join(" ")?.toUpperCase()}
+                    </div>
+                    {connectedAccountsObject[account][templateOption] && (
+                      <Tooltip content="View Template">
+                        <Link
+                          // monochrome
+                          removeUnderline
+                          onClick={(e) => {
+                            if (templateOption == "category_template") {
+                              let value =
+                                connectedAccountsObject[account][
+                                  templateOption
+                                ];
+                              let filtered = templateOptions[
+                                templateOption
+                              ].filter((item) => item.value == value);
+                              let { siteId, shopId } = filtered?.[0];
+                              return props.history.push(
+                                `/panel/ebay/templates/handler?type=category&id=${value}&siteID=${siteId}&shopID=${shopId}`
+                              );
+                            } else {
+                              let typeTemplate = templateOption.split("_")[0];
+                              let value =
+                                connectedAccountsObject[account][
+                                  templateOption
+                                ];
+                              return props.history.push(
+                                `/panel/ebay/templates/handler?type=${typeTemplate}&id=${value}`
+                              );
+                            }
+                          }}
+                        >
+                          {/* {templateOption?.split("_")?.join(" ")?.toUpperCase()} */}
+
+                          <Icon color="primary" source={ExternalSmallMinor} />
+                        </Link>
+                      </Tooltip>
+                    )}
+                  </Stack>
+                }
               >
                 <Select
                   key={index}
@@ -55,4 +108,4 @@ const Template = ({
   );
 };
 
-export default Template;
+export default withRouter(Template);
