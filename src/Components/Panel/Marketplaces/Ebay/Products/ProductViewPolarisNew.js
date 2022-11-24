@@ -375,7 +375,7 @@ const ProductViewPolarisNew = (props) => {
     let itemIdObj = {};
     // console.log(errors, ebay_product_response);
     Object.keys(errors).map((shopId) => {
-      if (errors[shopId].hasOwnProperty("Errors")) {
+      if (errors[shopId].hasOwnProperty("Errors") && errors[shopId]["Errors"]) {
         errorsObj[shopId] = { ...errors[shopId]?.Errors };
       }
       // else if (errors[shopId].hasOwnProperty("ItemId")) {
@@ -469,14 +469,20 @@ const ProductViewPolarisNew = (props) => {
       // for errors
       // let shopsForErrors = editedData[0].shops;
       let temp = [...editedData[0].shops];
-      let tempObj = {}
-      temp.forEach(obj => {
-        const {shop_id, ...remainingProps} = obj
-        console.log(shop_id, remainingProps);
-        tempObj[shop_id] = remainingProps
-      })
-      let shopsForErrors = {...tempObj}
-      
+      let tempObj = {};
+      // temp.forEach(obj => {
+      //   const {shop_id, ...remainingProps} = obj
+      //   console.log(shop_id, remainingProps);
+      //   tempObj[shop_id] = remainingProps
+      // })
+      temp.forEach((obj, index) => {
+        if (index == 0 || obj?.ItemId) {
+          const { shop_id, ...remainingProps } = obj;
+          tempObj[shop_id] = remainingProps;
+        }
+      });
+      let shopsForErrors = { ...tempObj };
+
       let dataForErrors = extractProductUploadErrorData(
         shopsForErrors,
         ebay_product_response
@@ -798,7 +804,8 @@ const ProductViewPolarisNew = (props) => {
         data?.ebay_product_response
       );
     } else if (message.includes("Product not found")) {
-      redirect.push("/panel/ebay/products");
+      notify.info("Product not found");
+      props.history.push("/panel/ebay/products");
     } else {
       notify.error(message);
       // redirect("/auth/login");
@@ -1078,6 +1085,44 @@ const ProductViewPolarisNew = (props) => {
 
   const getBadge = (test) => {
     if (test?.endStatus && test?.hasError) {
+      let errorWarningStructure = <></>;
+      if (
+        test.errorsList &&
+        Array.isArray(test.errorsList) &&
+        test.errorsList.length > 0
+      ) {
+        errorWarningStructure = test.errorsList.map((item) => {
+          if (item && typeof item == "object" && !Array.isArray(item)) {
+            const { SeverityCode, LongMessage } = item;
+            return (
+              <Banner
+                title={
+                  SeverityCode == "Error"
+                    ? "Error"
+                    : SeverityCode == "Warning"
+                    ? "Warning"
+                    : ""
+                }
+                status={
+                  SeverityCode == "Error"
+                    ? "critical"
+                    : SeverityCode == "Warning"
+                    ? "warning"
+                    : ""
+                }
+              >
+                <>{LongMessage}</>
+              </Banner>
+            );
+          } else {
+            return (
+              <Banner title="Error" status="critical">
+                <>{item}</>
+              </Banner>
+            );
+          }
+        });
+      }
       return (
         <Tag
           color="rgb(255 215 157)"
@@ -1104,7 +1149,8 @@ const ProductViewPolarisNew = (props) => {
               setErrorPopup({
                 ...errorPopup,
                 active: true,
-                content: errorsList,
+                // content: errorsList,
+                content: errorWarningStructure,
                 title: errorPopupTitle,
               });
             }}
@@ -1124,6 +1170,44 @@ const ProductViewPolarisNew = (props) => {
         </Tag>
       );
     } else if (test?.itemId && test?.hasError) {
+      let errorWarningStructure = <></>;
+      if (
+        test.errorsList &&
+        Array.isArray(test.errorsList) &&
+        test.errorsList.length > 0
+      ) {
+        errorWarningStructure = test.errorsList.map((item) => {
+          if (item && typeof item == "object" && !Array.isArray(item)) {
+            const { SeverityCode, LongMessage } = item;
+            return (
+              <Banner
+                title={
+                  SeverityCode == "Error"
+                    ? "Error"
+                    : SeverityCode == "Warning"
+                    ? "Warning"
+                    : ""
+                }
+                status={
+                  SeverityCode == "Error"
+                    ? "critical"
+                    : SeverityCode == "Warning"
+                    ? "warning"
+                    : ""
+                }
+              >
+                <>{LongMessage}</>
+              </Banner>
+            );
+          } else {
+            return (
+              <Banner title="Error" status="critical">
+                <>{item}</>
+              </Banner>
+            );
+          }
+        });
+      }
       return (
         <div style={{ display: "flex" }}>
           <Tag color="#aee9d1" style={{ color: "#000", borderRadius: "10px" }}>
@@ -1147,7 +1231,8 @@ const ProductViewPolarisNew = (props) => {
                 setErrorPopup({
                   ...errorPopup,
                   active: true,
-                  content: errorsList,
+                  // content: errorsList,
+                  content: errorWarningStructure,
                   title: errorPopupTitle,
                 });
               }}
@@ -1176,6 +1261,44 @@ const ProductViewPolarisNew = (props) => {
         </>
       );
     } else if (test?.hasError) {
+      let errorWarningStructure = <></>;
+      if (
+        test.errorsList &&
+        Array.isArray(test.errorsList) &&
+        test.errorsList.length > 0
+      ) {
+        errorWarningStructure = test.errorsList.map((item) => {
+          if (item && typeof item == "object" && !Array.isArray(item)) {
+            const { SeverityCode, LongMessage } = item;
+            return (
+              <Banner
+                title={
+                  SeverityCode == "Error"
+                    ? "Error"
+                    : SeverityCode == "Warning"
+                    ? "Warning"
+                    : ""
+                }
+                status={
+                  SeverityCode == "Error"
+                    ? "critical"
+                    : SeverityCode == "Warning"
+                    ? "warning"
+                    : ""
+                }
+              >
+                <>{LongMessage}</>
+              </Banner>
+            );
+          } else {
+            return (
+              <Banner title="Error" status="critical">
+                <>{item}</>
+              </Banner>
+            );
+          }
+        });
+      }
       return (
         <Tag color="#fed3d1" style={{ color: "#000", borderRadius: "10px" }}>
           {/* Errors */}
@@ -1199,7 +1322,8 @@ const ProductViewPolarisNew = (props) => {
               setErrorPopup({
                 ...errorPopup,
                 active: true,
-                content: errorsList,
+                // content: errorsList,
+                content: errorWarningStructure,
                 title: errorPopupTitle,
               });
             }}
@@ -1543,15 +1667,17 @@ const ProductViewPolarisNew = (props) => {
         onClose={() => setErrorPopup({ active: false, content: [], title: "" })}
         title={errorPopup.title}
       >
-        <Modal.Section>
+        {/* <Modal.Section>
           <Banner status="critical">{errorPopup.content}</Banner>
-        </Modal.Section>
+        </Modal.Section> */}
+        <Modal.Section>{errorPopup.content}</Modal.Section>
       </Modal>
       <FooterHelp>
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=editing-product-details-in-application"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=editing-product-details-in-application"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=editing-product-details-in-application-2"
         >
           Edit Product
         </Link>
