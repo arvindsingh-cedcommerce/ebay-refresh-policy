@@ -36,6 +36,7 @@ import {
   Tooltip,
   Scrollable,
   FooterHelp,
+  Badge,
 } from "@shopify/polaris";
 import { Button as AntButton } from "antd";
 import { getConnectedAccounts } from "../../../../../Apirequest/accountsApi";
@@ -192,6 +193,21 @@ const FinalDashboard = (props) => {
   // faqloader
   const [faqLoader, setFaqLoader] = useState(false);
 
+  // booster credits
+  const [boosterCredits, setBoosterCredits] = useState({
+    productAvailable: 0,
+    productService: 0,
+    orderAvailable: 0,
+    orderService: 0,
+    hasBoosterProduct: false,
+    hasBoosterOrder: false,
+  });
+  const [boosterCreditsOrder, setBoosterCreditsOrder] = useState({
+    orderAvailable: 0,
+    orderService: 0,
+    hasBoosterOrder: false,
+  });
+
   const getAllFAQs = async () => {
     setFaqLoader(true);
     let { success, data } = await getMethod(faqAPI, {
@@ -224,6 +240,11 @@ const FinalDashboard = (props) => {
       "Sell on eBay with eBay Marketplace Integration App | Integration for eBay";
     document.description =
       "CedCommerce introduces the eBay Marketplace Integration App enabling the Shopify merchants to sell on eBay by helping them to manage their products & orders.";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
+    }
     getAllConnectedAccounts();
     getAllFAQs();
     // hitNews();
@@ -674,51 +695,71 @@ const FinalDashboard = (props) => {
         }
         if (orderCredits) {
           if (orderCredits?.booster) {
-            var {
+            let {
               available_credits: boosterAvailableOrderCredits,
               service_credits: boosterServiceOrderCredits,
             } = orderCredits?.booster;
+            let temp1 = { ...boosterCreditsOrder };
+            temp1["hasBoosterOrder"] = true;
+            temp1["orderService"] = boosterServiceOrderCredits;
+            temp1["orderAvailable"] = boosterAvailableOrderCredits;
+            setBoosterCreditsOrder(temp1);
           }
           const { available_credits, service_credits } = orderCredits?.prepaid;
           let remainingCredits = (available_credits * 100) / service_credits;
           let truncatedRemainingCredits = truncateDecimals(remainingCredits, 2);
           setRemainingOrderCredits(truncatedRemainingCredits);
-          if (boosterAvailableOrderCredits) {
-            setAvailableOrderCredits(
-              available_credits + Number(boosterAvailableOrderCredits)
-            );
-          } else setAvailableOrderCredits(available_credits);
-          if (boosterServiceOrderCredits) {
-            setTotalOrderCredits(
-              service_credits + Number(boosterServiceOrderCredits)
-            );
-          } else setTotalOrderCredits(service_credits);
+          // if (boosterAvailableOrderCredits) {
+          //   setAvailableOrderCredits(
+          //     Number(available_credits) + Number(boosterAvailableOrderCredits)
+          //   );
+          // } else
+          setAvailableOrderCredits(available_credits);
+          // if (boosterServiceOrderCredits) {
+          //   setTotalOrderCredits(
+          //     Number(service_credits) + Number(boosterServiceOrderCredits)
+          //   );
+          // } else
+          setTotalOrderCredits(service_credits);
           setRemainingOrderCreditsFormatted(
             `${available_credits}/${service_credits}`
           );
         }
         if (productCredits) {
-          if (productCredits?.booster) {
-            var {
-              available_credits: boosterAvailableProductCredits,
-              service_credits: boosterServiceProductCredits,
-            } = productCredits?.booster;
-          }
+          // if (productCredits?.booster) {
+          //   var {
+          //     available_credits: boosterAvailableProductCredits,
+          //     service_credits: boosterServiceProductCredits,
+          //   } = productCredits?.booster;
+          // }
           const { available_credits, service_credits } =
             productCredits?.prepaid;
           let remainingCredits = (available_credits * 100) / service_credits;
           let truncatedRemainingCredits = truncateDecimals(remainingCredits, 2);
           setRemainingProductCredits(truncatedRemainingCredits);
-          if (boosterAvailableProductCredits) {
-            setAvailableProductCredits(
-              available_credits + Number(boosterAvailableProductCredits)
-            );
-          } else setAvailableProductCredits(available_credits);
-          if (boosterServiceProductCredits) {
-            setTotalProductCredits(
-              service_credits + Number(boosterServiceProductCredits)
-            );
-          } else setTotalProductCredits(service_credits);
+          // if (boosterAvailableProductCredits) {
+          //   setAvailableProductCredits(
+          //     Number(available_credits) + Number(boosterAvailableProductCredits)
+          //   );
+          // } else
+          if (productCredits?.booster) {
+            let {
+              available_credits: boosterAvailableProductCredits,
+              service_credits: boosterServiceProductCredits,
+            } = productCredits?.booster;
+            let temp = { ...boosterCredits };
+            temp["hasBoosterProduct"] = true;
+            temp["productService"] = boosterServiceProductCredits;
+            temp["productAvailable"] = boosterAvailableProductCredits;
+            setBoosterCredits(temp);
+          }
+          setAvailableProductCredits(available_credits);
+          // if (boosterServiceProductCredits) {
+          //   setTotalProductCredits(
+          //     Number(service_credits) + Number(boosterServiceProductCredits)
+          //   );
+          // } else
+          setTotalProductCredits(service_credits);
           setRemainingProductCreditsFormatted(
             `${available_credits}/${service_credits}`
           );
@@ -905,7 +946,7 @@ const FinalDashboard = (props) => {
                     <SkeletonBodyText size="Large" />
                   ) : (
                     <Stack vertical spacing="tight">
-                      <Title level={1} style={{ margin: 0 }}>
+                      <Title level={3} style={{ margin: 0 }}>
                         Welcome, {shopifyUsername}
                       </Title>
                     </Stack>
@@ -1160,18 +1201,23 @@ const FinalDashboard = (props) => {
             <Col span={6} xs={24} sm={24} md={8} lg={8} xl={6}>
               <Card
                 title={
-                  <Tooltip content="Number of products can list on eBay from app">
-                    <TextStyle variation="strong">
-                      <span
-                        style={{
-                          borderBottomStyle: "dashed",
-                          borderColor: "#00000069",
-                        }}
-                      >
-                        Product Credits
-                      </span>
-                    </TextStyle>
-                  </Tooltip>
+                  <Stack distribution="equalSpacing">
+                    <Tooltip content="Number of products can list on eBay from app">
+                      <TextStyle variation="strong">
+                        <span
+                          style={{
+                            borderBottomStyle: "dashed",
+                            borderColor: "#00000069",
+                          }}
+                        >
+                          Product Credits
+                        </span>
+                      </TextStyle>
+                    </Tooltip>
+                    {/* {boosterCredits.hasBoosterProduct && (
+                      <Badge>{`${boosterCredits.productAvailable}/${boosterCredits.productService} booster credits`}</Badge>
+                    )} */}
+                  </Stack>
                 }
                 sectioned={dashboardSkeleton ? true : false}
                 bordered={false}
@@ -1180,12 +1226,72 @@ const FinalDashboard = (props) => {
                   <div style={{ padding: "36px 0px" }}>
                     <SkeletonBodyText lines={3} />
                   </div>
+                ) : boosterCredits.hasBoosterProduct ? (
+                  <Row justify="space-around">
+                    <Col>
+                      <div style={{ padding: "25px 0px" }}>
+                        <center>
+                          <Badge status="info">Plan</Badge>
+                          <Title
+                            level={1}
+                            style={{ marginBottom: "-15px", fontSize: "65px" }}
+                            // style={{margin: '0px'}}
+                            type={
+                              (20 * totalProductCredits) / 100 >=
+                                availableProductCredits && "danger"
+                            }
+                          >
+                            {availableProductCredits}
+                          </Title>
+                        </center>
+                        <Text
+                          type="secondary"
+                          style={{ fontSize: "18px", marginLeft: "5px" }}
+                        >
+                          left of {totalProductCredits}/month
+                        </Text>
+                      </div>
+                    </Col>
+                    {/* <Col
+                      style={{
+                        height: "15rem",
+                        border: "1px solid #E4E5E7",
+                        background: "#E4E5E7",
+                        marginTop: "5px",
+                      }}
+                    ></Col> */}
+                    <Col>
+                      <div style={{ padding: "25px 0px" }}>
+                        <center>
+                          <Badge status="success">Booster</Badge>
+                          <Title
+                            level={1}
+                            style={{ marginBottom: "-15px", fontSize: "40px" }}
+                            // style={{margin: '0px'}}
+                            type={
+                              (20 * boosterCredits.productService) / 100 >=
+                                boosterCredits.productAvailable && "danger"
+                            }
+                          >
+                            {boosterCredits.productAvailable}
+                          </Title>
+                        </center>
+                        <Text
+                          type="secondary"
+                          style={{ fontSize: "18px", marginLeft: "5px" }}
+                        >
+                          left of {boosterCredits.productService}
+                        </Text>
+                      </div>
+                    </Col>
+                  </Row>
                 ) : (
                   <Stack distribution="center">
                     <div style={{ padding: "36px 0px" }}>
                       <Title
                         level={1}
                         style={{ marginBottom: "-15px", fontSize: "65px" }}
+                        // style={{margin: '0px'}}
                         type={
                           (20 * totalProductCredits) / 100 >=
                             availableProductCredits && "danger"
@@ -1207,18 +1313,20 @@ const FinalDashboard = (props) => {
             <Col span={6} xs={24} sm={24} md={8} lg={8} xl={6}>
               <Card
                 title={
-                  <Tooltip content="Number of orders can create on Shopify">
-                    <TextStyle variation="strong">
-                      <span
-                        style={{
-                          borderBottomStyle: "dashed",
-                          borderColor: "#00000069",
-                        }}
-                      >
-                        Order Credits
-                      </span>
-                    </TextStyle>
-                  </Tooltip>
+                  <Stack distribution="equalSpacing">
+                    <Tooltip content="Number of orders can create on Shopify">
+                      <TextStyle variation="strong">
+                        <span
+                          style={{
+                            borderBottomStyle: "dashed",
+                            borderColor: "#00000069",
+                          }}
+                        >
+                          Order Credits
+                        </span>
+                      </TextStyle>
+                    </Tooltip>
+                  </Stack>
                 }
                 sectioned={dashboardSkeleton ? true : false}
                 bordered={false}
@@ -1227,6 +1335,65 @@ const FinalDashboard = (props) => {
                   <div style={{ padding: "36px 0px" }}>
                     <SkeletonBodyText lines={3} />
                   </div>
+                ) : boosterCreditsOrder.hasBoosterOrder ? (
+                  <Row justify="space-around">
+                    <Col>
+                      <div style={{ padding: "25px 0px" }}>
+                        <center>
+                          <Badge status="info">Plan</Badge>
+                          <Title
+                            level={1}
+                            style={{ marginBottom: "-15px", fontSize: "65px" }}
+                            // style={{margin: '0px'}}
+                            type={
+                              (20 * totalOrderCredits) / 100 >=
+                                availableOrderCredits && "danger"
+                            }
+                          >
+                            {availableOrderCredits}
+                          </Title>
+                        </center>
+                        <Text
+                          type="secondary"
+                          style={{ fontSize: "18px", marginLeft: "5px" }}
+                        >
+                          left of {totalOrderCredits}/month
+                        </Text>
+                      </div>
+                    </Col>
+                    {/* <Col
+                      style={{
+                        height: "15rem",
+                        border: "1px solid #E4E5E7",
+                        background: "#E4E5E7",
+                        marginTop: "5px",
+                      }}
+                    ></Col> */}
+                    <Col>
+                      <div style={{ padding: "25px 0px" }}>
+                        <center>
+                          <Badge status="success">Booster</Badge>
+                          <Title
+                            level={1}
+                            style={{ marginBottom: "-15px", fontSize: "40px" }}
+                            // style={{margin: '0px'}}
+                            type={
+                              (20 * boosterCreditsOrder.orderService) / 100 >=
+                                boosterCreditsOrder.orderAvailable && "danger"
+                            }
+                          >
+                            {boosterCreditsOrder.orderAvailable}
+                          </Title>
+                        </center>
+                        <Text
+                          type="secondary"
+                          style={{ fontSize: "18px", marginLeft: "5px" }}
+                        >
+                          left of {boosterCreditsOrder.orderService}
+                        </Text>
+                      </div>
+                    </Col>
+                  </Row>
                 ) : (
                   <Stack distribution="center">
                     <div style={{ padding: "36px 0px" }}>
