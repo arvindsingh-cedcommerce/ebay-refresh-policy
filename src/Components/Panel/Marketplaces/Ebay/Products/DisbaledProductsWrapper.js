@@ -7,6 +7,9 @@ const DisbaledProductsWrapper = () => {
   useEffect(() => {
     document.title = "Disabled Products | Integration for eBay";
     document.description = "Disabled Products";
+    if(!document.title.includes(localStorage.getItem('shop_url'))) {
+      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    }
   }, []);
   return (
     <Switch>

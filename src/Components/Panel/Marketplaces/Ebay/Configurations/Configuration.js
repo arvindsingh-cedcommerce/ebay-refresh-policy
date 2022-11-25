@@ -66,6 +66,9 @@ const Configuration = (props) => {
   useEffect(() => {
     document.title = "Configuration | Integration for eBay";
     document.description = "Configuration";
+    if(!document.title.includes(localStorage.getItem('shop_url'))) {
+      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    }
     getSavedData();
   }, []);
 

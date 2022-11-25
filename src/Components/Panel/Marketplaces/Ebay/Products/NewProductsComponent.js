@@ -5,11 +5,16 @@ import NewProductsNewFilters from "./NewProductsNewFilters";
 import ProductViewPolarisNew from "./ProductViewPolarisNew";
 
 const NewProductsComponent = (props) => {
-   useEffect(() => {
+  useEffect(() => {
     document.title =
       "Manage Shopify products on eBay Marketplace Integration App";
     document.description =
       "Minimize your efforts to sell Shopify products on eBay with eBay Marketplace Integration App, which helps to easily list, sync & manage your products on eBay.";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
+    }
   }, []);
 
   return (

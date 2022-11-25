@@ -376,6 +376,9 @@ const ActivityGrid = (props) => {
   useEffect(() => {
     document.title = "Activity | Integration for eBay";
     document.description = "Activity";
+    if(!document.title.includes(localStorage.getItem('shop_url'))) {
+      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    }
   }, []);
   return (
     <PageHeader

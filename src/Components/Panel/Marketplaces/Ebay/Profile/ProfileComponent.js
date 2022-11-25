@@ -10,6 +10,11 @@ const ProfileComponent = () => {
     document.title = "Profile | Integration for eBay";
     document.description =
       "Place & segment your Shopify products based on product properties such as type, vendor, etc. in particular profile to assign various business policies (Return, Payment, Shipping ), templates.";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
+    }
   }, []);
 
   return (

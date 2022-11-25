@@ -10,6 +10,11 @@ const PolicyComponent = () => {
     document.title = "Policy | Integration for eBay";
     document.description =
       "Business Policy section helps you to edit an existing business policy or you can create a new business policy (Shipping/Return/Payment) as per your choice.";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
+    }
   }, []);
 
   return (

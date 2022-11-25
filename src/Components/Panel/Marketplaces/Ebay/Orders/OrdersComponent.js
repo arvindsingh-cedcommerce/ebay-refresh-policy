@@ -7,6 +7,9 @@ const OrdersComponent = () => {
   useEffect(() => {
     document.title = "Orders";
     document.description = "Orders";
+    if(!document.title.includes(localStorage.getItem('shop_url'))) {
+      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    }
   }, []);
 
   return (

@@ -40,6 +40,9 @@ const ShopifyAccount = (props) => {
 
   useEffect(() => {
     document.title = "User Profile | Integration for eBay";
+    if(!document.title.includes(localStorage.getItem('shop_url'))) {
+      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    }
   }, []);
 
   // useEffect(() => {

@@ -102,6 +102,11 @@ const PlansComponentAnt = ({
   useEffect(() => {
     document.title = "Plans | Integration for eBay";
     document.description = "Plans";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
+    }
     hitRequiredFuncs();
     fromOnBoarding && checkActivePlan();
     getAllFAQs();

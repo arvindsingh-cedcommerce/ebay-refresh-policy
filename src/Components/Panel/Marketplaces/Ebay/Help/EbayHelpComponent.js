@@ -106,6 +106,9 @@ const EbayHelpComponent = (props) => {
   useEffect(() => {
     document.title = "Help | Integration for eBay";
     document.description = "Help";
+    if(!document.title.includes(localStorage.getItem('shop_url'))) {
+      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    }
     getAllFAQs();
   }, []);
 

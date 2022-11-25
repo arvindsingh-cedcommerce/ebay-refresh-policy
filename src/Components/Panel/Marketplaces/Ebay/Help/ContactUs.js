@@ -181,6 +181,11 @@ const ContactUs = (props) => {
   useEffect(() => {
     document.title = "Contact Us | Integration for eBay";
     document.description = "Contact Us";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
+    }
     getAllConnectedAccounts();
   }, []);
 
@@ -264,38 +269,42 @@ const ContactUs = (props) => {
             }}
           >
             <Stack vertical>
-              <div>
-                <div>Accounts</div>
-                <Row gutter={[48, 12]}>
-                  {accountLoader ? (
-                    <Col span={24}>
-                      <Card sectioned>
-                        <TextContainer>
-                          <SkeletonDisplayText size="small" />
-                          <SkeletonBodyText />
-                        </TextContainer>
-                      </Card>
-                    </Col>
-                  ) : (
-                    connectedAccountsArray.map((connectedAccount, index) => {
-                      return (
-                        <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-                          <Checkbox
-                            label={connectedAccount.label}
-                            checked={connectedAccount.checked}
-                            onChange={() => {
-                              let temp = [...connectedAccountsArray];
-                              temp[index]["checked"] =
-                                !connectedAccount.checked;
-                              setconnectedAccountsArray(temp);
-                            }}
-                          />
-                        </Col>
-                      );
-                    })
-                  )}
-                </Row>
-              </div>
+              {connectedAccountsArray.length === 1 ? (
+                <></>
+              ) : (
+                <div>
+                  <div>Accounts</div>
+                  <Row gutter={[48, 12]}>
+                    {accountLoader ? (
+                      <Col span={24}>
+                        <Card sectioned>
+                          <TextContainer>
+                            <SkeletonDisplayText size="small" />
+                            <SkeletonBodyText />
+                          </TextContainer>
+                        </Card>
+                      </Col>
+                    ) : (
+                      connectedAccountsArray.map((connectedAccount, index) => {
+                        return (
+                          <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
+                            <Checkbox
+                              label={connectedAccount.label}
+                              checked={connectedAccount.checked}
+                              onChange={() => {
+                                let temp = [...connectedAccountsArray];
+                                temp[index]["checked"] =
+                                  !connectedAccount.checked;
+                                setconnectedAccountsArray(temp);
+                              }}
+                            />
+                          </Col>
+                        );
+                      })
+                    )}
+                  </Row>
+                </div>
+              )}
               {/* <Select
               onChange={(accountValue) => {
                 let matchedAccount = connectedAccountsArray.find(

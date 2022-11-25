@@ -7,9 +7,14 @@ const TemplateComponent = () => {
   useEffect(() => {
     // document.title =
     //   "Create/Edit templates on eBay Marketplace Integration - CedCommerce";
-    document.title = "Template | Integration for eBay"
+    document.title = "Template | Integration for eBay";
     document.description =
       "Users can create or edit Title, Inventory, Price & Category Templates to make selling on eBay automated.";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
+    }
   }, []);
 
   return (
