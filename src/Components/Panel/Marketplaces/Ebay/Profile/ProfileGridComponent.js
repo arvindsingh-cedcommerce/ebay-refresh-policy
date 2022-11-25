@@ -234,6 +234,17 @@ const ProfileGridComponent = (props) => {
     }
   }, [filtersToPass]);
 
+  useEffect(() => {
+    if (profileGifs.length === 1 && isOpenModalVideo) {
+      setIsOpenModalVideo(false);
+      setIsOpenGifModal({
+        active: true,
+        title: profileGifs[0].title,
+        url: profileGifs[0].url,
+      });
+    }
+  }, [isOpenModalVideo]);
+
   const filterData = (componentFilters) => {
     let temp = { ...filtersProps };
     temp["filters"] = [...componentFilters];
@@ -982,7 +993,7 @@ const ProfileGridComponent = (props) => {
         title="How Can I Help?"
       >
         <Modal.Section>
-          {profileGifs.map((gif, index) => {
+          {profileGifs.length > 1 && profileGifs.map((gif, index) => {
             return (
               <>
                 <Stack distribution="equalSpacing">

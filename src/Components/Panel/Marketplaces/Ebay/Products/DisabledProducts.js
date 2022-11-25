@@ -625,6 +625,17 @@ const DisabledProducts = (props) => {
     }
   }, [filtersToPass]);
 
+  useEffect(() => {
+    if (disabledProductsGifs.length === 1 && isOpenModalVideo) {
+      setIsOpenModalVideo(false);
+      setIsOpenGifModal({
+        active: true,
+        title: disabledProductsGifs[0].title,
+        url: disabledProductsGifs[0].url,
+      });
+    }
+  }, [isOpenModalVideo]);
+
   const verify = useCallback(
     debounce((value) => {
       let type = "";
@@ -1268,7 +1279,7 @@ const DisabledProducts = (props) => {
         title="How Can I Help?"
       >
         <Modal.Section>
-          {disabledProductsGifs.map((gif, index) => {
+          {disabledProductsGifs.length > 1 && disabledProductsGifs.map((gif, index) => {
             return (
               <>
                 <Stack distribution="equalSpacing">

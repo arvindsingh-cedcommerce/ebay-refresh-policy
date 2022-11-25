@@ -144,6 +144,17 @@ const NewAccount = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (ebayAccountGifs.length === 1 && isOpenModalVideo) {
+      setIsOpenModalVideo(false);
+      setIsOpenGifModal({
+        active: true,
+        title: ebayAccountGifs[0].title,
+        url: ebayAccountGifs[0].url,
+      });
+    }
+  }, [isOpenModalVideo]);
+
   const updateShopStatusFunc = (record) => {
     setConnectedAccountsGridData((pre) => {
       return pre.map((each) => {
@@ -340,6 +351,9 @@ const NewAccount = (props) => {
   useEffect(() => {
     document.title = "Accounts | Integration for eBay";
     document.description = "Accounts";
+    if(!document.title.includes(localStorage.getItem('shop_url'))) {
+      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    }
     getAllConnectedAccounts();
     getAPI();
   }, []);
@@ -633,7 +647,7 @@ const NewAccount = (props) => {
         title="How Can I Help?"
       >
         <Modal.Section>
-          {ebayAccountGifs.map((gif, index) => {
+          {ebayAccountGifs.length > 1 && ebayAccountGifs.map((gif, index) => {
             return (
               <>
                 <Stack distribution="equalSpacing">
