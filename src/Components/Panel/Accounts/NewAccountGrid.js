@@ -38,6 +38,8 @@ import {
   FooterHelp,
   Link,
   Badge,
+  Banner,
+  List,
 } from "@shopify/polaris";
 import { getDashboardData } from "../../../APIrequests/DashboardAPI";
 import { dashboardAnalyticsURL, ebayDetails } from "../../../URLs/DashboardURL";
@@ -351,8 +353,10 @@ const NewAccount = (props) => {
   useEffect(() => {
     document.title = "Accounts | Integration for eBay";
     document.description = "Accounts";
-    if(!document.title.includes(localStorage.getItem('shop_url'))) {
-      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
     }
     getAllConnectedAccounts();
     getAPI();
@@ -455,6 +459,18 @@ const NewAccount = (props) => {
                 src="https://ebay.sellernext.com/marketplace-logos/ebay.png"
               />
             </center>
+            <Banner status="info">
+              <List type="bullet">
+                <List.Item>
+                  Sign out your current sign in account from ebay.com before
+                  connecting any eBay website to the App.
+                </List.Item>
+                <List.Item>
+                  Once sign out, consider refreshing the cache file
+                  (Ctrl+Shift+R).
+                </List.Item>
+              </List>
+            </Banner>
             <Row justify="space-around" align="middle">
               <Col span={8}>
                 <ShopifySelect
@@ -647,29 +663,30 @@ const NewAccount = (props) => {
         title="How Can I Help?"
       >
         <Modal.Section>
-          {ebayAccountGifs.length > 1 && ebayAccountGifs.map((gif, index) => {
-            return (
-              <>
-                <Stack distribution="equalSpacing">
-                  <>{gif.title}</>
-                  <ShopifyButton
-                    plain
-                    onClick={() => {
-                      setIsOpenModalVideo(false);
-                      setIsOpenGifModal({
-                        active: true,
-                        title: gif.title,
-                        url: gif.url,
-                      });
-                    }}
-                  >
-                    Watch
-                  </ShopifyButton>
-                </Stack>
-                {index == ebayAccountGifs.length - 1 ? <></> : <Divider />}
-              </>
-            );
-          })}
+          {ebayAccountGifs.length > 1 &&
+            ebayAccountGifs.map((gif, index) => {
+              return (
+                <>
+                  <Stack distribution="equalSpacing">
+                    <>{gif.title}</>
+                    <ShopifyButton
+                      plain
+                      onClick={() => {
+                        setIsOpenModalVideo(false);
+                        setIsOpenGifModal({
+                          active: true,
+                          title: gif.title,
+                          url: gif.url,
+                        });
+                      }}
+                    >
+                      Watch
+                    </ShopifyButton>
+                  </Stack>
+                  {index == ebayAccountGifs.length - 1 ? <></> : <Divider />}
+                </>
+              );
+            })}
           <Divider />
           <center>
             <ShopifyButton primary onClick={() => setIsOpenModalVideo(false)}>
