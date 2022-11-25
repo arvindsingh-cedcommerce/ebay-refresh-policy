@@ -10,6 +10,7 @@ import {
   Stack,
   TextField,
   TextStyle,
+  Thumbnail,
   Tooltip,
 } from "@shopify/polaris";
 import { EditMinor } from "@shopify/polaris-icons";
@@ -175,10 +176,29 @@ const VariantsComponent = ({
       }
     });
     tempObject["key"] = index.toString();
-    tempObject["variantImage"] = key["variant_image"] ? (
-      <Image width={25} src={key["variant_image"]} />
-    ) : (
-      <Image width={25} preview={false} src={NoProductImage} />
+    tempObject["variantImage"] =  key["variant_image"] ? (
+      // <Image width={25} src={key["variant_image"]} />
+      <Thumbnail
+      size="small"
+      source={key["variant_image"]}
+      alt="Black choker necklace"
+    />
+
+    ) 
+    : (key['variant_attributes'].length == 0 && key["main_image"]) ? 
+    // <Image width={25} src={key["main_image"]} /> 
+    <Thumbnail
+    size="small"
+      source={key["main_image"]}
+      alt="Black choker necklace"
+    />
+    : (
+      // <Image width={25} preview={false} src={NoProductImage} />
+      <Thumbnail
+      size="small"
+      source={NoProductImage}
+      alt="Black choker necklace"
+    />
     );
     let skuText=key["sku"];
         if(skuText?.length>80)
@@ -565,7 +585,7 @@ const VariantsComponent = ({
 
   return (
     <>
-    <Card>
+    <Card sectioned>
       <Stack distribution="center">
         <React.Fragment style={switchShopifyCustom ? { opacity: "0.5" } : {}}>
           Shopify
