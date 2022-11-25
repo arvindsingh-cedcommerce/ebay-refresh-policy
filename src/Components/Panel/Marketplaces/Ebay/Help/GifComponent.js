@@ -1,10 +1,11 @@
 import { Button, Modal, Stack } from "@shopify/polaris";
-import { Card, Col, Divider, Row } from "antd";
+import { Card, Col, Divider, Row, Typography } from "antd";
 import React, { useState } from "react";
 // import CategoryTemplateImage from "../../../../../assets/gifImage/categoryTemplate.png";
 import { gifs } from "./gifHelper";
 
 const { Meta } = Card;
+const { Text } = Typography;
 
 const GifComponent = () => {
   const [gifImageModal, setGifImageModal] = useState({
@@ -45,6 +46,12 @@ const GifComponent = () => {
                 }}
               >
                 {gif.title}
+                <Text
+                  copyable={{
+                    text: gif.url,
+                    tooltips: <>Copy gif link</>
+                  }}
+                />
               </div>
             </Card>
           </Col>
