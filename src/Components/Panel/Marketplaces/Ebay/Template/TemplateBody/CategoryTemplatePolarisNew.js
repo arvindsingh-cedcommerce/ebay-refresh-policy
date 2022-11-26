@@ -56,6 +56,8 @@ export function debounce(func, wait, immediate) {
 }
 
 const CategoryTemplatePolarisNew = (props) => {
+  const [templateTitle, setTemplateTitle] = useState(false);
+  const [templateTitleErrors, setTemplateTitleErrors] = useState(false);
   const { id, loader, showSecondaryCategory, siteID, shopID, recieveFormdata } =
     props;
   const [connectedAccountsObject, setconnectedAccountsObject] = useState([]);
@@ -1107,7 +1109,6 @@ function to handle optional attribute changes
         value: "",
       });
     }
-    console.log("barcode_options", barcode_options);
     setBarcodeOptions(barcode_options);
     setCategoryFeatureOptions(categoryFeature_options);
   };
@@ -1135,12 +1136,17 @@ function to handle optional attribute changes
       ) {
         let extractData = getExtractedDataForCategory(mappingCategorywise);
         let temp = [...categoryTypeMapping];
+        // console.log("1139", extractData[0]["level"]);
+        // console.log(temp.filter((category) => category?.levelNumber == 1));
+        // if(extractData[0]["level"] == 1 && temp.filter(category => category?.levelNumber == 1).length == 0) {
         temp.push({
           options: extractData,
           label: `Category Level ${extractData[0]["level"]}`,
           value: "",
           levelNumber: extractData[0]["level"],
         });
+        // }
+        // console.log("temp", temp);
         setCategoryTypeMapping(temp);
       } else if (
         categoryType === "primaryCategory" &&
@@ -1152,6 +1158,7 @@ function to handle optional attribute changes
         const lastLevel = { ...temp.at(temp.length - 1) };
         const lastLevelValue = lastLevel?.["value"];
         setLoaderOverlayActive(true);
+        console.log('lastLevelValue', lastLevelValue);
         let dataCategoryFeatures = await getcategoryFeatures({
           category_id: lastLevelValue,
           site_id: siteID,
@@ -1249,6 +1256,7 @@ function to handle optional attribute changes
           temp.push({ label: meta, value: meta });
         });
       }
+      setTemplateTitle(data?.title);
       if (data?.data) {
         extractDataFromSavedTemplate(data?.data, temp);
       } else {
@@ -1859,13 +1867,45 @@ function to check final validation
       };
       if (id) {
         data["_id"] = id;
-      }
-      let returnedResponse = await props.recieveFormdata(data);
-      if (returnedResponse) {
-        redirect("/panel/ebay/templates");
+        if (postData["name"] != templateTitle) {
+          data["title"] = templateTitle;
+          if (!templateTitle) {
+            setTemplateTitleErrors("Name cannot be empty");
+            notify.error(
+              "Kindly fill all the required fields with proper values"
+            );
+          } else {
+            let returnedResponse = await props.recieveFormdata(data);
+            if (returnedResponse) {
+              redirect("/panel/ebay/templates");
+            } else {
+              // notify.error(message);
+              notify.error(
+                "Kindly fill all the required fields with proper values"
+              );
+            }
+          }
+        }  else {
+          let returnedResponse = await props.recieveFormdata(data);
+          if (returnedResponse) {
+            redirect("/panel/ebay/templates");
+          } else {
+            // notify.error(message);
+            notify.error(
+              "Kindly fill all the required fields with proper values"
+            );
+          }
+        }
       } else {
-        // notify.error(message);
-        notify.error("Kindly fill all the required fields with proper values");
+        let returnedResponse = await props.recieveFormdata(data);
+        if (returnedResponse) {
+          redirect("/panel/ebay/templates");
+        } else {
+          // notify.error(message);
+          notify.error(
+            "Kindly fill all the required fields with proper values"
+          );
+        }
       }
     } else {
       setValidationErrors({ ...validationObject });
@@ -2623,7 +2663,7 @@ function to check final validation
           </Button>
         </ButtonGroup>
         {enableVariationImageSettings && (
-          <Stack distribution="fillEvenly">
+          <Stack distribution="leading">
             {configurableAttributes.map((attribute, index) => {
               return (
                 <Checkbox
@@ -2686,6 +2726,27 @@ function to check final validation
               condition, store front category and secondary category also.
             </p>
           </Banner>
+          <Card.Section>
+            <Layout>
+              <Layout.AnnotatedSection
+                id="templateName"
+                title="Template name"
+                // description="Set unique name to identify in profile section."
+                description="Define name as per your understanding. It will use to identify template in other sections of the app like product's profile."
+              >
+                <Card sectioned>
+                  <TextField
+                    value={templateTitle}
+                    onChange={(e) => {
+                      setTemplateTitleErrors(false);
+                      setTemplateTitle(e);
+                    }}
+                    error={templateTitleErrors}
+                  />
+                </Card>
+              </Layout.AnnotatedSection>
+            </Layout>
+          </Card.Section>
           <Card.Section>{getCategoryStructure("primary")}</Card.Section>
           <Card.Section>{getCategoryStructure("secondary")}</Card.Section>
         </Card>
