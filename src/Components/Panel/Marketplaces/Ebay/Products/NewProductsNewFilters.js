@@ -47,6 +47,7 @@ import {
   List,
   FooterHelp,
   Link,
+  Thumbnail,
 } from "@shopify/polaris";
 import { notify } from "../../../../../services/notify";
 import ActionPopover from "./ActionPopover";
@@ -108,7 +109,8 @@ export const filtersFields = [
     searchType: "textField",
     inputValue: "",
     operator: "1",
-    dataType: "number",
+    // dataType: "number",
+    dataType: "string",
     placeholder: "Enter eBay Item Id",
   },
   {
@@ -201,7 +203,7 @@ function NewProductsNewFilters(props) {
   const initialStatusValue =
     reduxState[checkValueHandler(reduxState, "status")];
   const initialProfileValue =
-    reduxState[checkValueHandler(reduxState, "profile_name")];
+    reduxState[checkValueHandler(reduxState, "profile_id")];
   const moreFilters = [
     "listing_id",
     "product_type",
@@ -364,14 +366,16 @@ function NewProductsNewFilters(props) {
 
   // pagination
   const [activePage, setActivePage] = useState(1);
-  const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
+  // const [pageSizeOptions, setPageSizeOptions] = useState([25, 50, 100]);
+  const [pageSizeOptions, setPageSizeOptions] = useState([50, 100, 150, 200]);
   const [responsivePageSizeOptions, setResponsivePageSizeOptions] = useState([
     { label: " 25 / page ", value: 25 },
     { label: " 50 / page ", value: 50 },
     { label: " 100 / page ", value: 100 },
   ]);
 
-  const [pageSize, setPageSize] = useState(25);
+  // const [pageSize, setPageSize] = useState(25);
+  const [pageSize, setPageSize] = useState(50);
   const [totalProductsCount, setTotalProductsCount] = useState(0);
 
   // && filters
@@ -401,7 +405,7 @@ function NewProductsNewFilters(props) {
   const [selected, setSelected] = useState({
     country: [""],
     status: [],
-    profile_name: [],
+    profile_id: [],
     product_type: [],
     brand: [],
   });
@@ -417,6 +421,7 @@ function NewProductsNewFilters(props) {
   const [errorPopup, setErrorPopup] = useState({
     active: false,
     content: [],
+    fullTitle: "",
   });
 
   // variant state
@@ -435,6 +440,13 @@ function NewProductsNewFilters(props) {
     url: "",
   });
 
+  // booster credits
+  const [boosterCredits, setBoosterCredits] = useState({
+    productAvailable: 0,
+    productService: 0,
+    hasBoosterProduct: false,
+  });
+
   const [prevPage, setPrevPage] = useState(1);
   const { Option } = Select;
   useEffect(() => {
@@ -446,8 +458,55 @@ function NewProductsNewFilters(props) {
     }
   }, [filtersToPass]);
 
-  const getBadge = (test) => {
+  const fetchCurrentSearchWithTitle = () => {
+    if (filtersToPass) {
+      if (
+        (filtersToPass.hasOwnProperty("filter[sku][3]") && searchWithTitle) ||
+        (filtersToPass.hasOwnProperty("filter[title][3]") && !searchWithTitle)
+      )
+        return !searchWithTitle;
+      else return searchWithTitle;
+    }
+    return searchWithTitle;
+  };
+
+  const getBadge = (title, test) => {
     if (test?.ended && test?.Errors) {
+      let errorWarningStructure = <></>;
+      if (test.Errors && Array.isArray(test.Errors) && test.Errors.length > 0) {
+        errorWarningStructure = test.Errors.map((item) => {
+          if (item && typeof item == "object" && !Array.isArray(item)) {
+            const { SeverityCode, LongMessage } = item;
+            return (
+              <Banner
+                title={
+                  SeverityCode == "Error"
+                    ? "Error"
+                    : SeverityCode == "Warning"
+                    ? "Warning"
+                    : ""
+                }
+                // action={{ content: "Review risk analysis" }}
+                status={
+                  SeverityCode == "Error"
+                    ? "critical"
+                    : SeverityCode == "Warning"
+                    ? "warning"
+                    : ""
+                }
+              >
+                <>{LongMessage}</>
+              </Banner>
+            );
+          } else {
+            return (
+              <Banner title="Error" status="critical">
+                <>{item}</>
+              </Banner>
+            );
+          }
+        });
+      }
       return (
         <Badge status="warning">
           <div
@@ -455,7 +514,9 @@ function NewProductsNewFilters(props) {
             onClick={(e) => {
               setErrorPopup({
                 active: true,
-                content: [...test.Errors],
+                // content: [...test.Errors],
+                content: errorWarningStructure,
+                fullTitle: title,
               });
             }}
           >
@@ -469,6 +530,41 @@ function NewProductsNewFilters(props) {
     } else if (test?.ended) {
       return <Badge status="warning">Ended</Badge>;
     } else if (test?.ItemId && test?.Errors) {
+      let errorWarningStructure = <></>;
+      if (test.Errors && Array.isArray(test.Errors) && test.Errors.length > 0) {
+        errorWarningStructure = test.Errors.map((item) => {
+          if (item && typeof item == "object" && !Array.isArray(item)) {
+            const { SeverityCode, LongMessage } = item;
+            return (
+              <Banner
+                title={
+                  SeverityCode == "Error"
+                    ? "Error"
+                    : SeverityCode == "Warning"
+                    ? "Warning"
+                    : ""
+                }
+                // action={{ content: "Review risk analysis" }}
+                status={
+                  SeverityCode == "Error"
+                    ? "critical"
+                    : SeverityCode == "Warning"
+                    ? "warning"
+                    : ""
+                }
+              >
+                <>{LongMessage}</>
+              </Banner>
+            );
+          } else {
+            return (
+              <Banner title="Error" status="critical">
+                <>{item}</>
+              </Banner>
+            );
+          }
+        });
+      }
       return (
         <Badge status="success" progress="complete">
           <div
@@ -476,7 +572,9 @@ function NewProductsNewFilters(props) {
             onClick={(e) => {
               setErrorPopup({
                 active: true,
-                content: [...test.Errors],
+                // content: [...test.Errors],
+                content: errorWarningStructure,
+                fullTitle: title,
               });
             }}
           >
@@ -494,6 +592,41 @@ function NewProductsNewFilters(props) {
         </Badge>
       );
     } else if (test?.Errors) {
+      let errorWarningStructure = <></>;
+      if (test.Errors && Array.isArray(test.Errors) && test.Errors.length > 0) {
+        errorWarningStructure = test.Errors.map((item) => {
+          if (item && typeof item == "object" && !Array.isArray(item)) {
+            const { SeverityCode, LongMessage } = item;
+            return (
+              <Banner
+                title={
+                  SeverityCode == "Error"
+                    ? "Error"
+                    : SeverityCode == "Warning"
+                    ? "Warning"
+                    : ""
+                }
+                // action={{ content: "Review risk analysis" }}
+                status={
+                  SeverityCode == "Error"
+                    ? "critical"
+                    : SeverityCode == "Warning"
+                    ? "warning"
+                    : ""
+                }
+              >
+                <>{LongMessage}</>
+              </Banner>
+            );
+          } else {
+            return (
+              <Banner title="Error" status="critical">
+                <>{item}</>
+              </Banner>
+            );
+          }
+        });
+      }
       return (
         <Badge status="critical">
           <div
@@ -502,7 +635,9 @@ function NewProductsNewFilters(props) {
               setErrorPopup({
                 ...errorPopup,
                 active: true,
-                content: [...test.Errors],
+                // content: [...test.Errors]
+                content: errorWarningStructure,
+                fullTitle: title,
               });
             }}
           >
@@ -579,13 +714,20 @@ function NewProductsNewFilters(props) {
       </center>
     );
   };
-  const getProductStatusEbayResponse = (response1) => {
+  const getProductStatusEbayResponse = (title, response1) => {
     let response = {};
     if (response1) {
-      response1.forEach((responseObj) => {
-        const { shop_id, ...remainingProps } = responseObj;
-        response[shop_id] = remainingProps;
-      });
+      if (typeof response1 == "object" && Array.isArray(response1)) {
+        response1.forEach((responseObj) => {
+          const { shop_id, ...remainingProps } = responseObj;
+          response[shop_id] = remainingProps;
+        });
+      } else if (typeof response1 == "object") {
+        for (const key in response1) {
+          const { shop_id, ...remainingProps } = response1[key];
+          response[shop_id] = remainingProps;
+        }
+      }
     }
     let statusStructures = [];
     if (response && Object.keys(response).length) {
@@ -603,7 +745,7 @@ function NewProductsNewFilters(props) {
               <Stack>
                 {test?.image}
                 <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
-                {test?.image && getBadge(test)}
+                {test?.image && getBadge(title, test)}
               </Stack>
             )
           : (test.ItemId || test.Errors) && (
@@ -616,7 +758,7 @@ function NewProductsNewFilters(props) {
                 <Stack>
                   {test?.image}
                   <Text style={{ fontSize: "1.5rem" }}>{test?.username}</Text>
-                  {test?.image && getBadge(test)}
+                  {test?.image && getBadge(title, test)}
                 </Stack>
               </div>
             );
@@ -701,9 +843,11 @@ function NewProductsNewFilters(props) {
           tempObject["image"] = (
             <center>
               {main_image ? (
-                <Image width={30} src={main_image} />
+                // <Image width={30} height={30} src={main_image} />
+                <Thumbnail source={main_image} size="small" />
               ) : (
-                <Image width={30} preview={false} src={NoProductImage} />
+                <Thumbnail source={NoProductImage} size="small" />
+                // <Image width={30} preview={false} src={NoProductImage} />
               )}
             </center>
           );
@@ -733,9 +877,10 @@ function NewProductsNewFilters(props) {
               />
             </Stack>
           );
+          tempObject["fullTitle"] = title;
           tempObject["productStatus"] = (
             <Stack alignment="center" distribution="center">
-              {getProductStatusEbayResponse(ebay_response)}
+              {getProductStatusEbayResponse(title, ebay_response)}
             </Stack>
           );
           tempObject["productType"] = (
@@ -833,17 +978,71 @@ function NewProductsNewFilters(props) {
   };
   const verify = useCallback(
     debounce((value) => {
+      let dropdownObj = {};
+
+      let cloneObj = { ...filters };
+      const filtersToPassTemp = { ...filtersToPass };
       let type = "";
       if (searchWithTitle) {
         type = "filter[title][3]";
+        Object.keys(filtersToPassTemp).map((filter, index) => {
+          if (filter !== "filtersPresent" && value) {
+            if (
+              ["price", "quantity", "sku"].includes(
+                filter.split("[")[1].replace("]", "")
+              )
+            ) {
+              delete filtersToPassTemp[filter];
+              if (filter.split("[")[1].replace("]", "") !== "sku") {
+                Object.keys(cloneObj).map((item, index) => {
+                  if (["quantity", "price"].includes(item))
+                    cloneObj[item]["value"] = "";
+                  cloneObj[item]["disabled"] = false;
+                });
+              }
+            }
+          }
+        });
       } else {
         type = "filter[sku][3]";
+        console.log("typing main check", filtersToPassTemp);
+
+        Object.keys(filtersToPassTemp).map((filter, index) => {
+          if (filter !== "filtersPresent") {
+            if (
+              !["price", "quantity", "sku"].includes(
+                filter.split("[")[1].replace("]", "")
+              )
+            ) {
+              if (
+                ["country", "status", "profile_id"].includes(
+                  filter.split("[")[1].replace("]", "")
+                )
+              ) {
+                dropdownObj[filter.split("[")[1].replace("]", "")] = [];
+              } else {
+                Object.keys(cloneObj).forEach((filter) => {
+                  if (!["price", "quantity"].includes(filter))
+                    cloneObj[filter]["value"] = "";
+                  cloneObj[filter]["disabled"] = false;
+                });
+              }
+              delete filtersToPassTemp[filter];
+            }
+          }
+        });
       }
+      console.log("main filters to pass", dropdownObj);
       let titleFilterObj = {};
       titleFilterObj[type] = value;
+
       if (titleFilterObj[type] !== "") {
+        if (dropdownObj) {
+          setSelected({ ...selected, ...dropdownObj });
+        }
+        if (cloneObj) setFilters(cloneObj);
         setFiltersToPass({
-          ...filtersToPass,
+          ...filtersToPassTemp,
           ...titleFilterObj,
           filtersPresent: true,
         });
@@ -870,15 +1069,19 @@ function NewProductsNewFilters(props) {
         onChange={(e) => {
           setFilterTitleORsku(e);
         }}
-        placeholder={searchWithTitle ? "Search with title" : "Search with SKU"}
+        placeholder={
+          fetchCurrentSearchWithTitle()
+            ? "Search with title"
+            : "Search with SKU"
+        }
       />
     );
   };
   const renderChoiceListForTitleSKU = () => (
     <ButtonGroup segmented>
       <Button
-        primary={searchWithTitle}
-        pressed={searchWithTitle}
+        primary={fetchCurrentSearchWithTitle()}
+        pressed={fetchCurrentSearchWithTitle()}
         onClick={(e) => {
           let temp = { ...filtersToPass };
           if (temp.hasOwnProperty("filter[sku][3]")) {
@@ -892,8 +1095,8 @@ function NewProductsNewFilters(props) {
         Title
       </Button>
       <Button
-        primary={!searchWithTitle}
-        pressed={!searchWithTitle}
+        primary={!fetchCurrentSearchWithTitle()}
+        pressed={!fetchCurrentSearchWithTitle()}
         onClick={(e) => {
           let temp = { ...filtersToPass };
           if (temp.hasOwnProperty("filter[title][3]")) {
@@ -931,6 +1134,8 @@ function NewProductsNewFilters(props) {
   );
 
   const gatherAllFilters = () => {
+    let dropdownObj = {};
+    let resetTitleField = false;
     let temp = {};
     Object.keys(filters).forEach((filter) => {
       if (filters[filter]["value"]) {
@@ -939,7 +1144,64 @@ function NewProductsNewFilters(props) {
       }
     });
     let filtersToPassTemp = { ...filtersToPass };
-    if (Object.keys(filtersToPassTemp).length) {
+    let containsMainFilters = false;
+    let containsMoreFilters = false;
+    Object.keys(filtersToPassTemp).map((filter, index) => {
+      if (
+        filter !== "filtersPresent" &&
+        ["sku", "quantity", "price"].includes(
+          filter.split("[")[1].replace("]", "")
+        )
+      ) {
+        containsMainFilters = true;
+      }
+    });
+    Object.keys(temp).map((filter, index) => {
+      if (["quantity", "price"].includes(filter.split("[")[1].replace("]", "")))
+        containsMoreFilters = true;
+    });
+    if (containsMainFilters) {
+      if (Object.keys(temp).length > 0 && !containsMoreFilters) {
+        Object.keys(filtersToPassTemp).map((item, index) => {
+          if (
+            item !== "filtersPresent" &&
+            ["sku", "price", "quantity"].includes(
+              item.split("[")[1].replace("]", "")
+            )
+          ) {
+            delete filtersToPassTemp[item];
+            if (item.split("[")[1].replace("]", "") === "sku") {
+              setFilterTitleORsku("");
+              setSearchWithTitle(true);
+            }
+          }
+        });
+      }
+    } else {
+      if (Object.keys(temp).length > 0 && containsMoreFilters) {
+        Object.keys(filtersToPassTemp).map((item, index) => {
+          if (
+            item !== "filtersPresent" &&
+            !["sku", "price", "quantity"].includes(
+              item.split("[")[1].replace("]", "")
+            )
+          ) {
+            if (
+              ["country", "status", "profile_id"].includes(
+                item.split("[")[1].replace("]", "")
+              )
+            ) {
+              dropdownObj[item.split("[")[1].replace("]", "")] = [];
+            }
+            if (item.split("[")[1].replace("]", "") === "title")
+              resetTitleField = true;
+            delete filtersToPassTemp[item];
+          }
+        });
+      }
+    }
+    // if (Object.keys(filtersToPassTemp).length) {
+    if (Object.keys(filtersToPassTemp).length && Object.keys(temp).length > 0) {
       for (const key in filtersToPassTemp) {
         for (const key1 in temp) {
           if (key.split("[")[1] === key1.split("[")[1]) {
@@ -948,24 +1210,54 @@ function NewProductsNewFilters(props) {
         }
       }
     }
+
     if (Object.keys(temp).length > 0) {
       setInnerFilterCount(Object.keys(temp).length);
       setFiltersToPass({ ...filtersToPassTemp, ...temp });
+      if (dropdownObj) {
+        setSelected({ ...selected, ...dropdownObj });
+      }
+      if (resetTitleField) setFilterTitleORsku("");
     } else {
       // notify.warn("No filters applied");
       setFiltersDrawerVisible(false);
       setInnerFilterCount(0);
-      setFiltersToPass({ filtersPresent: false });
-      setFilterTitleORsku("");
+      // setFiltersToPass({ filtersPresent: false });
+      // setFilterTitleORsku("");
+      setFiltersToPass({ ...filtersToPass, filtersPresent: false });
+      //setFilterTitleORsku("");
     }
   };
 
   const handleChange = (value, selectedType) => {
     let type = `filter[${selectedType}][1]`;
     let filterObj = {};
+    let cloneObj = { ...filters };
     filterObj[type] = value[0];
-    setFiltersToPass({ ...filtersToPass, ...filterObj });
+    const filtersToPassTemp = { ...filtersToPass };
+    Object.keys(filtersToPassTemp).map((filter, index) => {
+      if (filter !== "filtersPresent") {
+        if (
+          ["sku", "quantity", "price"].includes(
+            filter.split("[")[1].replace("]", "")
+          )
+        ) {
+          delete filtersToPassTemp[filter];
+          Object.keys(cloneObj).forEach((filter) => {
+            if (["quantity", "price"].includes(filter))
+              cloneObj[filter]["value"] = "";
+            cloneObj[filter]["disabled"] = false;
+          });
+          if (filter.split("[")[1].replace("]", "") === "sku") {
+            setFilterTitleORsku("");
+            setSearchWithTitle(true);
+          }
+        }
+      }
+    });
+    setFiltersToPass({ ...filtersToPassTemp, ...filterObj });
     setSelected({ ...selected, [selectedType]: value });
+    if (cloneObj) setFilters({ ...cloneObj });
   };
 
   const renderOtherFilters = () => {
@@ -990,10 +1282,17 @@ function NewProductsNewFilters(props) {
             <div style={{ margin: "10px" }}>
               <ChoiceList
                 choices={connectedAccountsArray}
+                // selected={
+                //   initialCountryObj[0]
+                //     ? [initialCountryObj[0].value]
+                //     : selected["country"]
+                // }
                 selected={
                   initialCountryObj[0]
                     ? [initialCountryObj[0].value]
                     : selected["country"]
+                    ? selected["country"]
+                    : [""]
                 }
                 onChange={(value) => handleChange(value, "country")}
               />
@@ -1028,9 +1327,9 @@ function NewProductsNewFilters(props) {
                   selected={
                     initialProfileObj[0]
                       ? [initialProfileObj[0].value]
-                      : selected["profile_name"]
+                      : selected["profile_id"]
                   }
-                  onChange={(value) => handleChange(value, "profile_name")}
+                  onChange={(value) => handleChange(value, "profile_id")}
                 />
               </div>
             </Popover>
@@ -1050,9 +1349,9 @@ function NewProductsNewFilters(props) {
                 selected={
                   initialProfileObj[0]
                     ? [initialProfileObj[0].value]
-                    : selected["profile_name"]
+                    : selected["profile_id"]
                 }
-                onChange={(value) => handleChange(value, "profile_name")}
+                onChange={(value) => handleChange(value, "profile_id")}
               />
             </div>
           </Popover>
@@ -1110,7 +1409,8 @@ function NewProductsNewFilters(props) {
     const profileList = profiles.map((profile) => {
       return {
         label: profile.name,
-        value: profile.name,
+        // value: profile.name,
+        value: profile.profile_id,
         profileId: profile.profile_id,
       };
     });
@@ -1123,21 +1423,25 @@ function NewProductsNewFilters(props) {
 
   const prepareProductTypeVendor = (data) => {
     const { product_type, vendor } = data;
-    product_type
-      .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
-      .reverse();
-    vendor
-      .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
-      .reverse();
-    const productTypeList = product_type.map((type) => {
-      return { label: type, value: type };
-    });
-    const vendorList = vendor.map((type) => {
-      return { label: type, value: type };
-    });
     let temp = { ...filters };
-    temp["brand"]["options"] = vendorList;
-    temp["product_type"]["options"] = productTypeList;
+    if (product_type) {
+      product_type
+        .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+        .reverse();
+      const productTypeList = product_type.map((type) => {
+        return { label: type, value: type };
+      });
+      temp["product_type"]["options"] = productTypeList;
+    }
+    if (vendor) {
+      vendor
+        .sort((a, b) => b.localeCompare(a, "es", { sensitivity: "base" }))
+        .reverse();
+      const vendorList = vendor.map((type) => {
+        return { label: type, value: type };
+      });
+      temp["brand"]["options"] = vendorList;
+    }
     setFilters(temp);
     setProductTypeList(productTypeList);
     setVendorList(vendorList);
@@ -1250,6 +1554,17 @@ function NewProductsNewFilters(props) {
         temp["total"] = service_credits;
         setProductCredits(temp);
       }
+      if (data?.planDetails?.productCredits?.booster) {
+        let {
+          available_credits: boosterAvailableProductCredits,
+          service_credits: boosterServiceProductCredits,
+        } = data?.planDetails?.productCredits?.booster;
+        let temp = { ...boosterCredits };
+        temp["hasBoosterProduct"] = true;
+        temp["productService"] = boosterServiceProductCredits;
+        temp["productAvailable"] = boosterAvailableProductCredits;
+        setBoosterCredits(temp);
+      }
     }
   };
 
@@ -1277,7 +1592,7 @@ function NewProductsNewFilters(props) {
         return "Title";
       case "sku":
         return "SKU";
-      case "profile_name":
+      case "profile_id":
         return "Profile";
       default:
         return filtersFields.find((option) => option["value"] === field)?.[
@@ -1315,8 +1630,13 @@ function NewProductsNewFilters(props) {
   const formatFilterValue = (filterName, filterValue) => {
     if (filterName === "status") {
       const statusItem = status?.filter((item) => item.value === filterValue);
-      console.log("filter name", statusItem);
       return statusItem[0]?.label;
+    } else if (filterName === "profile_id") {
+      const profileLabel = profileList?.filter(
+        (item) => item.value === filterValue
+      );
+      console.log("filter name", profileLabel);
+      return profileLabel[0]?.label;
     } else {
       return filterValue;
     }
@@ -1370,7 +1690,16 @@ function NewProductsNewFilters(props) {
                       !disabledArr.includes("price") &&
                       !disabledArr.includes("quantity")
                     ) {
-                      tempObj["listing_id"]["disabled"] = false;
+                      // disabledArr.map((key,index)=>{
+                      //   if(moreFilters.includes(key))
+                      // tempObj[key]["disabled"] = false;
+                      // });
+                      Object.keys(tempObj).map((filter, index) => {
+                        if (["price", "quantity"].includes(filter)) {
+                          tempObj[filter]["value"] = "";
+                        }
+                        tempObj[filter]["disabled"] = false;
+                      });
                     }
                   }
                   tempObj[object]["value"] = "";
@@ -1447,6 +1776,17 @@ function NewProductsNewFilters(props) {
               </Badge>
             )}
           </>
+          <>
+            {boosterCredits.hasBoosterProduct && (
+              <Badge>
+                <Text strong>
+                  <Stack spacing="extraTight" alignment="center">
+                    <>{`${boosterCredits.productAvailable}/${boosterCredits.productService} booster product credits available`}</>
+                  </Stack>
+                </Text>
+              </Badge>
+            )}
+          </>
         </Stack>
       }
       ghost={true}
@@ -1481,6 +1821,14 @@ function NewProductsNewFilters(props) {
             ]
       }
     >
+      {/* <Alert
+        style={{ borderRadius: "7px" }}
+        // message="Note"
+        message="No other filters are applicable when using sku, price, and inventory filter vice-versa"
+        type="info"
+        showIcon
+      />
+      <br /> */}
       <Card sectioned>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <div
@@ -1599,7 +1947,7 @@ function NewProductsNewFilters(props) {
       options={pageSizeOptions}
       onChange={handleSelectChange}
       value={pageSize}
-    
+   
     /> */}
                     <Select
                       defaultValue="25 / page"
@@ -1734,17 +2082,21 @@ function NewProductsNewFilters(props) {
       />
       <Modal
         open={errorPopup.active}
-        onClose={() => setErrorPopup({ active: false, content: [] })}
-        title="Errors"
+        onClose={() =>
+          setErrorPopup({ active: false, content: [], fullTitle: "" })
+        }
+        // title="Errors"
+        title={errorPopup.fullTitle}
       >
         <Modal.Section>
-          <Banner status="critical">
-            <List>
-              {errorPopup.content.map((error) => (
-                <List.Item>{error}</List.Item>
-              ))}
-            </List>
-          </Banner>
+          {/* <Banner status="critical"> */}
+          {/* <List> */}
+          {errorPopup.content.map((error) => (
+            // <List.Item>{error}</List.Item>
+            <>{error}</>
+          ))}
+          {/* </List> */}
+          {/* </Banner> */}
         </Modal.Section>
       </Modal>
       <Modal
@@ -1816,7 +2168,8 @@ function NewProductsNewFilters(props) {
         Learn more about{" "}
         <Link
           external
-          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-products-on-the-application"
+          // url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=managing-products-on-the-application"
+          url="https://docs.cedcommerce.com/shopify/integration-ebay-multi-account/?section=performing-the-actions"
         >
           Manage Products
         </Link>
