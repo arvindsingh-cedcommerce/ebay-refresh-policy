@@ -1019,7 +1019,8 @@ function to handle optional attribute changes
     attributeData.forEach((data) => {
       let tempObj = {
         label: data?.name,
-        value: data?.code,
+        // value: data?.code,
+        value: data?.name,
         variation: data?.variation,
         ebayRecommendedAttributesOptions: extractEbayRecommendedAttributes(
           data?.values
@@ -1103,12 +1104,12 @@ function to handle optional attribute changes
         }
       });
     }
-    if (categoryFeature_options.length) {
-      categoryFeature_options.unshift({
-        label: "Unselect",
-        value: "",
-      });
-    }
+    // if (categoryFeature_options.length) {
+    //   categoryFeature_options.unshift({
+    //     label: "Unselect",
+    //     value: "",
+    //   });
+    // }
     setBarcodeOptions(barcode_options);
     setCategoryFeatureOptions(categoryFeature_options);
   };
@@ -1158,7 +1159,6 @@ function to handle optional attribute changes
         const lastLevel = { ...temp.at(temp.length - 1) };
         const lastLevelValue = lastLevel?.["value"];
         setLoaderOverlayActive(true);
-        console.log('lastLevelValue', lastLevelValue);
         let dataCategoryFeatures = await getcategoryFeatures({
           category_id: lastLevelValue,
           site_id: siteID,
@@ -1885,7 +1885,7 @@ function to check final validation
               );
             }
           }
-        }  else {
+        } else {
           let returnedResponse = await props.recieveFormdata(data);
           if (returnedResponse) {
             redirect("/panel/ebay/templates");
@@ -2554,7 +2554,8 @@ function to check final validation
           )}
           {id &&
             primaryCategoryMapping.length > 0 &&
-            categoryFeatureOptions.length == 0 &&
+            categoryFeatureOptions.length > 0 &&
+            !category_feature &&
             !isCategoryChanged && (
               <Layout.AnnotatedSection
                 id="productCondition"
