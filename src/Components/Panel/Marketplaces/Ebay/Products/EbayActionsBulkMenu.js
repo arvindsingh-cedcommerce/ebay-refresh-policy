@@ -504,9 +504,9 @@ const EbayActionsBulkMenu = (props) => {
         <Modal.Section>
           <Stack vertical spacing="tight">
             <Banner status="info">
-              If you want to upload the product(s) with single profile kindly
-              select one from below and click on Upload, or your all product(s)
-              get uploaded with all profiles.
+              If you want to revise the product(s) with single profile kindly
+              select one from below and click on Revise, or your all product(s)
+              get revised with all profiles.
             </Banner>
             <Select
               options={profileList}
@@ -584,7 +584,7 @@ const EbayActionsBulkMenu = (props) => {
                   setBtnLoader(false);
                 }}
               >
-                Upload
+                Revise
               </Button>
             </Stack>
           </Stack>
