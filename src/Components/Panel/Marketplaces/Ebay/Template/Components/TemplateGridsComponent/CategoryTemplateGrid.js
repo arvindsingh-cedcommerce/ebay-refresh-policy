@@ -239,7 +239,8 @@ const CategoryTemplateGrid = (props) => {
                   }}
                 >
                   {template["title"]
-                    ? capitalizeFirstLetterofWords(template["title"])
+                    // ? capitalizeFirstLetterofWords(template["title"])
+                    ? template["title"]
                     : ""}
                 </Text>
               </center>
