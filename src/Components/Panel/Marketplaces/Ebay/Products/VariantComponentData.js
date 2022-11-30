@@ -10,13 +10,17 @@ import {
   Card,
   Popover,
   Stack,
+  Thumbnail,
 } from "@shopify/polaris";
 import {
   getProducts,
   getrequest,
   postActionOnProductById,
 } from "../../../../../APIrequests/ProductsAPI";
-import { changeVariantStatusURL, getVariantsURL } from "../../../../../URLs/ProductsURL";
+import {
+  changeVariantStatusURL,
+  getVariantsURL,
+} from "../../../../../URLs/ProductsURL";
 import { notify } from "../../../../../services/notify";
 const { Text } = Typography;
 
@@ -58,17 +62,16 @@ export const EditableCell = ({
 const VariantComponentData = ({ record, size }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
-  const [variants,setVariants] = useState([]);
+  const [variants, setVariants] = useState([]);
   const [editingKey, setEditingKey] = useState("");
   const [selectionType, setSelectionType] = useState("checkbox");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-useEffect(()=>{
-if(variants.length>0)
-{
-  getAllVariants([...variants]);
-}
-},[variants]);
+  useEffect(() => {
+    if (variants.length > 0) {
+      getAllVariants([...variants]);
+    }
+  }, [variants]);
   const [popoverActive, setPopoverActive] = useState(false);
 
   const isEditing = (record) => record.key === editingKey;
@@ -77,11 +80,11 @@ if(variants.length>0)
     let variantCount = variantProductsData.length;
     let temp = [...variantProductsData];
     temp.forEach((curr) => curr.isExclude === true && count++);
-    let flag = false
-    if(count+1 === variantCount) {
-      flag = true
-    } else flag = false
-    return flag
+    let flag = false;
+    if (count + 1 === variantCount) {
+      flag = true;
+    } else flag = false;
+    return flag;
   };
   const getCheckedAtleastOnce = (e, index) => {
     let count = 0;
@@ -91,22 +94,21 @@ if(variants.length>0)
     temp[index]["isExclude"] = !e;
     temp.forEach((curr) => curr.isExclude === true && count++);
     if (count + 1 === variantCount) {
-      let findIndex
+      let findIndex;
       variants.forEach((val, j, arr) => {
-        if(!arr[j]['isExclude']) {
-          findIndex = j
+        if (!arr[j]["isExclude"]) {
+          findIndex = j;
         }
-      })
+      });
       temp[findIndex]["isExcludeDisabled"] = true;
       setVariants(temp);
     } else {
-      let temp1 = temp.map((curr) => ({...curr, isExcludeDisabled: false}));
+      let temp1 = temp.map((curr) => ({ ...curr, isExcludeDisabled: false }));
       setVariants(temp1);
     }
     return returnValue;
   };
   const getAllVariants = (data) => {
-    console.log("start data",data);
     let tempVariantData = [];
     tempVariantData = data.map((key, index) => {
       let tempObject = {};
@@ -125,8 +127,8 @@ if(variants.length>0)
             disabled={key["isExcludeDisabled"]}
             onChange={async (e) => {
               const { source_product_id } = key;
-console.log("variant arr",variants);
-          let returnValue = getCheckedAtleastOnce(e, index);
+              console.log("variant arr", variants);
+              let returnValue = getCheckedAtleastOnce(e, index);
               const postData = {};
               postData["variant_id"] = [source_product_id];
               postData["status"] = !e ? "Exclude" : "Include";
@@ -151,28 +153,31 @@ console.log("variant arr",variants);
         </Stack>
       );
       tempObject["variantImage"] = key["main_image"] ? (
-        <Image width={30} src={key["main_image"]} />
-      ) :  key["variant_image"] ? (
-        <Image width={30} src={key["variant_image"]} />
+        // <Image width={30} src={key["main_image"]} />
+        <Thumbnail size="small" source={key["main_image"]} alt="Black choker necklace" />
+      ) : key["variant_image"] ? (
+        // <Image width={30} src={key["variant_image"]} />
+        <Thumbnail size="small" source={key["variant_image"]} alt="Black choker necklace" />
       ) : (
         // <Image width={50} src={ImageResizer(key["variant_image"])} />
-        <Image width={40} preview={false} src={NoProductImage} />
+        // <Image width={40} preview={false} src={NoProductImage} />
+        <Thumbnail size="small" source={NoProductImage} alt="Black choker necklace" />
       );
       tempObject["variantTitle"] = key["variant_title"];
       tempObject["variantSKU"] = key["sku"];
       tempObject["variantBarcode"] = key["barcode"] ? key["barcode"] : "N/A";
-      tempObject["variantQuantity"] = key["quantity"] == 0 ? (
-        <Text type="danger">{key["quantity"]}</Text>
-      ) : (
-        key["quantity"]
-      );
+      tempObject["variantQuantity"] =
+        key["quantity"] == 0 ? (
+          <Text type="danger">{key["quantity"]}</Text>
+        ) : (
+          key["quantity"]
+        );
       tempObject["variantPrice"] = key["price"];
 
       return tempObject;
     });
     setData(tempVariantData);
   };
-
 
   const callVariantData = async (record) => {
     // console.log("record", record);
@@ -193,18 +198,17 @@ console.log("variant arr",variants);
       Array.isArray(productsData[container_id]["variations"])
     ) {
       // console.log(productsData[container_id]["variations"]);
-      const variantProductsData=[...productsData[container_id]["variations"]];
+      const variantProductsData = [...productsData[container_id]["variations"]];
       let includeIsExcludeKey = variantProductsData.map((e, index) => {
-        if(e.hasOwnProperty('isExclude')) {
-          return {...e, isExcludeDisabled: false}
+        if (e.hasOwnProperty("isExclude")) {
+          return { ...e, isExcludeDisabled: false };
         } else {
-          let flag = getCheckedAtleastOnceFlag(variantProductsData, index)
-          return {...e, isExclude: false, isExcludeDisabled: flag}
+          let flag = getCheckedAtleastOnceFlag(variantProductsData, index);
+          return { ...e, isExclude: false, isExcludeDisabled: flag };
         }
-      })
+      });
       setVariants([...includeIsExcludeKey]);
       //getAllVariants([...includeIsExcludeKey]);
-
     }
   };
 
@@ -314,7 +318,7 @@ console.log("variant arr",variants);
       More actions
     </Button>
   );
-  
+
   return (
     // <Form form={form} component={false}>
     // <Card
