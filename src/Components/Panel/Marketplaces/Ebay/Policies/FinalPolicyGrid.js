@@ -223,13 +223,23 @@ const FinalPolicyGrid = (props) => {
         shopID: "",
         status: "",
       });
-      setRefreshPoliciesAccountSelectionModal({
-        ...accountSelectionModal,
-        options: ebayAccountsObj,
-        // siteID: ebayAccountsObj[0]?.siteID,
-        // accountName: ebayAccountsObj[0]?.value,
-        // shopID: ebayAccountsObj[0]?.shopID,
-      });
+      if (ebayAccountsObj.length === 1) {
+        setRefreshPoliciesAccountSelectionModal({
+          ...accountSelectionModal,
+          accountName: ebayAccountsObj[0]?.value,
+          options: ebayAccountsObj,
+          siteID: ebayAccountsObj[0]?.siteID,
+          shopID: ebayAccountsObj[0]?.shopID,
+          domainName: ebayAccountsObj[0]?.domainName,
+        });
+      } else
+        setRefreshPoliciesAccountSelectionModal({
+          ...accountSelectionModal,
+          options: ebayAccountsObj,
+          // siteID: ebayAccountsObj[0]?.siteID,
+          // accountName: ebayAccountsObj[0]?.value,
+          // shopID: ebayAccountsObj[0]?.shopID,
+        });
     } else {
       notify.error(message);
       if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
@@ -316,6 +326,16 @@ const FinalPolicyGrid = (props) => {
         ...refreshPoliciesAccountSelectionModal,
         active: false,
       });
+      if (selectedTabId == 0) {
+        getPaymentPolicyCount();
+        getReturnPolicyCount();
+      } else if (selectedTabId == 1) {
+        getShippingPolicyCount();
+        getReturnPolicyCount();
+      } else if (selectedTabId == 2) {
+        getShippingPolicyCount();
+        getPaymentPolicyCount();
+      }
     } else {
       notify.error(message);
     }
@@ -441,6 +461,11 @@ const FinalPolicyGrid = (props) => {
                 options={refreshPoliciesAccountSelectionModal.options}
                 value={refreshPoliciesAccountSelectionModal.accountName}
                 placeholder="Please Select..."
+                defaultValue={
+                  connectedAccountsArray.length === 1
+                    ? refreshPoliciesAccountSelectionModal.accountName
+                    : undefined
+                }
                 onChange={(e) => {
                   let temp =
                     refreshPoliciesAccountSelectionModal.options.filter(
