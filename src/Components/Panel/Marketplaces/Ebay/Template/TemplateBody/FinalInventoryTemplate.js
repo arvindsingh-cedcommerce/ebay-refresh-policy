@@ -121,14 +121,26 @@ const FinalInventoryTemplate = (props) => {
           } else temp[key] = false;
           break;
         case "fixedInventory":
-          if (formData[key] !== "" && formData[key] < 1) {
+          if (
+            formData.customiseInventoryType === "fixedInventory" &&
+            formData[key] === ""
+          ) {
+            temp[key] = "value must be greater than 1";
+            errorsCount++;
+          } else if (formData[key] !== "" && formData[key] < 1) {
             temp[key] = "value must be greater than 1";
             errorsCount++;
           } else temp[key] = false;
           break;
 
         case "reservedInventory":
-          if (formData[key] !== "" && formData[key] < 1) {
+          if (
+            formData.customiseInventoryType === "reservedInventory" &&
+            formData[key] === ""
+          ) {
+            temp[key] = "value must be greater than 1";
+            errorsCount++;
+          } else if (formData[key] !== "" && formData[key] < 1) {
             temp[key] = "value must be greater than 1";
             errorsCount++;
           } else temp[key] = false;
@@ -193,7 +205,12 @@ const FinalInventoryTemplate = (props) => {
               min={1}
               // label="Set Fixed Inventory for eBay Products"
               value={formData.fixedInventory}
-              onChange={(e) => changeHandler(e, "fixedInventory")}
+              onChange={(e) => {
+                let temp = { ...errors };
+                temp["fixedInventory"] = false;
+                setErrors(temp);
+                changeHandler(e, "fixedInventory");
+              }}
               error={errors.fixedInventory}
             />
             <Checkbox
@@ -210,7 +227,12 @@ const FinalInventoryTemplate = (props) => {
             min={1}
             // label="Reserve Inventory for Shopify Products"
             value={formData.reservedInventory}
-            onChange={(e) => changeHandler(e, "reservedInventory")}
+            onChange={(e) => {
+              let temp = { ...errors };
+              temp["reservedInventory"] = false;
+              setErrors(temp);
+              changeHandler(e, "reservedInventory");
+            }}
             error={errors.reservedInventory}
           />
         );
@@ -312,9 +334,10 @@ const FinalInventoryTemplate = (props) => {
         sectioned
         actions={[
           {
-            content: <Button primary>Save</Button>,
+            content: <Button primary loading={saveBtnLoader}>Save</Button>,
+            // content: 'Save',
             onAction: saveFormdata,
-            loading: saveBtnLoader,
+            // loading: saveBtnLoader,
           },
         ]}
         // primaryFooterAction={{
