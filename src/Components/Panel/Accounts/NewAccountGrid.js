@@ -460,16 +460,14 @@ const NewAccount = (props) => {
               />
             </center>
             <Banner status="info">
-              <List type="bullet">
+              Sign out your current signed in account from ebay.com before
+              connecting any eBay website to the App.
+              {/* <List type="bullet">
                 <List.Item>
-                  Sign out your current sign in account from ebay.com before
+                  Sign out your current signed in account from ebay.com before
                   connecting any eBay website to the App.
                 </List.Item>
-                <List.Item>
-                  Once sign out, consider refreshing the cache file
-                  (Ctrl+Shift+R).
-                </List.Item>
-              </List>
+              </List> */}
             </Banner>
             <Row justify="space-around" align="middle">
               <Col span={8}>
