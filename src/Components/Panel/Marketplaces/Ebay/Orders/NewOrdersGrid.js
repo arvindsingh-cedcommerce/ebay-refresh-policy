@@ -155,7 +155,8 @@ const NewOrdersGrid = (props) => {
     return state.orderFilterReducer.reduxFilters;
   });
   const dispatch = useDispatch();
-
+  const [deletedOrderId, setDeletedOrderId] = useState('');
+  const [deleteOrderModal, setDeleteOrderModal] = useState(false);
   const [tab, setTab] = useState("0");
   const [jumpToActivePage, setJumpToActivePage] = useState(0);
   const [orderColumns, setOrderColumns] = useState([
@@ -322,6 +323,14 @@ const NewOrdersGrid = (props) => {
     available: "",
     total: "",
   });
+
+  // booster credits
+  const [boosterCredits, setBoosterCredits] = useState({
+    orderAvailable: 0,
+    orderService: 0,
+    hasBoosterOrder: false,
+  });
+
   const { Option } = Select;
   const checkValueHandler = (arr, filterName) => {
     let countryValue = "";
@@ -386,6 +395,26 @@ const NewOrdersGrid = (props) => {
       />
     );
   };
+
+  const handleOrderDeletion = async () => {
+    let queryString = {
+      order_id: deletedOrderId,
+      // shop_id: shopId,
+    };
+    let { success, data, message } = await massAction(
+      deleteOrdersURL,
+      queryString
+    );
+    if (success) {
+      notify.success(message ? message : data);
+    } else {
+      notify.error(message ? message : data);
+    }
+    setDeleteOrderModal(false);
+    setSelectedAccount(null);
+    setDeletedOrderId("");
+  };
+
   const [orderAlertListData, setOrderAlertListData] = useState([
     // 'Racing car sprays burning fuel into crowd.',
     <div>
@@ -667,6 +696,17 @@ const NewOrdersGrid = (props) => {
         temp["total"] = service_credits;
         setOrderCredits(temp);
       }
+      if (data?.planDetails?.orderCredits?.booster) {
+        let {
+          available_credits: boosterAvailableOrderCredits,
+          service_credits: boosterServiceOrderCredits,
+        } = data?.planDetails?.orderCredits?.booster;
+        let temp = { ...boosterCredits };
+        temp["hasBoosterOrder"] = true;
+        temp["orderService"] = boosterServiceOrderCredits;
+        temp["orderAvailable"] = boosterAvailableOrderCredits;
+        setBoosterCredits(temp);
+      }
     }
   };
 
@@ -674,12 +714,20 @@ const NewOrdersGrid = (props) => {
     document.title = "Orders | Integration for eBay";
     document.description =
       "Order section helps you to keep a track of your orders (Fulfilled/Unfulfilled/Failed/Cancelled). It updates you about each new order received on eBay.";
+    if (!document.title.includes(localStorage.getItem("shop_url"))) {
+      document.title += localStorage.getItem("shop_url")
+        ? " " + localStorage.getItem("shop_url")
+        : "";
+    }
     getAllConnectedAccounts();
     hitDashoboardAPI();
   }, []);
   useEffect(() => {
     if (reduxState && connectedAccountsArray.length) {
       setFiltersToPass(reduxState);
+    }
+    if (connectedAccountsArray.length === 1) {
+      setSelectedAccount(connectedAccountsArray[0].value);
     }
   }, [connectedAccountsArray]);
 
@@ -1163,20 +1211,35 @@ const NewOrdersGrid = (props) => {
       title="Orders"
       ghost={true}
       subTitle={
-        orderCredits.total && (
-          <Badge>
-            <Text strong>
-              <Stack spacing="extraTight" alignment="center">
-                <>{`${orderCredits.available}/${orderCredits.total} order credits available`}</>
-                <div style={{ cursor: "pointer" }}>
-                  <Tooltip content="1 Order credit means 1 eBay Order can be managed from Shopify through the app">
-                    <Icon source={QuestionMarkMinor} />
-                  </Tooltip>
-                </div>
-              </Stack>
-            </Text>
-          </Badge>
-        )
+        <Stack spacing="extraTight">
+          <>
+            {orderCredits.total && (
+              <Badge>
+                <Text strong>
+                  <Stack spacing="extraTight" alignment="center">
+                    <>{`${orderCredits.available}/${orderCredits.total} order credits available`}</>
+                    <div style={{ cursor: "pointer" }}>
+                      <Tooltip content="1 Order credit means 1 eBay Order can be managed from Shopify through the app">
+                        <Icon source={QuestionMarkMinor} />
+                      </Tooltip>
+                    </div>
+                  </Stack>
+                </Text>
+              </Badge>
+            )}
+          </>
+          <>
+            {boosterCredits.hasBoosterOrder && (
+              <Badge>
+                <Text strong>
+                  <Stack spacing="extraTight" alignment="center">
+                    <>{`${boosterCredits.orderAvailable}/${boosterCredits.orderService} booster order credits available`}</>
+                  </Stack>
+                </Text>
+              </Badge>
+            )}
+          </>
+        </Stack>
       }
       extra={[
         // <OrderMassMenu
@@ -1186,6 +1249,9 @@ const NewOrdersGrid = (props) => {
         //   hitGetOrdersAPI={hitGetOrdersAPI}
         //   rowSelectionPassed={rowSelectionFunc}
         // />,
+        <ShopifyButton secondary onClick={() => setDeleteOrderModal(true)}>
+          Delete Shopify Order
+        </ShopifyButton>,
         <ShopifyButton primary onClick={() => setImportEbayOrdersModal(true)}>
           Import eBay Order(s)
         </ShopifyButton>,
@@ -1456,7 +1522,7 @@ const NewOrdersGrid = (props) => {
         isModalVisible={importEbayOrdersModal}
         handleCancel={() => {
           setImportEbayOrdersModal(false);
-          setSelectedAccount(null);
+          // setSelectedAccount(null);
         }}
         handleOk={() => {}}
         modalContent={
@@ -1471,12 +1537,27 @@ const NewOrdersGrid = (props) => {
                 <Form.Item
                   label="Select Account"
                   name="accounts"
-                  rules={[
-                    { required: true, message: "Please select your account!" },
-                  ]}
+                  // rules={[
+                  //   { required: true, message: "Please select your account!" },
+                  // ]}
+                  rules={
+                    connectedAccountsArray.length === 1
+                      ? []
+                      : [
+                          {
+                            required: true,
+                            message: "Please select your account!",
+                          },
+                        ]
+                  }
                 >
                   <Select
                     style={{ width: "100%" }}
+                    defaultValue={
+                      connectedAccountsArray.length === 1
+                        ? selectedAccount
+                        : undefined
+                    }
                     onChange={(accountValue) => {
                       setSelectedAccount(accountValue);
                     }}
@@ -1550,14 +1631,14 @@ const NewOrdersGrid = (props) => {
                           postData["create_time_to"]) ||
                         (postData["mod_time_from"] && postData["mod_time_to"])
                       ) {
-                        let { success, message } = await importOrders(
+                        let { success, message, data } = await importOrders(
                           importOrdersURL,
                           postData
                         );
                         if (success) {
                           notify.success(message);
                         } else {
-                          notify.error(message);
+                          notify.error(data ? data : message);
                         }
 
                         setImportEbayOrdersModal(false);
@@ -1585,7 +1666,55 @@ const NewOrdersGrid = (props) => {
         >
           Orders
         </Link>
-      </FooterHelp>
+      </FooterHelp>{" "}
+      <ModalComponent
+        title="Delete Order"
+        isModalVisible={deleteOrderModal}
+        handleCancel={() => {
+          setDeleteOrderModal(false);
+          setSelectedAccount(null);
+          setDeletedOrderId("");
+        }}
+        handleOk={() => {}}
+        modalContent={
+          <>
+            <Stack vertical distribution="center">
+              <Banner status="warning">
+                <div className="d-flex">
+                  <div style={{ fontWeight: "bold", display: "flex" }}>
+                    Provide the Shopify Order ID of the order you want to
+                    delete.
+                  </div>
+                  <div style={{ fontWeight: "bold", display: "flex" }}>
+                    {" "}
+                    Please note that this process can't be reverted
+                  </div>
+                </div>
+              </Banner>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <TextField
+                  onChange={(e) => {
+                    if (e.length <= 13) setDeletedOrderId(e);
+                  }}
+                  type="number"
+                  value={deletedOrderId}
+                  placeholder="Provide order id for deletion"
+                />
+              </div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                {console.log('deletedOrderId', deletedOrderId)}
+                <ShopifyButton
+                  disabled={deletedOrderId.length < 13}
+                  onClick={handleOrderDeletion}
+                  primary
+                >
+                  Delete Order
+                </ShopifyButton>
+              </div>
+            </Stack>
+          </>
+        }
+      />
     </PageHeader>
   );
 };
