@@ -78,6 +78,9 @@ const ViewOrdersPolarisNew = (props) => {
   //   buyer details
   const [buyerName, setBuyerName] = useState(null);
   const [buyerEmail, setBuyerEmail] = useState(null);
+  const [customerFName, setCustomerFName] = useState("");
+  const [customerLName, setCustomerLName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [buyerAddress, setBuyerAddress] = useState({
     address1: "",
     address2: "",
@@ -220,7 +223,9 @@ const ViewOrdersPolarisNew = (props) => {
       setEbayRefrenceID(data["source_order_data"]["ExtendedOrderID"]);
       setEbayOrderData(data["source_order_data"]);
       setShopifyOrderData(data["target_order_data"]);
-
+      setCustomerFName(data?.["customer"]?.["first_name"]);
+      setCustomerLName(data?.["customer"]?.["last_name"]);
+      setCustomerEmail(data?.["customer"]?.["email"]);
       setBuyerEmail(
         data["customer"]
           ? data["customer"]["email"]
@@ -776,6 +781,9 @@ const ViewOrdersPolarisNew = (props) => {
         shopifyOrderName={shopifyOrderName}
         updateOrder={updateOrder}
         historyProps={props}
+        customerFName={customerFName}
+        customerLName={customerLName}
+        customerEmail={customerEmail}
       />
       {/* <TabsComponent
         totalTabs={2}
@@ -1109,6 +1117,9 @@ export const OrderDetailsComponent = ({
   shopifyOrderName,
   updateOrder,
   historyProps,
+  customerFName,
+  customerLName,
+  customerEmail,
 }) => {
   // line items
   let [orderColumns, setOrderColumns] = useState([
@@ -1301,7 +1312,17 @@ export const OrderDetailsComponent = ({
           </Card>
           <Card>
             <Card.Section title="Customer">
-              <div style={{ wordBreak: "break-word" }}>{buyerEmail}</div>
+              {/* <div style={{ wordBreak: "break-word" }}>{buyerEmail}</div> */}
+              {
+                <div style={{ wordBreak: "break-word" }}>
+                  {customerEmail ? customerEmail : buyerEmail}
+                </div>
+              }
+              {(customerFName || customerLName) && (
+                <div style={{ wordBreak: "break-word" }}>
+                  {`${customerFName} ${customerLName}`}
+                </div>
+              )}
             </Card.Section>
             {/* {updateOrder.email ||
               (updateOrder.phone && ( */}
