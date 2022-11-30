@@ -14,6 +14,7 @@ class Welcome extends Component {
   }
 
   componentDidMount() {
+    this.getAllConnectedAccounts()
     setTimeout(() => {
       this.routetoUrl();
     }, 4000);
@@ -32,6 +33,7 @@ class Welcome extends Component {
   };
 
   setShopUrlInLocalStorage = (shop_url) => {
+    localStorage.removeItem("shop_url");
     localStorage.setItem("shop_url", shop_url);
   };
 
