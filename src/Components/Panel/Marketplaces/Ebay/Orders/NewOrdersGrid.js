@@ -155,7 +155,7 @@ const NewOrdersGrid = (props) => {
     return state.orderFilterReducer.reduxFilters;
   });
   const dispatch = useDispatch();
-  const [deletedOrderId, setDeletedOrderId] = useState('');
+  const [deletedOrderId, setDeletedOrderId] = useState("");
   const [deleteOrderModal, setDeleteOrderModal] = useState(false);
   const [tab, setTab] = useState("0");
   const [jumpToActivePage, setJumpToActivePage] = useState(0);
@@ -1693,15 +1693,45 @@ const NewOrdersGrid = (props) => {
                   </div>
                 </div>
               </Banner>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  onChange={(e) => {
-                    if (e.length <= 13) setDeletedOrderId(e);
-                  }}
-                  type="number"
-                  value={deletedOrderId}
-                  placeholder="Provide order id for deletion"
-                />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                {connectedAccountsArray.length > 1 && (
+                  <>
+                    <div>Select Account</div>
+                    <Select
+                      style={{ width: "100%" }}
+                      defaultValue={
+                        connectedAccountsArray.length === 1
+                          ? selectedAccount
+                          : undefined
+                      }
+                      onChange={(accountValue) => {
+                        setSelectedAccount(accountValue);
+                      }}
+                      value={selectedAccount}
+                      options={connectedAccountsArray}
+                      placeholder="Select to add account"
+                    />
+                  </>
+                )}
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{ width: "50%" }}>
+                    <TextField
+                      onChange={(e) => {
+                        if (e.length <= 13) setDeletedOrderId(e);
+                      }}
+                      type="number"
+                      value={deletedOrderId}
+                      placeholder="Provide order id for deletion"
+                    />
+                  </div>
+                </div>
               </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <ShopifyButton
