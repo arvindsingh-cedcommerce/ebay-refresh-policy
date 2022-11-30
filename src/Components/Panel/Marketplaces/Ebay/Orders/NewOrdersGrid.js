@@ -399,7 +399,7 @@ const NewOrdersGrid = (props) => {
   const handleOrderDeletion = async () => {
     let queryString = {
       order_id: deletedOrderId,
-      // shop_id: shopId,
+      shop_id: shopId,
     };
     let { success, data, message } = await massAction(
       deleteOrdersURL,
@@ -411,7 +411,7 @@ const NewOrdersGrid = (props) => {
       notify.error(message ? message : data);
     }
     setDeleteOrderModal(false);
-    setSelectedAccount(null);
+    // setSelectedAccount(null);
     setDeletedOrderId("");
   };
 
@@ -934,12 +934,14 @@ const NewOrdersGrid = (props) => {
   };
 
   useEffect(() => {
+    // console.log('selectedAccount',selectedAccount);
     if (selectedAccount) {
       let { siteID, shopId } = getSiteID(
         selectedAccount,
         connectedAccountsArray
       );
       setSiteID(siteID);
+      // console.log('shopId',shopId);
       setShopId(shopId);
     }
   }, [selectedAccount]);
@@ -1672,7 +1674,7 @@ const NewOrdersGrid = (props) => {
         isModalVisible={deleteOrderModal}
         handleCancel={() => {
           setDeleteOrderModal(false);
-          setSelectedAccount(null);
+          // setSelectedAccount(null);
           setDeletedOrderId("");
         }}
         handleOk={() => {}}
@@ -1702,7 +1704,6 @@ const NewOrdersGrid = (props) => {
                 />
               </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
-                {console.log('deletedOrderId', deletedOrderId)}
                 <ShopifyButton
                   disabled={deletedOrderId.length < 13}
                   onClick={handleOrderDeletion}
