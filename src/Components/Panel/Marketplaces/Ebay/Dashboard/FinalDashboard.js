@@ -968,25 +968,22 @@ const FinalDashboard = (props) => {
                       {reqiuredCurrentStep >= 2 ? (
                         <>
                           {reqiuredCurrentStep === 3 ? (
-                            <Stack wrap={false} vertical>
-                              <Text strong>
-                                Complete{" "}
-                                <Link
-                                  removeUnderline
-                                  onClick={() =>
-                                    props.history.push("configurations")
+                            // <Stack wrap={false} vertical>
+                            <Row
+                              gutter={
+                                window.innerWidth > 1024 ? [0, 8] : [0, 0]
+                              }
+                            >
+                              <Col>
+                                <Text
+                                  strong
+                                  style={
+                                    window.innerWidth <= 1024
+                                      ? { fontSize: "11px" }
+                                      : {}
                                   }
                                 >
-                                  configuration
-                                </Link>{" "}
-                                related with your connected eBay Account(s) in
-                                app.
-                              </Text>
-                              {orderManagementDisabledCount && (
-                                <Text strong>
-                                  Order Management is disabled on{" "}
-                                  {orderManagementDisabledCount} account(s). If
-                                  you want to enable then check your{" "}
+                                  Complete{" "}
                                   <Link
                                     removeUnderline
                                     onClick={() =>
@@ -995,24 +992,60 @@ const FinalDashboard = (props) => {
                                   >
                                     configuration
                                   </Link>{" "}
+                                  related with your connected eBay Account(s) in
+                                  app.
                                 </Text>
-                              )}
-                              {productManagementDisabledCount && (
-                                <Text strong>
-                                  Product Management is disabled on{" "}
-                                  {productManagementDisabledCount} account(s).
-                                  If you want to enable then check your{" "}
-                                  <Link
-                                    removeUnderline
-                                    onClick={() =>
-                                      props.history.push("configurations")
+                              </Col>
+                              <Col>
+                                {orderManagementDisabledCount && (
+                                  <Text
+                                    strong
+                                    style={
+                                      window.innerWidth <= 1024
+                                        ? { fontSize: "11px" }
+                                        : {}
                                     }
                                   >
-                                    configuration
-                                  </Link>{" "}
-                                </Text>
-                              )}
-                            </Stack>
+                                    Order Management is disabled on{" "}
+                                    {orderManagementDisabledCount} account(s).
+                                    If you want to enable then check your{" "}
+                                    <Link
+                                      removeUnderline
+                                      onClick={() =>
+                                        props.history.push("configurations")
+                                      }
+                                    >
+                                      configuration
+                                    </Link>{" "}
+                                  </Text>
+                                )}
+                              </Col>
+                              <Col>
+                                {productManagementDisabledCount && (
+                                  <Text
+                                    strong
+                                    style={
+                                      window.innerWidth <= 1024
+                                        ? { fontSize: "11px" }
+                                        : {}
+                                    }
+                                  >
+                                    Product Management is disabled on{" "}
+                                    {productManagementDisabledCount} account(s).
+                                    If you want to enable then check your{" "}
+                                    <Link
+                                      removeUnderline
+                                      onClick={() =>
+                                        props.history.push("configurations")
+                                      }
+                                    >
+                                      configuration
+                                    </Link>{" "}
+                                  </Text>
+                                )}
+                              </Col>
+                              {/* </Stack> */}
+                            </Row>
                           ) : notProfiledProductCount > 0 ? (
                             <>
                               <Text strong>{notProfiledProductCount}</Text>
