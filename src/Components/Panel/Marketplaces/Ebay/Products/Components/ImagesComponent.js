@@ -5,47 +5,85 @@ import NoProductImage from "../../../../../../assets/notfound.png";
 
 const ImagesComponent = ({ mainProduct }) => {
   const [pointedImage, setPointedImage] = useState(mainProduct["mainImage"]);
-  const [imageArray, setImageArray] = useState([])
-  
+  const [imageArray, setImageArray] = useState([]);
+
   useEffect(() => {
-    let temp = []
-    if(mainProduct["mainImage"]) {
-      temp.push(mainProduct["mainImage"])
+    let temp = [];
+    if (mainProduct["mainImage"]) {
+      temp.push(mainProduct["mainImage"]);
     }
-    if(Array.isArray(mainProduct["image_array"]) && mainProduct["image_array"].length) {
-      mainProduct["image_array"].forEach(e => {
-        temp.push(e)
-      })
+    if (
+      Array.isArray(mainProduct["image_array"]) &&
+      mainProduct["image_array"].length
+    ) {
+      mainProduct["image_array"].forEach((e) => {
+        temp.push(e);
+      });
     }
-    setImageArray(temp)
-  }, [])
+    setImageArray(temp);
+  }, []);
 
   return (
     <Stack vertical distribution="center">
       <Stack.Item fill>
         <div style={{ height: "40vh", width: "20%", margin: "0 auto" }}>
-          <Thumbnail source={pointedImage ? pointedImage : NoProductImage} alt={""} size={"extralarge"} />
+          <Thumbnail
+            source={pointedImage ? pointedImage : NoProductImage}
+            alt={""}
+            size={"extralarge"}
+          />
         </div>
       </Stack.Item>
       <Stack.Item>
-        <div style={{ margin: "0 auto", display: 'flex', justifyContent: 'center' }}>
+        <div
+          style={{
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: "10px",
+          }}
+        >
           {/* {mainProduct["image_array"] && */}
-            {/* mainProduct["image_array"]. */}
-            {imageArray.map((image, index) => {
-              return (
+          {/* mainProduct["image_array"]. */}
+          {imageArray.map((image, index) => {
+            return (
+              <div
+                onMouseOver={(e) => {
+                  setPointedImage(e.target.src);
+                }}
+                key={index}
+              >
                 <Image
                   preview={false}
-                  width={"5%"}
-                  height={'100px'}
-                  style={{padding: '0px 10px'}}
+                  width={"50px"}
+                  height={"50px"}
+                  // style={{ padding: "0px 10px" }}
                   src={image}
                   onMouseOver={(e) => {
                     setPointedImage(e.target.src);
                   }}
                   key={index}
                 />
-              );
-            })}
+                {/* <Thumbnail
+                  source={image}
+                  alt="Black choker necklace"
+                  size="small"
+                /> */}
+              </div>
+              // <Image
+              //   preview={false}
+              //   // width={"5%"}
+              //   height={'100px'}
+              //   style={{padding: '0px 10px'}}
+              //   src={image}
+              //   onMouseOver={(e) => {
+              //     setPointedImage(e.target.src);
+              //   }}
+              //   key={index}
+              // />
+            );
+          })}
         </div>
       </Stack.Item>
     </Stack>
