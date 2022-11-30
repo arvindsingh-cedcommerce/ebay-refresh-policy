@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Ebaymessage from "./Marketplaces/Ebay/Message/ebaymessage";
-import { Layout, Menu, Image, Avatar, Drawer, Button } from "antd";
+import {
+  Layout,
+  Menu,
+  Image,
+  Avatar,
+  Drawer,
+  Button,
+  Tooltip as AntTooltip,
+} from "antd";
 import Logo from "../../assets/ced-ebay-logo.png";
 import CollapsedLogo from "../../assets/cedcommercelogoCollapsed.png";
 import {
@@ -70,6 +78,7 @@ import NewProductsComponent from "./Marketplaces/Ebay/Products/NewProductsCompon
 import DisbaledProductsWrapper from "./Marketplaces/Ebay/Products/DisbaledProductsWrapper";
 import { TextLoop } from "react-text-loop-next";
 import { tokenExpireValues } from "../../HelperVariables";
+import { checkStepCompleted } from "../../Apirequest/registrationApi";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -190,9 +199,20 @@ const NewPanel = (props) => {
     }
   };
 
+  const getCheckStepCompleted = async () => {
+    let { success, message, code, data } = await checkStepCompleted();
+    console.log("panel");
+    if (success) {
+    } else {
+      notify.error(message);
+      if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
+    }
+  };
+
   useEffect(() => {
     getAllConnectedAccounts();
     getImage();
+    // getCheckStepCompleted()
   }, []);
 
   useEffect(() => {
@@ -866,7 +886,23 @@ const NewPanel = (props) => {
                       )}
                       {window.innerWidth > 384 ? (
                         <div style={{ color: "#fff" }}>
-                          {shopURL?.split(".")?.[0]}
+                          {shopURL.includes("www") ? (
+                            <AntTooltip
+                              placement="bottom"
+                              title={shopURL}
+                            >
+                              {shopURL?.substring(0, 20)}...
+                            </AntTooltip>
+                          ) : shopURL?.split(".")?.[0].length < 40 ? (
+                            shopURL?.split(".")?.[0]
+                          ) : (
+                            <AntTooltip
+                              placement="bottom"
+                              title={shopURL?.split(".")?.[0]}
+                            >
+                              {shopURL?.split(".")?.[0]?.substring(0, 30)}...
+                            </AntTooltip>
+                          )}
                         </div>
                       ) : (
                         <></>
