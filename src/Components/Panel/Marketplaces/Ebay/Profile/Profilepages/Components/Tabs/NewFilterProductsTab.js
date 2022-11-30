@@ -33,6 +33,10 @@ import NestedTableComponent from "../../../../../../../AntDesignComponents/Neste
 import PaginationComponent from "../../../../../../../AntDesignComponents/PaginationComponent";
 
 const filterConditionsforDropdown = [{ label: "Equals", value: "==" }];
+const filterConditionsforCollection = [
+  { label: "Equals", value: "==" },
+  { label: "Not Equals", value: "!=" },
+];
 
 const filterConditionsforQueryString = [
   { label: "Equals", value: "==" },
@@ -302,6 +306,9 @@ const NewFilterProductsTab = ({
               label="Condition Selection"
               value={arrayGroup["condition"]}
               options={
+                // ["collection.collection_id"].includes(arrayGroup["attribute"])
+                //   ? filterConditionsforCollection
+                //   :
                 ["brand", "product_type", "collection.collection_id"].includes(
                   arrayGroup["attribute"]
                 )
@@ -317,6 +324,14 @@ const NewFilterProductsTab = ({
               onChange={(value) =>
                 changeHandler(value, index, innerIndex, "condition")
               }
+              // disabled={
+              //   arrayGroup["attribute"] === "" ||
+              //   [
+              //     "brand",
+              //     "product_type",
+              //     // , "collection.collection_id"
+              //   ].includes(arrayGroup["attribute"])
+              // }
               disabled={
                 arrayGroup["attribute"] === "" ||
                 ["brand", "product_type", "collection.collection_id"].includes(
@@ -649,6 +664,11 @@ const NewFilterProductsTab = ({
               break;
             case "value":
               let valueLabel = andConditionDataObj[key];
+              if (resStr.includes("Collections")) {
+                valueLabel = collectionList.find(
+                  (collection) => collection.value === valueLabel
+                )?.["label"];
+              }
               if (valueLabel) {
                 resStr += valueLabel;
               } else {
