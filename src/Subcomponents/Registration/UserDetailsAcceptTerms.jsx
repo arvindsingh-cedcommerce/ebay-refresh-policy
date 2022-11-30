@@ -56,7 +56,8 @@ export function userDetails(activeStep, data={}, onChange, errors={}){
 }
 
 export function downloadPrivacyPolicy(){
-    window.open("https://ebay-multiaccount.sellernext.com/cedcommerce-privacy-policy.pdf","_blank")
+    // window.open("https://ebay-multiaccount.sellernext.com/cedcommerce-privacy-policy.pdf","_blank")
+    window.open("https://integration.cedcommerce.com/cedcommerce-privacy-policy.pdf","_blank")
 }
 
 export function getMobileCode(countryCode){
