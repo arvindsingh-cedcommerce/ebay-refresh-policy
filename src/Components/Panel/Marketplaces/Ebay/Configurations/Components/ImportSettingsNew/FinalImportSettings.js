@@ -71,7 +71,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
         "The option imports the products from Shopify based on the applied filters given below and replaces /removes the other existing products from the app.",
     },
     productType: {
-      options: [],
+      options: [{ label: "Please Select...", value: "" }],
       label: "Product Type",
       enable: "yes",
       type: "dropdown",
@@ -80,7 +80,7 @@ const FinalImportSettings = ({ importSettingsFromSavedAPIData, ...props }) => {
         "Select the product type you wish to import from Shopify to the App. By default, all product types are imported.",
     },
     vendor: {
-      options: [],
+      options: [{ label: "Please Select...", value: "" }],
       label: "Vendor",
       enable: "yes",
       type: "dropdown",
