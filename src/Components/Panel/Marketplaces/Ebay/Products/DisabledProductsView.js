@@ -149,7 +149,7 @@ const commonFields = [
   "title",
   "brand",
   "tags",
-  "producttype",
+  "product_type",
   "description",
   "length",
   "width",
