@@ -116,7 +116,9 @@ const ContactUs = (props) => {
         }
         if (email) {
           // tempLinks["email"] = email;
-          setEmail(email);
+          if (email.includes("mailto:")) setEmail(email);
+          else setEmail(`mailto:${email}`);
+          // setEmail(email);
         }
         // console.log("tempLinks", tempLinks);
         // setSocialMediaLinks({
