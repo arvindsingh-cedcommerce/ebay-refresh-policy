@@ -16,6 +16,7 @@ import {
   Tooltip,
   DisplayText,
   FooterHelp,
+  Badge,
 } from "@shopify/polaris";
 import { ImportMinor, QuestionMarkMinor } from "@shopify/polaris-icons";
 import React, { useState, useEffect } from "react";
@@ -38,7 +39,7 @@ import { globalState } from "../../services/globalstate";
 import { environment } from "../../environment/environment";
 import { getConnectedAccounts } from "../../Apirequest/accountsApi";
 import PlansComponentAnt from "./PlansComponentAnt";
-import { Progress } from "antd";
+import { Col, Divider, Progress, Row } from "antd";
 import {
   configurationAPI,
   currencyFunc,
@@ -52,6 +53,7 @@ import {
 import Title from "antd/lib/typography/Title";
 import {
   order_settings,
+  order_settingsFalse,
   productSettingsDataShop,
   product_settings,
 } from "./StaticData/importSettings";
@@ -61,6 +63,7 @@ import { getRefreshPolicies } from "../../APIrequests/PoliciesAPI";
 import WelcomeImage from "../../assets/Sell-on-ebay-marketplace-08.jpg";
 import { getCountryName } from "../Panel/Accounts/NewAccount";
 import {publicIpv4} from 'public-ip';
+import { notify } from "../../services/notify";
 
 export const alreadySellingOnEbayOptions = [
   { label: "Yes", value: "yes" },
@@ -90,6 +93,12 @@ export const accountTypeOptions = [
 let siteID = false;
 
 export const FinalRegistrationItemLocation = (props) => {
+  const [
+    refreshProductTypeVendorBtnLoader,
+    setRefreshProductTypeVendorBtnLoader,
+  ] = useState(false);
+  const [refreshCollectionBtnLoader, setRefreshCollectionBtnLoader] =
+    useState(false);
   const [username, setUsername] = useState("");
   const [ebaySellerAccountActive, setEbaySellerAccountActive] = useState(false);
   const [similarShopifyApp, setSimilarShopifyApp] = useState(false);
@@ -215,6 +224,9 @@ export const FinalRegistrationItemLocation = (props) => {
   // ip
   const [ip, setIp] = useState('')
 
+  // need help
+  const [needHelpModal, setNeedHelpModal] = useState(false)
+
   const plansComponentCallback = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -232,21 +244,45 @@ export const FinalRegistrationItemLocation = (props) => {
     setIp(recievedIP)
   }
   useEffect(() => {
+    if(ebayAccountConnected && ebayAccountConnected?.warehouses && 
+      ebayAccountConnected?.warehouses?.[0]?.site_id) {
+      async function callCuurencyAPI() {
+        let { success, data: currencyData } = await currencyFunc(
+          currencyConvertorURL,
+          // { site_id: accountConnection["countryConnected"] }
+          { site_id: ebayAccountConnected?.warehouses?.[0]?.site_id }
+        );
+        if (success) {
+          const { source, rate } = currencyData;
+          let tempObj = {};
+          tempObj["shopifyCurrencyName"] = source["shopify"];
+          tempObj["shopifyCurrencyValue"] = source["amount"];
+          tempObj["ebayCurrencyName"] = source["ebay"];
+          tempObj["ebayCurrencyValue"] = rate;
+          setCurrencyData(tempObj);
+        }
+      }
+      callCuurencyAPI()
+    }
+  }, [ebayAccountConnected])
+  useEffect(() => {
     async function fetchMyAPI() {
       // setShowWelcomImage()
-      let { success, data: currencyData } = await currencyFunc(
-        currencyConvertorURL,
-        { site_id: accountConnection["countryConnected"] }
-      );
-      if (success) {
-        const { source, rate } = currencyData;
-        let tempObj = {};
-        tempObj["shopifyCurrencyName"] = source["shopify"];
-        tempObj["shopifyCurrencyValue"] = source["amount"];
-        tempObj["ebayCurrencyName"] = source["ebay"];
-        tempObj["ebayCurrencyValue"] = rate;
-        setCurrencyData(tempObj);
-      }
+      // console.log(ebayAccountConnected);
+      // console.log('ch', accountConnection, accountConnection["countryConnected"]);
+      // let { success, data: currencyData } = await currencyFunc(
+      //   currencyConvertorURL,
+      //   { site_id: accountConnection["countryConnected"] }
+      // );
+      // if (success) {
+      //   const { source, rate } = currencyData;
+      //   let tempObj = {};
+      //   tempObj["shopifyCurrencyName"] = source["shopify"];
+      //   tempObj["shopifyCurrencyValue"] = source["amount"];
+      //   tempObj["ebayCurrencyName"] = source["ebay"];
+      //   tempObj["ebayCurrencyValue"] = rate;
+      //   setCurrencyData(tempObj);
+      // }
       await callConnectedAccounts();
       // await importCollections();
       let { success: checkStepCompletedSuccess, data } =
@@ -358,14 +394,14 @@ export const FinalRegistrationItemLocation = (props) => {
             let temp = { ...importProductFilters };
             for (const key in configData.data.import_settings) {
               temp[key]["enable"] =
-                configData.data.import_settings[key]["enable"];
+                configData.data.import_settings[key]["enable"] ? configData.data.import_settings[key]["enable"] : 'yes' ;
               if (key !== "import_collection") {
                 if (temp[key]["enable"] === "yes") {
                   setImportByAttribute(temp[key]["enable"]);
                   setRestictImportByAttribute(true);
                 }
                 temp[key]["value"] =
-                  configData.data.import_settings[key]["value"];
+                  configData.data.import_settings[key]["value"] ? configData.data.import_settings[key]["value"]: configData.data.import_settings[key];
               } else if (
                 configData.data.import_settings[key]["enable"] === "yes"
               ) {
@@ -395,6 +431,9 @@ export const FinalRegistrationItemLocation = (props) => {
     }
     fetchMyAPI();
     getAPI()
+    if(!document.title.includes(localStorage.getItem('shop_url'))) {
+      document.title += localStorage.getItem('shop_url') ? " " + localStorage.getItem('shop_url') : "";
+    }
   }, []);
 
   const redirect = (url) => {
@@ -541,10 +580,12 @@ export const FinalRegistrationItemLocation = (props) => {
         setShopUrlLink(url);
       }
       // setEbayFirstAccountConnectedSiteId(firstebayAccountConnected?.warehouses[0]?.site_id)
-      setAccountConnection({
-        ...accountConnection,
-        countryConnected: firstebayAccountConnected?.warehouses[0]?.site_id,
-      });
+      if(firstebayAccountConnected?.warehouses[0]?.site_id) {
+        setAccountConnection({
+          ...accountConnection,
+          countryConnected: firstebayAccountConnected?.warehouses[0]?.site_id,
+        });
+      }
       let shopifyWarehouses = extractShopifyWarehouses(shopifyAccount);
       setShopifyWareHouses(shopifyWarehouses);
       setEbayAccountConnected(firstebayAccountConnected);
@@ -611,6 +652,11 @@ export const FinalRegistrationItemLocation = (props) => {
       postData["order_settings"] = {};
       postData["order_settings"][id] = { ...order_settings };
       postData["order_settings"]["default"] = { ...order_settings };
+    } else {
+      postData.setting_type.push("order_settings");
+      const { id } = ebayAccountConnected;
+      postData["order_settings"] = {};
+      postData["order_settings"]["default"] = { ...order_settingsFalse };
     }
     await configurationAPI(saveAppSettingsShopifyToAppURL, postData);
   };
@@ -638,7 +684,7 @@ export const FinalRegistrationItemLocation = (props) => {
                 setImportProductFilters(temp);
               }}
               label="Published Status"
-              disabled={restrictImportByAttribute}
+              // disabled={restrictImportByAttribute}
             />
             <Select
               title="Kindly select the product status you want to import"
@@ -650,7 +696,7 @@ export const FinalRegistrationItemLocation = (props) => {
                 setImportProductFilters(temp);
               }}
               label="Product Status"
-              disabled={restrictImportByAttribute}
+              // disabled={restrictImportByAttribute}
             />
           </Stack>
         </Card.Section>
@@ -679,7 +725,7 @@ export const FinalRegistrationItemLocation = (props) => {
                   temp["vendor"]["value"] = e;
                   setImportProductFilters(temp);
                 }}
-                disabled={restrictImportByAttribute}
+                // disabled={restrictImportByAttribute}
               />
               <Select
                 label="Product Type"
@@ -692,7 +738,7 @@ export const FinalRegistrationItemLocation = (props) => {
                   temp["productType"]["value"] = e;
                   setImportProductFilters(temp);
                 }}
-                disabled={restrictImportByAttribute}
+                // disabled={restrictImportByAttribute}
               />
             </Stack>
           </Stack>
@@ -722,7 +768,7 @@ export const FinalRegistrationItemLocation = (props) => {
             temp["import_collection"]["value"] = e;
             setImportProductFilters(temp);
           }}
-          disabled={restrictImportByCollection}
+          // disabled={restrictImportByCollection}
           error={importCollectionValueError.value}
         />
       </Card>
@@ -860,7 +906,11 @@ export const FinalRegistrationItemLocation = (props) => {
           {[0, 1, 2, 3].includes(currentStep) && (
             <Card.Section>
               <Stack vertical>
-                <DisplayText size="large">Integration for eBay</DisplayText>
+                <Row align="middle" gutter={[8, 0]}><Col><DisplayText size="large">Integration for eBay</DisplayText></Col><Col>
+                <div
+                  onClick={() => setNeedHelpModal(true)}
+                  style={{ cursor: "pointer" }}
+                ><Badge status="info">Need Help</Badge></div></Col></Row>
                 <>
                   Hello <b>{username}</b>, Thank you for choosing this app for
                   managing your products and orders. Please fulfill certain
@@ -875,10 +925,10 @@ export const FinalRegistrationItemLocation = (props) => {
               </Stack>
             </Card.Section>
           )}
-          {(currentStep === 0 ||
-            currentStep === 1 ||
+          {(currentStep == 0 ||
+            currentStep == 1 ||
             //   currentStep === 2 ||
-            currentStep === 2) && (
+            currentStep == 2) && (
             <div style={{padding:'20px'}}>
           
             <Card.Section>
@@ -1222,8 +1272,11 @@ export const FinalRegistrationItemLocation = (props) => {
                                 <Button
                                   disabled={ebayAccountConnected?.id}
                                   onClick={() =>
+                                    // getAppInstallationForm(
+                                    //   userData["countryConnected"]
+                                    // )
                                     getAppInstallationForm(
-                                      userData["countryConnected"]
+                                      userData["countryConnected"] ? userData["countryConnected"] : accountConnection['countryConnected']
                                     )
                                   }
                                   primary
@@ -1344,22 +1397,56 @@ export const FinalRegistrationItemLocation = (props) => {
                           let { success, message } = await saveUserDetails(
                             dataToPost
                           );
-                          console.log("success", success);
+                          // console.log("success", success);
                           if (success) {
-                            await saveCompletedStep(2);
+                            // await saveCompletedStep(2);
                             await saveConfiguration(temp);
-                            if (importByAttribute) await importProduct();
-                            else if (importByCollection)
-                              await importCollectionProduct();
-
-                            let { success, data } = await checkStepCompleted();
-                            if (success) {
-                              setCurrentStep(data);
-                              let { success, registration_details } =
-                                await getUserDetails();
-                              if (success) {
-                              }
+                            if (importByAttribute) {
+                                let {success, message: importProductMsg, data: importProductData} = await importProduct();
+                                console.log('importByAttribute success', success);
+                                if(success) {
+                                 await saveCompletedStep(2);
+                                  let { success, data } = await checkStepCompleted();
+                                  if (success) {
+                                    setCurrentStep(data);
+                                    let { success, registration_details } =
+                                      await getUserDetails();
+                                    if (success) {
+                                    }
+                                  }
+                                } else {
+                                  notify.error(importProductMsg ? importProductMsg : importProductData)
+                                }
+                            } else if(importByCollection) {
+                                let {success, message: importCollectionProductMsg, data: importCollectionProductData} = await importCollectionProduct();
+                                console.log('importByCollection success', success);
+                                if(success) {
+                                  await saveCompletedStep(2);
+                                  let { success, data } = await checkStepCompleted();
+                                  if (success) {
+                                    setCurrentStep(data);
+                                    let { success, registration_details } =
+                                      await getUserDetails();
+                                    if (success) {
+                                    }
+                                  }
+                                } else {
+                                  notify.error(importCollectionProductMsg ? importCollectionProductMsg : importCollectionProductData)
+                                }
                             }
+
+                            // if (importByAttribute) await importProduct();
+                            // else if (importByCollection)
+                            //   await importCollectionProduct();
+
+                            // let { success, data } = await checkStepCompleted();
+                            // if (success) {
+                            //   setCurrentStep(data);
+                            //   let { success, registration_details } =
+                            //     await getUserDetails();
+                            //   if (success) {
+                            //   }
+                            // }
                           }
                           setNext3Loader(false);
                           }
@@ -1387,27 +1474,53 @@ export const FinalRegistrationItemLocation = (props) => {
                             choices={[
                               {
                                 label: (
-                                  <Tooltip
-                                    preferredPosition="mostSpace"
-                                    content="All selected filters will apply for importing process"
-                                  >
-                                    <TextStyle>
-                                      <span
-                                        style={{
-                                          borderBottomStyle: "dashed",
-                                          borderColor: "#00000069",
-                                        }}
-                                      >
-                                        Import By Filter(s)
-                                      </span>
-                                    </TextStyle>
-                                  </Tooltip>
+                                  <Stack distribution="equalSpacing">
+                                    <Tooltip
+                                      preferredPosition="mostSpace"
+                                      content="All selected filters will apply for importing process"
+                                    >
+                                      <TextStyle>
+                                        <span
+                                          style={{
+                                            borderBottomStyle: "dashed",
+                                            borderColor: "#00000069",
+                                          }}
+                                        >
+                                          Import By Filter(s)
+                                        </span>
+                                      </TextStyle>
+                                    </Tooltip>
+                                    <Button loading={refreshProductTypeVendorBtnLoader} plain onClick={async() => {
+                                      setRefreshProductTypeVendorBtnLoader(true);
+                                      let { success, message } = await initiateVendorProductTypeFetch();
+                                      if (success) {
+                                        notify.success(message);
+                                        await hitAPIsForVendorProductType();
+                                      } else {
+                                        notify.error(message);
+                                      }
+                                      setRefreshProductTypeVendorBtnLoader(false);
+                                    }}>Refresh Product Type & Vendor</Button>
+                                  </Stack>
                                 ),
                                 value: "Import By Filter(s)",
                                 renderChildren: () => renderImportByFilter,
                               },
                               {
-                                label: "Import By Collection",
+                                label: <Stack distribution="equalSpacing">
+                                  <div>Import By Collection</div>
+                                  <Button loading={refreshCollectionBtnLoader} plain onClick={async() => {
+                                      setRefreshCollectionBtnLoader(true);
+                                      const { success, message } = await configurationAPI(collectionFetchURL);
+                                      if (success) {
+                                        notify.success(message);
+                                        await hitAPIsForVendorProductType();
+                                      } else {
+                                        notify.error(message);
+                                      }
+                                      setRefreshCollectionBtnLoader(false);
+                                  }}>Refresh Collections</Button>
+                                </Stack>,
                                 value: "Import Collection",
                                 renderChildren: () => renderImportByCollection,
                               },
@@ -1415,6 +1528,13 @@ export const FinalRegistrationItemLocation = (props) => {
                             selected={selectImportShopifyProduct}
                             onChange={(e) => {
                               let temp1 = {...importProductFilters}
+                              temp1['import_collection']['value'] = ''
+                              temp1['productStatus']['value'] = ''
+                              temp1['productType']['value'] = ''
+                              temp1['publishedStatus']['value'] = ''
+                              temp1['publishedStatus']['value'] = ''
+                              temp1['vendor']['value'] = ''
+
                               temp1['import_collection']['value'] = ''
                               setImportProductFilters(temp1)
                               setImportCollectionValueError({...importCollectionValueError, value: false})
@@ -1467,7 +1587,7 @@ export const FinalRegistrationItemLocation = (props) => {
             </Card.Section>
             </div>
           )}
-          {currentStep === 3 && (
+          {currentStep == 3 && (
             <PlansComponentAnt
               plans={plans}
               plansComponentCallback={plansComponentCallback}
@@ -1522,6 +1642,21 @@ export const FinalRegistrationItemLocation = (props) => {
             Onboarding Process
           </Link>
         </FooterHelp>
+        <Modal
+        open={needHelpModal}
+        onClose={() => setNeedHelpModal(false)}
+        title="How to complete the app onboarding process?"
+      >
+        <Modal.Section>
+          <img src={'https://integration.cedcommerce.com/assets/gifs/onboarding.gif'} style={{ width: "100%" }} />
+          <Divider />
+          <center>
+            <Button primary onClick={() => setNeedHelpModal(false)}>
+              Close
+            </Button>
+          </center>
+        </Modal.Section>
+      </Modal>
       </Page>
     </div>
   );
