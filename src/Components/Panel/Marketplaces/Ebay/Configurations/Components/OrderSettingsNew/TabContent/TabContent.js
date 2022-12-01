@@ -4,13 +4,18 @@ import {
   Card,
   Checkbox,
   FormLayout,
+  Icon,
   Layout,
   Select,
+  SkeletonBodyText,
   Stack,
   TextField,
 } from "@shopify/polaris";
+import { RefreshMinor } from "@shopify/polaris-icons";
 import { Typography } from "antd";
 import React, { useEffect, useState } from "react";
+import { currencyFunc } from "../../../../../../../../APIrequests/ConfigurationAPI";
+import { currencyConvertorURL } from "../../../../../../../../URLs/ConfigurationURL";
 
 const { Title } = Typography;
 const yesNoButtonList = [
@@ -149,6 +154,43 @@ const TabContent = ({
     shopifyOrderTagsCustomAttributeValue,
     setShopifyOrderTagsCustomAttributeValue,
   ] = useState("");
+  const [currencyLoader, setCurrencyLoader] = useState(false);
+
+  const getCurrencyFunc = async () => {
+    setCurrencyLoader(true);
+    let temp = { ...connectedAccountsObject };
+    let { success, data: currencyData } = await currencyFunc(
+      currencyConvertorURL,
+      {
+        site_id: temp[account]["siteId"],
+      }
+    );
+    if (success) {
+      const { source, rate } = currencyData;
+      temp[account]["fields"]["currencyConversion"]["shopifyCurrencyName"] =
+        source["shopify"];
+      temp[account]["fields"]["currencyConversion"]["shopifyCurrencyValue"] =
+        source["amount"];
+      temp[account]["fields"]["currencyConversion"]["ebayCurrencyName"] =
+        source["ebay"];
+      temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"] = rate;
+    }
+    if (
+      errorsData?.[account]?.["fields"]?.["currencyConversion"]?.[
+        "ebayCurrencyValue"
+      ] &&
+      temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"]
+    ) {
+      let tempErrorData = { ...errorsData };
+      tempErrorData[account]["fields"]["currencyConversion"][
+        "ebayCurrencyValue"
+      ] = false;
+      setErrorsData(tempErrorData);
+    }
+    console.log("final temp object", temp);
+    setconnectedAccountsObject(temp);
+    setCurrencyLoader(false);
+  };
 
   const handleBtnPres = (value, field, innerField) => {
     let temp = { ...connectedAccountsObject };
@@ -461,7 +503,7 @@ const TabContent = ({
       <FormLayout>
         {fields["autoOrderSync"]["value"] &&
           Object.keys(fields).map((field, outerIndex) => {
-            if (field !== "autoOrderSync") {
+            if (field !== "autoOrderSync" && field !== "currencyConversion") {
               return (
                 <Layout key={outerIndex}>
                   <Layout.AnnotatedSection
@@ -618,6 +660,88 @@ const TabContent = ({
                       </Stack>
                     </Card>
                   </Layout.AnnotatedSection>
+                </Layout>
+              );
+            } else if (field === "currencyConversion") {
+              return (
+                <Layout key={outerIndex}>
+                  {field === "currencyConversion" &&
+                    currencyLoader &&
+                    account !== "Default" && (
+                      <Layout.AnnotatedSection
+                        id={field}
+                        title={fields[field]["label"]}
+                        description={fields[field]["description"]}
+                      >
+                        <Card sectioned>
+                          <FormLayout>
+                            <SkeletonBodyText lines={2} />
+                          </FormLayout>
+                        </Card>
+                      </Layout.AnnotatedSection>
+                    )}
+                  {field === "currencyConversion" &&
+                    account !== "Default" &&
+                    !currencyLoader &&
+                    fields[field]["shopifyCurrencyName"] !==
+                      fields[field]["ebayCurrencyName"] && (
+                      <Layout.AnnotatedSection
+                        id={field}
+                        title={fields[field]["label"]}
+                        description={fields[field]["description"]}
+                      >
+                        <Card sectioned>
+                          <FormLayout>
+                            <Stack distribution="fill">
+                              <TextField
+                                placeholder={"Shopify Currency"}
+                                prefix={fields[field]["shopifyCurrencyName"]}
+                                value={String(
+                                  fields[field]["shopifyCurrencyValue"]
+                                )}
+                                disabled
+                                type="number"
+                              />
+                              <TextField
+                                placeholder={"eBay Currency"}
+                                prefix={fields[field]["ebayCurrencyName"]}
+                                value={String(
+                                  fields[field]["ebayCurrencyValue"]
+                                )}
+                                type="number"
+                                onChange={(e) => {
+                                  let temp = { ...connectedAccountsObject };
+                                  temp[account]["fields"][field][
+                                    "ebayCurrencyValue"
+                                  ] = e;
+                                  if (
+                                    e &&
+                                    errorsData?.[account]?.["fields"]?.[
+                                      "currencyConversion"
+                                    ]?.["ebayCurrencyValue"]
+                                  ) {
+                                    let tempErrorData = { ...errorsData };
+                                    tempErrorData[account]["fields"][
+                                      "currencyConversion"
+                                    ]["ebayCurrencyValue"] = false;
+                                    setErrorsData(tempErrorData);
+                                  }
+                                  setconnectedAccountsObject(temp);
+                                }}
+                                error={
+                                  errorsData?.[account]?.["fields"]?.[field]?.[
+                                    "ebayCurrencyValue"
+                                  ]
+                                }
+                              />
+                              <Button onClick={() => getCurrencyFunc()}>
+                                <Icon source={RefreshMinor} color="base" />
+                              </Button>
+                            </Stack>
+                          </FormLayout>
+                        </Card>
+                      </Layout.AnnotatedSection>
+                    )}
                 </Layout>
               );
             }
