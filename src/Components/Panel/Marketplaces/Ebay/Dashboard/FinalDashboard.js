@@ -997,7 +997,7 @@ const FinalDashboard = (props) => {
                                 </Text>
                               </Col>
                               <Col>
-                                {orderManagementDisabledCount && (
+                                {orderManagementDisabledCount ? (
                                   <Text
                                     strong
                                     style={
@@ -1018,10 +1018,12 @@ const FinalDashboard = (props) => {
                                       configuration
                                     </Link>{" "}
                                   </Text>
+                                ) : (
+                                  ""
                                 )}
                               </Col>
                               <Col>
-                                {productManagementDisabledCount && (
+                                {productManagementDisabledCount ? (
                                   <Text
                                     strong
                                     style={
@@ -1042,6 +1044,8 @@ const FinalDashboard = (props) => {
                                       configuration
                                     </Link>{" "}
                                   </Text>
+                                ) : (
+                                  ""
                                 )}
                               </Col>
                               {/* </Stack> */}
