@@ -151,6 +151,7 @@ const getUsername = (shopid, username) => {
   }
 };
 const NewOrdersGrid = (props) => {
+  const [deleteOrderIdLoader, setDeleteOrderIdLoader] = useState(false)
   const reduxState = useSelector((state) => {
     return state.orderFilterReducer.reduxFilters;
   });
@@ -397,22 +398,25 @@ const NewOrdersGrid = (props) => {
   };
 
   const handleOrderDeletion = async () => {
-    let queryString = {
+    setDeleteOrderIdLoader(true)
+    let queryString = [{
       order_id: deletedOrderId,
-      shop_id: shopId,
-    };
+      shop_id: ""+shopId,
+    }];
     let { success, data, message } = await massAction(
       deleteOrdersURL,
       queryString
     );
     if (success) {
       notify.success(message ? message : data);
+      props.history.push("/panel/ebay/activity");
     } else {
       notify.error(message ? message : data);
     }
     setDeleteOrderModal(false);
     // setSelectedAccount(null);
     setDeletedOrderId("");
+    setDeleteOrderIdLoader(false)
   };
 
   const [orderAlertListData, setOrderAlertListData] = useState([
@@ -941,7 +945,6 @@ const NewOrdersGrid = (props) => {
         connectedAccountsArray
       );
       setSiteID(siteID);
-      // console.log('shopId',shopId);
       setShopId(shopId);
     }
   }, [selectedAccount]);
@@ -1738,6 +1741,7 @@ const NewOrdersGrid = (props) => {
                   disabled={deletedOrderId.length < 13}
                   onClick={handleOrderDeletion}
                   primary
+                  loading={deleteOrderIdLoader}
                 >
                   Delete Order
                 </ShopifyButton>
