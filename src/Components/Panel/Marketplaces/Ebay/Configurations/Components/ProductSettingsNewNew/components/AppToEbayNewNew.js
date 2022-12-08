@@ -77,6 +77,19 @@ const AppToEbayNewNew = ({
         if (attribute === "fields") {
           errorData[account][attribute] = {};
           for (const field in data[account][attribute]) {
+            if (field === "match_from_ebay") {
+              errorData[account][attribute][field] = {};
+              if (data[account][attribute][field]["value"].length > 0) {
+                errorData[account][attribute][field]["errors"] = [];
+                data[account][attribute][field]["value"].map((item, index) => {
+                  if (!item["shopify_attribute"]) {
+                    errorData[account][attribute][field]["errors"].push(true);
+                    errorCount++;
+                  } else
+                    errorData[account][attribute][field]["errors"].push(false);
+                });
+              }
+            }
             if (field === "itemLocation") {
               errorData[account][attribute][field] = {};
               if (!data[account][attribute][field]["country"]) {
@@ -148,10 +161,12 @@ const AppToEbayNewNew = ({
           const { value } = fields[field];
           parsedData[shopId][field] = Array.isArray(value) ? [...value] : value;
         } else if (["shopifyWarehouses"].includes(field)) {
-          const { options } = fields[field];
-          parsedData[shopId][field] = options
-            .filter((option) => option.value)
-            .map((option) => option.label);
+          const { options, value } = fields[field];
+          parsedData[shopId][field] = value
+
+          // parsedData[shopId][field] = options
+          //   .filter((option) => option.value)
+          //   .map((option) => option.label);
         } else if (["currencyConversion"].includes(field)) {
           const { ebayCurrencyValue } = fields[field];
           if (ebayCurrencyValue === "same") {
@@ -305,7 +320,7 @@ export const CheckboxComponent = ({
                   key={index}
                   // disabled={
                   //   // (connectedAccountsObject[account]["checked"] &&
-                  //   //   getDisbledLength()) 
+                  //   //   getDisbledLength())
                   //   // ||
                   //   // (connectedAccountsObject[account]["status"] === "inactive"
                   //   //   ? true

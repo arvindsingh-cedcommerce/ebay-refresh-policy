@@ -1,6 +1,6 @@
 import { environment } from '../environment/environment';
 import { globalState } from './globalstate';
-import { isUndefined } from 'util';
+import { isUndefined } from 'util'; 
 const message = 'Sorry, the request was unsuccessful. Please come back later.';
 export const requests = {
     getRequest: (endpoint, params, fullUrl, hideLoader) => {
@@ -33,10 +33,13 @@ export const requests = {
                             // window.location.reload(true);
                         }
                     }
+                    // debugger
                     return res;
                 }).catch(e => {
                     return { success: false, message: message,code: e }
                 });
+        
+
         } else {
             return fetch(endpoint + paramsString, {
                 method: 'GET',
@@ -61,7 +64,8 @@ export const requests = {
                 });
         }
     },
-    postRequest: (endpoint, data, fullUrl, hideLoader) => {
+    postRequest: (endpoint, data, fullUrl, hideLoader) => { 
+        // debugger
         if (isUndefined(hideLoader) || !hideLoader) {
             window.showLoader = true;
         }

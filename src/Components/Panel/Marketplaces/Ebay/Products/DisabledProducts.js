@@ -230,7 +230,7 @@ const DisabledProducts = (props) => {
     { label: "Uploaded", value: "uploaded" },
     { label: "Not Uploaded", value: "notUploaded" },
     { label: "Ended", value: "ended" },
-    { label: "Error", value: "Error" },
+    { label: "Error", value: "error" },
   ]);
   const [profileList, setProfileList] = useState([]);
   const [productTypeList, setProductTypeList] = useState([]);

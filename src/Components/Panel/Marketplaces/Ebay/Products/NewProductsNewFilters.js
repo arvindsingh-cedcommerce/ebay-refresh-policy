@@ -852,30 +852,38 @@ function NewProductsNewFilters(props) {
             </center>
           );
           tempObject["title"] = (
-            <Stack
-              spacing="extraTight"
-              wrap={true}
-              vertical={false}
-              distribution="center"
-            >
-              <Text
-                strong
-                onClick={(e) => {
-                  return props.history.push(
-                    `/panel/ebay/products/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
-                  );
-                }}
-                style={{ cursor: "pointer" }}
-                title={title}
-              >
-                {trimTitle(title)}
-              </Text>
-              <Text
-                copyable={{
-                  text: title,
-                }}
-              />
-            </Stack>
+            // <Stack
+            //   spacing="extraTight"
+            //   wrap={true}
+            //   vertical={false}
+            //   distribution="center"
+            // >
+            <center>
+              <Row>
+                <Col span={20}>
+                  <Text
+                    strong
+                    onClick={(e) => {
+                      return props.history.push(
+                        `/panel/ebay/products/viewproducts?id=${container_id}&source_product_id=${source_product_id}`
+                      );
+                    }}
+                    style={{ cursor: "pointer" }}
+                    title={title}
+                  >
+                    {trimTitle(title)}
+                  </Text>
+                </Col>
+                <Col span={4}>
+                  <Text
+                    copyable={{
+                      text: title,
+                    }}
+                  />
+                </Col>
+              </Row>
+            </center>
+            // {/* </Stack> */}
           );
           tempObject["fullTitle"] = title;
           tempObject["productStatus"] = (

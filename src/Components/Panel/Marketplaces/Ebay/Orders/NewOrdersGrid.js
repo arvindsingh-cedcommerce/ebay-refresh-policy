@@ -1254,9 +1254,9 @@ const NewOrdersGrid = (props) => {
         //   hitGetOrdersAPI={hitGetOrdersAPI}
         //   rowSelectionPassed={rowSelectionFunc}
         // />,
-        <ShopifyButton secondary onClick={() => setDeleteOrderModal(true)}>
-          Delete Shopify Order
-        </ShopifyButton>,
+        // <ShopifyButton secondary onClick={() => setDeleteOrderModal(true)}>
+        //   Delete Shopify Order
+        // </ShopifyButton>,
         <ShopifyButton primary onClick={() => setImportEbayOrdersModal(true)}>
           Import eBay Order(s)
         </ShopifyButton>,

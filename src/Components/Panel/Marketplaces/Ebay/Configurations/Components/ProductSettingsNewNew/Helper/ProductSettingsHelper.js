@@ -200,6 +200,20 @@ export const getAppToEbaySavedData = (
                   ],
                 ];
           } else if (field === "shopifyWarehouses") {
+            if (
+              data[shopid]["data"]["product_settings"]["app_to_ebay"][field]
+                .length == 1
+            ) {
+              temp[account]["fields"][field]["options"] = temp[account]["fields"][field]["options"].map((obj) => {
+                return {
+                  ...obj,
+                  disabled: data[shopid]["data"]["product_settings"][
+                    "app_to_ebay"
+                  ][field].includes(obj.value) ? true : false,
+                };
+              });
+            }
+
             temp[account]["fields"][field]["value"] =
               data[shopid]["data"]["product_settings"]["app_to_ebay"][field];
           } else if (field === "vehicleDetails") {

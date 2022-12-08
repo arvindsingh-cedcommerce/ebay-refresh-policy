@@ -9,6 +9,10 @@ import priceTemplateFixedListing from "../../../../../assets/gifImage/priceTempl
 import disableProducts from "../../../../../assets/gifImage/disableProducts.jpg";
 import enableProducts from "../../../../../assets/gifImage/enableProducts.jpg";
 import importProductsCollection from "../../../../../assets/gifImage/importProductsCollection.png";
+import onboarding from "../../../../../assets/gifImage/onboarding.png";
+import auctionPriceTemplates from "../../../../../assets/gifImage/auctionPriceTemplates.png";
+import syncInventoryApp2Ebay from "../../../../../assets/gifImage/syncInventoryApp2Ebay.png";
+import matchFromEbay from "../../../../../assets/gifImage/matchFromEbay.png";
 
 export const gifs = [
   {
@@ -27,6 +31,16 @@ export const gifs = [
     gifModalImage: uploadProducts,
   },
   {
+    title: "How to sync inventory from app to eBay for all products?",
+    url: "https://integration.cedcommerce.com/assets/gifs/syncInventoryApp2Ebay.gif",
+    gifModalImage: syncInventoryApp2Ebay,
+  },
+  {
+    title: "How to perform match from eBay for all products?",
+    url: "https://integration.cedcommerce.com/assets/gifs/matchFromEbay.gif",
+    gifModalImage: matchFromEbay,
+  },
+  {
     title: "How to create category template?",
     url: "https://integration.cedcommerce.com/assets/gifs/categoryTemplate.gif",
     gifModalImage: categoryTemplate,
@@ -37,15 +51,21 @@ export const gifs = [
     gifModalImage: inventoryTemplate,
   },
   {
-    title: "How to create title template?",
-    url: "https://integration.cedcommerce.com/assets/gifs/titleTemplate.gif",
-    gifModalImage: titleTemplate,
+    title:
+      "How to create price template for eBay's fixed price listing format?",
+    url: "https://integration.cedcommerce.com/assets/gifs/priceTemplates.gif",
+    gifModalImage: priceTemplateFixedListing,
   },
   {
     title:
-      "How to create price template for eBay's fixed price listing format?",
-    url: "https://integration.cedcommerce.com/assets/gifs/priceTemplate.gif",
-    gifModalImage: priceTemplateFixedListing,
+      "How to create price template for eBay's auction price listing format?",
+    url: "https://integration.cedcommerce.com/assets/gifs/auctionPriceTemplates.gif",
+    gifModalImage: auctionPriceTemplates,
+  },
+  {
+    title: "How to create title template?",
+    url: "https://integration.cedcommerce.com/assets/gifs/titleTemplate.gif",
+    gifModalImage: titleTemplate,
   },
   {
     title: "How to create profile?",
@@ -67,6 +87,11 @@ export const gifs = [
     url: "https://integration.cedcommerce.com/assets/gifs/importProductsCollection.gif",
     gifModalImage: importProductsCollection,
   },
+  // {
+  //   title: "How to complete the app onboarding process?",
+  //   url: "https://integration.cedcommerce.com/assets/gifs/onboarding.gif",
+  //   gifModalImage: onboarding,
+  // },
 ];
 
 export const gifTemplates = [
@@ -85,7 +110,12 @@ export const gifTemplates = [
   {
     title:
       "How to create price template for eBay's fixed price listing format?",
-    url: "https://integration.cedcommerce.com/assets/gifs/priceTemplate.gif",
+    url: "https://integration.cedcommerce.com/assets/gifs/priceTemplates.gif",
+  },
+  {
+    title:
+      "How to create price template for eBay's auction price listing format?",
+    url: "https://integration.cedcommerce.com/assets/gifs/auctionPriceTemplates.gif",
   },
 ];
 
@@ -105,7 +135,14 @@ export const manageProductsGifs = [
   {
     title: "How to import products from Shopify Collections?",
     url: "https://integration.cedcommerce.com/assets/gifs/importProductsCollection.gif",
-    gifModalImage: importProductsCollection,
+  },
+  {
+    title: "How to sync inventory from app to eBay for all products?",
+    url: "https://integration.cedcommerce.com/assets/gifs/syncInventoryApp2Ebay.gif",
+  },
+  {
+    title: "How to perform match from eBay for all products?",
+    url: "https://integration.cedcommerce.com/assets/gifs/matchFromEbay.gif",
   },
 ];
 

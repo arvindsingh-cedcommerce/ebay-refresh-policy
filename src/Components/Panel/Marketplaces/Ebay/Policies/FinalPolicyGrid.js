@@ -186,12 +186,16 @@ const FinalPolicyGrid = (props) => {
   };
 
   const getAllConnectedAccounts = async () => {
+    // debugger
     let {
       success: accountConnectedSuccess,
       data: connectedAccountData,
       message,
       code,
     } = await getConnectedAccounts();
+    console.log('first')
+    console.log(connectedAccountData)
+    let ebayUsersObj = {};
     let ebayAccountsObj = [];
     if (accountConnectedSuccess) {
       let ebayAccounts = connectedAccountData.filter(
@@ -213,7 +217,13 @@ const FinalPolicyGrid = (props) => {
         temp["disabled"] =
           account["warehouses"][0]["status"] === "inactive" ? true : false;
         ebayAccountsObj.push(temp);
+        let siteId = account["warehouses"][0]["site_id"];
+        let userName = account["warehouses"][0]["name"];
+        ebayUsersObj[siteId] = userName;
       });
+      // console.log(ebayUsersObj)
+      localStorage.setItem("ebayUsersObj",JSON.stringify(ebayUsersObj))
+      console.log(JSON.parse(localStorage.getItem("ebayUsersObj")))
       setconnectedAccountsArray(ebayAccountsObj);
       setaccountSelectionModal({
         ...accountSelectionModal,
@@ -314,6 +324,7 @@ const FinalPolicyGrid = (props) => {
     if (refresh) {
       requestData["refresh"] = refresh;
     }
+    // debugger
     let {
       success,
       data: fetchedPoliciesArray,
@@ -579,7 +590,7 @@ const FinalPolicyGrid = (props) => {
           Business Policy
         </Link>
       </FooterHelp>
-    </PageHeader>
+    </PageHeader> 
   );
 };
 

@@ -73,15 +73,15 @@ export const getParsedEbayAccounts = (ebayAccounts) => {
         description:
           "Set Shopify Order Name. You can customise it as per your need.",
       },
-      currencyConversion: {
-        label: "Currency Converter",
-        description:
-          "Convert the Shopify store currency to eBay account currency.",
-        shopifyCurrencyName: "",
-        shopifyCurrencyValue: "",
-        ebayCurrencyName: "",
-        ebayCurrencyValue: "",
-      },
+      // currencyConversion: {
+      //   label: "Currency Converter",
+      //   description:
+      //     "Convert the Shopify store currency to eBay account currency.",
+      //   shopifyCurrencyName: "",
+      //   shopifyCurrencyValue: "",
+      //   ebayCurrencyName: "",
+      //   ebayCurrencyValue: "",
+      // },
       useEbayCustomerDetails: {
         label: "Use eBay Customer Details",
         value: true,
@@ -169,22 +169,22 @@ export const getSavedData = (
                   "mappingOfShippingCarrier"
                 ];
             }
-            if (field === "currencyConversion") {
-              const {
-                ebayCurrencyName,
-                ebayCurrencyValue,
-                shopifyCurrencyName,
-                shopifyCurrencyValue,
-              } = orderSettingsFromSavedAPIData[shopIdFromAPI][field];
-              temp[account]["fields"][field]["ebayCurrencyName"] =
-                ebayCurrencyName;
-              temp[account]["fields"][field]["ebayCurrencyValue"] =
-                ebayCurrencyValue;
-              temp[account]["fields"][field]["shopifyCurrencyName"] =
-                shopifyCurrencyName;
-              temp[account]["fields"][field]["shopifyCurrencyValue"] =
-                shopifyCurrencyValue;
-            }
+            // if (field === "currencyConversion") {
+            //   const {
+            //     ebayCurrencyName,
+            //     ebayCurrencyValue,
+            //     shopifyCurrencyName,
+            //     shopifyCurrencyValue,
+            //   } = orderSettingsFromSavedAPIData[shopIdFromAPI][field];
+            //   temp[account]["fields"][field]["ebayCurrencyName"] =
+            //     ebayCurrencyName;
+            //   temp[account]["fields"][field]["ebayCurrencyValue"] =
+            //     ebayCurrencyValue;
+            //   temp[account]["fields"][field]["shopifyCurrencyName"] =
+            //     shopifyCurrencyName;
+            //   temp[account]["fields"][field]["shopifyCurrencyValue"] =
+            //     shopifyCurrencyValue;
+            // }
             if (
               field === "useEbayCustomerDetails" &&
               orderSettingsFromSavedAPIData[shopIdFromAPI][field] &&

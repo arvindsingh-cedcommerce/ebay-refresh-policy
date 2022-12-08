@@ -3,7 +3,7 @@ import {Redirect, Route, Switch} from "react-router-dom";
 import LoginComponent from "./login/LoginComponent";
 
 class Auth extends Component {
-
+ 
     render() {
         return (
             <Switch>

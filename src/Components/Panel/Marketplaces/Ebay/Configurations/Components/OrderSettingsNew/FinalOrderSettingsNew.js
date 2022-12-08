@@ -83,38 +83,38 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
     }
   };
 
-  const getCurrencyFunc = async (account) => {
-    let temp = { ...connectedAccountsObject };
-    let { success, data: currencyData } = await currencyFunc(
-      currencyConvertorURL,
-      {
-        site_id: temp[account]["siteId"],
-      }
-    );
-    if (success) {
-      const { source, rate } = currencyData;
-      temp[account]["fields"]["currencyConversion"]["shopifyCurrencyName"] =
-        source["shopify"];
-      temp[account]["fields"]["currencyConversion"]["shopifyCurrencyValue"] =
-        source["amount"];
-      temp[account]["fields"]["currencyConversion"]["ebayCurrencyName"] =
-        source["ebay"];
-      temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"] = rate;
-    }
-    if (
-      errorsData?.[account]?.["fields"]?.["currencyConversion"]?.[
-        "ebayCurrencyValue"
-      ] &&
-      temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"]
-    ) {
-      let tempErrorData = { ...errorsData };
-      tempErrorData[account]["fields"]["currencyConversion"][
-        "ebayCurrencyValue"
-      ] = false;
-      setErrorsData(tempErrorData);
-    }
-    setconnectedAccountsObject(temp);
-  };
+  // const getCurrencyFunc = async (account) => {
+  //   let temp = { ...connectedAccountsObject };
+  //   let { success, data: currencyData } = await currencyFunc(
+  //     currencyConvertorURL,
+  //     {
+  //       site_id: temp[account]["siteId"],
+  //     }
+  //   );
+  //   if (success) {
+  //     const { source, rate } = currencyData;
+  //     temp[account]["fields"]["currencyConversion"]["shopifyCurrencyName"] =
+  //       source["shopify"];
+  //     temp[account]["fields"]["currencyConversion"]["shopifyCurrencyValue"] =
+  //       source["amount"];
+  //     temp[account]["fields"]["currencyConversion"]["ebayCurrencyName"] =
+  //       source["ebay"];
+  //     temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"] = rate;
+  //   }
+  //   if (
+  //     errorsData?.[account]?.["fields"]?.["currencyConversion"]?.[
+  //       "ebayCurrencyValue"
+  //     ] &&
+  //     temp[account]["fields"]["currencyConversion"]["ebayCurrencyValue"]
+  //   ) {
+  //     let tempErrorData = { ...errorsData };
+  //     tempErrorData[account]["fields"]["currencyConversion"][
+  //       "ebayCurrencyValue"
+  //     ] = false;
+  //     setErrorsData(tempErrorData);
+  //   }
+  //   setconnectedAccountsObject(temp);
+  // };
 
   useEffect(() => {
     if (accountsReceived) {
@@ -131,15 +131,15 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
       let checkedAccounts = {};
       for (const account in connectedAccountsObject) {
         if (connectedAccountsObject[account]["checked"]) {
-          const currencyItem =
-            connectedAccountsObject[account]["fields"]["currencyConversion"];
-          if (
-            account !== "Default" &&
-            !currencyItem["ebayCurrencyName"] &&
-            !currencyItem["shopifyCurrencyValue"] &&
-            !currencyItem["shopifyCurrencyName"]
-          )
-            getCurrencyFunc(account);
+          // const currencyItem =
+          //   connectedAccountsObject[account]["fields"]["currencyConversion"];
+          // if (
+          //   account !== "Default" &&
+          //   !currencyItem["ebayCurrencyName"] &&
+          //   !currencyItem["shopifyCurrencyValue"] &&
+          //   !currencyItem["shopifyCurrencyName"]
+          // )
+          //   getCurrencyFunc(account);
           checkedAccounts[account] = { ...connectedAccountsObject[account] };
           checkedAccounts[account]["content"] = (
             <TabContent
@@ -284,17 +284,17 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
               errorData[account][attribute][field]["customValue"] =
                 "must contain ebay order id";
               errorCount++;
-            } else if (
-              field === "currencyConversion" &&
-              account !== "Default"
-            ) {
-              errorData[account][attribute][field] = {};
-              if (!data[account][attribute][field]["ebayCurrencyValue"]) {
-                errorData[account][attribute][field][
-                  "ebayCurrencyValue"
-                ] = true;
-                errorCount++;
-              }
+              // } else if (
+              //   field === "currencyConversion" &&
+              //   account !== "Default"
+              // ) {
+              //   errorData[account][attribute][field] = {};
+              //   if (!data[account][attribute][field]["ebayCurrencyValue"]) {
+              //     errorData[account][attribute][field][
+              //       "ebayCurrencyValue"
+              //     ] = true;
+              //     errorCount++;
+              //   }
             } else {
               errorData[account][attribute][field] = false;
             }
@@ -342,19 +342,19 @@ const FinalOrderSettingsNew = ({ orderSettingsFromSavedAPIData }) => {
             parsedData[shopId][field] = {};
             parsedData[shopId][field]["custom"] = fields[field]["customValue"];
           } else parsedData[shopId][field] = fields[field]["value"];
-        } else if (field === "currencyConversion") {
-          const {
-            ebayCurrencyName,
-            ebayCurrencyValue,
-            shopifyCurrencyName,
-            shopifyCurrencyValue,
-          } = { ...fields[field] };
-          parsedData[shopId][field] = {
-            ebayCurrencyName: ebayCurrencyName,
-            ebayCurrencyValue: ebayCurrencyValue,
-            shopifyCurrencyName: shopifyCurrencyName,
-            shopifyCurrencyValue: shopifyCurrencyValue,
-          };
+          // } else if (field === "currencyConversion") {
+          //   const {
+          //     ebayCurrencyName,
+          //     ebayCurrencyValue,
+          //     shopifyCurrencyName,
+          //     shopifyCurrencyValue,
+          //   } = { ...fields[field] };
+          //   parsedData[shopId][field] = {
+          //     ebayCurrencyName: ebayCurrencyName,
+          //     ebayCurrencyValue: ebayCurrencyValue,
+          //     shopifyCurrencyName: shopifyCurrencyName,
+          //     shopifyCurrencyValue: shopifyCurrencyValue,
+          //   };
         } else parsedData[shopId][field] = fields[field]["value"];
       }
     }

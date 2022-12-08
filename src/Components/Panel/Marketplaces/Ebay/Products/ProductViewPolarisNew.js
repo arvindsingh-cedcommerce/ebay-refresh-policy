@@ -185,6 +185,7 @@ const ProductViewPolarisNew = (props) => {
   const [customvariants, setCustomVariants] = useState([]);
   const [productId, setProductId] = useState(null);
   const [saveBtnLoader, setSaveBtnLoader] = useState(false);
+  const [statusValues, setStatusValues] = useState([]);
 
   const [connectedAccounts, setconnectedAccounts] = useState({});
   const [errors, setErrors] = useState({});
@@ -251,6 +252,15 @@ const ProductViewPolarisNew = (props) => {
 
   useEffect(() => {
     // console.log('itemUrls', itemUrls);
+    if (itemUrls.length === 1) setStatusValues([getStatusValue(itemUrls[0])]);
+    if (itemUrls.length > 1) {
+      let statusArr = [];
+      itemUrls.map((item) => {
+        const statusVal = getStatusValue(item);
+        if (statusVal) statusArr.push(statusVal);
+      });
+      setStatusValues([...statusArr]);
+    }
   }, [itemUrls]);
 
   const extractEditedDataForVariationProduct = (forvariationproduct, type) => {
@@ -1368,7 +1378,19 @@ const ProductViewPolarisNew = (props) => {
     });
     return statusStructures;
   };
-
+  const getStatusValue = (test) => {
+    if (test?.endStatus && test?.hasError) {
+      return "Ended";
+    } else if (test?.endStatus) {
+      return "Ended";
+    } else if (test?.itemId && test?.hasError) {
+      return "Uploaded with error";
+    } else if (test?.itemId) {
+      return "Uploaded";
+    } else if (test?.hasError) {
+      return "Error";
+    }
+  };
   const menu = (
     <Menu>
       <Menu.Item
@@ -1410,46 +1432,59 @@ const ProductViewPolarisNew = (props) => {
         <SyncOutlined /> Sync from Shopify
       </Menu.Item>
       {!getItemURLs().every((item) => item == false) ? (
-        <Menu.Item
-          key="end"
-          onClick={() => {
-            let postData = {
-              product_id: [apiCallMainProduct["source_product_id"]],
-            };
-            setModal({
-              ...modal,
-              active: true,
-              content: "End",
-              actionName: postActionOnProductById,
-              actionPayload: postData,
-              api: endProductByIdURL,
-            });
-          }}
-        >
-          <DeleteOutlined /> End
-        </Menu.Item>
+        (itemUrls.length === 1 &&
+          ["Uploaded", "Uploaded with error"].includes(statusValues[0])) ||
+        (itemUrls.length > 1 &&
+          (statusValues.includes("Uploaded") ||
+            statusValues.includes("Uploaded with error"))) ? (
+          <Menu.Item
+            key="end"
+            onClick={() => {
+              let postData = {
+                product_id: [apiCallMainProduct["source_product_id"]],
+              };
+              setModal({
+                ...modal,
+                active: true,
+                content: "End",
+                actionName: postActionOnProductById,
+                actionPayload: postData,
+                api: endProductByIdURL,
+              });
+            }}
+          >
+            <DeleteOutlined /> End
+          </Menu.Item>
+        ) : (
+          <></>
+        )
       ) : (
         <></>
       )}
       {!getItemURLs().every((item) => item == false) ? (
-        <Menu.Item
-          key="Relist Item"
-          onClick={() => {
-            let postData = {
-              product_id: [apiCallMainProduct["source_product_id"]],
-            };
-            setModal({
-              ...modal,
-              active: true,
-              content: "Relist Item",
-              actionName: postActionOnProductById,
-              actionPayload: postData,
-              api: relistItemURL,
-            });
-          }}
-        >
-          <RollbackOutlined /> Relist Item
-        </Menu.Item>
+        (itemUrls.length === 1 && statusValues[0] === "Ended") ||
+        (itemUrls.length > 1 && statusValues.includes("Ended")) ? (
+          <Menu.Item
+            key="Relist Item"
+            onClick={() => {
+              let postData = {
+                product_id: [apiCallMainProduct["source_product_id"]],
+              };
+              setModal({
+                ...modal,
+                active: true,
+                content: "Relist Item",
+                actionName: postActionOnProductById,
+                actionPayload: postData,
+                api: relistItemURL,
+              });
+            }}
+          >
+            <RollbackOutlined /> Relist Item
+          </Menu.Item>
+        ) : (
+          <></>
+        )
       ) : (
         <></>
       )}
@@ -1521,17 +1556,18 @@ const ProductViewPolarisNew = (props) => {
           />
           <Stack vertical spacing="extraTight">
             <>{mainProduct["title"]}</>
-            {!getItemURLs().every((item) => item == false) && itemUrls.length && (
-              <Popover
-                placement="right"
-                content={getItemURLs()}
-                trigger="click"
-                visible={viewItemURLsPopoverActive}
-                onVisibleChange={(e) => setViewItemURLsPopoverActive(e)}
-              >
-                <Button plain>View Status</Button>
-              </Popover>
-            )}
+            {!getItemURLs().every((item) => item == false) &&
+              itemUrls.length && (
+                <Popover
+                  placement="right"
+                  content={getItemURLs()}
+                  trigger="click"
+                  visible={viewItemURLsPopoverActive}
+                  onVisibleChange={(e) => setViewItemURLsPopoverActive(e)}
+                >
+                  <Button plain>View Status</Button>
+                </Popover>
+              )}
           </Stack>
         </Stack>
       }
@@ -1668,8 +1704,8 @@ const ProductViewPolarisNew = (props) => {
         title={errorPopup.title}
       >
         {/* <Modal.Section>
-          <Banner status="critical">{errorPopup.content}</Banner>
-        </Modal.Section> */}
+         <Banner status="critical">{errorPopup.content}</Banner>
+       </Modal.Section> */}
         <Modal.Section>{errorPopup.content}</Modal.Section>
       </Modal>
       <FooterHelp>

@@ -14,7 +14,7 @@ class Welcome extends Component {
   }
 
   componentDidMount() {
-    this.getAllConnectedAccounts()
+    this.getAllConnectedAccounts();
     setTimeout(() => {
       this.routetoUrl();
     }, 4000);
@@ -50,13 +50,14 @@ class Welcome extends Component {
       );
       if (shopifyAccount) {
         const { shop_url } = shopifyAccount;
-        this.setShopUrlInLocalStorage(shop_url);
+        this.setShopUrlInLocalStorage(shopifyAccount?.shop_details?.myshopify_domain);
       }
     } else {
       notify.error(message);
-      if (tokenExpireValues.includes(code)) this.props.history.push("/auth/login");
+      if (tokenExpireValues.includes(code))
+        this.props.history.push("/auth/login");
     }
-  }
+  };
 
   render() {
     return (

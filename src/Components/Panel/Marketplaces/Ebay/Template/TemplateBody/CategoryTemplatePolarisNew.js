@@ -56,6 +56,7 @@ export function debounce(func, wait, immediate) {
 }
 
 const CategoryTemplatePolarisNew = (props) => {
+  const [finalLoading,setFinalLoading]=useState(false);
   const [templateTitle, setTemplateTitle] = useState(false);
   const [templateTitleErrors, setTemplateTitleErrors] = useState(false);
   const { id, loader, showSecondaryCategory, siteID, shopID, recieveFormdata } =
@@ -1414,6 +1415,7 @@ function to handle optional attribute changes
       site_id: siteID,
       shop_id: shopID,
     });
+    setFinalLoading(false);
     if (
       successattribCategorywise &&
       Array.isArray(attributeCategorywise) &&
@@ -1635,6 +1637,7 @@ function to handle optional attribute changes
     await getAllConnectedAccounts();
   };
   useEffect(() => {
+    setFinalLoading(true);
     // console.log("1185");
     setsiteIDSelection(siteID);
     setshopIDSelection(shopID);
@@ -2071,6 +2074,7 @@ function to check final validation
       site_id: siteID,
       shop_id: shopID,
     });
+    setFinalLoading(false);
     if (
       successattribCategorywise &&
       Array.isArray(attributeCategorywise) &&
@@ -2163,6 +2167,7 @@ function to check final validation
           lineHeight: "2.4rem !important",
         }}
         onSelect={(data) => {
+          setFinalLoading(true);  
           const validationObj = { ...validationErrors };
           validationObj.primaryCategoryValidation = new Array(6).fill(false);
           setValidationErrors({ ...validationObj });
@@ -2709,7 +2714,14 @@ function to check final validation
           sectioned
           actions={[
             {
-              content: <Button primary>Save</Button>,
+              content: (
+                <Button
+                  primary
+                  disabled={!id?false: finalLoading}
+                >
+                  Save
+                </Button>
+              ),
               onAction: saveFormdata,
               loading: saveBtnLoader,
             },

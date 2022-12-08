@@ -53,7 +53,7 @@ import CarouselComponent from "./CarouselComponent";
 import { getParsedOrderAnalyticsDataAntD } from "./OrderAnalyticsHelper";
 import { getParsedRevenueAnalyticsDataAntD } from "./RevenueAnalyticsHelper";
 import StackedBarAnt from "./StackedBarAnt";
-import StackedLineAnt from "./StackedLineAnt";
+import StackedLineAnt from "./StackedLineAnt"; 
 import MyResponsivePie2TotalOrder from "./MyResponsivePie2TotalOrder";
 import MyResponsiveChildOrders from "./MyResponsiveChildOrders";
 import { ArrowDownMinor, ArrowUpMinor } from "@shopify/polaris-icons";
@@ -65,6 +65,9 @@ import Skype from "../../../../../assets/skype.png";
 import Mail from "../../../../../assets/mail.png";
 import { faqAPI } from "../../../../../APIrequests/HelpAPI";
 import { tokenExpireValues } from "../../../../../HelperVariables";
+import { getRefreshPolicies } from "../../../../../APIrequests/PoliciesAPI";
+import { refreshPoliciesURL } from "../../../../../URLs/PoliciesURL";
+import { getReturnPolicyCount1 } from "../Policies/RefreshPolicyFunctions.js";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
@@ -207,12 +210,15 @@ const FinalDashboard = (props) => {
     orderService: 0,
     hasBoosterOrder: false,
   });
+  const [shopId,setShopId]=useState('');
+  const [siteId,setSiteId]=useState('');
 
   const getAllFAQs = async () => {
     setFaqLoader(true);
     let { success, data } = await getMethod(faqAPI, {
       type: "FAQ",
     });
+    // debugger
     if (success) {
       let temp = data
         .map((faq) => {
@@ -252,6 +258,10 @@ const FinalDashboard = (props) => {
     // hitFAQs();
   }, []);
 
+  useEffect(()=>{
+    getAllPoliciesRefresh();
+  },[shopId,siteId])
+
   useEffect(() => {
     if (productGraphStoreSelected) {
       let { siteID, shopId } = getSiteID(
@@ -261,6 +271,7 @@ const FinalDashboard = (props) => {
       setProductAnalyticsShopId(shopId);
     }
   }, [productGraphStoreSelected]);
+
 
   useEffect(() => {
     if (orderGraphStoreSelected) {
@@ -277,6 +288,48 @@ const FinalDashboard = (props) => {
     title: "Create profile to list your productds on eBay",
     gif: "https://apps.cedcommerce.com/integration/static/modules/walmart/assets/images/gif/Profiling.gif",
   });
+
+  //my written component
+  const getAllPoliciesRefresh = async (refresh = false) => {
+    // setRefreshPolicyLoader(true);
+    let requestData = {
+      multitype: ["shipping", "payment", "return"],
+      // shop_id: Number(refreshPoliciesAccountSelectionModal.shopID),
+      // site_id: refreshPoliciesAccountSelectionModal.siteID,
+    };
+    if (refresh) {
+      requestData["refresh"] = refresh;
+    }
+    // debugger
+    let {
+      success,
+      data: fetchedPoliciesArray,
+      message,
+    } = await getRefreshPolicies(refreshPoliciesURL, { ...requestData });
+    if (success) {
+      // setRefreshSuccessStatus(true);
+      // notify.success(message);
+      // setRefreshPoliciesAccountSelectionModal({
+      //   ...refreshPoliciesAccountSelectionModal,
+      //   active: false,
+      // });
+    //   if (selectedTabId == 0) {
+    //     getPaymentPolicyCount();
+    //     getReturnPolicyCount();
+    //   } else if (selectedTabId == 1) {
+    //     getShippingPolicyCount();
+    //     getReturnPolicyCount();
+    //   } else if (selectedTabId == 2) {
+    //     getShippingPolicyCount();
+    //     getPaymentPolicyCount();
+    //   }
+    // } else {
+    //   notify.error(message);
+    // }
+    // setRefreshPolicyLoader(false);
+  };
+}
+  //my written component
 
   const getAllConnectedAccounts = async () => {
     const colors = [
@@ -302,6 +355,8 @@ const FinalDashboard = (props) => {
       message,
       code,
     } = await getConnectedAccounts();
+    console.log(connectedAccountData)
+    let ebayUsersObj = {};
     if (accountConnectedSuccess) {
       if (Array.isArray(connectedAccountData) && connectedAccountData.length) {
         let shopifyAccount = connectedAccountData.find(
@@ -335,7 +390,6 @@ const FinalDashboard = (props) => {
         let ebayAccounts = connectedAccountData.filter(
           (account) => account["marketplace"] === "ebay"
         );
-
         let tempArr = ebayAccounts.map((account, key) => {
           let accountName = {
             label: (
@@ -378,8 +432,12 @@ const FinalDashboard = (props) => {
               </Stack>
             ),
           };
+        let siteId = account["warehouses"][0]["site_id"];
+        let userName = account["warehouses"][0]["name"];
+        ebayUsersObj[siteId] = userName;
           return accountName;
         });
+        console.log(ebayUsersObj)
         // tempArr.unshift({ label: "All", value: "all" });
         let activeAccounts = 0;
         tempArr.forEach((account) => {
@@ -398,6 +456,15 @@ const FinalDashboard = (props) => {
       notify.error(message);
       if (tokenExpireValues.includes(code)) props.history.push("/auth/login");
     }
+    let localEbayUsersObj = JSON.parse(localStorage.getItem("ebayUsersObj"));
+    console.log(localEbayUsersObj)
+    Object.entries(ebayUsersObj).forEach(([key,value])=>{
+      console.log(key,value)
+    if(!localEbayUsersObj.hasOwnProperty(key)){
+      setShopId();
+      setSiteId()
+    }
+    })
   };
 
   const hitNews = async () => {
@@ -947,7 +1014,7 @@ const FinalDashboard = (props) => {
                   ) : (
                     <Stack vertical spacing="tight">
                       <Title level={3} style={{ margin: 0 }}>
-                        Welcome, {shopifyUsername}
+                        Welcome, {shopifyUsername} 
                       </Title>
                     </Stack>
                   )}

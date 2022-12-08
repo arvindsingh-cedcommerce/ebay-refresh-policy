@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import FinalPolicyGrid from "./FinalPolicyGrid";
 import PolicyHandler from "./PolicyHandler";
 
-const PolicyComponent = () => {
+const PolicyComponent = () => { 
   useEffect(() => {
     // document.title =
     //   "Edit an existing business policy or create new - CedCommerce";

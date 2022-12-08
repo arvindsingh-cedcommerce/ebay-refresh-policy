@@ -65,6 +65,14 @@ const TabContent = ({
 }) => {
   let { fields, value } = content;
   const [currencyLoader, setCurrencyLoader] = useState(false);
+  const [matchfromShopifyOptions, setMatchFromShopifyOptions] = useState([
+    { label: "Title", value: "title" },
+    { label: "Sku", value: "sku" },
+  ]);
+  const [matchfromEbayOptions, setMatchFromEbayOptions] = useState([
+    { label: "Title", value: "Title" },
+    { label: "Sku", value: "SKU" },
+  ]);
   const handleBtnPres = (value, field, innerField) => {
     let temp = { ...connectedAccountsObject };
     if (innerField) {
@@ -150,14 +158,32 @@ const TabContent = ({
                       label="Shopify Attribute"
                       value={shopify_attribute}
                       options={matchfromShopifyOptions}
-                      onChange={(e) =>
+                      error={
+                        errorsData?.[account]?.["fields"]?.[field]?.[
+                          "errors"
+                        ]?.[index]
+                      }
+                      onChange={(e) => {
+                        if (e) {
+                          let temp = { ...errorsData };
+                          if (
+                            temp?.[account]?.["fields"]?.[field]?.["errors"]?.[
+                              index
+                            ]
+                          ) {
+                            temp[account]["fields"][field]["errors"][
+                              index
+                            ] = false;
+                            setErrorsData(temp);
+                          }
+                        }
                         matchFromEbayHandler(
                           e,
                           field,
                           index,
                           "shopify_attribute"
-                        )
-                      }
+                        );
+                      }}
                       placeholder="Please Select..."
                     />
                     <Select
@@ -167,7 +193,7 @@ const TabContent = ({
                       onChange={(e) =>
                         matchFromEbayHandler(e, field, index, "ebay_attribute")
                       }
-                      // placeholder="Please Select..."
+                      placeholder="Please Select..."
                       disabled
                     />
                   </FormLayout.Group>
@@ -265,6 +291,26 @@ const TabContent = ({
       ebayCurrencyName,
       ebayCurrencyValue,
     } = connectedAccountsObject[account]["fields"]["currencyConversion"];
+    let temp = { ...connectedAccountsObject };
+    const currentArr = temp[account]["fields"]["match_from_ebay"]["value"];
+    let disabledValues = [];
+    if (currentArr) {
+      currentArr.map((item, index) => {
+        if (item["shopify_attribute"])
+          disabledValues.push(item["shopify_attribute"]);
+      });
+    }
+    let finalOptions;
+    let currentTemp = [...matchfromShopifyOptions];
+    finalOptions = currentTemp.map((item, index) => {
+      if (disabledValues.includes(item.value)) {
+        item.disabled = true;
+      } else {
+        item.disabled = false;
+      }
+      return item;
+    });
+    setMatchFromShopifyOptions([...finalOptions]);
     if (!shopifyCurrencyName || !shopifyCurrencyValue || !ebayCurrencyName) {
       getCurrencyFunc();
     }
@@ -358,7 +404,7 @@ const TabContent = ({
                   </Card>
                 </Layout.AnnotatedSection>
               )}
-            {field !== "currencyConversion" && (
+            {field !== "currencyConversion" && field !== "shopifyWarehouses" && (
               <Layout.AnnotatedSection
                 id={field}
                 title={fields[field]["label"]}
@@ -594,7 +640,7 @@ const TabContent = ({
                           </FormLayout.Group>
                         </FormLayout>
                       )}
-                      {field === "shopifyWarehouses" && (
+                      {/* {field === "shopifyWarehouses" && (
                         <Stack vertical spacing="extraTight">
                           <ChoiceList
                             allowMultiple
@@ -626,7 +672,8 @@ const TabContent = ({
                             }}
                           />
                         </Stack>
-                      )}
+                      )} */}
+
                       {/* {field === "currencyConversion" && currencyLoader && (
                         <SkeletonBodyText lines={2} />
                       )}
