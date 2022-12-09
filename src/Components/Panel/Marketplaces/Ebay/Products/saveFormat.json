@@ -1,0 +1,46 @@
+for simple
+{
+    "edited_fields": {
+        "title": "xyz",
+        "sku": "123",
+        "price": "100",
+    },
+    "source_product_id": "123456789"
+}
+
+for variant (common data)
+{
+    "edited_fields": {
+        "variation": [
+            {
+                "source_product_id": "123456789v1",
+                "title": "abc", 
+                "sku": "123v1",
+            },
+            {
+                "source_product_id": "123456789v2",
+                "title": "abc",
+                "sku": "123v2",
+            },
+            {
+                "source_product_id": "123456789v3",
+                "title": "abc",
+                "sku": "123v3",
+            },
+        ]
+    },
+    "source_product_id": "123456789"
+}
+
+for variant (variant related only)
+{
+    "edited_fields": {
+        "variation": [
+            {
+                "source_product_id": "123456789v1",
+                "sku": "123v1",
+            },
+        ]
+    },
+    "source_product_id": "123456789"
+}
