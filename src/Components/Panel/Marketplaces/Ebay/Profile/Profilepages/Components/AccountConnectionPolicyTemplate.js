@@ -1,12 +1,13 @@
 import { Banner, Card, Layout, List, Stack } from "@shopify/polaris";
-import { Tabs, Divider, Image } from "antd";
+import { Tabs, Divider, Image, Badge, theme } from "antd";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import AccountTabContent from "./AccountTabContent";
 import CheckboxComponent from "./CheckboxComponent";
+import TabStyles from "./arvindCss/TabsError.module.css";
 
 const { TabPane } = Tabs;
-
+// const {useToken} = theme;
 const AccountConnectionPolicyTemplate = ({
   templateOptions,
   connectedAccountsObject,
@@ -15,8 +16,13 @@ const AccountConnectionPolicyTemplate = ({
   panes,
   setPanes,
   checkboxError,
-  setCheckboxError
+  setCheckboxError,
+  tabErrors,
+  setTabErrors,
 }) => {
+  //active key
+  const [activeKey, setActiveKey] = useState("");
+
   useEffect(() => {
     if (Object.keys(connectedAccountsObject).length > 0) {
       const filteredArray = panes
@@ -33,6 +39,8 @@ const AccountConnectionPolicyTemplate = ({
                 setconnectedAccountsObject={setconnectedAccountsObject}
                 templateOptions={templateOptions}
                 shopifyWarehouses={shopifyWarehouses}
+                tabErrors={tabErrors}
+                setTabErrors={setTabErrors}
               />
             ),
           };
@@ -41,6 +49,21 @@ const AccountConnectionPolicyTemplate = ({
     }
   }, [connectedAccountsObject, templateOptions]);
 
+  // Arvind code ------------------
+  useEffect(() => {
+    console.log(panes,'+++++++++++++')
+    Object.keys(panes).forEach((pane, index) => {
+      if (index < 1 && activeKey === "")
+        setActiveKey(panes[pane].key);
+      return;
+    });
+  }, [panes.length]);
+
+  const onChange = (key) => {
+    setActiveKey(key);
+  };
+  // Arvind code ------------------
+  // const {token} = useToken();
   return (
     <Card.Section title="Account Selection">
       <Banner title="How to add accounts to profile" status="info">
@@ -55,45 +78,80 @@ const AccountConnectionPolicyTemplate = ({
         </List>
       </Banner>
       <Divider />
-      <div style={checkboxError ? {WebkitBoxShadow: "0px 0px 5px 1px rgba(255,0,0,1)",MozBoxShadow: "0px 0px 5px 1px rgba(255,0,0,1)",boxShadow: "0px 0px 5px 1px rgba(255,0,0,1)"}:null}>
-      <Card sectioned>
-      <CheckboxComponent
-        connectedAccountsObject={connectedAccountsObject}
-        setconnectedAccountsObject={setconnectedAccountsObject}
-        panes={panes}
-        setPanes={setPanes}
-        setCheckboxError={setCheckboxError}
-      />
-      </Card>
+      <div
+        style={
+          checkboxError
+            ? {
+                WebkitBoxShadow: "0px 0px 5px 1px rgba(255,0,0,1)",
+                MozBoxShadow: "0px 0px 5px 1px rgba(255,0,0,1)",
+                boxShadow: "0px 0px 5px 1px rgba(255,0,0,1)",
+              }
+            : null
+        }
+      >
+        <Card sectioned>
+          <CheckboxComponent
+            connectedAccountsObject={connectedAccountsObject}
+            setconnectedAccountsObject={setconnectedAccountsObject}
+            panes={panes}
+            setPanes={setPanes}
+            setCheckboxError={setCheckboxError}
+            activeKey={activeKey}
+            setActiveKey={setActiveKey}
+          />
+        </Card>
       </div>
       {panes.length > 0 && <Divider />}
       {panes.length > 0 && <>Selected Accounts-:</>}
-      <Tabs onChange={() => {}} type="card">
-        {panes.map((pane) => {
+      <Tabs onChange={onChange} type="card" activeKey={activeKey}>
+        {panes.map((pane, index) => {
           return (
             <TabPane
               // tab={pane.title}
               tab={
-                <Stack alignment="fill" spacing="tight">
-                  <Image
-                    preview={false}
-                    width={25}
-                    src={
-                      pane["siteID"] &&
-                      require(`../../../../../../../assets/flags/${pane["siteID"]}.png`)
-                    }
-                    style={{ borderRadius: "50%" }}
-                  />
-                  <>{pane.title.split("-")[1]}</>
-                </Stack>
+                <div
+                  className={
+                    tabErrors[pane.title]
+                      ? TabStyles.errorTabBar
+                      : TabStyles.tabBar
+                  }
+                  id={
+                   activeKey === pane?.key 
+                      ? TabStyles.activeTab
+                      : null
+                  }
+                >
+                  <Stack
+                    alignment="fill"
+                    spacing="tight"
+                    style={{ border: "1px solid red", backgroundColor: "red" }}
+                  >
+                    <Image
+                      preview={false}
+                      width={25}
+                      src={
+                        pane["siteID"] &&
+                        require(`../../../../../../../assets/flags/${pane["siteID"]}.png`)
+                      }
+                      style={{ borderRadius: "50%" }}
+                    />
+                    <>{pane.title.split("-")[1]}</>
+                  </Stack>
+                </div>
               }
               key={pane.key}
               closable={pane.closable}
             >
-              <div style={pane?.['status'] === "inactive" ? {
-                pointerEvents: "none",
-                opacity: 0.8,
-              } : {}}>
+              <div
+                style={
+                  pane?.["status"] === "inactive"
+                    ? {
+                        pointerEvents: "none",
+                        opacity: 0.8,
+                      }
+                    : {}
+                }
+              >
                 {pane.content}
               </div>
             </TabPane>
